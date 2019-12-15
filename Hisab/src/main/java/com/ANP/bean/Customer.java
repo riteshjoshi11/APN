@@ -1,6 +1,8 @@
 package com.ANP.bean;
 
 public class Customer{
+
+        private long id;
 private String name;
 private int city;
 private java.util.Date dob;
@@ -35,5 +37,13 @@ public void setDob(java.util.Date dob){
 
         public void setOrgId(int orgId) {
                 this.orgId = orgId;
+        }
+
+        public long getId() {
+                return id;
+        }
+
+        public void setId(long id) {
+                this.id = id;
         }
 }

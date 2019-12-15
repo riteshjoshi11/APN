@@ -7,10 +7,10 @@ import com.ANP.bean.Customer;
 import com.ANP.repository.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
@@ -26,6 +26,20 @@ public class CustomerController {
         {
             return customerDao.getCustomer();
         }
+
+    @PostMapping(path = "/create", produces = "application/json" )
+    public ResponseEntity createCustomer(@RequestBody Customer customer) {
+        customerDao.createCustomer(customer);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/search", produces = "application/json" )
+    public List<Customer> searchCustomer(@RequestBody Customer customer) {
+       List <Customer>customers =customerDao.findByNameAndCity(customer);
+        return customers;
+    }
+
+
 
 //        @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 //        public ResponseEntity<Object> addEmployee (@RequestBody Employee employee)
