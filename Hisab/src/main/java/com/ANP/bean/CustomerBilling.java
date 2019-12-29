@@ -1,4 +1,4 @@
-package com.ANP.repository;
+package com.ANP.bean;
 
 public class CustomerBilling{
 private java.util.Date date;

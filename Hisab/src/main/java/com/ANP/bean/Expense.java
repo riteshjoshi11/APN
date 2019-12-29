@@ -1,6 +1,9 @@
-package com.ANP.repository;
+package com.ANP.bean;
+
+import java.util.Date;
 
 public class Expense{
+private int id;
 private java.util.Date date;
 private String Category;
 private String Description;
@@ -10,76 +13,93 @@ private int orgId;
 private int createdById;
 private int FromAccountID;
 private String ToAccountID;
+private boolean includeInCalc;
 
-public java.util.Date getDate(){
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isIncludeInCalc() {
+        return includeInCalc;
+    }
+
+    public void setIncludeInCalc(boolean includeInCalc) {
+        this.includeInCalc = includeInCalc;
+    }
+
+    public Date getDate() {
         return date;
-        }
+    }
 
-public void setDate(java.util.Date date){
-        this.date=date;
-        }
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-public String getCategory(){
+    public String getCategory() {
         return Category;
-        }
+    }
 
-public void setCategory(String Category){
-        this.Category=Category;
-        }
+    public void setCategory(String category) {
+        Category = category;
+    }
 
-public String getDescription(){
+    public String getDescription() {
         return Description;
-        }
+    }
 
-public void setDescription(String Description){
-        this.Description=Description;
-        }
+    public void setDescription(String description) {
+        Description = description;
+    }
 
-public double getAmount(){
+    public double getAmount() {
         return amount;
-        }
+    }
 
-public void setAmount(double amount){
-        this.amount=amount;
-        }
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
-public String getTopartyname(){
+    public String getToPartyName() {
         return toPartyName;
-        }
+    }
 
-public void setTopartyname(String toPartyName){
-        this.toPartyName=toPartyName;
-        }
+    public void setToPartyName(String toPartyName) {
+        this.toPartyName = toPartyName;
+    }
 
-public int getOrgid(){
+    public int getOrgId() {
         return orgId;
-        }
+    }
 
-public void setOrgid(int orgId){
-        this.orgId=orgId;
-        }
+    public void setOrgId(int orgId) {
+        this.orgId = orgId;
+    }
 
-public int getCreatedbyid(){
+    public int getCreatedById() {
         return createdById;
-        }
+    }
 
-public void setCreatedbyid(int createdById){
-        this.createdById=createdById;
-        }
+    public void setCreatedById(int createdById) {
+        this.createdById = createdById;
+    }
 
-public int getFromaccountid(){
+    public int getFromAccountID() {
         return FromAccountID;
-        }
+    }
 
-public void setFromaccountid(int FromAccountID){
-        this.FromAccountID=FromAccountID;
-        }
+    public void setFromAccountID(int fromAccountID) {
+        FromAccountID = fromAccountID;
+    }
 
-public String getToaccountid(){
+    public String getToAccountID() {
         return ToAccountID;
-        }
+    }
 
-public void setToaccountid(String ToAccountID){
-        this.ToAccountID=ToAccountID;
-        }
+    public void setToAccountID(String toAccountID) {
+        ToAccountID = toAccountID;
+    }
 }

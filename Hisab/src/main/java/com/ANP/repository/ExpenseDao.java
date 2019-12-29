@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.Customer;
+import com.ANP.bean.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,70 +12,73 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 @Repository
-public class CustomerDao {
+public class ExpenseDao {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
 
-    public List<Customer> getCustomer(){
+    public List<Expense> getExpenses(){
 
-        List <Customer> customers =new ArrayList<Customer>();
-        Customer cu1=new Customer();
-        cu1.setName("Ritesh");
-        cu1.setCity(1);
-        cu1.setOrgId(1);
+        List <Expense> list=new ArrayList<Expense>();
+        Expense obj1=new Expense();
 
-        Customer cu2=new Customer();
-        cu2.setName("Nitesh");
-        cu2.setCity(2);
-        cu2.setOrgId(2);
-        customers.add(cu1);
-        customers.add(cu2);
-        return customers;
+        obj1.setAmount(101);
+        obj1.setOrgId(1);
+        obj1.setDate(new Date()   );
+
+        list.add(obj1);
+        return list;
 
     }
 
 
 
-    public int createCustomer(Customer customer) {
-        System.out.println("customer "+customer.getName());
+    public int createExpense(Expense expense) {
+            System.out.println("Expense obj "+expense.getToPartyName()+" "+expense.getDate());
         return namedParameterJdbcTemplate.update(
-                "insert into apn.customer (name, city,orgId) values(:name,:city,:orgId)",
-                new BeanPropertySqlParameterSource(customer));
+                "INSERT INTO expense(date,Category,Description,amount,toPartyName,orgId,createdById,FromAccountID,ToAccountID,IncludeInCalc)" +
+                        "VALUES(:date,:Category,:Description,:amount,:toPartyName,:orgId,:createdById,:FromAccountID,:ToAccountID,:IncludeInCalc);",
+                new BeanPropertySqlParameterSource(expense));
+}
 
-    }
 
-
-    public List<Customer> findByNameAndCity(Customer customer) {
-        String where = "";
-        if (null != customer.getName() && (0 != customer.getCity())) {
-            where = "name = :name and city =:city";
-        } else if (null != customer.getName()) {
-            where = "name = :name";
-        } else if (0 != customer.getCity()) {
-            where = "city =:city";
+    public List<Expense> findByNameAndCity(Expense expense) {
+        String whereCondition = "";
+        if (null != expense.getCategory()) {
+            whereCondition = "category = :category";
+        } else if (null != expense.getToPartyName()) {
+            if(!"".equals(whereCondition)){
+                whereCondition=whereCondition+" And ";
+            }
+            whereCondition = whereCondition +"toPartyName = :toPartyName";
+        } else if (0 != expense.getOrgId()) {
+            if(!"".equals(whereCondition)){
+                whereCondition=whereCondition+" And ";
+            }
+            whereCondition =whereCondition+ "orgId =:orgId";
         }
 
 
         return namedParameterJdbcTemplate.query(
-                "select * from apn.customer where " + where,
-                new BeanPropertySqlParameterSource(customer), new CustomerMapper());
+                "select * from expense where " + whereCondition,
+                new BeanPropertySqlParameterSource(expense), new ExpenseMapper());
 
 
 
     }
 
-    private static final class CustomerMapper implements RowMapper<Customer> {
-        public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Customer cus = new Customer();
-            cus.setId(rs.getLong("id"));
-            cus.setName(rs.getString("name"));
-            cus.setCity(rs.getInt("city"));
-            return cus;
+    private static final class ExpenseMapper implements RowMapper<Expense> {
+        public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Expense obj = new Expense();
+            obj.setId(rs.getInt("id"));
+            obj.setCategory(rs.getString("category"));
+            obj.setAmount(rs.getFloat("amount"));
+            return obj;
         }
     }
 
