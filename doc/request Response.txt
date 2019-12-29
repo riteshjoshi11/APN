@@ -1,0 +1,87 @@
+Customer
+	Create
+		http://localhost:8080/apn/customer/get
+			request
+			response
+						[
+				{
+					"id": 0,
+					"name": "Ritesh",
+					"city": 1,
+					"dob": null,
+					"orgId": 1,
+					"transporter": null,
+					"gstin": null
+				},
+				{
+					"id": 0,
+					"name": "Nitesh",
+					"city": 2,
+					"dob": null,
+					"orgId": 2,
+					"transporter": null,
+					"gstin": null
+				}
+]
+
+
+
+
+
+
+Expense
+	Create
+		http://localhost:8080/apn/expense/create
+			request	
+				{
+				"date": "2019-12-29",
+				"amount": 101.0,
+				"toPartyName": "IT",
+				"orgId": 1,
+				"createdById": 1,
+				"includeInCalc": false,
+				"description": null,
+				"fromAccountID": 1,
+				"category": "IT",
+				"toAccountID": null
+				}        
+			response 
+				Success
+	search
+		http://localhost:8080/apn/expense/search
+		request
+			{
+			"toPartyName": "IT",
+			"orgId": 1,
+			"category": "IT"
+		}
+		response
+			[
+				{
+					"id": 3,
+					"date": null,
+					"amount": 101.0,
+					"toPartyName": null,
+					"orgId": 0,
+					"createdById": 0,
+					"includeInCalc": false,
+					"description": null,
+					"category": "it",
+					"toAccountID": null,
+					"fromAccountID": 0
+				},
+				{
+					"id": 4,
+					"date": null,
+					"amount": 101.0,
+					"toPartyName": null,
+					"orgId": 0,
+					"createdById": 0,
+					"includeInCalc": false,
+					"description": null,
+					"category": "IT",
+					"toAccountID": null,
+					"fromAccountID": 0
+				}
+			]
+				
