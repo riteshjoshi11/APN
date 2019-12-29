@@ -7,6 +7,9 @@ private String name;
 private int city;
 private java.util.Date dob;
 private int orgId;
+private String GSTIN;
+private String transporter;
+
 public String getName(){
         return name;
         }
@@ -46,4 +49,20 @@ public void setDob(java.util.Date dob){
         public void setId(long id) {
                 this.id = id;
         }
+
+    public String getGSTIN() {
+        return GSTIN;
+    }
+
+    public void setGSTIN(String GSTIN) {
+        this.GSTIN = GSTIN;
+    }
+
+    public String getTransporter() {
+        return transporter;
+    }
+
+    public void setTransporter(String transporter) {
+        this.transporter = transporter;
+    }
 }
