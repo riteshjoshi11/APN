@@ -39,7 +39,6 @@ public class ExpenseDao {
 
 
     public int createExpense(Expense expense) {
-            System.out.println("Expense obj "+expense.getToPartyName()+" "+expense.getDate());
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO expense(date,Category,Description,amount,toPartyName,orgId,createdById,FromAccountID,ToAccountID,IncludeInCalc)" +
                         "VALUES(:date,:Category,:Description,:amount,:toPartyName,:orgId,:createdById,:FromAccountID,:ToAccountID,:IncludeInCalc);",
@@ -47,7 +46,7 @@ public class ExpenseDao {
 }
 
 
-    public List<Expense> findByNameAndCity(Expense expense) {
+    public List<Expense> findExpense(Expense expense) {
         String whereCondition = "";
         if (null != expense.getCategory()) {
             whereCondition = "category = :category";

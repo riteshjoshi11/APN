@@ -25,12 +25,12 @@ public class CustomerDao {
         List <Customer> customers =new ArrayList<Customer>();
         Customer cu1=new Customer();
         cu1.setName("Ritesh");
-        cu1.setCity(1);
+        cu1.setCity("test dummy");
         cu1.setOrgId(1);
 
         Customer cu2=new Customer();
         cu2.setName("Nitesh");
-        cu2.setCity(2);
+        cu2.setCity("test dummy2");
         cu2.setOrgId(2);
         customers.add(cu1);
         customers.add(cu2);
@@ -51,11 +51,11 @@ public class CustomerDao {
 
     public List<Customer> findByNameAndCity(Customer customer) {
         String where = "";
-        if (null != customer.getName() && (0 != customer.getCity())) {
+        if (null != customer.getName() && (null != customer.getCity())) {
             where = "name = :name and city =:city";
         } else if (null != customer.getName()) {
             where = "name = :name";
-        } else if (0 != customer.getCity()) {
+        } else if (null != customer.getCity()) {
             where = "city =:city";
         }
 
@@ -73,7 +73,7 @@ public class CustomerDao {
             Customer cus = new Customer();
             cus.setId(rs.getLong("id"));
             cus.setName(rs.getString("name"));
-            cus.setCity(rs.getInt("city"));
+            cus.setCity(rs.getString("city"));
             return cus;
         }
     }

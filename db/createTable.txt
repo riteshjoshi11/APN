@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS  customer,delivery,customer_billing;
 CREATE TABLE `customer` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
-  `city` int DEFAULT NULL,
+  `city` varchar(200),
   `dob` timestamp NULL DEFAULT NULL,
   `orgId` int NOT NULL,
   `GSTIN` varchar(200),
@@ -47,7 +47,17 @@ CREATE TABLE `Expense` (
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `city` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1;
 
+CREATE TABLE `expense_cat` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+   PRIMARY KEY (`id`)	
+) ENGINE=InnoDB AUTO_INCREMENT=1;
 
 
 

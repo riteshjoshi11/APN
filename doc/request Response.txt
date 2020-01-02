@@ -24,7 +24,34 @@ Customer
 				}
 ]
 
+http://localhost:8080/apn/city/get
+	[
+    {
+        "id": 1,
+        "name": "indore"
+    },
+    {
+        "id": 2,
+        "name": "dewas"
+    }
+]
 
+
+http://localhost:8080/apn/expenseCategory/get
+
+[
+    {
+        "name": "abc"
+    }
+]
+
+http://localhost:8080/apn/expenseCategory/create
+
+		request	{
+			"name":"abc"
+		}
+			response 
+				Success
 
 
 

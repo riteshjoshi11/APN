@@ -4,7 +4,7 @@ public class Customer{
 
         private long id;
 private String name;
-private int city;
+private String city;
 private java.util.Date dob;
 private int orgId;
 private String GSTIN;
@@ -18,15 +18,16 @@ public void setName(String name){
         this.name=name;
         }
 
-public int getCity(){
+
+    public String getCity() {
         return city;
-        }
+    }
 
-public void setCity(int city){
-        this.city=city;
-        }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-public java.util.Date getDob(){
+    public java.util.Date getDob(){
         return dob;
         }
 

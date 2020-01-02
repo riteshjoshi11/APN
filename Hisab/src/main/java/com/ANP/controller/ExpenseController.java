@@ -31,7 +31,7 @@ public class ExpenseController {
 
     @GetMapping(path = "/search", produces = "application/json")
     public List<Expense> searchCustomer(@RequestBody Expense expense) {
-        List<Expense> expenses = expenseDao.findByNameAndCity(expense);
+        List<Expense> expenses = expenseDao.findExpense(expense);
         return expenses;
     }
 }
