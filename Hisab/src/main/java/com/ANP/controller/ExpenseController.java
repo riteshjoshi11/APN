@@ -4,6 +4,7 @@ import com.ANP.bean.Customer;
 import com.ANP.bean.Expense;
 import com.ANP.repository.CustomerDao;
 import com.ANP.repository.ExpenseDao;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,8 @@ public class ExpenseController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping(path = "/search", produces = "application/json")
+    @ApiOperation("Search based on category,to party name and org")
+    @PostMapping(path = "/search", produces = "application/json")
     public List<Expense> searchCustomer(@RequestBody Expense expense) {
         List<Expense> expenses = expenseDao.findExpense(expense);
         return expenses;

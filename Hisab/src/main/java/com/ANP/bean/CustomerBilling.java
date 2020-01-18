@@ -1,85 +1,127 @@
 package com.ANP.bean;
 
-public class CustomerBilling{
-private java.util.Date date;
-private double amount;
-private double CGST;
-private double SGST;
-private double IGST;
-private double extra;
-private double total;
-private int orgId;
-private int createdById;
+import java.util.Date;
 
-public java.util.Date getDate(){
-        return date;
-        }
+public class CustomerBilling {
 
-public void setDate(java.util.Date date){
-        this.date=date;
-        }
+        private int id;
+        private int customerId;
+        private java.util.Date date;
+        private double amount;
+        private double CGST;
+        private double SGST;
+        private double IGST;
+        private double extra;
+        private double total;
+        private int orgId;
+        private int createdById;
+        private String note;
+        private boolean includeInReport;
 
-public double getAmount(){
-        return amount;
-        }
-
-public void setAmount(double amount){
-        this.amount=amount;
+        public int getId() {
+                return id;
         }
 
-public double getCgst(){
-        return CGST;
+        public void setId(int id) {
+                this.id = id;
         }
 
-public void setCgst(double CGST){
-        this.CGST=CGST;
+        public int getCustomerId() {
+                return customerId;
         }
 
-public double getSgst(){
-        return SGST;
+        public void setCustomerId(int customerId) {
+                this.customerId = customerId;
         }
 
-public void setSgst(double SGST){
-        this.SGST=SGST;
+        public Date getDate() {
+                return date;
         }
 
-public double getIgst(){
-        return IGST;
+        public void setDate(Date date) {
+                this.date = date;
         }
 
-public void setIgst(double IGST){
-        this.IGST=IGST;
+        public double getAmount() {
+                return amount;
         }
 
-public double getExtra(){
-        return extra;
+        public void setAmount(double amount) {
+                this.amount = amount;
         }
 
-public void setExtra(double extra){
-        this.extra=extra;
+        public double getCGST() {
+                return CGST;
         }
 
-public double getTotal(){
-        return total;
+        public void setCGST(double CGST) {
+                this.CGST = CGST;
         }
 
-public void setTotal(double total){
-        this.total=total;
+        public double getSGST() {
+                return SGST;
         }
 
-public int getOrgid(){
-        return orgId;
+        public void setSGST(double SGST) {
+                this.SGST = SGST;
         }
 
-public void setOrgid(int orgId){
-        this.orgId=orgId;
+        public double getIGST() {
+                return IGST;
         }
 
-public int getCreatedbyid(){
-        return createdById;
+        public void setIGST(double IGST) {
+                this.IGST = IGST;
         }
 
-public void setCreatedbyid(int createdById){
-        this.createdById=createdById;
+        public double getExtra() {
+                return extra;
         }
+
+        public void setExtra(double extra) {
+                this.extra = extra;
         }
+
+        public double getTotal() {
+                return total;
+        }
+
+        public void setTotal(double total) {
+                this.total = total;
+        }
+
+        public int getOrgId() {
+                return orgId;
+        }
+
+        public void setOrgId(int orgId) {
+                this.orgId = orgId;
+        }
+
+        public int getCreatedById() {
+                return createdById;
+        }
+
+        public void setCreatedById(int createdById) {
+                this.createdById = createdById;
+        }
+
+        public String getNote() {
+                return note;
+        }
+
+        public void setNote(String note) {
+                this.note = note;
+        }
+
+        public boolean isIncludeInReport() {
+                return includeInReport;
+        }
+
+        public void setIncludeInReport(boolean includeInReport) {
+                this.includeInReport = includeInReport;
+        }
+
+
+
+}

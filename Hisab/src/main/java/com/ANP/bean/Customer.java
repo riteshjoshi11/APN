@@ -1,9 +1,13 @@
 package com.ANP.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Customer{
 
-        private long id;
-private String name;
+
+    private long id;
+    @JsonProperty("name")
+        private String name;
 private String city;
 private java.util.Date dob;
 private int orgId;

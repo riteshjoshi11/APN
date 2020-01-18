@@ -20,7 +20,7 @@ public class ExpenseCategoryController {
     private MasterDao masterDao;
 
  @GetMapping(path = "/get", produces = "application/json")
-        public List<ExpenseCategory> getCity()
+        public List<ExpenseCategory> getCategory()
         {
             return masterDao.getExpenseCategory();
         }
