@@ -1,27 +1,43 @@
 Customer
 	Create
-		http://localhost:8080/apn/customer/get
-			request
+		http://localhost:8080/apn/customer/create
+			request 
+   				 
+ 			 {
+			   "name": "Ritesh",
+				"city": "Dewas",
+				"dob": null,
+				"orgId": 0,
+				"transporter": null,
+				"gstin": null
+				}		
 			response
-						[
-				{
-					"id": 0,
-					"name": "Ritesh",
-					"city": 1,
-					"dob": null,
-					"orgId": 1,
-					"transporter": null,
-					"gstin": null
-				},
-				{
-					"id": 0,
-					"name": "Nitesh",
-					"city": 2,
-					"dob": null,
-					"orgId": 2,
-					"transporter": null,
-					"gstin": null
-				}
+				Success
+		
+	
+	
+	Search
+		http://localhost:8080/apn/customer/search
+			request 
+   				 
+ 			 {
+			   "city": "dewas",
+			   "name":"ritesh"
+
+				}		
+				
+			response
+								[
+			{
+				"id": 3,
+				"name": "Ritesh",
+				"city": "Dewas",
+				"dob": null,
+				"orgId": 0,
+				"transporter": null,
+				"gstin": null
+			}
+		]
 ]
 
 http://localhost:8080/apn/city/get

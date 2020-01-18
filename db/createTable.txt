@@ -17,6 +17,8 @@ CREATE TABLE `delivery` (
   `orgId` int NOT NULL,
   `createdById` int  NOT NULL
 ) ;
+
+
 CREATE TABLE `customer_billing` (
   `customerId` int  NOT NULL,
   `date` timestamp Not NULL ,
@@ -29,8 +31,12 @@ CREATE TABLE `customer_billing` (
  `IncludeInCalc`  Boolean,
   `total`  float,
   `orgId` int NOT NULL,
-  `createdById` int  NOT NULL
-);
+  `createdById` int  NOT NULL,
+  `note`varchar(256) DEFAULT NULL,
+  `includeInReport` boolean,
+  PRIMARY KEY (`customerId`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;  
+
 
 CREATE TABLE `Expense` (
   `id` int NOT NULL AUTO_INCREMENT,
