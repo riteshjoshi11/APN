@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS  customer,delivery,customer_billing;
+DROP TABLE IF EXISTS  customer,delivery,customer_billing,PaymentReceived,Account;
 CREATE TABLE `customer` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
@@ -20,7 +20,8 @@ CREATE TABLE `delivery` (
 
 
 CREATE TABLE `customer_billing` (
-  `customerId` int  NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+   `customerId` int,
   `date` timestamp Not NULL ,
   `item`varchar(200) DEFAULT NULL,
   `amount` float NOT NULL,
@@ -66,6 +67,30 @@ CREATE TABLE `expense_cat` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1;
 
 
+CREATE TABLE `PaymentReceived` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `FromAccountID` varchar(20) ,  
+  `ToAccountID` varchar(20) , 
+  `PaymentType` varchar(20) NOT NULL,
+  `RcvdDate` timestamp not NULL DEFAULT NOW(),
+  `amount` float NOT NULL,
+  `orgId` int NOT NULL,
+  `createdById` int  NOT NULL,
+  `IncludeInCalc`  Boolean,	
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `Account` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `OwnerID` varchar(20) ,  
+  `AccountNickName` varchar(20) , 
+  `Type` varchar(20) NOT NULL,
+  `Details` varchar(20),
+  `orgId` int NOT NULL,
+  `createdById` int  NOT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
