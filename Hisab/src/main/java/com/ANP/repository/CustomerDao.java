@@ -43,7 +43,7 @@ public class CustomerDao {
     public int createCustomer(Customer customer) {
         System.out.println("customer "+customer.getName());
         return namedParameterJdbcTemplate.update(
-                "insert into apn.customer (name, city,orgId) values(:name,:city,:orgId)",
+                "insert into customer (name, city,orgId) values(:name,:city,:orgId)",
                 new BeanPropertySqlParameterSource(customer));
 
     }
@@ -61,7 +61,7 @@ public class CustomerDao {
 
 
         return namedParameterJdbcTemplate.query(
-                "select * from apn.customer where " + where,
+                "select * from customer where " + where,
                 new BeanPropertySqlParameterSource(customer), new CustomerMapper());
 
 
