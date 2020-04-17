@@ -1,7 +1,7 @@
 use antrackerdb ;
-DROP TABLE IF EXISTS  customer,delivery,customer_billing,PaymentReceived,Account,Expense,city,expense_cat;
+DROP TABLE IF EXISTS  customer,delivery,customer_billing,PaymentReceived,Account;
 
-CREATE DATABASE IF NOT EXISTS antrackerdb ; 
+CREATE DATABASE antrackerdb ; 
 use antrackerdb; 
 CREATE TABLE `customer` (
   `id` int NOT NULL AUTO_INCREMENT,
