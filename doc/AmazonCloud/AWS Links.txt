@@ -1,0 +1,9 @@
+Billing Console
+-------
+https://console.aws.amazon.com/billing/home?#/
+
+AWS Console
+https://console.aws.amazon.com/rds/home?region=us-east-1#databases:
+
+UserName: avinash email / Sena@1200
+----------------------------------------
