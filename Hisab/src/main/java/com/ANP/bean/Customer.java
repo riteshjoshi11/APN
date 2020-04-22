@@ -2,19 +2,98 @@ package com.ANP.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
 public class Customer{
 
-
-    private long id;
-    @JsonProperty("name")
         private String name;
-private String city;
-private java.util.Date dob;
-private int orgId;
-private String GSTIN;
-private String transporter;
+        private String city;
+        private String gstin;
+        private String transporter;
+        private String mobile1;
+        private String mobile2;
+        private String firmname;
+        private String billingadress;
+        private int orgid;
+        private String createdbyid;
+        private java.util.Date createdate;
+        private long id;
 
-public String getName(){
+
+
+    public String getGstin() {
+        return gstin;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setGstin(String gstin) {
+        this.gstin = gstin;
+    }
+
+    public String getMobile1() {
+        return mobile1;
+    }
+
+    public void setMobile1(String mobile1) {
+        this.mobile1 = mobile1;
+    }
+
+    public String getMobile2() {
+        return mobile2;
+    }
+
+    public void setMobile2(String mobile2) {
+        this.mobile2 = mobile2;
+    }
+
+    public String getFirmname() {
+        return firmname;
+    }
+
+    public void setFirmname(String firmname) {
+        this.firmname = firmname;
+    }
+
+    public String getBillingadress() {
+        return billingadress;
+    }
+
+    public void setBillingadress(String billingadress) {
+        this.billingadress = billingadress;
+    }
+
+    public int getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(int orgid) {
+        this.orgid = orgid;
+    }
+
+    public String getCreatedbyid() {
+        return createdbyid;
+    }
+
+    public void setCreatedbyid(String createdbyid) {
+        this.createdbyid = createdbyid;
+    }
+
+    public Date getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
+    }
+
+    public String getName(){
         return name;
         }
 
@@ -29,38 +108,6 @@ public void setName(String name){
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public java.util.Date getDob(){
-        return dob;
-        }
-
-public void setDob(java.util.Date dob){
-        this.dob=dob;
-        }
-
-        public int getOrgId() {
-                return orgId;
-        }
-
-        public void setOrgId(int orgId) {
-                this.orgId = orgId;
-        }
-
-        public long getId() {
-                return id;
-        }
-
-        public void setId(long id) {
-                this.id = id;
-        }
-
-    public String getGSTIN() {
-        return GSTIN;
-    }
-
-    public void setGSTIN(String GSTIN) {
-        this.GSTIN = GSTIN;
     }
 
     public String getTransporter() {

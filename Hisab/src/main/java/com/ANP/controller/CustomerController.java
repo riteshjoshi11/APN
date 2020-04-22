@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ANP.bean.Customer;
 import com.ANP.bean.CustomerBilling;
+import com.ANP.com.ANP.service.CustomerHandler;
 import com.ANP.repository.CustomerDao;
 import com.ANP.repository.customerBillingDao;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private CustomerHandler customerHandler;
 
     @Autowired
     private customerBillingDao billDao;

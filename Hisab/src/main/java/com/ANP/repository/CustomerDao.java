@@ -26,12 +26,12 @@ public class CustomerDao {
         Customer cu1=new Customer();
         cu1.setName("Ritesh");
         cu1.setCity("test dummy");
-        cu1.setOrgId(1);
+        cu1.setOrgid(1);
 
         Customer cu2=new Customer();
         cu2.setName("Nitesh");
         cu2.setCity("test dummy2");
-        cu2.setOrgId(2);
+        cu2.setOrgid(2);
         customers.add(cu1);
         customers.add(cu2);
         return customers;

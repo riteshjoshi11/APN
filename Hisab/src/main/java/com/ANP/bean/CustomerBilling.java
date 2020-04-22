@@ -18,6 +18,8 @@ public class CustomerBilling {
         private String note;
         private boolean includeInReport;
 
+
+
         public int getId() {
                 return id;
         }
