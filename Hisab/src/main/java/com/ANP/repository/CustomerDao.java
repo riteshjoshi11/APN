@@ -42,9 +42,14 @@ public class CustomerDao {
 
     public int createCustomer(Customer customer) {
         System.out.println("customer "+customer.getName());
+//        return namedParameterJdbcTemplate.update(
+//                "insert into customer (name, city,orgId) values(:name,:city,:orgid)",
+//                new BeanPropertySqlParameterSource(customer));
+
         return namedParameterJdbcTemplate.update(
-                "insert into customer (name, city,orgId) values(:name,:city,:orgId)",
+                "insert into customer (name,city,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) values(:name,:city,:gstin,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgid,:userID)",
                 new BeanPropertySqlParameterSource(customer));
+
 
     }
 

@@ -38,8 +38,9 @@ public class CustomerController {
 
     @PostMapping(path = "/create", produces = "application/json" )
     public ResponseEntity createCustomer(@RequestBody Customer customer) {
-        customerDao.createCustomer(customer);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+       int result= customerDao.createCustomer(customer);
+
+       return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "search customer based on name and city")
