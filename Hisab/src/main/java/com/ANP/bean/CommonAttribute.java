@@ -3,7 +3,7 @@ package com.ANP.bean;
 public class CommonAttribute {
     public String statusMessage;
 
-    public String userID="1"; //TODo values will be set after log in from Token hardcoded till implimentation
+    public String userID="E1"; //TODo values will be set after log in from Token hardcoded till implimentation
 
     public String getStatusMessage() {
         return statusMessage;
