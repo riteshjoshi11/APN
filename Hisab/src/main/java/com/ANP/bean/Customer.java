@@ -15,22 +15,24 @@ public class Customer extends  CommonAttribute{
         private String firmname;
         private String billingadress;
         private int orgid;
-        private String createdbyid;
+
+    public double getInitialBalance() {
+        return initialBalance;
+    }
+
+    public void setInitialBalance(double initialBalance) {
+        this.initialBalance = initialBalance;
+    }
+
+    private String createdbyid;
         private java.util.Date createdate;
-        private long id;
+    private double initialBalance = 0;
+
 
 
 
     public String getGstin() {
         return gstin;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void setGstin(String gstin) {

@@ -24,6 +24,7 @@ public class CustomerController {
     @Autowired
     private CustomerDao customerDao;
 
+
     @Autowired
     private CustomerHandler customerHandler;
 
@@ -38,9 +39,11 @@ public class CustomerController {
 
     @PostMapping(path = "/create", produces = "application/json" )
     public ResponseEntity createCustomer(@RequestBody Customer customer) {
-       int result= customerDao.createCustomer(customer);
+        boolean isCustomerCreated = customerHandler.createCustomer(customer);
+        //int result= customerDao.createCustomer(customer);
 
-       return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "search customer based on name and city")

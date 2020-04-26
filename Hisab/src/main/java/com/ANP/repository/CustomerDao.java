@@ -76,11 +76,11 @@ public class CustomerDao {
     private static final class CustomerMapper implements RowMapper<Customer> {
         public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
             Customer cus = new Customer();
-            cus.setId(rs.getLong("id"));
+            cus.setUserID(rs.getString("id"));
             cus.setName(rs.getString("name"));
             cus.setCity(rs.getString("city"));
             return cus;
         }
     }
 
-    }
+}
