@@ -6,11 +6,11 @@ public class RawLoginBean {
     //UI: registerd Mobile Number currently
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String loginUserName;
-    //UI: password
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String loginPassword;
-    //UI: clientID
+    String orgId;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String clientID;
+    String OTP;
 
 }

@@ -15,12 +15,13 @@ public class SuccessLoginBean {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String LoggedInEmployeeID;//EMployee:EmployeeID
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String companyId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     String loginUserName;
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String password;
+    String orgName;
+
+    public String getOrgName() {
+        return orgName;
+    }
 
     public String getLoggedInUserID() {
         return LoggedInUserID;
@@ -54,28 +55,12 @@ public class SuccessLoginBean {
         LoggedInEmployeeID = loggedInEmployeeID;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
     public String getLoginUserName() {
         return loginUserName;
     }
 
     public void setLoginUserName(String loginUserName) {
         this.loginUserName = loginUserName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getOrgID() {
@@ -85,6 +70,4 @@ public class SuccessLoginBean {
     public void setOrgID(String orgID) {
         OrgID = orgID;
     }
-
-
 }
