@@ -4,10 +4,10 @@ package com.ANP.controller;
 import java.util.List;
 
 import com.ANP.bean.Customer;
-import com.ANP.bean.CustomerBilling;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.service.CustomerHandler;
 import com.ANP.repository.CustomerDao;
-import com.ANP.repository.customerBillingDao;
+import com.ANP.repository.PurchaseFromVendorDAO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,7 +29,7 @@ public class CustomerController {
     private CustomerHandler customerHandler;
 
     @Autowired
-    private customerBillingDao billDao;
+    private PurchaseFromVendorDAO billDao;
 
  @GetMapping(path = "/get", produces = "application/json")
         public List<Customer> getCustomer()
@@ -56,7 +56,7 @@ public class CustomerController {
 
 
     @PostMapping(path = "/createBill", produces = "application/json" )
-    public ResponseEntity createBill(@RequestBody CustomerBilling bill) {
+    public ResponseEntity createBill(@RequestBody PurchaseFromVendorBean bill) {
         billDao.createBill(bill);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

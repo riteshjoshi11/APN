@@ -9,6 +9,7 @@ public class CommonAttribute {
     protected String statusMessage;
     protected String createdbyId;
     protected java.util.Date createDate;
+    protected long orgId = 1; //TODO remove 1
     protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
 
     public String getCreatedbyId() {
@@ -27,7 +28,7 @@ public class CommonAttribute {
         return createDate;
     }
 
-    protected long orgId = 1; //TODO remove 1
+
 
     public long getOrgId() {
         return orgId;

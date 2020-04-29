@@ -1,6 +1,6 @@
 package com.ANP.repository;
 
-import com.ANP.bean.CustomerBilling;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,21 +15,20 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class customerBillingDao {
+public class PurchaseFromVendorDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
+    public List<Expense> getExpenses() {
 
-    public List<Expense> getExpenses(){
-
-        List <Expense> list=new ArrayList<Expense>();
-        Expense obj1=new Expense();
+        List<Expense> list = new ArrayList<Expense>();
+        Expense obj1 = new Expense();
 
         obj1.setAmount(101);
         obj1.setOrgId(1);
-        obj1.setDate(new Date()   );
+        obj1.setDate(new Date());
 
         list.add(obj1);
         return list;
@@ -37,13 +36,16 @@ public class customerBillingDao {
     }
 
 
-
-    public int createBill(CustomerBilling bill) {
+    /*
+        TODO: Joshi i have corrected this method, you need to run the latest 29April version of DB patch
+        No need to change anything here.
+     */
+    public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO customer_billing(customerId,date,CGST,amount,SGST,IGST,extra,total,orgId,createdById,note,includeInReport) "+
-                        " VALUES(:customerId,:date,:CGST,:amount,:SGST,:IGST,:extra,:total,:orgId,:createdById,:note,:includeInReport); ",
-                new BeanPropertySqlParameterSource(bill));
-}
+                "INSERT INTO customer_billing(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
+                        " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdById,:note,:includeInReport,includeInCalc,fromAccountId,billNo); ",
+                new BeanPropertySqlParameterSource(purchaseFromVendorBean));
+    }
 
 
     public List<Expense> findExpense(Expense expense) {
@@ -51,23 +53,21 @@ public class customerBillingDao {
         if (null != expense.getCategory()) {
             whereCondition = "category = :category";
         } else if (null != expense.getToPartyName()) {
-            if(!"".equals(whereCondition)){
-                whereCondition=whereCondition+" And ";
+            if (!"".equals(whereCondition)) {
+                whereCondition = whereCondition + " And ";
             }
-            whereCondition = whereCondition +"toPartyName = :toPartyName";
+            whereCondition = whereCondition + "toPartyName = :toPartyName";
         } else if (0 != expense.getOrgId()) {
-            if(!"".equals(whereCondition)){
-                whereCondition=whereCondition+" And ";
+            if (!"".equals(whereCondition)) {
+                whereCondition = whereCondition + " And ";
             }
-            whereCondition =whereCondition+ "orgId =:orgId";
+            whereCondition = whereCondition + "orgId =:orgId";
         }
 
 
         return namedParameterJdbcTemplate.query(
                 "select * from expense where " + whereCondition,
                 new BeanPropertySqlParameterSource(expense), new ExpenseMapper());
-
-
 
     }
 
@@ -81,4 +81,4 @@ public class customerBillingDao {
         }
     }
 
-    }
+}
