@@ -1,4 +1,4 @@
-package com.ANP.com.ANP.service;
+package com.ANP.service;
 
 import com.ANP.bean.SuccessLoginBean;
 import com.ANP.bean.RawLoginBean;
@@ -10,7 +10,6 @@ public class LoginHandler {
         //TODO need to think logic of Authorization and return Valid token or login information
         SuccessLoginBean loginSuccess=new SuccessLoginBean();
         loginSuccess.setOrgID("1");
-        loginSuccess.setCompanyId("C001");
         loginSuccess.setLoggedInEmployeeID("E1");
         loginSuccess.setLoggedInUserAccountID("1");
         loginSuccess.setLoggedInUserType("Employee");

@@ -1,4 +1,4 @@
-package com.ANP.com.ANP.service;
+package com.ANP.service;
 
 import com.ANP.bean.AccountBean;
 import com.ANP.bean.Organization;
@@ -26,10 +26,10 @@ public class CustomerHandler {
         customerDao.createCustomer(customerBean);
 
         AccountBean accountBean = new AccountBean();
-        accountBean.setOwnerid(customerBean.getUserID());
+        accountBean.setOwnerid(customerBean.getCustomerID());
         Organization org = orgDAO.getOrganization(customerBean.getOrgId());
         accountBean.setAccountnickname(getAccountNickName(customerBean.getName(), org.getOrgname()));
-        accountBean.setCreatedbyid(customerBean.getUserID());
+        accountBean.setCreatedbyid(customerBean.getCustomerID());
         accountBean.setCurrentbalance(customerBean.getInitialBalance());
         accountBean.setType("C");
 

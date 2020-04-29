@@ -4,17 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-public class Customer extends  CommonAttribute{
+public class Customer extends CommonAttribute {
 
-        private String name;
-        private String city;
-        private String gstin;
-        private String transporter;
-        private String mobile1;
-        private String mobile2;
-        private String firmname;
-        private String billingadress;
-        private int orgid;
+    private String name;
+    private String city;
+    private String gstin;
+    private String transporter;
+    private String mobile1;
+    private String mobile2;
+    private String firmname;
+    private String billingadress;
+    private int orgid;
+    private String customerID;
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
 
     public double getInitialBalance() {
         return initialBalance;
@@ -25,10 +34,8 @@ public class Customer extends  CommonAttribute{
     }
 
     private String createdbyid;
-        private java.util.Date createdate;
+    private java.util.Date createdate;
     private double initialBalance = 0;
-
-
 
 
     public String getGstin() {
@@ -95,13 +102,13 @@ public class Customer extends  CommonAttribute{
         this.createdate = createdate;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
-        }
+    }
 
-public void setName(String name){
-        this.name=name;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
     public String getCity() {

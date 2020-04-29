@@ -1,6 +1,6 @@
 package com.ANP.bean;
 
-public class Organization {
+public class Organization extends CommonAttribute {
 
     private long id;
     private String orgname;

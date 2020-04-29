@@ -1,6 +1,6 @@
 package com.ANP.bean;
 
-public class ExpenseCategory {
+public class ExpenseCategory extends CommonAttribute {
 
 private String name;
 

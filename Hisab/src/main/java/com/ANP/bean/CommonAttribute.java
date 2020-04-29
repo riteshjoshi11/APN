@@ -1,11 +1,33 @@
 package com.ANP.bean;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
+import java.util.Date;
+
 public class CommonAttribute {
-    public String statusMessage;
 
-    public String userID="E1"; //TODo values will be set after log in from Token hardcoded till implimentation
+    protected String statusMessage;
+    protected String createdbyId;
+    protected java.util.Date createDate;
+    protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
 
-    public long orgId = 1;
+    public String getCreatedbyId() {
+        return createdbyId;
+    }
+
+    public void setCreatedbyId(String createdbyId) {
+        this.createdbyId = createdbyId;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public java.util.Date getCreateDate() {
+        return createDate;
+    }
+
+    protected long orgId = 1; //TODO remove 1
 
     public long getOrgId() {
         return orgId;
@@ -23,6 +45,7 @@ public class CommonAttribute {
         this.statusMessage = statusMessage;
     }
 
+    /*
     public String getUserID() {
         return userID;
     }
@@ -30,4 +53,5 @@ public class CommonAttribute {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+*/
 }

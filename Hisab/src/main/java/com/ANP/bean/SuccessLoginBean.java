@@ -2,7 +2,7 @@ package com.ANP.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class SuccessLoginBean {
+public class SuccessLoginBean extends CommonAttribute {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String OrgID;

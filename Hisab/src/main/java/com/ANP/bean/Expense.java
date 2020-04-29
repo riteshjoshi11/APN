@@ -2,7 +2,7 @@ package com.ANP.bean;
 
 import java.util.Date;
 
-public class Expense{
+public class Expense extends CommonAttribute{
 private int id;
 private java.util.Date date;
 private String Category;
@@ -69,10 +69,6 @@ private boolean includeInCalc;
 
     public void setToPartyName(String toPartyName) {
         this.toPartyName = toPartyName;
-    }
-
-    public int getOrgId() {
-        return orgId;
     }
 
     public void setOrgId(int orgId) {

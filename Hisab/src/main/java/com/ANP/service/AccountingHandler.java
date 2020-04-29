@@ -1,4 +1,4 @@
-package com.ANP.com.ANP.service;
+package com.ANP.service;
 
 import org.springframework.stereotype.Service;
 
