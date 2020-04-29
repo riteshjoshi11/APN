@@ -113,3 +113,16 @@ IF NEW.currentsalarybalance <> OLD.currentsalarybalance THEN
 END IF;
 END$$
 DELIMITER ;
+
+
+ALTER TABLE `antrackerdb`.`purchasefromvendor` 
+CHANGE COLUMN `amount` `orderamount` FLOAT NOT NULL ,
+CHANGE COLUMN `total` `totalamount` FLOAT NULL DEFAULT NULL ;
+
+ALTER TABLE `antrackerdb`.`customerinvoice` 
+CHANGE COLUMN `amount` `orderamount` FLOAT NOT NULL ,
+CHANGE COLUMN `total` `totalamount` FLOAT NULL DEFAULT '0' ,
+CHANGE COLUMN `billno` `invoiceno` VARCHAR(100) NULL DEFAULT NULL ;
+
+ALTER TABLE `antrackerdb`.`customerinvoice` 
+DROP COLUMN `item`;
