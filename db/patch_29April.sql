@@ -126,3 +126,18 @@ CHANGE COLUMN `billno` `invoiceno` VARCHAR(100) NULL DEFAULT NULL ;
 
 ALTER TABLE `antrackerdb`.`customerinvoice` 
 DROP COLUMN `item`;
+
+ALTER TABLE `antrackerdb`.`generalexpense` 
+ADD COLUMN `orderamount` FLOAT NULL DEFAULT 0 AFTER `createdate`,
+ADD COLUMN `cgst` FLOAT NULL DEFAULT 0 AFTER `orderamount`,
+ADD COLUMN `sgst` FLOAT NULL DEFAULT 0 AFTER `cgst`,
+ADD COLUMN `igst` FLOAT NULL DEFAULT 0 AFTER `sgst`,
+ADD COLUMN `extra` FLOAT NULL DEFAULT 0 AFTER `igst`,
+CHANGE COLUMN `amount` `totalamount` FLOAT NOT NULL ;
+
+
+ALTER TABLE `antrackerdb`.`paytovendor` 
+CHANGE COLUMN `rcvddate` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+
+ALTER TABLE `antrackerdb`.`paymentreceived` 
+ADD COLUMN `details` VARCHAR(200) NULL AFTER `createdate`;

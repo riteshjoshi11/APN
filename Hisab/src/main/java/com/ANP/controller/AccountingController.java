@@ -1,9 +1,6 @@
 package com.ANP.controller;
 
-import com.ANP.bean.CustomerInvoiceBean;
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.Expense;
-import com.ANP.bean.PurchaseFromVendorBean;
+import com.ANP.bean.*;
 import com.ANP.repository.ExpenseDAO;
 import com.ANP.service.AccountingHandler;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +63,42 @@ public class AccountingController {
     public List<Expense> searchExpense(@RequestBody Expense expense) {
         List<Expense> expenses = expenseDao.findExpense(expense);
         return expenses;
+    }
+
+    @PostMapping(path = "/createPayToVendor", produces = "application/json")
+    public ResponseEntity createPayToVendor(@RequestBody PayToVendorBean payToVendorBean) {
+        ResponseEntity<String> responseEntity = null;
+        boolean isPayToVendorCreated = accountingHandler.createPayToVendor(payToVendorBean);
+        if (isPayToVendorCreated) {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+        }
+        return responseEntity;
+    }
+
+    @PostMapping(path = "/createPaymentReceived", produces = "application/json")
+    public ResponseEntity createPaymentReceived(@RequestBody PaymentReceivedBean paymentReceivedBean) {
+        ResponseEntity<String> responseEntity = null;
+        boolean isPaymentReceivedCreated = accountingHandler.createPaymentReceived(paymentReceivedBean);
+        if (isPaymentReceivedCreated) {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+        }
+        return responseEntity;
+    }
+
+    @PostMapping(path = "/createInternalTransfer", produces = "application/json")
+    public ResponseEntity createInternalTransfer(@RequestBody InternalTransferBean internalTransferBean) {
+        ResponseEntity<String> responseEntity = null;
+        boolean isInternalTransferCreated = accountingHandler.createInternalTransfer(internalTransferBean);
+        if (isInternalTransferCreated) {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+        }
+        return responseEntity;
     }
 
 }
