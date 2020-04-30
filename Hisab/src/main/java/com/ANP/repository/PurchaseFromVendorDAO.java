@@ -26,7 +26,7 @@ public class PurchaseFromVendorDAO {
         List<Expense> list = new ArrayList<Expense>();
         Expense obj1 = new Expense();
 
-        obj1.setAmount(101);
+        obj1.setTotalAmount(101);
         obj1.setOrgId(1);
         obj1.setDate(new Date());
 
@@ -42,7 +42,7 @@ public class PurchaseFromVendorDAO {
      */
     public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO customer_billing(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
+                "INSERT INTO purchasefromvendor(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
                         " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdById,:note,:includeInReport,includeInCalc,fromAccountId,billNo); ",
                 new BeanPropertySqlParameterSource(purchaseFromVendorBean));
     }
@@ -74,9 +74,9 @@ public class PurchaseFromVendorDAO {
     private static final class ExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
-            obj.setId(rs.getInt("id"));
+            obj.setExpenseId(rs.getInt("id"));
             obj.setCategory(rs.getString("category"));
-            obj.setAmount(rs.getFloat("amount"));
+            obj.setTotalAmount(rs.getFloat("amount"));
             return obj;
         }
     }

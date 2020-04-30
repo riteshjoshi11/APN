@@ -2,33 +2,30 @@ package com.ANP.bean;
 
 import java.util.Date;
 
-public class Expense extends CommonAttribute{
-private int id;
-private java.util.Date date;
-private String Category;
-private String Description;
-private double amount;
-private String toPartyName;
-private int orgId;
-private int createdById;
-private int FromAccountID;
-private String ToAccountID;
-private boolean includeInCalc;
+public class Expense extends CommonAttribute {
 
-    public int getId() {
-        return id;
+    private long expenseId;
+    private java.util.Date date;
+    private String category;
+    private String description;
+    private double totalAmount;
+    private String toPartyName;
+    private long fromAccountID;
+    private String fromEmployeeID;
+    private boolean includeInCalc;
+    private boolean includeInReport;
+    private double orderAmount;
+    private double CGST;
+    private double SGST;
+    private double IGST;
+    private double extra;
+
+    public long getExpenseId() {
+        return expenseId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public boolean isIncludeInCalc() {
-        return includeInCalc;
-    }
-
-    public void setIncludeInCalc(boolean includeInCalc) {
-        this.includeInCalc = includeInCalc;
+    public void setExpenseId(long expenseId) {
+        this.expenseId = expenseId;
     }
 
     public Date getDate() {
@@ -40,27 +37,27 @@ private boolean includeInCalc;
     }
 
     public String getCategory() {
-        return Category;
+        return category;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        this.category = category;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public String getToPartyName() {
@@ -71,31 +68,75 @@ private boolean includeInCalc;
         this.toPartyName = toPartyName;
     }
 
-    public void setOrgId(int orgId) {
-        this.orgId = orgId;
+    public long getFromAccountID() {
+        return fromAccountID;
     }
 
-    public int getCreatedById() {
-        return createdById;
+    public void setFromAccountID(long fromAccountID) {
+        this.fromAccountID = fromAccountID;
     }
 
-    public void setCreatedById(int createdById) {
-        this.createdById = createdById;
+    public String getFromEmployeeID() {
+        return fromEmployeeID;
     }
 
-    public int getFromAccountID() {
-        return FromAccountID;
+    public void setFromEmployeeID(String fromEmployeeID) {
+        this.fromEmployeeID = fromEmployeeID;
     }
 
-    public void setFromAccountID(int fromAccountID) {
-        FromAccountID = fromAccountID;
+    public boolean isIncludeInCalc() {
+        return includeInCalc;
     }
 
-    public String getToAccountID() {
-        return ToAccountID;
+    public void setIncludeInCalc(boolean includeInCalc) {
+        this.includeInCalc = includeInCalc;
     }
 
-    public void setToAccountID(String toAccountID) {
-        ToAccountID = toAccountID;
+    public boolean isIncludeInReport() {
+        return includeInReport;
+    }
+
+    public void setIncludeInReport(boolean includeInReport) {
+        this.includeInReport = includeInReport;
+    }
+
+    public double getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(double orderAmount) {
+        this.orderAmount = orderAmount;
+    }
+
+    public double getCGST() {
+        return CGST;
+    }
+
+    public void setCGST(double CGST) {
+        this.CGST = CGST;
+    }
+
+    public double getSGST() {
+        return SGST;
+    }
+
+    public void setSGST(double SGST) {
+        this.SGST = SGST;
+    }
+
+    public double getIGST() {
+        return IGST;
+    }
+
+    public void setIGST(double IGST) {
+        this.IGST = IGST;
+    }
+
+    public double getExtra() {
+        return extra;
+    }
+
+    public void setExtra(double extra) {
+        this.extra = extra;
     }
 }

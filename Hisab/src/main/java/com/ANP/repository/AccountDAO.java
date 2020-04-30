@@ -22,4 +22,13 @@ public class AccountDAO {
         }
         return result;
     }
+
+    //Operations: (ADD,SUBTRACT)
+    public boolean updateAccountBalance(long accountId, double balance, String operation) {
+        //logic 1. for the accountID update the balance
+        //1. Get the  account:currentBalance & update the value over to account:LastBalance   2. New account:LastBalance= LastBalance (operations +/-) Balance
+      return false;
+    }
+
+
 }

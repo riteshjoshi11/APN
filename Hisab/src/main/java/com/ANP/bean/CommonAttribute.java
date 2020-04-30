@@ -29,7 +29,6 @@ public class CommonAttribute {
     }
 
 
-
     public long getOrgId() {
         return orgId;
     }

@@ -15,21 +15,20 @@ import java.util.List;
 import java.util.Date;
 
 @Repository
-public class ExpenseDao {
+public class ExpenseDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
+    public List<Expense> getExpenses() {
 
-    public List<Expense> getExpenses(){
+        List<Expense> list = new ArrayList<Expense>();
+        Expense obj1 = new Expense();
 
-        List <Expense> list=new ArrayList<Expense>();
-        Expense obj1=new Expense();
-
-        obj1.setAmount(101);
+        obj1.setTotalAmount(101);
         obj1.setOrgId(1);
-        obj1.setDate(new Date()   );
+        obj1.setDate(new Date());
 
         list.add(obj1);
         return list;
@@ -37,13 +36,12 @@ public class ExpenseDao {
     }
 
 
-
     public int createExpense(Expense expense) {
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO expense(date,Category,Description,amount,toPartyName,orgId,createdById,FromAccountID,ToAccountID,IncludeInCalc)" +
-                        "VALUES(:date,:Category,:Description,:amount,:toPartyName,:orgId,:createdById,:FromAccountID,:ToAccountID,:IncludeInCalc);",
+                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra)" +
+                        "VALUES(:date,:Category,:Description,:totalAmount,:toPartyName,:orgId,:createdById,:FromAccountID,:fromEmployeeID,:IncludeInCalc,includeInReport,orderAmount,:CGST,SGST,:IGST,:extra);",
                 new BeanPropertySqlParameterSource(expense));
-}
+    }
 
 
     public List<Expense> findExpense(Expense expense) {
@@ -51,15 +49,15 @@ public class ExpenseDao {
         if (null != expense.getCategory()) {
             whereCondition = "category = :category";
         } else if (null != expense.getToPartyName()) {
-            if(!"".equals(whereCondition)){
-                whereCondition=whereCondition+" And ";
+            if (!"".equals(whereCondition)) {
+                whereCondition = whereCondition + " And ";
             }
-            whereCondition = whereCondition +"toPartyName = :toPartyName";
+            whereCondition = whereCondition + "toPartyName = :toPartyName";
         } else if (0 != expense.getOrgId()) {
-            if(!"".equals(whereCondition)){
-                whereCondition=whereCondition+" And ";
+            if (!"".equals(whereCondition)) {
+                whereCondition = whereCondition + " And ";
             }
-            whereCondition =whereCondition+ "orgId =:orgId";
+            whereCondition = whereCondition + "orgId =:orgId";
         }
 
 
@@ -68,17 +66,16 @@ public class ExpenseDao {
                 new BeanPropertySqlParameterSource(expense), new ExpenseMapper());
 
 
-
     }
 
     private static final class ExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
-            obj.setId(rs.getInt("id"));
+            obj.setExpenseId(rs.getInt("id"));
             obj.setCategory(rs.getString("category"));
-            obj.setAmount(rs.getFloat("amount"));
+            obj.setTotalAmount(rs.getFloat("amount"));
             return obj;
         }
     }
 
-    }
+}
