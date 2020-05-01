@@ -1,8 +1,7 @@
 package com.ANP.service;
 
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.EmployeeSalary;
-import com.ANP.bean.EmployeeSalaryPayment;
+import com.ANP.bean.*;
+import com.ANP.repository.AccountDAO;
 import com.ANP.repository.EmployeeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeHandler {
-
     @Autowired
     EmployeeDAO employeeDAO;
+    @Autowired
+    AccountDAO accountDAO;
 
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
@@ -20,7 +20,16 @@ public class EmployeeHandler {
         //TODO Joshi: Call EmployeeDAO:create
         // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
         // In a Transaction
-        return false;
+        boolean isemployeecreated = false;
+        employeeDAO.createEmployee(employeeBean);
+        AccountBean accountBean = new AccountBean();
+        accountBean.setAccountnickname(employeeBean.getFirst() + " " +  employeeBean.getLast());
+        accountBean.setCurrentbalance(employeeBean.getCurrentAccountBalance());
+        accountBean.setCreatedbyid(employeeBean.getEmployeeId());
+        accountBean.setType("E");
+
+        isemployeecreated = accountDAO.createAccount(accountBean);
+        return isemployeecreated;
     }
 
     @Transactional(rollbackFor = Exception.class)
