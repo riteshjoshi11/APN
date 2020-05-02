@@ -7,6 +7,10 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,16 +39,18 @@ public class CustomerDao {
 
     public int createCustomer(CustomerBean customerBean) {
         System.out.println("customer " + customerBean.getName());
+        KeyHolder holder = new GeneratedKeyHolder();
         return namedParameterJdbcTemplate.update(
                 "insert into customer (name,city,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
                         "values(:name,:city,:gstin,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgid,:userID)",
                 new BeanPropertySqlParameterSource(customerBean));
     }
+
     public List<CustomerBean> findByNameAndCity(CustomerBean customerBean) {
         String where = "";
         if (null != customerBean.getName() && (null != customerBean.getCity())) {
             where = "name = :name and city =:city";
-        } else if (null != customerBean.getName()) {
+    } else if (null != customerBean.getName()) {
             where = "name = :name";
         } else if (null != customerBean.getCity()) {
             where = "city =:city";
@@ -64,5 +70,4 @@ public class CustomerDao {
             return cus;
         }
     }
-
 }

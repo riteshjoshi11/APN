@@ -43,7 +43,6 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "search customer based on name and city")
-
     @PostMapping(path = "/search", produces = "application/json")
     public List<CustomerBean> searchCustomer(@RequestBody CustomerBean customerBean) {
         List<CustomerBean> customerBeans = customerDao.findByNameAndCity(customerBean);
