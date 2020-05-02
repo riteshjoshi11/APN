@@ -1,6 +1,5 @@
 package com.ANP.controller;
 
-import com.ANP.bean.Customer;
 import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.EmployeeSalary;
 import com.ANP.bean.EmployeeSalaryPayment;

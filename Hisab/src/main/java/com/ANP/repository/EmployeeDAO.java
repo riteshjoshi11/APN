@@ -6,6 +6,8 @@ import com.ANP.bean.EmployeeSalaryPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+
 
 @Repository
 /*
@@ -16,9 +18,12 @@ public class EmployeeDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public boolean createEmployee(EmployeeBean employeeBean) {
+    public int createEmployee(EmployeeBean employeeBean) {
+        return namedParameterJdbcTemplate.update(
+                "insert into employee (first,last,mobile,loginrequired,loginusername,loginpassword,currentsalarybalance" +
+                        ",lastsalarybalance,orgid) values(:first,:last,:mobile,:loginrequired,:loginusername,:loginpassword" +
+                        ",:currentsalarybalance,:lastsalarybalance,:orgid)", new BeanPropertySqlParameterSource(employeeBean));
         //TODO Joshi: Create a employee here
-        return false;
     }
 
     public boolean updateLoginRequired(long employeeID, boolean loginRequired) {
