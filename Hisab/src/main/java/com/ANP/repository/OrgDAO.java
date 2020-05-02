@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.Organization;
+import com.ANP.service.OrganizationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -43,5 +44,16 @@ public class OrgDAO {
         }
     }
 
+    /*
+     * This method will return organization(s) for a given mobileNumber
+     * It may result multiple organizations.
+     */
+    public List<Organization> getOrganizationsForMobileNo(String mobileNumber) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("mobileNumber", mobileNumber);
+        List<Organization> organizations = namedParameterJdbcTemplate.query("select * from organization where id IN" +
+                " (select orgid from employee where mobile=:mobileNumber)", param, new OrgMapper());
+        return organizations;
+    }
 
 }
