@@ -1,8 +1,6 @@
 package com.ANP.controller;
-import java.util.List;
 
-
-import com.ANP.bean.Organization;
+import com.ANP.bean.OrganizationRegistrationBean;
 import com.ANP.service.OrganizationHandler;
 
 import com.ANP.repository.OrgDAO;
@@ -20,8 +18,8 @@ public class OrganizationController {
     private OrganizationHandler orghandler;
 
     @PostMapping(path = "/createOrganization", produces = "application/json" )
-    public ResponseEntity createOrganization(@RequestBody Organization organization) {
-        boolean isOrganizationCreated = orghandler.createOrganization(organization);
+    public ResponseEntity createOrganization(@RequestBody OrganizationRegistrationBean organizationRegistrationBean) {
+        boolean isOrganizationCreated = orghandler.createOrganization(organizationRegistrationBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }
