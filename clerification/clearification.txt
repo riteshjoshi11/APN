@@ -1,4 +1,0 @@
-Created by Id is a employee id ..?
-differen between customer and employee ..?
-IN Expense table to party name is a free text ? 
-do we need ToAccountID in Expense table as we have payment receive table ?

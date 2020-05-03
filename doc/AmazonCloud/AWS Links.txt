@@ -7,3 +7,8 @@ https://console.aws.amazon.com/rds/home?region=us-east-1#databases:
 
 UserName: avinash email / Sena@1200
 ----------------------------------------
+
+MYSQL Installation
+=====================
+
+https://medium.com/@chamikakasun/installing-mysql-in-an-ec2-instance-55d6a3e19caf
