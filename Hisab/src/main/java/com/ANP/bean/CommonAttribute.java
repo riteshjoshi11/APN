@@ -1,6 +1,6 @@
 package com.ANP.bean;
 
-import com.sun.xml.internal.bind.v2.TODO;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
