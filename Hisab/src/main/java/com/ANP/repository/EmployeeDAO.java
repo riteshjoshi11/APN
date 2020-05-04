@@ -86,7 +86,7 @@ public class EmployeeDAO {
         //TODO Joshi: Create a employee here
         if (namedParameterJdbcTemplate.update(
                 "insert into employeesalary(toemployeeid,amount,details,orgid,createdbyid,includeincalc) " +
-                        "values(:toEmployeeId,:amount,:details,:orgId,:createdbyId,:includeInCalc)",
+                        "values(:toEmployeeID,:amount,:details,:orgId,:createdbyId,:includeInCalc)",
                 new BeanPropertySqlParameterSource(employeeSalaryBean))!=0)
             return true;
         else

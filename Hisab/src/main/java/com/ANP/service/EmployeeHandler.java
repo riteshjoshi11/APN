@@ -67,7 +67,7 @@ public class EmployeeHandler {
         //TODO Joshi: add additional code here
         boolean isSalaryCreated = false;
         employeeDAO.createEmployeeSalary(employeeSalaryBean);
-        isSalaryCreated = employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeId(),employeeSalaryBean.getAmount(), "ADD" );
+        isSalaryCreated = employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeID(),employeeSalaryBean.getAmount(), "ADD" );
         return isSalaryCreated;
     }
 
