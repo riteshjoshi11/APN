@@ -9,6 +9,15 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     private String details;
     private String toEmployeeId;
     private String fromEmployeeId;
+    private long salaryPaymentID;
+
+    public long getSalaryPaymentID() {
+        return salaryPaymentID;
+    }
+
+    public void setSalaryPaymentID(long salaryPaymentID) {
+        this.salaryPaymentID = salaryPaymentID;
+    }
 
     public long getFromAccountId() {
         return fromAccountId;
