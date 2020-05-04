@@ -35,6 +35,5 @@ public class EmployeeSalary extends CommonAttribute {
         super.orgId = orgid;
     }
 
-
 }
 

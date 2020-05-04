@@ -12,6 +12,8 @@ public class EmployeeBean extends CommonAttribute {
     private float initialSalaryBalance;
     private float currentAccountBalance;
 
+    private boolean loginrequired;
+
     public float getCurrentAccountBalance() {
         return currentAccountBalance;
     }
@@ -94,6 +96,14 @@ public class EmployeeBean extends CommonAttribute {
 
     public void setOrgid(long orgid){
         super.orgId=orgid;
+    }
+
+
+
+    public boolean getLoginrequired(){ return loginrequired; }
+
+    public void setLoginrequired(boolean loginrequired){
+        this.loginrequired = loginrequired;
     }
 
 

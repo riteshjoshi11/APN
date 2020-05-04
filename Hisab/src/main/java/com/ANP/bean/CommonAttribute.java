@@ -16,6 +16,8 @@ public class CommonAttribute {
     @ApiModelProperty(hidden = true)
     protected long orgId = 1; //TODO remove 1
 
+    protected boolean includeInCalc;
+
     @ApiModelProperty(hidden = true)
     protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
 
@@ -52,6 +54,10 @@ public class CommonAttribute {
         this.statusMessage = statusMessage;
     }
 
+
+    public boolean getIncludeInCalc(){ return includeInCalc;}
+
+    public void setIncludeInCalc(){ this.includeInCalc= includeInCalc;}
     /*
     public String getUserID() {
         return userID;
