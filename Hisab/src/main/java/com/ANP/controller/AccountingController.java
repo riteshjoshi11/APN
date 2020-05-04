@@ -72,10 +72,11 @@ public class AccountingController {
         if (isPayToVendorCreated) {
             responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
         } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+            responseEntity = new ResponseEntity<>("Failuer", HttpStatus.OK);
         }
         return responseEntity;
     }
+
 
     @PostMapping(path = "/createPaymentReceived", produces = "application/json")
     public ResponseEntity createPaymentReceived(@RequestBody PaymentReceivedBean paymentReceivedBean) {
@@ -88,6 +89,7 @@ public class AccountingController {
         }
         return responseEntity;
     }
+
 
     @PostMapping(path = "/createInternalTransfer", produces = "application/json")
     public ResponseEntity createInternalTransfer(@RequestBody InternalTransferBean internalTransferBean) {

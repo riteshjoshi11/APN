@@ -1,11 +1,6 @@
 package com.ANP.bean;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Date;
-
-public class Customer extends CommonAttribute {
-
+public class CustomerBean extends CommonAttribute {
     private String name;
     private String city;
     private String gstin;
@@ -14,17 +9,15 @@ public class Customer extends CommonAttribute {
     private String mobile2;
     private String firmname;
     private String billingadress;
-    private int orgid;
     private String customerID;
+    private double initialBalance = 0;
 
     public String getCustomerID() {
         return customerID;
     }
-
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
-
     public double getInitialBalance() {
         return initialBalance;
     }
@@ -32,11 +25,6 @@ public class Customer extends CommonAttribute {
     public void setInitialBalance(double initialBalance) {
         this.initialBalance = initialBalance;
     }
-
-    private String createdbyid;
-    private java.util.Date createdate;
-    private double initialBalance = 0;
-
 
     public String getGstin() {
         return gstin;
@@ -76,30 +64,6 @@ public class Customer extends CommonAttribute {
 
     public void setBillingadress(String billingadress) {
         this.billingadress = billingadress;
-    }
-
-    public int getOrgid() {
-        return orgid;
-    }
-
-    public void setOrgid(int orgid) {
-        this.orgid = orgid;
-    }
-
-    public String getCreatedbyid() {
-        return createdbyid;
-    }
-
-    public void setCreatedbyid(String createdbyid) {
-        this.createdbyid = createdbyid;
-    }
-
-    public Date getCreatedate() {
-        return createdate;
-    }
-
-    public void setCreatedate(Date createdate) {
-        this.createdate = createdate;
     }
 
     public String getName() {

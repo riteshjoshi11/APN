@@ -1,11 +1,9 @@
 package com.ANP.service;
 
 import com.ANP.bean.AccountBean;
-import com.ANP.bean.Organization;
 import com.ANP.repository.AccountDAO;
 import com.ANP.repository.CustomerDao;
-import com.ANP.bean.Customer;
-import com.ANP.repository.OrgDAO;
+import com.ANP.bean.CustomerBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,25 +14,21 @@ public class CustomerHandler {
     CustomerDao customerDao;
     @Autowired
     AccountDAO accountDAO;
-    @Autowired
-    OrgDAO orgDAO;
+
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean createCustomer(Customer customerBean) {
+    public boolean createCustomer(CustomerBean customerBean) {
         boolean iscustomercreated = false;
-
         customerDao.createCustomer(customerBean);
 
+        //Preparing Account & creating account
         AccountBean accountBean = new AccountBean();
         accountBean.setOwnerid(customerBean.getCustomerID());
-        Organization org = orgDAO.getOrganization(customerBean.getOrgId());
-        accountBean.setAccountnickname(getAccountNickName(customerBean.getName(), org.getOrgname()));
-        accountBean.setCreatedbyid(customerBean.getCustomerID());
+        accountBean.setAccountnickname(getAccountNickName(customerBean.getFirmname(),customerBean.getName(), customerBean.getCity()));
+        accountBean.setCreatedbyid(customerBean.getCreatedbyId());
         accountBean.setCurrentbalance(customerBean.getInitialBalance());
         accountBean.setType("C");
-
         iscustomercreated = accountDAO.createAccount(accountBean);
-
         return iscustomercreated;
     }
 
@@ -46,5 +40,14 @@ public class CustomerHandler {
 
         return accountNickName;
 
+    }
+
+    private String getAccountNickName(String firmName, String personName, String city) {
+        String nickName="";
+        if(firmName.trim().equalsIgnoreCase(personName.trim())){
+            nickName = firmName + " " + city;
+        }
+        nickName = personName + " " + firmName + " " + city;
+        return nickName;
     }
 }

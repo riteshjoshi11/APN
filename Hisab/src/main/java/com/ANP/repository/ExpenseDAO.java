@@ -1,6 +1,5 @@
 package com.ANP.repository;
 
-import com.ANP.bean.Customer;
 import com.ANP.bean.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;

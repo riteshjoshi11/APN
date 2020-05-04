@@ -19,6 +19,9 @@ public class PurchaseFromVendorBean extends CommonAttribute {
     private String billNo;
     private boolean includeInCalc;
 
+    private CustomerBean customerBean;
+
+
     public int getPurchaseID() {
         return purchaseID;
     }

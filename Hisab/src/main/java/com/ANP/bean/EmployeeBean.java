@@ -99,6 +99,7 @@ public class EmployeeBean extends CommonAttribute {
     }
 
 
+
     public boolean getLoginrequired(){ return loginrequired; }
 
     public void setLoginrequired(boolean loginrequired){

@@ -1,7 +1,6 @@
 package com.ANP.repository;
 
 import com.ANP.bean.City;
-import com.ANP.bean.Customer;
 import com.ANP.bean.ExpenseCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

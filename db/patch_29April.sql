@@ -141,3 +141,14 @@ CHANGE COLUMN `rcvddate` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
 
 ALTER TABLE `antrackerdb`.`paymentreceived` 
 ADD COLUMN `details` VARCHAR(200) NULL AFTER `createdate`;
+
+drop table if exists  organization;
+
+CREATE TABLE `organization` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orgname` varchar(200) NOT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
