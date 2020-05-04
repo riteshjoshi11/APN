@@ -14,7 +14,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CustomerDao {
@@ -50,7 +52,7 @@ public class CustomerDao {
         String where = "";
         if (null != customerBean.getName() && (null != customerBean.getCity())) {
             where = "name = :name and city =:city";
-    } else if (null != customerBean.getName()) {
+        } else if (null != customerBean.getName()) {
             where = "name = :name";
         } else if (null != customerBean.getCity()) {
             where = "city =:city";
@@ -69,5 +71,18 @@ public class CustomerDao {
             cus.setCity(rs.getString("city"));
             return cus;
         }
+    }
+
+    public CustomerBean getCustomerUsingMobile1(String mobile) {
+        CustomerBean customerBean = null;
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("mobileNumber", mobile);
+
+        List<CustomerBean> customerBeanList = namedParameterJdbcTemplate.query("select * from customer where mobile1=:mobileNumber",
+                param, new CustomerMapper());
+        if(customerBeanList!=null&&customerBeanList.size()>0) {
+            customerBean=customerBeanList.get(0);
+        }
+        return  customerBean;
     }
 }

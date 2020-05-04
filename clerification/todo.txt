@@ -1,2 +1,0 @@
-DB
-	Primary key for delivery table

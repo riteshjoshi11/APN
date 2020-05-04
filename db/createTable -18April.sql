@@ -1,5 +1,13 @@
  -- TESTED ON MYSQL 8.0.18
 SHOW VARIABLES LIKE "version";
+ 
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'Sena_120';
+GRANT ALL PRIVILEGES ON root.* TO 'root'@'%';
+
+CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sena_120';
+GRANT ALL PRIVILEGES ON root.* TO 'root'@'localhost';
+ 
+
 drop database antrackerdb;
 create database antrackerdb ; 
 use antrackerdb; 
