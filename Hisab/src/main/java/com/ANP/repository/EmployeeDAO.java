@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Repository
@@ -22,10 +24,17 @@ public class EmployeeDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public int createEmployee(EmployeeBean employeeBean) {
-        return namedParameterJdbcTemplate.update(
 
-                "insert into employee (first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
-                        ",lastsalarybalance,orgid) values(:first,:last,:mobile,:loginrequired,:loginusername" +
+        String idSql = "SELECT getEmployeeId() ";
+        Map param = new HashMap<String, Object>();
+        String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
+        employeeBean.setEmployeeId(id);
+
+
+
+        return namedParameterJdbcTemplate.update(
+                "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
+                        ",lastsalarybalance,orgid) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
                         ",:currentsalarybalance,:lastsalarybalance,:orgId)", new BeanPropertySqlParameterSource(employeeBean));
         //TODO set empid
 
