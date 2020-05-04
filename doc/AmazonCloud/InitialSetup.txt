@@ -1,3 +1,21 @@
+Base URL:  
+http://ec2-52-205-79-147.compute-1.amazonaws.com:8080/
+
+
+Swagger:
+
+http://ec2-52-205-79-147.compute-1.amazonaws.com:8080/apn/swagger-ui.html#/
+
+
+1. Open Command Prompt cmd and move to $HOME\APN\doc\AmazonCloud
+2. Type command: (
+ssh -i "Nitesh_New_Private_Key.pem" ec2-user@ec2-52-205-79-147.compute-1.amazonaws.com
+
+EC2 Instance @nitesh.indore
+
+
+
+
 1. Account for Login to Amazon Cloud: avinash email and common previous company password
 
 2.  Once logged in
@@ -12,10 +30,10 @@ ec2-52-3-182-97.compute-1.amazonaws.com
 =======================
 DB - MySQL - Amazon RDS - DB Host: antracker.c4bgqr2g0rab.us-east-1.rds.amazonaws.com   Port: 3306 
 DBID: antracker
-Username: admin
+Username: root
 Password:Sena_120
 
-apn.cvnmj1yrpjax.us-east-2.rds.amazonaws.com
+
 root/Sena_120
 DBSID: apn
 
@@ -31,3 +49,18 @@ http://ec2-52-3-182-97.compute-1.amazonaws.com:8080/
 
 
 
+Billing Console
+-------
+https://console.aws.amazon.com/billing/home?#/
+
+AWS Console
+https://console.aws.amazon.com/rds/home?region=us-east-1#databases:
+
+UserName: avinash email / Sena@1200
+----------------------------------------
+
+
+====================
+Auto Startup of Server
+
+https://docs.bitnami.com/aws/faq/configuration/configure-static-address/

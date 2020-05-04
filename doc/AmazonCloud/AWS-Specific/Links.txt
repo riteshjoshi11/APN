@@ -1,0 +1,1 @@
+https://docs.bitnami.com/aws/faq/configuration/configure-static-address/

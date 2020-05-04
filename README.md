@@ -9,4 +9,6 @@ command to build :
 
 #How to Build war file 
 Open Windows Command prompt and cd to this folder and run: 
-$ mvnw.cmd clean deploy
+$mvn clean prepare-package
+
+
