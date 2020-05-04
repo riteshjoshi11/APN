@@ -49,9 +49,7 @@ public class EmployeeSalary extends CommonAttribute {
         this.details = details;
     }
 
-    public void setOrgid(int orgid) {
-        super.orgId = orgid;
-    }
+
 
 }
 
