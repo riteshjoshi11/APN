@@ -1,6 +1,10 @@
 package com.ANP.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class EmployeeBean extends CommonAttribute {
+
+    @ApiModelProperty(hidden = true)
     private String employeeId;
     private String first;
     private String last;

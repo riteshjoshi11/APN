@@ -25,8 +25,9 @@ public class EmployeeHandler {
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountnickname(employeeBean.getFirst() + " " +  employeeBean.getLast());
         accountBean.setCurrentbalance(employeeBean.getCurrentAccountBalance());
-        accountBean.setCreatedbyid(employeeBean.getEmployeeId());
+        accountBean.setCreatedbyid(employeeBean.getCreatedbyId());
         accountBean.setType("E");
+        accountBean.setOwnerid(employeeBean.getEmployeeId());
         isemployeecreated = accountDAO.createAccount(accountBean);
         return isemployeecreated;
     }
