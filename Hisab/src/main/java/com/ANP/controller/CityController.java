@@ -38,13 +38,13 @@ public class CityController {
 //        public ResponseEntity<Object> addEmployee (@RequestBody Employee employee)
 //        {
 //            Integer id = employeeDao.getAllEmployees().getEmployeeList().size() + 1;
-//            employee.setId(id);
+//            employee.setCustomerID(id);
 //
 //            employeeDao.addEmployee(employee);
 //
 //            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 //                    .path("/{id}")
-//                    .buildAndExpand(employee.getId())
+//                    .buildAndExpand(employee.getCustomerID())
 //                    .toUri();
 //
 //            return ResponseEntity.created(location).build();

@@ -10,7 +10,7 @@ public class CommonAttribute {
     @ApiModelProperty(hidden = true)
     protected String statusMessage;
     @ApiModelProperty(hidden = true)
-    protected String createdbyId;
+    protected String createdbyId = "E1";
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
     @ApiModelProperty(hidden = true)

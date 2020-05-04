@@ -1,9 +1,5 @@
 package com.ANP.bean;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Date;
-
 public class CustomerBean extends CommonAttribute {
     private String name;
     private String city;

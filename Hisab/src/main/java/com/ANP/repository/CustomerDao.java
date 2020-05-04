@@ -7,9 +7,6 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,11 +38,20 @@ public class CustomerDao {
 
     public int createCustomer(CustomerBean customerBean) {
         System.out.println("customer " + customerBean.getName());
-        KeyHolder holder = new GeneratedKeyHolder();
-        return namedParameterJdbcTemplate.update(
-                "insert into customer (name,city,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
-                        "values(:name,:city,:gstin,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgid,:userID)",
-                new BeanPropertySqlParameterSource(customerBean));
+
+        String idSql = "SELECT getcustomerId() ";
+        Map param = new HashMap<String, Object>();
+        String customerId = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
+        customerBean.setCustomerID(customerId);
+
+        System.out.println("customer id " + customerId);
+        String sql = "insert into customer (id,name,city,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
+                "values(:customerID,:name,:city,:gstin,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgId,:createdbyId)";
+        int updated = namedParameterJdbcTemplate.update(sql
+                , new BeanPropertySqlParameterSource(customerBean));
+
+
+        return updated;
     }
 
     public List<CustomerBean> findByNameAndCity(CustomerBean customerBean) {

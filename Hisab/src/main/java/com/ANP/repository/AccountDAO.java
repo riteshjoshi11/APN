@@ -16,7 +16,7 @@ public class AccountDAO {
         boolean result = false;
         int accountCreated = namedParameterJdbcTemplate.update(
                 "insert into account (ownerid,accountnickname,type,details,currentbalance,lastbalance,orgid,createdbyid)" +
-                               " values(:ownerid,:accountnickname,:type,:details,:currentbalance,:lastbalance,:orgId,:userID)",
+                        " values(:ownerid,:accountnickname,:type,:details,:currentbalance,:lastbalance,:orgId,:createdbyId)",
                 new BeanPropertySqlParameterSource(accountBean));
         if (accountCreated > 0) {
             result = true;
