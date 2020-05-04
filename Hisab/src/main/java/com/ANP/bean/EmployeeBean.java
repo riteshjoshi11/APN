@@ -9,8 +9,18 @@ public class EmployeeBean extends CommonAttribute {
     private String type;
     private double currentsalarybalance;
     private double lastsalarybalance;
-    private java.util.Date createdate;
     private float initialSalaryBalance;
+    private float currentAccountBalance;
+
+    private boolean loginrequired;
+
+    public float getCurrentAccountBalance() {
+        return currentAccountBalance;
+    }
+
+    public void setCurrentAccountBalance(float currentAccountBalance) {
+        this.currentAccountBalance = currentAccountBalance;
+    }
 
     public float getInitialSalaryBalance() {
         return initialSalaryBalance;
@@ -88,8 +98,12 @@ public class EmployeeBean extends CommonAttribute {
         super.orgId=orgid;
     }
 
-    public java.util.Date getCreatedate(){
-        return createdate;
+
+    public boolean getLoginrequired(){ return loginrequired; }
+
+    public void setLoginrequired(boolean loginrequired){
+        this.loginrequired = loginrequired;
     }
+
 
 }

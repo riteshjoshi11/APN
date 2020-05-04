@@ -1,15 +1,24 @@
 package com.ANP.bean;
 
-import com.sun.xml.internal.bind.v2.TODO;
+
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
 public class CommonAttribute {
 
+    @ApiModelProperty(hidden = true)
     protected String statusMessage;
-    protected String createdbyId;
+    @ApiModelProperty(hidden = true)
+    protected String createdbyId = "E1";
+    @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
+    @ApiModelProperty(hidden = true)
     protected long orgId = 1; //TODO remove 1
+
+    protected boolean includeInCalc;
+
+    @ApiModelProperty(hidden = true)
     protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
 
     public String getCreatedbyId() {
@@ -45,6 +54,10 @@ public class CommonAttribute {
         this.statusMessage = statusMessage;
     }
 
+
+    public boolean getIncludeInCalc(){ return includeInCalc;}
+
+    public void setIncludeInCalc(){ this.includeInCalc= includeInCalc;}
     /*
     public String getUserID() {
         return userID;
