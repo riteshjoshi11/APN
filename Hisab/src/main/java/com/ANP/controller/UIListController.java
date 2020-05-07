@@ -26,7 +26,7 @@ public class UIListController {
     private UIListDAO UIListDAO;
 
 
-    @GetMapping(path = "/getCities", produces = "application/json")
+    @PostMapping(path = "/getCities", produces = "application/json")
     public List<City> getCity() {
         return cityDao.getCity();
     }
@@ -37,7 +37,7 @@ public class UIListController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping(path = "/getExpenseCategories", produces = "application/json")
+    @PostMapping(path = "/getExpenseCategories", produces = "application/json")
     public List<ExpenseCategory> getCategory() {
         return UIListDAO.getExpenseCategory();
     }
@@ -47,7 +47,6 @@ public class UIListController {
         UIListDAO.createExpenseCat(obj);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
 
 }
 

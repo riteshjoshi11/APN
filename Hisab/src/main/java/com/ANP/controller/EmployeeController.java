@@ -3,11 +3,14 @@ package com.ANP.controller;
 import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.EmployeeSalary;
 import com.ANP.bean.EmployeeSalaryPayment;
+import com.ANP.repository.EmployeeDAO;
 import com.ANP.service.EmployeeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/employee")
@@ -15,6 +18,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeHandler employeeHandler;
+
+    @Autowired
+    private EmployeeDAO employeeDAO;
+
 
     @PostMapping(path = "/createEmployee", produces = "application/json")
     public ResponseEntity createEmployee(@RequestBody EmployeeBean employeeBean) {
@@ -94,6 +101,10 @@ public class EmployeeController {
         return responseEntity;
     }
 
-
+    @PostMapping(path = "/getEmployeeListByName", produces = "application/json")
+    public List<EmployeeBean> getEmployeeListByName (@RequestParam long orgID, @RequestParam String firstName, @RequestParam String lastName)
+    {
+        return employeeDAO.searchEmployees(orgID,firstName,lastName);
+    }
 
 }

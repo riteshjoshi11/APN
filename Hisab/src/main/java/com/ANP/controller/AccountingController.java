@@ -1,6 +1,7 @@
 package com.ANP.controller;
 
 import com.ANP.bean.*;
+import com.ANP.repository.AccountDAO;
 import com.ANP.repository.ExpenseDAO;
 import com.ANP.service.AccountingHandler;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,10 @@ public class AccountingController {
 
     @Autowired
     private ExpenseDAO expenseDao;
+
+    @Autowired
+    AccountDAO accountDAO;
+
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
@@ -101,6 +106,11 @@ public class AccountingController {
             responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
         }
         return responseEntity;
+    }
+
+    @PostMapping(path = "/getExpenseCategories", produces = "application/json")
+    public List<AccountBean> getAccountsByNickName(@RequestParam long orgId, @RequestParam String nickName) {
+        return accountDAO.searchAccounts(orgId,nickName);
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,26 +30,20 @@ public class EmployeeDAO {
         Map param = new HashMap<String, Object>();
         String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
         employeeBean.setEmployeeId(id);
-
-
-
         return namedParameterJdbcTemplate.update(
                 "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
                         ",lastsalarybalance,orgid) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
                         ",:currentsalarybalance,:lastsalarybalance,:orgId)", new BeanPropertySqlParameterSource(employeeBean));
-        //TODO set empid
-
     }
 
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
         //TODO Joshi: Update loginRequired attribute for employeeID passed
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", employeeId);
-        in.addValue("loginrequired",loginRequired);
-        if(namedParameterJdbcTemplate.update("update employee set loginrequired = :loginrequired where id = :id", in) != 0) {
+        in.addValue("loginrequired", loginRequired);
+        if (namedParameterJdbcTemplate.update("update employee set loginrequired = :loginrequired where id = :id", in) != 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -57,8 +52,8 @@ public class EmployeeDAO {
         //TODO Joshi: Update mobile attribute for employeeID passed
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", employeeID);
-        in.addValue("mobile",mobile);
-        if(namedParameterJdbcTemplate.update("update employee set mobile = :mobile where id = :id", in) != 0)
+        in.addValue("mobile", mobile);
+        if (namedParameterJdbcTemplate.update("update employee set mobile = :mobile where id = :id", in) != 0)
             return true;
         else
             return false;
@@ -72,18 +67,18 @@ public class EmployeeDAO {
         in.addValue("toemployeeid", toEmployeeID);
         in.addValue("balance", balance);
         int n;
-        if(operation.equals("ADD"))
+        if (operation.equals("ADD"))
             n = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "+ :balance where toemployeeid = :toemployeeid",in) ;
+                    "+ :balance where toemployeeid = :toemployeeid", in);
         else
             n = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "- :balance where toemployeeid = :toemployeeid",in);
-        if(n!=0)
+                    "- :balance where toemployeeid = :toemployeeid", in);
+        if (n != 0)
             return true;
         else
             return false;
-            //Overall Effect: Employee:CurrentSalaryBalance = Employee:CurrentSalaryBalance 'operation(ADD/SUBTRACT)' balance
-            //Please note there is a mysql trigger running which is copying old value of Employee:CurrentSalaryBalance to Employee:LastSalaryBalance for audit purpose
+        //Overall Effect: Employee:CurrentSalaryBalance = Employee:CurrentSalaryBalance 'operation(ADD/SUBTRACT)' balance
+        //Please note there is a mysql trigger running which is copying old value of Employee:CurrentSalaryBalance to Employee:LastSalaryBalance for audit purpose
 
     }
 
@@ -92,7 +87,7 @@ public class EmployeeDAO {
         if (namedParameterJdbcTemplate.update(
                 "insert into employeesalary(toemployeeid,amount,details,orgid,createdbyid,includeincalc) " +
                         "values(:toEmployeeID,:amount,:details,:orgId,:createdbyId,:includeInCalc)",
-                new BeanPropertySqlParameterSource(employeeSalaryBean))!=0)
+                new BeanPropertySqlParameterSource(employeeSalaryBean)) != 0)
             return true;
         else
             return false;
@@ -103,10 +98,26 @@ public class EmployeeDAO {
         if (namedParameterJdbcTemplate.update("insert into employeesalarypayment(fromaccountid," +
                 "amount,details,toemployeeid,fromemployeeid,orgid,includeincalc,createdbyid) values(:fromAccountId," +
                 ":amount" +
-                ",:details,:toEmployeeId,:fromEmployeeId,:orgId,:includeInCalc,:createdbyId)",new BeanPropertySqlParameterSource
-                (employeeSalaryPaymentBean))!=0)
+                ",:details,:toEmployeeId,:fromEmployeeId,:orgId,:includeInCalc,:createdbyId)", new BeanPropertySqlParameterSource
+                (employeeSalaryPaymentBean)) != 0)
             return true;
         else
             return false;
     }
+
+    /*
+        This method will mainly used by UI to search for employee in the Employee module
+        orgID: mandatory: if not provided return error
+        firstName: can be empty
+        lastName: can be empty
+        Main Logic:
+        -------------
+        (Search at-least by orgId) AND (if firstName OR lastName) provided then try to search using those as well. Please do not forget to use %LIKE% for names
+        Return: EmployeeBean with only EmployeeID, First, LastName populated (Nothing else, for the optimization we are doing this)
+     */
+
+    public List<EmployeeBean> searchEmployees(long orgId, String firstName, String lastName) {
+        return null;
+    }
+
 }

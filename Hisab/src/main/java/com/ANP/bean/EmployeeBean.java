@@ -17,6 +17,13 @@ public class EmployeeBean extends CommonAttribute {
     private float currentAccountBalance;
     private boolean loginrequired;
 
+    /*
+    This method will be used for displaying in the UI
+     */
+    public String getDisplayName() {
+        return this.first + " " + this.last;
+    }
+
     public float getCurrentAccountBalance() {
         return currentAccountBalance;
     }
