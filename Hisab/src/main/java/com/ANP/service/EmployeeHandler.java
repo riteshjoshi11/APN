@@ -78,9 +78,12 @@ public class EmployeeHandler {
         //TODO Joshi: Call EmployeeDAO:create
         // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
         // In a Transaction
-        employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean);
         employeeDAO.UpdateEmpSalaryBalance(employeeSalaryPaymentBean.getToEmployeeId(),employeeSalaryPaymentBean.getAmount(), "SUBTRACT" );
-        return false;
+        if(employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean))
+            return true;
+        else
+            return false;
+
     }
 
 }

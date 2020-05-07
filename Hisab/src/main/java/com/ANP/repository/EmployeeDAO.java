@@ -78,10 +78,6 @@ public class EmployeeDAO {
         else
             n = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
                     "- :balance where toemployeeid = :toemployeeid",in);
-
-
-
-        // System.out.println(in.getValue("a"));
         if(n!=0)
             return true;
         else

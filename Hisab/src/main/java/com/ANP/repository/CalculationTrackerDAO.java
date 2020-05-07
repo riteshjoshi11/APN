@@ -38,5 +38,4 @@ public class CalculationTrackerDAO {
             return calculationTrackerBean;
         }
     }
-
 }

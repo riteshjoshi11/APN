@@ -11,6 +11,8 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     private String fromEmployeeId;
     private long salaryPaymentID;
 
+    private boolean includeInCalc;
+
     public long getSalaryPaymentID() {
         return salaryPaymentID;
     }
@@ -65,5 +67,13 @@ public class EmployeeSalaryPayment extends CommonAttribute {
 
     public void setFromEmployeeId(String fromEmployeeId) {
         this.fromEmployeeId = fromEmployeeId;
+    }
+
+    public boolean isIncludeInCalc() {
+        return includeInCalc;
+    }
+
+    public void setIncludeInCalc(boolean includeInCalc) {
+        this.includeInCalc = includeInCalc;
     }
 }
