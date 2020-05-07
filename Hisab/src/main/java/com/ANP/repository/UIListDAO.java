@@ -13,15 +13,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class MasterDao {
+public class UIListDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    public List<City> getCity(){
 
+    public List<City> getCity() {
         return namedParameterJdbcTemplate.query(
-                "select * from city ",new CityMapper());
+                "select * from city ", new CityMapper());
     }
+
     public int createCity(City city) {
         return namedParameterJdbcTemplate.update(
                 "insert into city (name) values(:name)",
@@ -37,12 +38,11 @@ public class MasterDao {
         }
     }
 
-
-    public List<ExpenseCategory> getExpenseCategory(){
-
+    public List<ExpenseCategory> getExpenseCategory() {
         return namedParameterJdbcTemplate.query(
-                "select * from expense_cat ",new ExpenseCatMapper());
+                "select * from expense_cat ", new ExpenseCatMapper());
     }
+
     public int createExpenseCat(ExpenseCategory expenseCategory) {
         return namedParameterJdbcTemplate.update(
                 "insert into expense_cat (name) values(:name)",
@@ -56,6 +56,4 @@ public class MasterDao {
             return obj;
         }
     }
-
-
 }
