@@ -14,6 +14,7 @@ public class LoginController {
     @Autowired
     LoginHandler loginHandler;
 
+    @PostMapping(path = "/getUserRegistrationStatusOnVerifiedOTP", produces = "application/json" )
     public boolean sendOTP(String mobileNumber) {
         return loginHandler.sendOTP(mobileNumber);
     }
