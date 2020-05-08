@@ -22,7 +22,7 @@ public class OrgDAO {
 
     public int createOrganization(Organization organization) {
         return namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
-                "values (:orgName,:state,city)", new BeanPropertySqlParameterSource(organization));
+                "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization));
     }
 
     public Organization getOrganization(Long id) {
