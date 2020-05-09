@@ -109,8 +109,8 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/getExpenseCategories", produces = "application/json")
-    public List<AccountBean> getAccountsByNickName(@RequestParam long orgId, @RequestParam String nickName) {
-        return accountDAO.searchAccounts(orgId,nickName);
+    public List<AccountBean> getAccountsByNickName(@RequestBody AccountBean accountBean) {
+        return accountDAO.searchAccounts(accountBean);
     }
 
 }

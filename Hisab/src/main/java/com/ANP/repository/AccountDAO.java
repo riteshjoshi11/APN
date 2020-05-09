@@ -1,13 +1,17 @@
 package com.ANP.repository;
 
 import com.ANP.bean.AccountBean;
-import com.ANP.bean.EmployeeBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -15,6 +19,15 @@ public class AccountDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
 
     public boolean createAccount(AccountBean accountBean) {
         boolean result = false;
@@ -50,8 +63,14 @@ public class AccountDAO {
         // 2. New account:currentBalance= currentBalance (operations +/-) Balance
     }
 
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
-     /*
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    /*
         This method will mainly used by UI to search for Accounts in almost all forms
         orgID: mandatory: if not provided return error
         nickName: can be empty
@@ -62,9 +81,31 @@ public class AccountDAO {
         Return: List:AccountBean with only AccountID, OwnerID, NickName populated (Nothing else, for the optimization we are doing this)
      */
 
-    public List<AccountBean> searchAccounts(long orgId, String nickName) {
-        return null;
+    public List<AccountBean> searchAccounts(AccountBean accountBean) {
+        System.out.println(accountBean.getOrgId());
+        if(accountBean.getOrgId()==0)
+            throw new java.lang.RuntimeException("orgId is mandatory");
+
+        String orgId = Long.toString(accountBean.getOrgId());
+        String accountnickname = accountBean.getAccountnickname();
+
+        if(accountnickname==null)
+            accountnickname = "";
+
+        List<AccountBean> accountBeanList=
+                jdbcTemplate.query("select * from account where accountnickname like ? and orgid = ?",
+                        new String[]{"%"+accountnickname+"%",orgId}
+                        ,new AccountMapper());
+            return accountBeanList;
+        }
+    private static final class AccountMapper implements RowMapper<AccountBean> {
+        public AccountBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AccountBean accbean = new AccountBean();
+            accbean.setOwnerid(rs.getString("ownerid"));
+            accbean.setAccountnickname(rs.getString("accountnickname"));
+         //   accbean.setOrgId(rs.getLong("orgid"));
+            accbean.setAccountId(rs.getLong("id"));
+            return accbean;
+        }
     }
-
-
 }

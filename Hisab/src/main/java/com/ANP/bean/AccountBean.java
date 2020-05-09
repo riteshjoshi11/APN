@@ -10,6 +10,11 @@ public class AccountBean extends CommonAttribute {
     private double currentbalance;
     private double lastbalance;
     private String createdate;
+    private long accountId;
+
+    public long getAccountId(){return  accountId;}
+
+    public void setAccountId(long accountId){this.accountId = accountId;}
 
     public String getOwnerid() {
         return ownerid;

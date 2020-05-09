@@ -102,9 +102,9 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/getEmployeeListByName", produces = "application/json")
-    public List<EmployeeBean> getEmployeeListByName (@RequestParam long orgID, @RequestParam String firstName, @RequestParam String lastName)
+    public List<EmployeeBean> getEmployeeListByName (@RequestBody EmployeeBean employeeBean)
     {
-        return employeeDAO.searchEmployees(orgID,firstName,lastName);
+        return employeeDAO.searchEmployees(employeeBean);
     }
 
 }

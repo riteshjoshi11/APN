@@ -4,12 +4,15 @@ import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.EmployeeSalary;
 import com.ANP.bean.EmployeeSalaryPayment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,12 @@ import java.util.Map;
 public class EmployeeDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+    private JdbcTemplate jdbcTemplate;
 
     public int createEmployee(EmployeeBean employeeBean) {
 
@@ -116,8 +125,35 @@ public class EmployeeDAO {
         Return: EmployeeBean with only EmployeeID, First, LastName populated (Nothing else, for the optimization we are doing this)
      */
 
-    public List<EmployeeBean> searchEmployees(long orgId, String firstName, String lastName) {
-        return null;
+    public List<EmployeeBean> searchEmployees(EmployeeBean employeeBean) {
+
+        if(employeeBean.getOrgId()==0)
+            throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+        System.out.println(employeeBean.getOrgId());
+        String orgId = Long.toString(employeeBean.getOrgId());
+        String firstName = employeeBean.getFirst();
+        String lastName = employeeBean.getLast();
+        if(firstName==null)
+            firstName = "";
+        if(lastName==null)
+            lastName = "";
+        List<EmployeeBean> employeeBeanList=
+                jdbcTemplate.query("select * from employee where orgid = ? and (first" +
+                                " like ? or last like ?)  ",
+                        new String[]{orgId,"%"+firstName+"%","%"+lastName+"%"}
+                        ,new EmployeeDAO.EmployeeMapper());
+        return employeeBeanList;
+    }
+
+    private static final class EmployeeMapper implements RowMapper<EmployeeBean> {
+        public EmployeeBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeBean empbean = new EmployeeBean();
+            empbean.setFirst(rs.getString("first"));
+            empbean.setLast(rs.getString("last"));
+            empbean.setEmployeeId(rs.getString("id"));
+ //           empbean.setOrgId(rs.getLong("orgid"));
+            return empbean;
+        }
     }
 
 }
