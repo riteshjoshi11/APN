@@ -1,6 +1,7 @@
 package com.ANP.service;
 
 import com.ANP.bean.*;
+import com.ANP.repository.AccountDAO;
 import com.ANP.repository.CustomerDao;
 import com.ANP.repository.OrgDAO;
 import com.ANP.util.ANPConstants;
@@ -17,6 +18,8 @@ public class LoginHandler {
     OrgDAO orgDAO;
     @Autowired
     CustomerDao customerDao;
+    @Autowired
+    AccountDAO accountDAO;
 
 
     /*
@@ -57,6 +60,10 @@ public class LoginHandler {
         }
         intermediateLoginBean.setLoginVerified(loginVerified);
         return intermediateLoginBean;
+    }
+
+    public SuccessLoginBean getLoggedInUserDetails(String mobileNumber,long orgId) {
+        return accountDAO.getUserDetails(mobileNumber,orgId);
     }
 
 }

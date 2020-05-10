@@ -1,23 +1,45 @@
 package com.ANP.bean;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class SuccessLoginBean extends CommonAttribute {
+public class SuccessLoginBean {
+    private Organization organization;
+    private AccountBean accountBean;
+    private EmployeeBean employeeBean;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    String OrgID;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    public AccountBean getAccountBean() {
+        return accountBean;
+    }
+
+    public void setAccountBean(AccountBean accountBean) {
+        this.accountBean = accountBean;
+    }
+
+    public EmployeeBean getEmployeeBean() {
+        return employeeBean;
+    }
+
+    public void setEmployeeBean(EmployeeBean employeeBean) {
+        this.employeeBean = employeeBean;
+    }
+
     String LoggedInUserID; //=Employee: username
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
     String LoggedInUserType; //=Customer/Employee
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
     String loggedInUserAccountID;//Account:AccountID
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
     String LoggedInEmployeeID;//EMployee:EmployeeID
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    String loginUserName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    String orgName;
+
+
+/*
 
     public String getOrgName() {
         return orgName;
@@ -70,4 +92,6 @@ public class SuccessLoginBean extends CommonAttribute {
     public void setOrgID(String orgID) {
         OrgID = orgID;
     }
+
+ */
 }

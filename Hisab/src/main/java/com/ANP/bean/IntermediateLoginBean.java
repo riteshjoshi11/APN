@@ -1,4 +1,5 @@
 package com.ANP.bean;
+
 import java.util.List;
 
 public class IntermediateLoginBean {

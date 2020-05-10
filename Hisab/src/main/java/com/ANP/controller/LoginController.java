@@ -2,12 +2,13 @@ package com.ANP.controller;
 
 import com.ANP.bean.IntermediateLoginBean;
 import com.ANP.bean.OTPBean;
+import com.ANP.bean.SuccessLoginBean;
 import com.ANP.repository.OTPDAO;
 import com.ANP.service.LoginHandler;
-import com.ANP.service.OTPHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,7 +22,7 @@ public class LoginController {
     OTPDAO otpdao;
 
     @PostMapping(path = "/sendOTP", produces = "application/json" )
-    public boolean sendOTP(String mobileNumber) {
+    public boolean sendOTP(@RequestParam String mobileNumber) {
         return loginHandler.sendOTP(mobileNumber);
     }
 
@@ -34,8 +35,16 @@ public class LoginController {
         Once mobile number is verified using OTP then this method will be invoked by UI.
      */
     @PostMapping(path = "/getUserRegistrationStatusOnVerifiedOTP", produces = "application/json" )
-    public IntermediateLoginBean getUserRegistrationStatusOnVerifiedOTP(String mobileNumber) {
+    public IntermediateLoginBean getUserRegistrationStatusOnVerifiedOTP(@RequestParam String mobileNumber) {
         return loginHandler.isMobileRegistered(mobileNumber);
     }
 
-  }
+    /*
+    Once user has either selected his/her organization from the one or more organization, this will give the details of that organization.
+    */
+    @PostMapping(path = "/getLoggedInUserDetails", produces = "application/json" )
+    public SuccessLoginBean getLoggedInUserDetails(@RequestParam  String mobileNumber, @RequestParam long orgId) {
+        return loginHandler.getLoggedInUserDetails(mobileNumber,orgId);
+    }
+
+}

@@ -1,6 +1,9 @@
 package com.ANP.repository;
 
 import com.ANP.bean.AccountBean;
+import com.ANP.bean.EmployeeBean;
+import com.ANP.bean.Organization;
+import com.ANP.bean.SuccessLoginBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -112,6 +115,36 @@ public class AccountDAO {
             return accbean;
         }
     }
+/*
+    TODO: Paras : Please write a single method querying three table Organization, Employee, Account
+    and Build Organization, Employee, Account and Set into the respective beans inside the Success Login Bean
 
+ */
+    public SuccessLoginBean getUserDetails(String mobileNumber, long orgId) {
+        /*
+        Make a query here with three tables
+         */
+        SuccessLoginBean successLoginBean = new SuccessLoginBean();
+        EmployeeBean employeeBean = new EmployeeBean() ;
+        /*
+            Process Result and set the respective values into the employeeBean
+         */
+        successLoginBean.setEmployeeBean(employeeBean);
+
+
+        AccountBean accountBean = new AccountBean();
+         /*
+           Further Process the Result and set the respective values into the AccountBean
+         */
+        successLoginBean.setAccountBean(accountBean);
+
+
+        Organization organizationBean = new Organization();
+          /*
+            Further Process the  Result and set the respective values into the OrganizationBean
+         */
+        successLoginBean.setOrganization(organizationBean);
+        return successLoginBean;
+    }
 
 }
