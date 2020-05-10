@@ -1,5 +1,7 @@
 package com.ANP.bean;
 
+import com.ANP.util.ANPUtils;
+
 import java.util.Date;
 
 public class Expense extends CommonAttribute {
@@ -19,6 +21,24 @@ public class Expense extends CommonAttribute {
     private double SGST;
     private double IGST;
     private double extra;
+    private String toPartyGSTNO;
+    private String toPartyMobileNO;
+
+    public String getToPartyGSTNO() {
+        return toPartyGSTNO;
+    }
+
+    public void setToPartyGSTNO(String toPartyGSTNO) {
+        this.toPartyGSTNO = toPartyGSTNO;
+    }
+
+    public String getToPartyMobileNO() {
+        return toPartyMobileNO;
+    }
+
+    public void setToPartyMobileNO(String toPartyMobileNO) {
+        this.toPartyMobileNO = toPartyMobileNO;
+    }
 
     public long getExpenseId() {
         return expenseId;
@@ -65,7 +85,8 @@ public class Expense extends CommonAttribute {
     }
 
     public void setToPartyName(String toPartyName) {
-        this.toPartyName = toPartyName;
+        if(!ANPUtils.isNullOrEmpty(toPartyName))
+        this.toPartyName = toPartyName.toUpperCase();
     }
 
     public long getFromAccountID() {

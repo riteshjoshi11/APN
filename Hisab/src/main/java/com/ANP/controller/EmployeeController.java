@@ -101,6 +101,16 @@ public class EmployeeController {
         return responseEntity;
     }
 
+    /*
+       This method will mainly used by UI fill Employee List in the Employee Module
+       orgID: mandatory: if not provided return error
+       firstName: can be empty
+       lastName: can be empty
+       Main Logic:
+       -------------
+       (Search at-least by orgId) AND (if firstName OR lastName) provided then try to search using those as well. Please do not forget to use %LIKE% for names
+       Return: EmployeeBean with only EmployeeID, First, LastName populated (Nothing else, for the optimization we are doing this)
+    */
     @PostMapping(path = "/getEmployeeListByName", produces = "application/json")
     public List<EmployeeBean> getEmployeeListByName (@RequestBody EmployeeBean employeeBean)
     {

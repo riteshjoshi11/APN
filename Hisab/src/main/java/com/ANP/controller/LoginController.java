@@ -25,11 +25,14 @@ public class LoginController {
         return loginHandler.sendOTP(mobileNumber);
     }
 
-    @PostMapping(path = "/getUserRegistrationStatusOnVerifiedOTP", produces = "application/json" )
+    @PostMapping(path = "/verifyOTP", produces = "application/json" )
     public boolean verifyOTP(OTPBean otpBean) {
         return otpdao.validateOTP(otpBean);
     }
 
+    /*
+        Once mobile number is verified using OTP then this method will be invoked by UI.
+     */
     @PostMapping(path = "/getUserRegistrationStatusOnVerifiedOTP", produces = "application/json" )
     public IntermediateLoginBean getUserRegistrationStatusOnVerifiedOTP(String mobileNumber) {
         return loginHandler.isMobileRegistered(mobileNumber);

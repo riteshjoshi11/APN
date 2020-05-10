@@ -19,7 +19,7 @@ public class DeliveryController {
     DeliveryDAO deliveryDAO;
 
     @PostMapping(path = "/createDelivery", produces = "application/json")
-    public ResponseEntity createEmployee(@RequestBody DeliveryBean deliveryBean) {
+    public ResponseEntity createDelivery(@RequestBody DeliveryBean deliveryBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isDeliveryCreated = deliveryDAO.createDelivery(deliveryBean);
         if (isDeliveryCreated) {

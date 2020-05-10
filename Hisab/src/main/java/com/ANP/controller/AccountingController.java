@@ -20,7 +20,7 @@ public class AccountingController {
     AccountingHandler accountingHandler;
 
     @Autowired
-    private ExpenseDAO expenseDao;
+    ExpenseDAO expenseDao;
 
     @Autowired
     AccountDAO accountDAO;
@@ -108,9 +108,24 @@ public class AccountingController {
         return responseEntity;
     }
 
-    @PostMapping(path = "/getExpenseCategories", produces = "application/json")
+    @PostMapping(path = "/getAccountsByNickName", produces = "application/json")
     public List<AccountBean> getAccountsByNickName(@RequestBody AccountBean accountBean) {
         return accountDAO.searchAccounts(accountBean);
     }
 
+    @PostMapping(path = "/searchExpenseByToPartyName", produces = "application/json")
+    public List<Expense> searchExpenseByToPartyName(@RequestParam String toPartyname, @RequestParam long orgId) {
+        List<Expense> expenses = expenseDao.findExpenseByToPartyName(toPartyname, orgId);
+        return expenses;
+    }
+
+    /*
+        TODO Paras: Please complete this method
+     */
+
+    @PostMapping(path = "/updateIncludeInCAReport", produces = "application/json")
+    public ResponseEntity updateIncludeInCAReport(@RequestParam long expenseID, @RequestParam boolean CASwtich) {
+        expenseDao.updateIncludeInCAReport(expenseID,CASwtich);
+        return  new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }

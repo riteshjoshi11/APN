@@ -24,6 +24,7 @@ public class AccountDAO {
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -33,7 +34,7 @@ public class AccountDAO {
         boolean result = false;
         int accountCreated = namedParameterJdbcTemplate.update(
                 "insert into account (ownerid,accountnickname,type,details,currentbalance,lastbalance,orgid,createdbyid)" +
-                               " values(:ownerid,:accountnickname,:type,:details,:currentbalance,:lastbalance,:orgId,:createdbyId)",
+                        " values(:ownerid,:accountnickname,:type,:details,:currentbalance,:lastbalance,:orgId,:createdbyId)",
                 new BeanPropertySqlParameterSource(accountBean));
         if (accountCreated > 0) {
             result = true;
@@ -47,14 +48,14 @@ public class AccountDAO {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", accountId);
         in.addValue("balance", balance);
-        if(operation.equals("add") )
-           n = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
-                    "+ :balance  where id = :id, ",in);
+        if (operation.equals("add"))
+            n = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
+                    "+ :balance  where id = :id, ", in);
         else
             n = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
-                    "- :balance  where id = :id, ",in);
+                    "- :balance  where id = :id, ", in);
 
-        if(n!=0)
+        if (n != 0)
             return true;
         else
             return false;
@@ -83,29 +84,34 @@ public class AccountDAO {
 
     public List<AccountBean> searchAccounts(AccountBean accountBean) {
         System.out.println(accountBean.getOrgId());
-        if(accountBean.getOrgId()==0)
+        if (accountBean.getOrgId() == 0) {
             throw new java.lang.RuntimeException("orgId is mandatory");
+        }
 
         String orgId = Long.toString(accountBean.getOrgId());
         String accountnickname = accountBean.getAccountnickname();
 
-        if(accountnickname==null)
+        if (accountnickname == null) {
             accountnickname = "";
-
-        List<AccountBean> accountBeanList=
-                jdbcTemplate.query("select * from account where accountnickname like ? and orgid = ?",
-                        new String[]{"%"+accountnickname+"%",orgId}
-                        ,new AccountMapper());
-            return accountBeanList;
         }
+
+        List<AccountBean> accountBeanList =
+                jdbcTemplate.query("select id,ownerid,accountnickname from account where accountnickname like ? and orgid = ?",
+                        new String[]{"%" + accountnickname + "%", orgId}
+                        , new AccountMapper());
+        return accountBeanList;
+    }
+
     private static final class AccountMapper implements RowMapper<AccountBean> {
         public AccountBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             AccountBean accbean = new AccountBean();
             accbean.setOwnerid(rs.getString("ownerid"));
             accbean.setAccountnickname(rs.getString("accountnickname"));
-         //   accbean.setOrgId(rs.getLong("orgid"));
+            //   accbean.setOrgId(rs.getLong("orgid"));
             accbean.setAccountId(rs.getLong("id"));
             return accbean;
         }
     }
+
+
 }
