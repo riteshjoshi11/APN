@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class OTPDAO {
@@ -36,6 +37,12 @@ public class OTPDAO {
         if(otpBeanList!=null && otpBeanList.size()>0) {
             java.util.Date generatedTimeFromDB =  otpBeanList.get(1).getTimeGenerated();
             //TODO for Paras: compare generatedTimeFromDB is less than 10 min from the current system timestamp
+            Date dateNow = new Date();
+            long timeDiff = dateNow.getTime() - generatedTimeFromDB.getTime();
+            long timeDiffInMinutes = TimeUnit.MILLISECONDS.toMinutes(timeDiff);
+            if(timeDiffInMinutes<10) {
+                otpValid = true;
+            }
             //If yes then set true else false
         }
         return otpValid;
