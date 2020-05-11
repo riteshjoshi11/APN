@@ -97,6 +97,7 @@ public class CustomerDao {
             cus.setFirmname(rs.getString("customer.firmname"));
             cus.setBillingadress(rs.getString("customer.billingadress"));
             cus.setOrgId(rs.getLong("customer.orgid"));
+            cus.setSendPaymentReminders(rs.getBoolean("sendPaymentReminders"));
             cus.setAccountBalance(rs.getFloat("account.currentbalance"));
             return cus;
         }
