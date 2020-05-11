@@ -138,7 +138,7 @@ public class EmployeeDAO {
         if(lastName==null)
             lastName = "";
         List<EmployeeBean> employeeBeanList=
-                jdbcTemplate.query("select * from employee where orgid = ? and (first" +
+                jdbcTemplate.query("select first,last,id from employee where orgid = ? and (first" +
                                 " like ? or last like ?)  ",
                         new String[]{orgId,"%"+firstName+"%","%"+lastName+"%"}
                         ,new EmployeeDAO.EmployeeMapper());
