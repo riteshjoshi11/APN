@@ -11,6 +11,25 @@ public class CustomerBean extends CommonAttribute {
     private String billingadress;
     private String customerID;
     private double initialBalance = 0;
+    private boolean sendPaymentReminders;
+    //This is account attribute
+    private double accountBalance;
+
+    public double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
+    public boolean isSendPaymentReminders() {
+        return sendPaymentReminders;
+    }
+
+    public void setSendPaymentReminders(boolean sendPaymentReminders) {
+        this.sendPaymentReminders = sendPaymentReminders;
+    }
 
     public String getCustomerID() {
         return customerID;

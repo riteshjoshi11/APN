@@ -1,6 +1,8 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerBean;
+import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -10,10 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class CustomerDao {
@@ -21,20 +20,6 @@ public class CustomerDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<CustomerBean> getCustomer() {
-        List<CustomerBean> customerBeans = new ArrayList<CustomerBean>();
-        CustomerBean cu1 = new CustomerBean();
-        cu1.setName("Ritesh");
-        cu1.setCity("test dummy");
-        cu1.setOrgId(1);
-        CustomerBean cu2 = new CustomerBean();
-        cu2.setName("Nitesh");
-        cu2.setCity("test dummy2");
-        cu2.setOrgId(2);
-        customerBeans.add(cu1);
-        customerBeans.add(cu2);
-        return customerBeans;
-    }
 
     public int createCustomer(CustomerBean customerBean) {
         System.out.println("customer " + customerBean.getName());
@@ -50,23 +35,7 @@ public class CustomerDao {
         int updated = namedParameterJdbcTemplate.update(sql
                 , new BeanPropertySqlParameterSource(customerBean));
 
-
         return updated;
-    }
-
-    public List<CustomerBean> findByNameAndCity(CustomerBean customerBean) {
-        String where = "";
-        if (null != customerBean.getName() && (null != customerBean.getCity())) {
-            where = "name = :name and city =:city";
-        } else if (null != customerBean.getName()) {
-            where = "name = :name";
-        } else if (null != customerBean.getCity()) {
-            where = "city =:city";
-        }
-
-        return namedParameterJdbcTemplate.query(
-                "select * from customer where " + where,
-                new BeanPropertySqlParameterSource(customerBean), new CustomerMapper());
     }
 
     private static final class CustomerMapper implements RowMapper<CustomerBean> {
@@ -79,6 +48,9 @@ public class CustomerDao {
         }
     }
 
+    /*
+     * This method is used during the login process if a user is being login as customer
+     */
     public CustomerBean getCustomerUsingMobile1(String mobile) {
         CustomerBean customerBean = null;
         Map<String, Object> param = new HashMap<String, Object>();
@@ -86,9 +58,49 @@ public class CustomerDao {
 
         List<CustomerBean> customerBeanList = namedParameterJdbcTemplate.query("select * from customer where mobile1=:mobileNumber",
                 param, new CustomerMapper());
-        if(customerBeanList!=null&&customerBeanList.size()>0) {
-            customerBean=customerBeanList.get(0);
+        if (customerBeanList != null && customerBeanList.size() > 0) {
+            customerBean = customerBeanList.get(0);
         }
-        return  customerBean;
+        return customerBean;
     }
+
+    /*
+     * This is one of the important method for the UI to list customer and vendor with their account balance
+     * 1. Join Customer and Account Table on Customer.CustomerId=Account.OwnerID
+     * 2. orgId is mandatory AND Condition
+     * 3. Add other search parameters as those are coming as part of search
+     * 4. searchParam is generic implementation
+     * Please note - this method supports pagination
+     * order By (asc,desc) will be added
+     */
+    public List<CustomerBean> listCustomerVendorsWithBalance(long orgID, Collection<SearchParam> searchParams, String orderBy, int pageStartIndex, int pageEndIndex) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgID", orgID);
+
+        return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
+                         " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
+                           ANPUtils.getWhereClause(searchParams) + " order by" + orderBy,
+                           param, new FullCustomerMapper()) ;
+    }
+
+
+    private static final class FullCustomerMapper implements RowMapper<CustomerBean> {
+        public CustomerBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CustomerBean cus = new CustomerBean();
+            cus.setCustomerID(rs.getString("customer.id"));
+            cus.setName(rs.getString("customer.name"));
+            cus.setCity(rs.getString("customer.city"));
+            cus.setGstin(rs.getString("customer.gstin"));
+            cus.setTransporter(rs.getString("customer.transporter"));
+            cus.setMobile1(rs.getString("customer.mobile1"));
+            cus.setMobile2(rs.getString("customer.mobile2"));
+            cus.setFirmname(rs.getString("customer.firmname"));
+            cus.setBillingadress(rs.getString("customer.billingadress"));
+            cus.setOrgId(rs.getLong("customer.orgid"));
+            cus.setAccountBalance(rs.getFloat("account.currentbalance"));
+            return cus;
+        }
+    }
+
+
 }
