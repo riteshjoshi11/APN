@@ -4,6 +4,7 @@ import com.ANP.bean.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -99,7 +100,14 @@ public class ExpenseDAO {
          you need to update Expense Table:IncludeInCAReport field with the passed value
      */
     public boolean updateIncludeInCAReport(long expenseID, boolean caSwitch) {
-        return false;
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", expenseID);
+        parameterSource.addValue("caSwitch", caSwitch);
+       if (namedParameterJdbcTemplate.update("update generalexpense set includeinreport = :caSwitch where id = :id", parameterSource)!= 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -107,8 +115,14 @@ public class ExpenseDAO {
           you need to update Expense Table:includeInCalc field with the passed value
     */
     public boolean updateIncludeInCalc(long expenseID,boolean includeInCalcSwtich) {
-        return false;
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", expenseID);
+        parameterSource.addValue("includeInCalcSwtich", includeInCalcSwtich);
+        if (namedParameterJdbcTemplate.update("update generalexpense set includeincalc = :includeInCalcSwtich where id = :id", parameterSource)!= 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
-
 }

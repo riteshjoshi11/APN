@@ -125,7 +125,15 @@ public class AccountingController {
 
     @PostMapping(path = "/updateIncludeInCAReport", produces = "application/json")
     public ResponseEntity updateIncludeInCAReport(@RequestParam long expenseID, @RequestParam boolean CASwtich) {
-        expenseDao.updateIncludeInCAReport(expenseID,CASwtich);
-        return  new ResponseEntity<>("Success", HttpStatus.OK);
+        ResponseEntity<String> responseEntity = null;
+        if(expenseDao.updateIncludeInCAReport(expenseID,CASwtich)){
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        }
+        else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+        }
+        return responseEntity;
     }
+
+
 }

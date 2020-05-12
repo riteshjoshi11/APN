@@ -1,9 +1,6 @@
 package com.ANP.repository;
 
-import com.ANP.bean.AccountBean;
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.Organization;
-import com.ANP.bean.SuccessLoginBean;
+import com.ANP.bean.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class AccountDAO {
@@ -115,6 +113,48 @@ public class AccountDAO {
             return accbean;
         }
     }
+
+    private static final class userDetailMapper implements RowMapper<UserDetailBean> {
+        public UserDetailBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+            UserDetailBean userDetailBean = new UserDetailBean();
+
+
+            userDetailBean.setEmployeeId(rs.getString("employee.id"));
+            userDetailBean.setFirst(rs.getString("employee.first"));
+            userDetailBean.setLast(rs.getString("employee.last"));
+            userDetailBean.setMobile(rs.getString("employee.mobile"));
+         //   userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
+         //   userDetailBean.setType(rs.getString("employee.type"));
+            userDetailBean.setLoginusername(rs.getString("employee.loginusername"));
+            userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
+            userDetailBean.setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
+
+
+            //organizationbean
+            userDetailBean.setOrgName(rs.getString("organization.orgname"));
+            userDetailBean.setCity(rs.getString("organization.city"));
+            userDetailBean.setState(rs.getString("organization.state"));
+            userDetailBean.setOrgId(rs.getLong("organization.id"));
+
+
+            //accountbean
+            userDetailBean.setAccountId(rs.getLong("account.id"));
+            userDetailBean.setOwnerid(rs.getString("account.ownerid"));
+            userDetailBean.setAccountnickname(rs.getString("account.accountnickname"));
+//          userDetailBean.setType(rs.getString("account.type"));
+//          userDetailBean.setDetails(rs.getString("account.details"));
+//          userDetailBean.setOrgId(rs.getLong("account.orgid"));
+            userDetailBean.setCreatedbyid(rs.getString("account.createdbyid"));
+            userDetailBean.setCurrentbalance(rs.getDouble("account.currentbalance"));
+            userDetailBean.setLastbalance(rs.getDouble("account.lastbalance"));
+
+
+            return userDetailBean;
+        }
+
+
+    }
 /*
     TODO: Paras : Please write a single method querying three table Organization, Employee, Account
     and Build Organization, Employee, Account and Set into the respective beans inside the Success Login Bean
@@ -124,27 +164,70 @@ public class AccountDAO {
         /*
         Make a query here with three tables
          */
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("mobileNumber", mobileNumber);
+        in.addValue("orgId", orgId);
+
+        List<UserDetailBean> userDetailBeanList =  namedParameterJdbcTemplate.query(
+                "select account.id,account.ownerid,account.accountnickname,account.createdbyid" +
+                        ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
+                        ", employee.last, employee.mobile, employee.loginusername, employee.currentsalarybalance" +
+                        ",employee.lastsalarybalance, organization.id, organization.orgname" +
+                        ", organization.state, organization.city from organization,employee,account where " +
+                        "employee.id = account.ownerid" +
+                        " and employee.orgid = organization.id and employee.mobile = :mobileNumber and " +
+                        "employee.orgid = :orgId",
+                in, new userDetailMapper());
+
+
+        UserDetailBean userDetailBean = userDetailBeanList.get(0);
+        EmployeeBean employeeBean = new EmployeeBean();
         SuccessLoginBean successLoginBean = new SuccessLoginBean();
-        EmployeeBean employeeBean = new EmployeeBean() ;
-        /*
-            Process Result and set the respective values into the employeeBean
-         */
+
+        //  Further Process the  Result and set the respective values into the EmployeeBean
+
+        employeeBean.setEmployeeId(userDetailBean.getEmployeeId());
+        employeeBean.setFirst(userDetailBean.getFirst());
+        employeeBean.setLast(userDetailBean.getLast());
+        employeeBean.setMobile(userDetailBean.getMobile());
+        employeeBean.setLoginusername(userDetailBean.getLoginusername());
+        employeeBean.setOrgId(userDetailBean.getOrgId());
+
+        //employeeBean.setLoginrequired(userDetailBean.getLoginrequired());
+
+        employeeBean.setCurrentsalarybalance(userDetailBean.getCurrentsalarybalance());
+        employeeBean.setLastsalarybalance(userDetailBean.getLastsalarybalance());
         successLoginBean.setEmployeeBean(employeeBean);
 
+        //  Further Process the  Result and set the respective values into the AccountBean
 
         AccountBean accountBean = new AccountBean();
-         /*
-           Further Process the Result and set the respective values into the AccountBean
-         */
+
+        accountBean.setAccountId(userDetailBean.getAccountId());
+        accountBean.setOwnerid(userDetailBean.getOwnerid());
+        accountBean.setAccountnickname(userDetailBean.getAccountnickname());
+        accountBean.setCreatedbyid(userDetailBean.getCreatedbyid());
+        accountBean.setCurrentbalance(userDetailBean.getCurrentbalance());
+        accountBean.setLastbalance(userDetailBean.getLastbalance());
+        accountBean.setOrgId(userDetailBean.getOrgId());
         successLoginBean.setAccountBean(accountBean);
 
+        /*
+            Further Process the  Result and set the respective values into the OrganizationBean
+        */
 
         Organization organizationBean = new Organization();
-          /*
-            Further Process the  Result and set the respective values into the OrganizationBean
-         */
+
+        organizationBean.setOrgId(userDetailBean.getOrgId());
+        organizationBean.setOrgName(userDetailBean.getOrgName());
+        organizationBean.setCity(userDetailBean.getCity());
+        organizationBean.setState(userDetailBean.getState());
+
+
         successLoginBean.setOrganization(organizationBean);
         return successLoginBean;
+
+
     }
 
 }
