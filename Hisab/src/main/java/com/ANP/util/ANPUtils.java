@@ -2,7 +2,10 @@ package com.ANP.util;
 
 import com.ANP.bean.SearchParam;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class ANPUtils implements ANPConstants {
@@ -28,7 +31,20 @@ public class ANPUtils implements ANPConstants {
      *
 
      */
-    public static String getWhereClause(final Collection<SearchParam> searchParam) {
-        return null ;
+    public static String getWhereClause(final Collection<SearchParam> searchParam)
+    {
+        String where=" ";
+        for (Object obj : searchParam) {
+                SearchParam searchParam1 = (SearchParam) obj;
+                String d = searchParam1.getValue();
+                if(searchParam1.getFieldType().equals("String")||searchParam1.getFieldType().equals("DATE"))
+                    d = "'"+d+"'";
+                where = where + " " + searchParam1.getCondition() + " " + searchParam1.getFieldName() + " " +
+                        searchParam1.getOperator() + " " +d;
+        }
+        if(where.equals(" ") )
+            where = null;
+        System.out.println(where);
+        return where ;
     }
 }
