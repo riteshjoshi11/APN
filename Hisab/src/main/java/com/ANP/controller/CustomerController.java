@@ -39,7 +39,7 @@ public class CustomerController {
     /*
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */
-    @PostMapping(path = "/listCustomerANDVendorWithBalance", produces = "application/json")
+    @PostMapping(path = "/listCustomerANDVendorWithBalancePaged", produces = "application/json")
     public List<CustomerBean> listCustomerANDVendorWithBalance(long orgID, Collection<SearchParam> searchParams,
                                                                String orderBy, int pageStartIndex, int pageEndIndex) {
         return customerDao.listCustomerVendorsWithBalance(orgID,searchParams,orderBy, pageStartIndex,pageEndIndex);

@@ -7,6 +7,19 @@ public class DeliveryBean extends  CommonAttribute {
     private java.util.Date date;
     private String toCustomerID;
     private String description;
+    private CustomerBean customerBean;
+
+    public DeliveryBean() {
+        customerBean = new CustomerBean();
+    }
+
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
 
     public long getDeliveryID() {
         return deliveryID;
