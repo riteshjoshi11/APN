@@ -34,29 +34,38 @@ public class ANPUtils implements ANPConstants {
     public static String getWhereClause(final Collection<SearchParam> searchParamCollection) {
         String where = "";
         if (searchParamCollection != null || !searchParamCollection.isEmpty()) {
-            for (Object obj : searchParamCollection) {
-                SearchParam searchParam = (SearchParam) obj;
+            for (SearchParam searchParam : searchParamCollection) {
                 String value = searchParam.getValue();
+
                 if (ANPConstants.SEARCH_FIELDTYPE_STRING.equalsIgnoreCase(searchParam.getFieldType())
                         || ANPConstants.SEARCH_FIELDTYPE_DATE.equalsIgnoreCase(searchParam.getFieldType())) {
                     value = "'" + value + "'";
-                    where = where + " " + searchParam.getCondition() + " " + searchParam.getFieldName() + " " +
-                            searchParam.getOperator() + " " + value;
                 }
+                where = where + " " + searchParam.getCondition() + " " + searchParam.getFieldName() + " " +
+                            searchParam.getOperator() + " " + value;
             }
         }
         return where;
     }
 
     public static void main(String argsp[]) {
+        Collection<SearchParam> l = new ArrayList();
         SearchParam searchParam = new SearchParam();
         searchParam.setCondition("OR");
         searchParam.setFieldName("city");
         searchParam.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
         searchParam.setOperator("=");
         searchParam.setValue("Pune");
-        Collection<SearchParam> l = new ArrayList();
+
         l.add(searchParam);
+
+        SearchParam searchParam1 = new SearchParam();
+        searchParam1.setCondition("AND");
+        searchParam1.setFieldName("city");
+        searchParam1.setFieldType("Number");
+        searchParam1.setOperator(">");
+        searchParam1.setValue("30000");
+        l.add(searchParam1);
         System.out.println(getWhereClause(l));
     }
 }
