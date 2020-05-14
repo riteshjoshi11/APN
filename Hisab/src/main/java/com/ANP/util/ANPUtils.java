@@ -4,14 +4,14 @@ import com.ANP.bean.SearchParam;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
-
+/*
+* this class is util class where all general purpose common method will be there.
+ */
 public class ANPUtils implements ANPConstants {
     public static boolean isNullOrEmpty(String str) {
-        boolean retValue=false;
-        if( str==null || (str.trim().length())==0) {
+        boolean retValue = false;
+        if (str == null || (str.trim().length()) == 0) {
             retValue = true;
         }
         return retValue;
@@ -31,20 +31,32 @@ public class ANPUtils implements ANPConstants {
      *
 
      */
-    public static String getWhereClause(final Collection<SearchParam> searchParam)
-    {
-        String where=" ";
-        for (Object obj : searchParam) {
-                SearchParam searchParam1 = (SearchParam) obj;
-                String d = searchParam1.getValue();
-                if(searchParam1.getFieldType().equals("String")||searchParam1.getFieldType().equals("DATE"))
-                    d = "'"+d+"'";
-                where = where + " " + searchParam1.getCondition() + " " + searchParam1.getFieldName() + " " +
-                        searchParam1.getOperator() + " " +d;
+    public static String getWhereClause(final Collection<SearchParam> searchParamCollection) {
+        String where = "";
+        if (searchParamCollection != null || !searchParamCollection.isEmpty()) {
+            for (Object obj : searchParamCollection) {
+                SearchParam searchParam = (SearchParam) obj;
+                String value = searchParam.getValue();
+                if (ANPConstants.SEARCH_FIELDTYPE_STRING.equalsIgnoreCase(searchParam.getFieldType())
+                        || ANPConstants.SEARCH_FIELDTYPE_DATE.equalsIgnoreCase(searchParam.getFieldType())) {
+                    value = "'" + value + "'";
+                    where = where + " " + searchParam.getCondition() + " " + searchParam.getFieldName() + " " +
+                            searchParam.getOperator() + " " + value;
+                }
+            }
         }
-        if(where.equals(" ") )
-            where = null;
-        System.out.println(where);
-        return where ;
+        return where;
+    }
+
+    public static void main(String argsp[]) {
+        SearchParam searchParam = new SearchParam();
+        searchParam.setCondition("OR");
+        searchParam.setFieldName("city");
+        searchParam.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam.setOperator("=");
+        searchParam.setValue("Pune");
+        Collection<SearchParam> l = new ArrayList();
+        l.add(searchParam);
+        System.out.println(getWhereClause(l));
     }
 }

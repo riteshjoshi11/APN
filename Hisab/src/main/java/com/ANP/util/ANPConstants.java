@@ -6,4 +6,7 @@ public interface ANPConstants {
       public static final String LOGIN_TYPE_EMPLOYEE="EMPLOYEE";
       public static final String LOGIN_TYPE_CUSTOMER="CUSTOMER";
 
+      public static final String SEARCH_FIELDTYPE_STRING="String" ;
+      public static final String SEARCH_FIELDTYPE_DATE="Date" ;
+
 }
