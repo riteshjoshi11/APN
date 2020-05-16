@@ -47,7 +47,7 @@ public class DeliveryDAO {
                         "customer.gstin,customer.mobile1,customer.firmname " +
                         " delivery.id, delivery.date,delivery.description " +
                         " from customer,delivery where customer.id=delivery.id " +
-                        ANPUtils.getWhereClause(searchParams) + " order by" + orderBy,
+                        ANPUtils.getWhereClause(searchParams) + " order by " + orderBy,
                 param, new DeliveryDAO.FullDeliveryMapper()) ;
     }
 

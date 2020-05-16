@@ -3,6 +3,7 @@ package com.ANP.controller;
 import com.ANP.bean.*;
 import com.ANP.repository.AccountDAO;
 import com.ANP.repository.ExpenseDAO;
+import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.service.AccountingHandler;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,9 @@ public class AccountingController {
 
     @Autowired
     AccountDAO accountDAO;
+
+    @Autowired
+    PurchaseFromVendorDAO purchaseFromVendorDAO ;
 
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
@@ -133,6 +138,13 @@ public class AccountingController {
             responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
         }
         return responseEntity;
+    }
+
+    @PostMapping(path = "/listPurchasesPaged", produces = "application/json")
+    public List<PurchaseFromVendorBean> listPurchasesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+        return purchaseFromVendorDAO.listPurchasesPaged(orgID,searchParams, orderBy, noOfRecordsToShow,startIndex);
+
     }
 
 

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class PurchaseFromVendorBean extends CommonAttribute {
 
-    private int purchaseID;
+    private long purchaseID;
     private long fromAccountId;
     private String fromCustomerId;
     private java.util.Date date;
@@ -21,12 +21,23 @@ public class PurchaseFromVendorBean extends CommonAttribute {
 
     private CustomerBean customerBean;
 
+    public PurchaseFromVendorBean() {
+        customerBean = new CustomerBean();
+    }
 
-    public int getPurchaseID() {
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
+
+    public long getPurchaseID() {
         return purchaseID;
     }
 
-    public void setPurchaseID(int purchaseID) {
+    public void setPurchaseID(long purchaseID) {
         this.purchaseID = purchaseID;
     }
 
