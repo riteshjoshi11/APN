@@ -1,6 +1,8 @@
 package com.ANP.repository;
 
 import com.ANP.bean.Expense;
+import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -10,30 +12,13 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 
 @Repository
 public class ExpenseDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-
-    public List<Expense> getExpenses() {
-
-        List<Expense> list = new ArrayList<Expense>();
-        Expense obj1 = new Expense();
-
-        obj1.setTotalAmount(101);
-        obj1.setOrgId(1);
-        obj1.setDate(new Date());
-
-        list.add(obj1);
-        return list;
-
-    }
 
 
     public int createExpense(Expense expense) {
@@ -44,36 +29,32 @@ public class ExpenseDAO {
     }
 
 
-    public List<Expense> findExpense(Expense expense) {
-        String whereCondition = "";
-        if (null != expense.getCategory()) {
-            whereCondition = "category = :category";
-        } else if (null != expense.getToPartyName()) {
-            if (!"".equals(whereCondition)) {
-                whereCondition = whereCondition + " And ";
-            }
-            whereCondition = whereCondition + "toPartyName = :toPartyName";
-        } else if (0 != expense.getOrgId()) {
-            if (!"".equals(whereCondition)) {
-                whereCondition = whereCondition + " And ";
-            }
-            whereCondition = whereCondition + "orgId =:orgId";
-        }
-
+    public List<Expense> listExpensesPaged(long orgID, Collection<SearchParam> searchParams,
+                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgID", orgID);
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
+        param.put("orderBy", orderBy);
 
         return namedParameterJdbcTemplate.query(
-                "select * from expense where " + whereCondition,
-                new BeanPropertySqlParameterSource(expense), new ExpenseMapper());
-
+                "select exp.*, e.first,e.last from expense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgId " +
+                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
+                param, new FullExpenseMapper());
 
     }
 
-    private static final class ExpenseMapper implements RowMapper<Expense> {
+    private static final class FullExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
             obj.setExpenseId(rs.getInt("id"));
             obj.setCategory(rs.getString("category"));
             obj.setTotalAmount(rs.getFloat("amount"));
+            //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
+            // e.first and e.last into the expense Bean, I have created two corresponding fields
+            // in the Exepense Bean (empFirstName, empLastName)
+
             return obj;
         }
     }
@@ -96,7 +77,6 @@ public class ExpenseDAO {
     }
 
     /*
-         TODO Paras: Please complete this method.
          you need to update Expense Table:IncludeInCAReport field with the passed value
      */
     public boolean updateIncludeInCAReport(long expenseID, boolean caSwitch) {
@@ -111,7 +91,6 @@ public class ExpenseDAO {
     }
 
     /*
-          TODO Paras: Please complete this method.
           you need to update Expense Table:includeInCalc field with the passed value
     */
     public boolean updateIncludeInCalc(long expenseID,boolean includeInCalcSwtich) {

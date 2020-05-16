@@ -56,23 +56,10 @@ public class AccountingController {
         return responseEntity;
     }
 
-
-    @GetMapping(path = "/getGeneralExpense", produces = "application/json")
-    public List<Expense> getExpense() {
-        return expenseDao.getExpenses();
-    }
-
     @PostMapping(path = "/createGeneralExpense", produces = "application/json")
     public ResponseEntity createExpense(@RequestBody Expense expense) {
         expenseDao.createExpense(expense);
         return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @ApiOperation("Search based on category,to party name and org")
-    @PostMapping(path = "/searchGeneralExpense", produces = "application/json")
-    public List<Expense> searchExpense(@RequestBody Expense expense) {
-        List<Expense> expenses = expenseDao.findExpense(expense);
-        return expenses;
     }
 
     @PostMapping(path = "/createPayToVendor", produces = "application/json")
@@ -147,5 +134,10 @@ public class AccountingController {
 
     }
 
+    @PostMapping(path = "/listExpensesPaged", produces = "application/json")
+    public List<Expense> listExpensesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+        return expenseDao.listExpensesPaged(orgID,searchParams, orderBy, noOfRecordsToShow,startIndex);
+    }
 
 }
