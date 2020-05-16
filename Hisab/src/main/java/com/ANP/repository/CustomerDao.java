@@ -73,13 +73,19 @@ public class CustomerDao {
      * Please note - this method supports pagination
      * order By (asc,desc) will be added
      */
-    public List<CustomerBean> listCustomerVendorsWithBalance(long orgID, Collection<SearchParam> searchParams, String orderBy, int pageStartIndex, int pageEndIndex) {
+    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(long orgID, Collection<SearchParam> searchParams, String orderBy, int noOfRecordsToShow, int startIndex) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
+        param.put("noOfRecordsToShow",noOfRecordsToShow);
+        param.put("startIndex",startIndex-1);
+        param.put("orderBy",orderBy);
+
+
 
         return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
                          " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
-                           ANPUtils.getWhereClause(searchParams) + " order by" + orderBy,
+                           ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
                            param, new FullCustomerMapper()) ;
     }
 
@@ -102,6 +108,4 @@ public class CustomerDao {
             return cus;
         }
     }
-
-
 }

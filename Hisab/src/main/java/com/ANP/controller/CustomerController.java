@@ -1,5 +1,6 @@
 package com.ANP.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.ANP.bean.SearchParam;
 import com.ANP.service.CustomerHandler;
 import com.ANP.repository.CustomerDao;
 import com.ANP.repository.PurchaseFromVendorDAO;
+import com.ANP.util.ANPConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,18 +37,12 @@ public class CustomerController {
         boolean isCustomerCreated = customerHandler.createCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
     /*
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */
     @PostMapping(path = "/listCustomerANDVendorWithBalancePaged", produces = "application/json")
-    public List<CustomerBean> listCustomerANDVendorWithBalance(long orgID, Collection<SearchParam> searchParams,
-                                                               String orderBy, int pageStartIndex, int pageEndIndex) {
-        return customerDao.listCustomerVendorsWithBalance(orgID,searchParams,orderBy, pageStartIndex,pageEndIndex);
+    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(long orgID,Collection<SearchParam> searchParams,
+                                                               String orderBy, int noOfRecordsToShow, int startIndex) {
+        return customerDao.listCustomerANDVendorWithBalancePaged(orgID,searchParams,orderBy, noOfRecordsToShow,startIndex);
     }
-
-
 }
-
-
-
