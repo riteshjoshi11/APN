@@ -5,12 +5,14 @@ import com.ANP.repository.AccountDAO;
 import com.ANP.repository.ExpenseDAO;
 import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.service.AccountingHandler;
+import com.ANP.util.ANPConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -135,9 +137,10 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/listExpensesPaged", produces = "application/json")
-    public List<Expense> listExpensesPaged(long orgID, Collection<SearchParam> searchParams,
+    public List<Expense> listExpensesPaged(long orgId,Collection<SearchParam> searchParams,
                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
-        return expenseDao.listExpensesPaged(orgID,searchParams, orderBy, noOfRecordsToShow,startIndex);
+
+        return expenseDao.listExpensesPaged(orgId,searchParams, orderBy, noOfRecordsToShow,startIndex);
     }
 
 }

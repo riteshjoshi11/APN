@@ -29,16 +29,16 @@ public class ExpenseDAO {
     }
 
 
-    public List<Expense> listExpensesPaged(long orgID, Collection<SearchParam> searchParams,
+    public List<Expense> listExpensesPaged(long orgId, Collection<SearchParam> searchParams,
                                            String orderBy, int noOfRecordsToShow, int startIndex) {
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("orgID", orgID);
+        param.put("orgID", orgId);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         param.put("orderBy", orderBy);
 
         return namedParameterJdbcTemplate.query(
-                "select exp.*, e.first,e.last from expense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgId " +
+                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
@@ -50,11 +50,23 @@ public class ExpenseDAO {
             Expense obj = new Expense();
             obj.setExpenseId(rs.getInt("id"));
             obj.setCategory(rs.getString("category"));
-            obj.setTotalAmount(rs.getFloat("amount"));
+            obj.setTotalAmount(rs.getFloat("totalamount"));
+            obj.setOrgId(rs.getLong("orgid"));
+            obj.setIncludeInCalc(rs.getBoolean("includeincalc"));
+            obj.setIncludeInReport(rs.getBoolean("includeinreport"));
+            obj.setCreatedbyId(rs.getString("createdbyid"));
+            obj.setOrderAmount(rs.getDouble("orderamount"));
+            obj.setCGST(rs.getDouble("cgst"));
+            obj.setSGST(rs.getDouble("sgst"));
+            obj.setIGST(rs.getDouble("igst"));
+            obj.setExtra(rs.getDouble("extra"));
+            obj.setToPartyGSTNO(rs.getString("topartygstno"));
+            obj.setToPartyMobileNO(rs.getString("topartymobileno"));
+            obj.setEmpFirstName(rs.getString("first"));
+            obj.setEmpLastName(rs.getString("last"));
             //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
             // e.first and e.last into the expense Bean, I have created two corresponding fields
             // in the Exepense Bean (empFirstName, empLastName)
-
             return obj;
         }
     }
@@ -71,7 +83,7 @@ public class ExpenseDAO {
 
     public List<Expense> findExpenseByToPartyName(String toPartyname, long orgId) {
         return namedParameterJdbcTemplate.query(
-                "select topartyname,topartygstno,topartymobileno from expense where orgid=" + orgId
+                "select topartyname,topartygstno,topartymobileno from generalexpense where orgid=" + orgId
                         + "and topartyname like %' + toPartyname + '%",
                 new BeanPropertySqlParameterSource(new Expense()), new ExpenseMapperLimited());
     }
