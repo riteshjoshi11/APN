@@ -11,6 +11,30 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     private String fromEmployeeId;
     private long salaryPaymentID;
 
+    private EmployeeBean toEmployeeBean;
+    private EmployeeBean fromEmployeeBean;
+
+    public EmployeeSalaryPayment() {
+        this.toEmployeeBean=new EmployeeBean();
+        this.fromEmployeeBean=new EmployeeBean();
+    }
+
+    public EmployeeBean getToEmployeeBean() {
+        return toEmployeeBean;
+    }
+
+    public void setToEmployeeBean(EmployeeBean toEmployeeBean) {
+        this.toEmployeeBean = toEmployeeBean;
+    }
+
+    public EmployeeBean getFromEmployeeBean() {
+        return fromEmployeeBean;
+    }
+
+    public void setFromEmployeeBean(EmployeeBean fromEmployeeBean) {
+        this.fromEmployeeBean = fromEmployeeBean;
+    }
+
     private boolean includeInCalc;
 
     public long getSalaryPaymentID() {

@@ -145,6 +145,8 @@ public class EmployeeDAO {
         return employeeBeanList;
     }
 
+
+
     private static final class EmployeeMapper implements RowMapper<EmployeeBean> {
         public EmployeeBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             EmployeeBean empbean = new EmployeeBean();
@@ -188,5 +190,74 @@ public class EmployeeDAO {
             return empbean;
         }
     }//end FullEmployeeMapper
+
+
+    public List<EmployeeSalary> listEmpSalariesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgid", orgID);
+        param.put("noOfRecordsToShow",noOfRecordsToShow);
+        param.put("startIndex",startIndex-1);
+        param.put("orderBy",orderBy);
+
+        return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
+                        " empsal.details, empsal.includeincalc,empsal.createdate " +
+                        " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
+                          ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
+                param, new FullEmployeeSalaryMapper()) ;
+    }
+
+
+    private static final class FullEmployeeSalaryMapper implements RowMapper<EmployeeSalary> {
+        public EmployeeSalary mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeSalary employeeSalary = new EmployeeSalary();
+            employeeSalary.getEmployeeBean().setFirst(rs.getString("e.first"));
+            employeeSalary.getEmployeeBean().setLast(rs.getString("e.last"));
+            employeeSalary.getEmployeeBean().setEmployeeId(rs.getString("e.id"));
+            employeeSalary.getEmployeeBean().setMobile(rs.getString("e.mobile"));
+            employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
+            employeeSalary.setAmount(rs.getFloat("empsal.amount"));
+            employeeSalary.setDetails(rs.getString("empsal.details"));
+            employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
+            employeeSalary.setCreateDate(rs.getDate("empsal.createdate"));
+            return employeeSalary;
+        }
+    }//end
+
+    /*
+    *
+     */
+    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                                String orderBy, int noOfRecordsToShow, int startIndex) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgid", orgID);
+        param.put("noOfRecordsToShow",noOfRecordsToShow);
+        param.put("startIndex",startIndex-1);
+        param.put("orderBy",orderBy);
+        return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount," +
+                        " empsalpay.details, empsalpay.includeincalc,empsalpay.transferdate " +
+                        " from employee e,employeesalarypayment empsalpay where e.id=empsalpay.toemployeeid and e.orgid=:orgid " +
+                          ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
+                param, new FullEmployeeSalaryPayment()) ;
+    }
+    //TODO Nitesh: Please fill the TO Employee Details
+    private static final class FullEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
+        public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeSalaryPayment employeeSalaryPayment = new EmployeeSalaryPayment();
+            employeeSalaryPayment.getToEmployeeBean().setFirst(rs.getString("e.first"));
+            employeeSalaryPayment.getToEmployeeBean().setLast(rs.getString("e.last"));
+            employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
+            employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
+            employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
+            employeeSalaryPayment.setAmount(rs.getFloat("empsal.amount"));
+            employeeSalaryPayment.setDetails(rs.getString("empsal.details"));
+            employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
+            employeeSalaryPayment.setCreateDate(rs.getDate("empsal.createdate"));
+            return employeeSalaryPayment;
+        }
+    }//end
+
 
 }

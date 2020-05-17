@@ -125,4 +125,22 @@ public class EmployeeController {
     }
 
 
+
+    /*
+     * This method returns the list of employee  Salaries with almost all employee attributes
+     * This will be used in list employee Salary screen
+     * The filter can be dynamic and can start with "e.<employee table attribute>" or "empsal.<Employee Salary Table attribute>"
+     */
+    @PostMapping(path = "/listEmpSalariesPaged", produces = "application/json")
+    public List<EmployeeSalary> listEmpSalariesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
+        return employeeDAO.listEmpSalariesPaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    }
+
+    @PostMapping(path = "/listEmpPaidSalariesPaged", produces = "application/json")
+    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(long orgID, Collection<SearchParam> searchParams,
+                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
+        return employeeDAO.listEmpPaidSalariesPaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    }
+
 }
