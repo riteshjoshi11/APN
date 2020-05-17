@@ -1,8 +1,6 @@
 package com.ANP.controller;
 
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.EmployeeSalary;
-import com.ANP.bean.EmployeeSalaryPayment;
+import com.ANP.bean.*;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.service.EmployeeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -62,8 +61,7 @@ public class EmployeeController {
 
     @PostMapping(path = "/updateLoginRequired", produces = "application/json")
     @ResponseBody
-    public ResponseEntity updateLoginRequired (@RequestBody EmployeeBean employeeBean)
-    {
+    public ResponseEntity updateLoginRequired(@RequestBody EmployeeBean employeeBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isupdateLoginRequired = employeeHandler.updateLoginRequired(employeeBean.getEmployeeId(), employeeBean.getLoginrequired());
         if (isupdateLoginRequired) {
@@ -76,8 +74,7 @@ public class EmployeeController {
 
     @PostMapping(path = "/updateMobile", produces = "application/json")
     @ResponseBody
-    public ResponseEntity updateMobile (@RequestBody EmployeeBean employeeBean)
-    {
+    public ResponseEntity updateMobile(@RequestBody EmployeeBean employeeBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isupdateMobile = employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
         if (isupdateMobile) {
@@ -89,8 +86,7 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/updateSalaryBalance", produces = "application/json")
-    public ResponseEntity updateSalaryBalance (@RequestParam String EmployeeId,@RequestParam double balance, @RequestParam String operation)
-    {
+    public ResponseEntity updateSalaryBalance(@RequestParam String EmployeeId, @RequestParam double balance, @RequestParam String operation) {
         ResponseEntity<String> responseEntity = null;
         boolean isupdateSalaryBalance = employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);
         if (isupdateSalaryBalance) {
@@ -112,9 +108,21 @@ public class EmployeeController {
        Return: EmployeeBean with only EmployeeID, First, LastName populated (Nothing else, for the optimization we are doing this)
     */
     @PostMapping(path = "/getEmployeeListByName", produces = "application/json")
-    public List<EmployeeBean> getEmployeeListByName (@RequestBody EmployeeBean employeeBean)
-    {
+    public List<EmployeeBean> getEmployeeListByName(@RequestBody EmployeeBean employeeBean) {
         return employeeDAO.searchEmployees(employeeBean);
     }
+
+
+    /*
+     * This method returns the list of employee with almost all employee attributes along with Salary and Current Balance
+     * This will be used in list employee screen
+     * The filter can be dynamic and can start with "e.<employee table attribute>"
+     */
+    @PostMapping(path = "/listEmployeesWithBalancePaged", produces = "application/json")
+    public List<EmployeeBean> listEmployeesWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
+                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
+        return employeeDAO.listEmployeesWithBalancePaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    }
+
 
 }

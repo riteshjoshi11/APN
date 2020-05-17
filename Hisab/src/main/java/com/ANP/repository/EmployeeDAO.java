@@ -1,8 +1,7 @@
 package com.ANP.repository;
 
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.EmployeeSalary;
-import com.ANP.bean.EmployeeSalaryPayment;
+import com.ANP.bean.*;
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,5 +155,38 @@ public class EmployeeDAO {
             return empbean;
         }
     }
+
+
+    public List<EmployeeBean> listEmployeesWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
+                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgID", orgID);
+        param.put("noOfRecordsToShow",noOfRecordsToShow);
+        param.put("startIndex",startIndex-1);
+        param.put("orderBy",orderBy);
+
+        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance " +
+                        " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
+                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
+                param, new FullEmployeeMapper()) ;
+    }
+
+
+    private static final class FullEmployeeMapper implements RowMapper<EmployeeBean> {
+        public EmployeeBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeBean empbean = new EmployeeBean();
+            empbean.setFirst(rs.getString("e.first"));
+            empbean.setLast(rs.getString("e.last"));
+            empbean.setEmployeeId(rs.getString("e.id"));
+            empbean.setMobile(rs.getString("e.mobile"));
+            empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
+            empbean.setLoginusername(rs.getString("e.loginusername"));
+            empbean.setType(rs.getString("e.type"));
+            empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
+            empbean.setCurrentAccountBalance(rs.getFloat("e.currentbalance"));
+            return empbean;
+        }
+    }//end FullEmployeeMapper
 
 }
