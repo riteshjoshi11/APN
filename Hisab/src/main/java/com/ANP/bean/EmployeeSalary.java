@@ -7,6 +7,19 @@ public class EmployeeSalary extends CommonAttribute {
     private String details;
     private long salaryID;
     private boolean includeInCalc;
+    private EmployeeBean employeeBean;
+
+    public EmployeeSalary() {
+        this.employeeBean=new EmployeeBean();
+    }
+
+    public EmployeeBean getEmployeeBean() {
+        return employeeBean;
+    }
+
+    public void setEmployeeBean(EmployeeBean employeeBean) {
+        this.employeeBean = employeeBean;
+    }
 
     public String getToEmployeeID() {
         return toEmployeeID;
