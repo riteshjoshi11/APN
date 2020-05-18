@@ -28,7 +28,7 @@ public class DeliveryDAO {
         boolean result = false;
         int accountCreated =
          namedParameterJdbcTemplate.update(
-                "insert into delivery (tocustomerid,description,date,orgid,createdbyid,createdate" +
+                "insert into delivery (tocustomerid,description,date,orgid,createdbyid,createdate)" +
                         " values(:toCustomerID,:description,:date,:orgId,:createdbyId,:createDate)",
                         new BeanPropertySqlParameterSource(deliveryBean));
         if (accountCreated > 0) {
