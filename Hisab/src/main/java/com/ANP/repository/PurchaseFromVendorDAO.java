@@ -29,7 +29,7 @@ public class PurchaseFromVendorDAO {
     public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO purchasefromvendor(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
-                        " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdById,:note,:includeInReport,includeInCalc,fromAccountId,billNo); ",
+                        " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdById,:note,:includeInReport,:includeInCalc,:fromAccountId,:billNo); ",
                 new BeanPropertySqlParameterSource(purchaseFromVendorBean));
     }
 

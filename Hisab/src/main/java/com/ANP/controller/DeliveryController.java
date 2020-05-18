@@ -40,8 +40,8 @@ public class DeliveryController {
 
     @PostMapping(path = "/listDeliveriesPaged", produces = "application/json")
     public List<DeliveryBean> listDeliveriesPaged(long ordID, Collection<SearchParam> searchParams,
-                                                  String orderBy, int pageStartIndex, int pageEndIndex) {
-        return deliveryDAO.listDeliveriesPaged(ordID,searchParams,orderBy,pageStartIndex,pageEndIndex);
+                                                  String orderBy, int noOfRecordsToShow, int startIndex) {
+        return deliveryDAO.listDeliveriesPaged(ordID,searchParams,orderBy,noOfRecordsToShow,startIndex);
 
     }
 

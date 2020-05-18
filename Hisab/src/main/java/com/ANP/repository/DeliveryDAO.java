@@ -29,7 +29,7 @@ public class DeliveryDAO {
         int accountCreated =
          namedParameterJdbcTemplate.update(
                 "insert into delivery (tocustomerid,description,date,orgid,createdbyid,createdate" +
-                        " values(:toCustomerID,:description,date,orgId,createdbyId,createDate)",
+                        " values(:toCustomerID,:description,:date,:orgId,:createdbyId,:createDate)",
                         new BeanPropertySqlParameterSource(deliveryBean));
         if (accountCreated > 0) {
             result = true;
@@ -38,17 +38,21 @@ public class DeliveryDAO {
     }
 
     public List<DeliveryBean> listDeliveriesPaged(long orgID, Collection<SearchParam> searchParams,
-                                                  String orderBy, int pageStartIndex, int pageEndIndex) {
+                                                  String orderBy, int noOfRecordsToShow, int startIndex) {
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
+        param.put("noOfRecordsToShow",noOfRecordsToShow);
+        param.put("startIndex",startIndex-1);
+        param.put("orderBy",orderBy);
 
         return namedParameterJdbcTemplate.query("select customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname " +
                         " delivery.id, delivery.date,delivery.description " +
-                        " from customer,delivery where customer.id=delivery.id " +
-                        ANPUtils.getWhereClause(searchParams) + " order by " + orderBy,
-                param, new DeliveryDAO.FullDeliveryMapper()) ;
+                        " from customer,delivery where customer.id=delivery.id and delivery.orgid=:orgID " +
+                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                         + " offset :startIndex",
+                     param, new DeliveryDAO.FullDeliveryMapper()) ;
     }
 
     private static final class FullDeliveryMapper implements RowMapper<DeliveryBean> {
