@@ -1,18 +1,18 @@
 package com.ANP.bean;
 
-public class Organization extends CommonAttribute {
+public class Organization {
 
-    private long orgID;
+    private long orgId;
     private String orgName;
     private String city;
     private String state;
 
-    public long getOrgID() {
-        return orgID;
+    public long getOrgId() {
+        return orgId;
     }
 
-    public void setOrgID(long orgID) {
-        this.orgID = orgID;
+    public void setOrgId(long orgID) {
+        this.orgId = orgID;
     }
 
     public String getCity() {

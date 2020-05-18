@@ -179,6 +179,9 @@ public class AccountDAO {
                         "employee.orgid = :orgId",
                 in, new userDetailMapper());
 
+        if(userDetailBeanList==null || userDetailBeanList.size()==0) {
+            //return error and do not process
+        }
 
         UserDetailBean userDetailBean = userDetailBeanList.get(0);
         EmployeeBean employeeBean = new EmployeeBean();
