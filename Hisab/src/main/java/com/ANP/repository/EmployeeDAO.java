@@ -235,7 +235,7 @@ public class EmployeeDAO {
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
         param.put("orderBy",orderBy);
-        return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount," +
+        List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount," +
                         " empsalpay.details, empsalpay.includeincalc,empsalpay.transferdate " +
                         " from employee e,employeesalarypayment empsalpay where e.id=empsalpay.toemployeeid and e.orgid=:orgid " +
                           ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
@@ -245,6 +245,19 @@ public class EmployeeDAO {
         //TODO Paras : We need to get the ID, First, Last Name along with above query (Above query is giving to Employee Name, now we ned to get from employee Details)
         // IF you see EmployeeSalaryPayment - there are two EmployeeBean , One is ToEmployee : whose details we are fetching in above query and filling up using the FullEmployeeSlaaryPayment
         // Second is FromEmployee whose details (only ID, Last, First Name) to be filled up.
+
+        List<EmployeeSalaryPayment> fromEmployeeSalaryPaymentList = namedParameterJdbcTemplate.query("select e.id, e.first, e.last from employee e, employeesalarypayment empsalpay " +
+                "where e.id=empsalpay.fromemployeeid and e.orgid=:orgid " + ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        + " offset :startIndex", param, new FromEmployeeSalaryPayment());
+        for(int i = 0 ; i < EmployeeSalaryPaymentlist.size() ; i++ )
+        {
+            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setFirst(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getFirst());
+            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setLast(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getLast());
+            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setEmployeeId(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getEmployeeId());
+        }
+        return EmployeeSalaryPaymentlist;
+
+
     }
 
     //TODO Nitesh: Please fill the TO Employee Details
@@ -256,15 +269,25 @@ public class EmployeeDAO {
             employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
             employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
-            employeeSalaryPayment.setAmount(rs.getFloat("empsal.amount"));
-            employeeSalaryPayment.setDetails(rs.getString("empsal.details"));
-            employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
-            employeeSalaryPayment.setCreateDate(rs.getDate("empsal.createdate"));
+            employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
+            employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
+            employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
+            //employeeSalaryPayment.setCreateDate(rs.getDate("empsalpay.createdate"));
 
 
             return employeeSalaryPayment;
         }
     }//end
+
+    private static final class FromEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
+        public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeSalaryPayment employeeSalaryPayment = new EmployeeSalaryPayment();
+            employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("e.first"));
+            employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("e.last"));
+            employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("e.id"));
+            return employeeSalaryPayment;
+        }
+    }
 
 
 }
