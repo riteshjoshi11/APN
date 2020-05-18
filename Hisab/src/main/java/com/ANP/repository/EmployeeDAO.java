@@ -241,7 +241,12 @@ public class EmployeeDAO {
                           ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryPayment()) ;
+
+        //TODO Paras : We need to get the ID, First, Last Name along with above query (Above query is giving to Employee Name, now we ned to get from employee Details)
+        // IF you see EmployeeSalaryPayment - there are two EmployeeBean , One is ToEmployee : whose details we are fetching in above query and filling up using the FullEmployeeSlaaryPayment
+        // Second is FromEmployee whose details (only ID, Last, First Name) to be filled up.
     }
+
     //TODO Nitesh: Please fill the TO Employee Details
     private static final class FullEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
         public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -255,6 +260,8 @@ public class EmployeeDAO {
             employeeSalaryPayment.setDetails(rs.getString("empsal.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
             employeeSalaryPayment.setCreateDate(rs.getDate("empsal.createdate"));
+
+
             return employeeSalaryPayment;
         }
     }//end
