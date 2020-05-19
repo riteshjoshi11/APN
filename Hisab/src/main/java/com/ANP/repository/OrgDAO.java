@@ -36,7 +36,7 @@ public class OrgDAO {
     private static final class OrgMapper implements RowMapper<Organization> {
         public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
             Organization org = new Organization();
-            org.setOrgID(rs.getLong("id"));
+            org.setOrgId(rs.getLong("id"));
             org.setOrgName(rs.getString("orgname"));
             org.setState(rs.getString("state"));
             org.setState(rs.getString("city"));
