@@ -12,10 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 
 @Repository
@@ -235,31 +233,17 @@ public class EmployeeDAO {
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
         param.put("orderBy",orderBy);
-        List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount," +
-                        " empsalpay.details, empsalpay.includeincalc,empsalpay.transferdate " +
-                        " from employee e,employeesalarypayment empsalpay where e.id=empsalpay.toemployeeid and e.orgid=:orgid " +
-                          ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+        List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
+                        "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.fromemployeeid," +
+                        "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +
+                        "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
+                        " from employee e, employeesalarypayment empsalpay " +
+                        "where e.id=empsalpay.toemployeeid and e.orgid=:orgid " +
+                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
-                param, new FullEmployeeSalaryPayment()) ;
-
-        //TODO Paras : We need to get the ID, First, Last Name along with above query (Above query is giving to Employee Name, now we ned to get from employee Details)
-        // IF you see EmployeeSalaryPayment - there are two EmployeeBean , One is ToEmployee : whose details we are fetching in above query and filling up using the FullEmployeeSlaaryPayment
-        // Second is FromEmployee whose details (only ID, Last, First Name) to be filled up.
-
-        List<EmployeeSalaryPayment> fromEmployeeSalaryPaymentList = namedParameterJdbcTemplate.query("select e.id, e.first, e.last from employee e, employeesalarypayment empsalpay " +
-                "where e.id=empsalpay.fromemployeeid and e.orgid=:orgid " + ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
-                        + " offset :startIndex", param, new FromEmployeeSalaryPayment());
-        for(int i = 0 ; i < EmployeeSalaryPaymentlist.size() ; i++ )
-        {
-            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setFirst(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getFirst());
-            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setLast(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getLast());
-            EmployeeSalaryPaymentlist.get(i).getFromEmployeeBean().setEmployeeId(fromEmployeeSalaryPaymentList.get(i).getFromEmployeeBean().getEmployeeId());
-        }
+                param, new FullEmployeeSalaryPayment());
         return EmployeeSalaryPaymentlist;
-
-
     }
-
     //TODO Nitesh: Please fill the TO Employee Details
     private static final class FullEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
         public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -272,22 +256,10 @@ public class EmployeeDAO {
             employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
-            //employeeSalaryPayment.setCreateDate(rs.getDate("empsalpay.createdate"));
-
-
-            return employeeSalaryPayment;
-        }
-    }//end
-
-    private static final class FromEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
-        public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            EmployeeSalaryPayment employeeSalaryPayment = new EmployeeSalaryPayment();
-            employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("e.first"));
-            employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("e.last"));
-            employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("e.id"));
+           employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("empsalpay.fromemployeeid"));
+            employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("fromEmpFirstName"));
+            employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("fromEmpLastName"));
             return employeeSalaryPayment;
         }
     }
-
-
 }
