@@ -136,8 +136,9 @@ public class EmployeeDAO {
         if(lastName==null)
             lastName = "";
         List<EmployeeBean> employeeBeanList=
-                jdbcTemplate.query("select first,last,id from employee where orgid = ? and (first" +
-                                " like ? or last like ?)  ",
+                jdbcTemplate.query("select employee.first,employee.last,employee.id,account.id from employee, account " +
+                                " where  employee.id = account.ownerid and employee.orgid = ? and (employee.first" +
+                                " like ? or employee.last like ?)  ",
                         new String[]{orgId,"%"+firstName+"%","%"+lastName+"%"}
                         ,new EmployeeDAO.EmployeeMapper());
         return employeeBeanList;
@@ -151,6 +152,7 @@ public class EmployeeDAO {
             empbean.setFirst(rs.getString("first"));
             empbean.setLast(rs.getString("last"));
             empbean.setEmployeeId(rs.getString("id"));
+            empbean.setAccountId(rs.getLong("account.id"));
  //           empbean.setOrgId(rs.getLong("orgid"));
             return empbean;
         }

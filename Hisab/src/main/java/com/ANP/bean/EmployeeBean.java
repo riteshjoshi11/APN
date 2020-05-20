@@ -13,10 +13,19 @@ public class EmployeeBean extends CommonAttribute {
     private float initialSalaryBalance;
     private float currentAccountBalance;
     private boolean loginrequired;
+    private long accountId;
+
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
 
     /*
-    This method will be used for displaying in the UI
-     */
+        This method will be used for displaying in the UI
+         */
     public String getDisplayName() {
         return this.first + " " + this.last;
     }

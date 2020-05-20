@@ -18,7 +18,7 @@ public class CustomerInvoiceDAO {
     public int createInvoice(CustomerInvoiceBean invoiceBean) {
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO customerinvoice(tocustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,toaccountid,invoiceno) "+
-                        " VALUES(:toCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdById,:note,:includeInReport,:includeInCalc,:toAccountId,:invoiceNo); ",
+                        " VALUES(:toCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdbyId,:note,:includeInReport,:includeInCalc,:toAccountId,:invoiceNo); ",
                 new BeanPropertySqlParameterSource(invoiceBean));
     }
 

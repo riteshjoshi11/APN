@@ -97,7 +97,7 @@ public class AccountDAO {
         }
 
         List<AccountBean> accountBeanList =
-                jdbcTemplate.query("select id,ownerid,accountnickname from account where accountnickname like ? and orgid = ?",
+                jdbcTemplate.query("select id,ownerid,accountnickname from account where accountnickname like ? and orgid = ? and type='Customer' ",
                         new String[]{"%" + accountnickname + "%", orgId}
                         , new AccountMapper());
         return accountBeanList;
