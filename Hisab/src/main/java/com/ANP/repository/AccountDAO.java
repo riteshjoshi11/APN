@@ -45,18 +45,17 @@ public class AccountDAO {
 
     //Operations: (ADD,SUBTRACT)
     public boolean updateAccountBalance(long accountId, double balance, String operation) {
-        int n;
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("id", accountId);
-        in.addValue("balance", balance);
-        if (operation.equals("add"))
-            n = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
-                    "+ :balance  where id = :id, ", in);
+        int updateSuccessful;
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", accountId);
+        mapSqlParameterSource.addValue("balance", balance);
+        if (operation.equals("ADD"))
+            updateSuccessful = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
+                    "+ :balance  where id = :id ", mapSqlParameterSource);
         else
-            n = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
-                    "- :balance  where id = :id, ", in);
-
-        if (n != 0)
+            updateSuccessful = namedParameterJdbcTemplate.update("update account set lastbalance = currentbalance, currentbalance = currentbalance" +
+                    "- :balance  where id = :id ", mapSqlParameterSource);
+        if (updateSuccessful != 0)
             return true;
         else
             return false;

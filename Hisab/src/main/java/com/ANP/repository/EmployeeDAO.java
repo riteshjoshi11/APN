@@ -70,17 +70,17 @@ public class EmployeeDAO {
     //operation values(ADD,SUBTRACT)
     public boolean UpdateEmpSalaryBalance(String toEmployeeID, double balance, String operation) {
         //TODO Joshi: Here you need to update the 'Employee:CurrentSalaryBalance' field based on the 'operation' passed
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("toemployeeid", toEmployeeID);
-        in.addValue("balance", balance);
-        int n;
+        int updateSuccess;
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("toemployeeid", toEmployeeID);
+        mapSqlParameterSource.addValue("balance", balance);
         if (operation.equals("ADD"))
-            n = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "+ :balance where toemployeeid = :toemployeeid", in);
+            updateSuccess = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
+                    "+ :balance where toemployeeid = :toemployeeid", mapSqlParameterSource);
         else
-            n = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "- :balance where toemployeeid = :toemployeeid", in);
-        if (n != 0)
+            updateSuccess = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
+                    "- :balance where toemployeeid = :toemployeeid", mapSqlParameterSource);
+        if (updateSuccess != 0)
             return true;
         else
             return false;
