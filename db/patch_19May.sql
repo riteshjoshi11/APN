@@ -16,3 +16,8 @@ INSERT INTO `antrackerdb`.`expense_cat` (`name`) VALUES ('Other');
 INSERT INTO `antrackerdb`.`expense_cat` (`name`) VALUES ('Repairing');
 INSERT INTO `antrackerdb`.`expense_cat` (`name`) VALUES ('Daily Wages');
 INSERT INTO `antrackerdb`.`expense_cat` (`name`) VALUES ('Small Purchase');
+
+
+ALTER TABLE `antrackerdb`.`paymentreceived` 
+CHANGE COLUMN `paymenttype` `paymenttype` VARCHAR(20) NULL ;
+
