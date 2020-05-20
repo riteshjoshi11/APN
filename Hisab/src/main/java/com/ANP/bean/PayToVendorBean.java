@@ -12,6 +12,15 @@ public class PayToVendorBean extends CommonAttribute {
     private java.util.Date paymentDate;
     private double amount;
     private String details;
+    private boolean includeInCalc;
+
+    public boolean isIncludeInCalc() {
+        return includeInCalc;
+    }
+
+    public void setIncludeInCalc(boolean includeInCalc) {
+        this.includeInCalc = includeInCalc;
+    }
 
     public long getPayToVendorID() {
         return payToVendorID;

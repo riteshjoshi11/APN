@@ -13,10 +13,12 @@ public class PayToVendorDAO {
 
     public int createPayToVendor(PayToVendorBean payToVendorBean) {
         return namedParameterJdbcTemplate.update(
-                "insert into paymentreceived (fromaccountid,fromemployeeid,toaccountid,tocustomerid,date,amount,details,includeincalc,orgid,createdbyid,createdate)" +
-                        " values(:fromAccountID,:fromEmployeeID,:toAccountID,:toCustomerID,:paymentDate,:amount,:details,:includeInCalc,:orgId,:createdbyId,:createDate)",
+                "insert into paytovendor(fromaccountid,fromemployeeid,toaccountid,tocustomerid,date,amount,details,includeincalc,orgid,createdbyid)" +
+                        " values(:fromAccountID,:fromEmployeeID,:toAccountID,:toCustomerID,:paymentDate,:amount,:details,:includeInCalc,:orgId,:createdbyId)",
                 new BeanPropertySqlParameterSource(payToVendorBean));
 
 
     }
+
+
 }

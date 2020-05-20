@@ -33,8 +33,8 @@ public class AccountingHandler {
      */
     @Transactional(rollbackFor = Exception.class)
     public boolean createCustomerInvoice(CustomerInvoiceBean customerInvoiceBean) {
-        customerInvoiceDAO.createInvoice(customerInvoiceBean);
-        accountDAO.updateAccountBalance(customerInvoiceBean.getToAccountId(), customerInvoiceBean.getTotalAmount(), "SUBTRACT");
+      //  customerInvoiceDAO.createInvoice(customerInvoiceBean);
+      //  accountDAO.updateAccountBalance(customerInvoiceBean.getToAccountId(), customerInvoiceBean.getTotalAmount(), "SUBTRACT");
         return true;
     }
 
@@ -43,8 +43,8 @@ public class AccountingHandler {
      */
     @Transactional(rollbackFor = Exception.class)
     public boolean createVendorPurchase(PurchaseFromVendorBean purchaseFromVendorBean) {
-        purchaseFromVendorDAO.createBill(purchaseFromVendorBean);
-        accountDAO.updateAccountBalance(purchaseFromVendorBean.getFromAccountId(), purchaseFromVendorBean.getTotalAmount(), "ADD");
+      //  purchaseFromVendorDAO.createBill(purchaseFromVendorBean);
+      //  accountDAO.updateAccountBalance(purchaseFromVendorBean.getFromAccountId(), purchaseFromVendorBean.getTotalAmount(), "ADD");
         return true;
     }
 
@@ -56,8 +56,8 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createPayToVendor(PayToVendorBean payToVendorBean) {
         payToVendorDAO.createPayToVendor(payToVendorBean);
-        accountDAO.updateAccountBalance(payToVendorBean.getToAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
-        accountDAO.updateAccountBalance(payToVendorBean.getFromAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
+        //accountDAO.updateAccountBalance(payToVendorBean.getToAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
+        //accountDAO.updateAccountBalance(payToVendorBean.getFromAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
         return true;
     }
 
@@ -68,8 +68,8 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createPaymentReceived(PaymentReceivedBean paymentReceivedBean) {
         paymentReceivedDAO.createPaymentReceived(paymentReceivedBean);
-        accountDAO.updateAccountBalance(paymentReceivedBean.getFromAccountID(), paymentReceivedBean.getAmount(), "ADD");
-        accountDAO.updateAccountBalance(paymentReceivedBean.getToAccountID(), paymentReceivedBean.getAmount(), "ADD");
+        //accountDAO.updateAccountBalance(paymentReceivedBean.getFromAccountID(), paymentReceivedBean.getAmount(), "ADD");
+        //accountDAO.updateAccountBalance(paymentReceivedBean.getToAccountID(), paymentReceivedBean.getAmount(), "ADD");
         return true;
     }
 
@@ -80,8 +80,8 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createInternalTransfer(InternalTransferBean internalTransferBean) {
         internalTransferDAO.createInternalTransfer(internalTransferBean);
-        accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
-        accountDAO.updateAccountBalance(internalTransferBean.getFromAccountID(), internalTransferBean.getAmount(), "SUBTRACTED");
+        //accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
+        //accountDAO.updateAccountBalance(internalTransferBean.getFromAccountID(), internalTransferBean.getAmount(), "SUBTRACTED");
         return true;
     }
 
