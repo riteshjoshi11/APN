@@ -108,7 +108,7 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/searchExpenseByToPartyName", produces = "application/json")
-    public List<Expense> searchExpenseByToPartyName(@RequestParam String toPartyname, @RequestParam long orgId) {
+    public List<Expense> searchExpenseByToPartyName(String toPartyname, @RequestParam long orgId) {
         List<Expense> expenses = expenseDao.findExpenseByToPartyName(toPartyname, orgId);
         return expenses;
     }

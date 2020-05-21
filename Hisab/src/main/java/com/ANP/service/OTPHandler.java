@@ -12,6 +12,10 @@ public class OTPHandler {
 
     public boolean sendOTP(String mobile) {
         String otp=generateNumberOTP(6);
+        if("True".equalsIgnoreCase(System.getProperty("TestMode"))){
+            System.out.println("Test Mode is enabled to setting OTP to 250250");
+            otp="250250";
+        }
         OTPBean otpBean = new OTPBean();
         otpBean.setMobileNumber(mobile);
         otpBean.setOtp(otp);

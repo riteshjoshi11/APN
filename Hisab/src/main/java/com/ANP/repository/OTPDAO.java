@@ -22,8 +22,8 @@ public class OTPDAO {
 
     public int createOTP(OTPBean otpBean) {
         //Delete old OTP
-        namedParameterJdbcTemplate.update("delete from otphandler where mobileNumber=:mobilenumber" +
-                "values(:mobileNumber)", new BeanPropertySqlParameterSource(otpBean));
+        namedParameterJdbcTemplate.update("delete from otphandler where mobileNumber=:mobileNumber",
+                new BeanPropertySqlParameterSource(otpBean));
        //Add NEW OTP
         return namedParameterJdbcTemplate.update("insert into otphandler(mobileNumber,otp) " +
                 "values (:mobileNumber,:otp)", new BeanPropertySqlParameterSource(otpBean));
@@ -35,7 +35,7 @@ public class OTPDAO {
                 "select generatedtime from otphandler where mobileNumber=:mobileNumber "
                         + " and otp=:otp",new BeanPropertySqlParameterSource(otpBean), new OTPDAO.OTPMapper());
         if(otpBeanList!=null && otpBeanList.size()>0) {
-            java.util.Date generatedTimeFromDB =  otpBeanList.get(1).getTimeGenerated();
+            java.util.Date generatedTimeFromDB =  otpBeanList.get(0).getTimeGenerated();
             //TODO for Paras: compare generatedTimeFromDB is less than 10 min from the current system timestamp
             Date dateNow = new Date();
             long timeDiff = dateNow.getTime() - generatedTimeFromDB.getTime();

@@ -20,6 +20,8 @@ public class LoginHandler {
     CustomerDao customerDao;
     @Autowired
     AccountDAO accountDAO;
+    @Autowired
+    OTPHandler otpHandler;
 
 
     /*
@@ -32,7 +34,7 @@ public class LoginHandler {
 
     //Send OTP on the given mobileNumber
     public boolean sendOTP(String mobileNumber) {
-        return true;
+        return otpHandler.sendOTP(mobileNumber);
     }
 
     /*

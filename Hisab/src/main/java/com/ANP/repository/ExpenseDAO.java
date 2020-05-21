@@ -81,10 +81,14 @@ public class ExpenseDAO {
         }
     }
 
-    public List<Expense> findExpenseByToPartyName(String toPartyname, long orgId) {
+    public List<Expense> findExpenseByToPartyName(String toPartyName, long orgId) {
+        String toPartyNameCriteria="";
+        if(!ANPUtils.isNullOrEmpty(toPartyName)) {
+            toPartyNameCriteria = " and topartyname like '%" + toPartyName + "%'" ;
+        }
         return namedParameterJdbcTemplate.query(
                 "select topartyname,topartygstno,topartymobileno from generalexpense where orgid=" + orgId
-                        + " and topartyname like '%" + toPartyname + "%'",
+                        + toPartyNameCriteria,
                 new BeanPropertySqlParameterSource(new Expense()), new ExpenseMapperLimited());
     }
 

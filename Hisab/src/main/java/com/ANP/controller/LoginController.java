@@ -6,6 +6,8 @@ import com.ANP.bean.SuccessLoginBean;
 import com.ANP.repository.OTPDAO;
 import com.ANP.service.LoginHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,13 +24,25 @@ public class LoginController {
     OTPDAO otpdao;
 
     @PostMapping(path = "/sendOTP", produces = "application/json" )
-    public boolean sendOTP(@RequestParam String mobileNumber) {
-        return loginHandler.sendOTP(mobileNumber);
+    public ResponseEntity sendOTP(@RequestParam String mobileNumber) {
+        ResponseEntity<String> responseEntity = null;
+        if(loginHandler.sendOTP(mobileNumber)) {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+        }
+        return responseEntity;
     }
 
     @PostMapping(path = "/verifyOTP", produces = "application/json" )
-    public boolean verifyOTP(OTPBean otpBean) {
-        return otpdao.validateOTP(otpBean);
+    public ResponseEntity verifyOTP(OTPBean otpBean) {
+        ResponseEntity<String> responseEntity = null;
+        if(otpdao.validateOTP(otpBean)){
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
     }
 
     /*
