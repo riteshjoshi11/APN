@@ -1,5 +1,6 @@
 package com.ANP.demo;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,6 +15,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
+		System.out.println("System Property Test: " + System.getProperty("TestModeOTP"));
 		SpringApplication.run(DemoApplication.class, args);
 	}
 

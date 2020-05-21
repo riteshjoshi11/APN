@@ -42,6 +42,8 @@ public class OTPDAO {
             long timeDiffInMinutes = TimeUnit.MILLISECONDS.toMinutes(timeDiff);
             if(timeDiffInMinutes<10) {
                 otpValid = true;
+                namedParameterJdbcTemplate.update("delete from otphandler where mobileNumber=:mobileNumber",
+                        new BeanPropertySqlParameterSource(otpBean));
             }
             //If yes then set true else false
         }

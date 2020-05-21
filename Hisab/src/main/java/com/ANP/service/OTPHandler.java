@@ -1,6 +1,7 @@
 package com.ANP.service;
 import com.ANP.bean.OTPBean;
 import com.ANP.repository.OTPDAO;
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,10 @@ public class OTPHandler {
 
     public boolean sendOTP(String mobile) {
         String otp=generateNumberOTP(6);
-        if("True".equalsIgnoreCase(System.getProperty("TestMode"))){
-            System.out.println("Test Mode is enabled to setting OTP to 250250");
-            otp="250250";
+        String testModeOTP = System.getProperty("TestModeOTP");
+        if(!ANPUtils.isNullOrEmpty(testModeOTP)){
+            System.out.println("Test Mode is enabled to setting OTP to [" + testModeOTP + "]" );
+            otp=testModeOTP;
         }
         OTPBean otpBean = new OTPBean();
         otpBean.setMobileNumber(mobile);
