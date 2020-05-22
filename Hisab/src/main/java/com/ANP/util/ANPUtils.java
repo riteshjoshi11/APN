@@ -33,7 +33,7 @@ public class ANPUtils implements ANPConstants {
      */
     public static String getWhereClause(final Collection<SearchParam> searchParamCollection) {
         String where = "";
-        if (searchParamCollection != null || !searchParamCollection.isEmpty()) {
+        if (searchParamCollection != null) {
             for (SearchParam searchParam : searchParamCollection) {
                 String value = searchParam.getValue();
 

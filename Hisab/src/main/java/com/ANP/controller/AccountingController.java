@@ -137,10 +137,10 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/listExpensesPaged", produces = "application/json")
-    public List<Expense> listExpensesPaged(long orgId,Collection<SearchParam> searchParams,
-                                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+    public List<Expense> listExpensesPaged(@RequestBody ListParametersBean listParametersBean) {
 
-        return expenseDao.listExpensesPaged(orgId,searchParams, orderBy, noOfRecordsToShow,startIndex);
+        return expenseDao.listExpensesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
 }

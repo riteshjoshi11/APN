@@ -31,6 +31,10 @@ public class ExpenseDAO {
 
     public List<Expense> listExpensesPaged(long orgId, Collection<SearchParam> searchParams,
                                            String orderBy, int noOfRecordsToShow, int startIndex) {
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgId);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
