@@ -161,6 +161,10 @@ public class EmployeeDAO {
 
     public List<EmployeeBean> listEmployeesWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
                                                             String orderBy, int noOfRecordsToShow, int startIndex) {
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
@@ -186,7 +190,7 @@ public class EmployeeDAO {
             empbean.setLoginusername(rs.getString("e.loginusername"));
             empbean.setType(rs.getString("e.type"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
-            empbean.setCurrentAccountBalance(rs.getFloat("e.currentbalance"));
+           // empbean.setCurrentAccountBalance(rs.getFloat("e.currentbalance"));
             return empbean;
         }
     }//end FullEmployeeMapper
@@ -194,6 +198,10 @@ public class EmployeeDAO {
 
     public List<EmployeeSalary> listEmpSalariesPaged(long orgID, Collection<SearchParam> searchParams,
                                                             String orderBy, int noOfRecordsToShow, int startIndex) {
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgid", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
@@ -230,7 +238,12 @@ public class EmployeeDAO {
      */
     public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(long orgID, Collection<SearchParam> searchParams,
                                                                 String orderBy, int noOfRecordsToShow, int startIndex) {
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
+
         param.put("orgid", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);

@@ -75,6 +75,10 @@ public class CustomerDao {
      */
     public List<CustomerBean> listCustomerANDVendorWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
                                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);

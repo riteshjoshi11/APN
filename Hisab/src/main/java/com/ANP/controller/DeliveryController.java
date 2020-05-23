@@ -1,9 +1,6 @@
 package com.ANP.controller;
 
-import com.ANP.bean.CustomerBean;
-import com.ANP.bean.DeliveryBean;
-import com.ANP.bean.EmployeeBean;
-import com.ANP.bean.SearchParam;
+import com.ANP.bean.*;
 import com.ANP.repository.DeliveryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,9 +36,9 @@ public class DeliveryController {
     }
 
     @PostMapping(path = "/listDeliveriesPaged", produces = "application/json")
-    public List<DeliveryBean> listDeliveriesPaged(long ordID, Collection<SearchParam> searchParams,
-                                                  String orderBy, int noOfRecordsToShow, int startIndex) {
-        return deliveryDAO.listDeliveriesPaged(ordID,searchParams,orderBy,noOfRecordsToShow,startIndex);
+    public List<DeliveryBean> listDeliveriesPaged(@RequestBody ListParametersBean listParametersBean) {
+        return deliveryDAO.listDeliveriesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
 
     }
 

@@ -3,11 +3,13 @@ package com.ANP.controller;
 import com.ANP.bean.*;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.service.EmployeeHandler;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -119,9 +121,9 @@ public class EmployeeController {
      * The filter can be dynamic and can start with "e.<employee table attribute>"
      */
     @PostMapping(path = "/listEmployeesWithBalancePaged", produces = "application/json")
-    public List<EmployeeBean> listEmployeesWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
-                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
-        return employeeDAO.listEmployeesWithBalancePaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    public List<EmployeeBean> listEmployeesWithBalancePaged(@RequestBody ListParametersBean listParametersBean) {
+        return employeeDAO.listEmployeesWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
 
@@ -132,15 +134,14 @@ public class EmployeeController {
      * The filter can be dynamic and can start with "e.<employee table attribute>" or "empsal.<Employee Salary Table attribute>"
      */
     @PostMapping(path = "/listEmpSalariesPaged", produces = "application/json")
-    public List<EmployeeSalary> listEmpSalariesPaged(long orgID, Collection<SearchParam> searchParams,
-                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
-        return employeeDAO.listEmpSalariesPaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    public List<EmployeeSalary> listEmpSalariesPaged(@RequestBody ListParametersBean listParametersBean) {
+        return employeeDAO.listEmpSalariesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listEmpPaidSalariesPaged", produces = "application/json")
-    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(long orgID, Collection<SearchParam> searchParams,
-                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
-        return employeeDAO.listEmpPaidSalariesPaged(orgID, searchParams, orderBy, noOfRecordsToShow, startIndex);
+    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(@RequestBody ListParametersBean listParametersBean) {
+        return employeeDAO.listEmpPaidSalariesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
-
 }

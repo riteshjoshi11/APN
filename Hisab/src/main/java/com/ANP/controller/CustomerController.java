@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ANP.bean.CustomerBean;
+import com.ANP.bean.ListParametersBean;
 import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.service.CustomerHandler;
@@ -41,8 +42,8 @@ public class CustomerController {
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */
     @PostMapping(path = "/listCustomerANDVendorWithBalancePaged", produces = "application/json")
-    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(long orgID,Collection<SearchParam> searchParams,
-                                                               String orderBy, int noOfRecordsToShow, int startIndex) {
-        return customerDao.listCustomerANDVendorWithBalancePaged(orgID,searchParams,orderBy, noOfRecordsToShow,startIndex);
+    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(@RequestBody ListParametersBean listParametersBean) {
+        return customerDao.listCustomerANDVendorWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 }

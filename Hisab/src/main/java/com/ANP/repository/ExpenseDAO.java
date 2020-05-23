@@ -27,8 +27,6 @@ public class ExpenseDAO {
                         "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO);",
                 new BeanPropertySqlParameterSource(expense));
     }
-
-
     public List<Expense> listExpensesPaged(long orgId, Collection<SearchParam> searchParams,
                                            String orderBy, int noOfRecordsToShow, int startIndex) {
         if(startIndex == 0)
@@ -40,15 +38,12 @@ public class ExpenseDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         param.put("orderBy", orderBy);
-
         return namedParameterJdbcTemplate.query(
                 "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
-
     }
-
     private static final class FullExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
@@ -74,7 +69,6 @@ public class ExpenseDAO {
             return obj;
         }
     }
-
     private static final class ExpenseMapperLimited implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
@@ -84,7 +78,6 @@ public class ExpenseDAO {
             return obj;
         }
     }
-
     public List<Expense> findExpenseByToPartyName(String toPartyName, long orgId) {
         String toPartyNameCriteria="";
         if(!ANPUtils.isNullOrEmpty(toPartyName)) {
@@ -95,7 +88,6 @@ public class ExpenseDAO {
                         + toPartyNameCriteria,
                 new BeanPropertySqlParameterSource(new Expense()), new ExpenseMapperLimited());
     }
-
     /*
          you need to update Expense Table:IncludeInCAReport field with the passed value
      */
@@ -109,12 +101,10 @@ public class ExpenseDAO {
             return false;
         }
     }
-
     /*
           you need to update Expense Table:includeInCalc field with the passed value
     */
     public boolean updateIncludeInCalc(long expenseID,boolean includeInCalcSwtich) {
-
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
         parameterSource.addValue("includeInCalcSwtich", includeInCalcSwtich);

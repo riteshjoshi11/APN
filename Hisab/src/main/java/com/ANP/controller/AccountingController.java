@@ -130,9 +130,9 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/listPurchasesPaged", produces = "application/json")
-    public List<PurchaseFromVendorBean> listPurchasesPaged(long orgID, Collection<SearchParam> searchParams,
-                                                           String orderBy, int noOfRecordsToShow, int startIndex) {
-        return purchaseFromVendorDAO.listPurchasesPaged(orgID,searchParams, orderBy, noOfRecordsToShow,startIndex);
+    public List<PurchaseFromVendorBean> listPurchasesPaged(@RequestBody ListParametersBean listParametersBean) {
+        return purchaseFromVendorDAO.listPurchasesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
 
     }
 

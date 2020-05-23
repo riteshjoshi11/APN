@@ -37,19 +37,23 @@ public class PurchaseFromVendorDAO {
     public List<PurchaseFromVendorBean> listPurchasesPaged(long orgID, Collection<SearchParam> searchParams,
                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
 
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("orgID", orgID);
+        param.put("orgId", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         param.put("orderBy", orderBy);
 
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
-                        "customer.gstin,customer.mobile1,customer.firmname, customer.orgid " +
+                        "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, " +
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno " +
-                        " from customer,purchasefromvendor where p.orgid=:orgId and customer.id=p.id " +
+                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.id " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullPurchaseFromVendorMapper());

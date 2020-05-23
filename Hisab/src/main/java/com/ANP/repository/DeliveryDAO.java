@@ -39,7 +39,10 @@ public class DeliveryDAO {
 
     public List<DeliveryBean> listDeliveriesPaged(long orgID, Collection<SearchParam> searchParams,
                                                   String orderBy, int noOfRecordsToShow, int startIndex) {
-
+        if(startIndex == 0)
+        {
+            startIndex = 1;
+        }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
@@ -47,7 +50,7 @@ public class DeliveryDAO {
         param.put("orderBy",orderBy);
 
         return namedParameterJdbcTemplate.query("select customer.name, customer.city," +
-                        "customer.gstin,customer.mobile1,customer.firmname " +
+                        "customer.gstin,customer.mobile1,customer.firmname, " +
                         " delivery.id, delivery.date,delivery.description " +
                         " from customer,delivery where customer.id=delivery.id and delivery.orgid=:orgID " +
                          ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
