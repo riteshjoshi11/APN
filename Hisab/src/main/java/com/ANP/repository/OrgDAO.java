@@ -1,11 +1,14 @@
 package com.ANP.repository;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.ANP.bean.Organization;
 import com.ANP.service.OrganizationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -20,9 +23,14 @@ public class OrgDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public int createOrganization(Organization organization) {
-        return namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
-                "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization));
+    public long createOrganization(Organization organization) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
+                "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization), holder);
+        long generatedOrgKey = holder.getKey().longValue();
+        System.out.println("CreateOrganization: Generated Key=" + generatedOrgKey);
+        return generatedOrgKey ;
+
     }
 
     public Organization getOrganization(Long id) {
