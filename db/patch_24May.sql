@@ -37,3 +37,4 @@ ADD COLUMN `createdate` DATETIME NULL AFTER `includeincalc`;
 
 ALTER TABLE `antrackerdb`.`retailsale` 
 CHANGE COLUMN `createdate` `createdate` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ;
+
