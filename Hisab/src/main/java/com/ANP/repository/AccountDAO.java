@@ -179,7 +179,7 @@ public class AccountDAO {
                 in, new userDetailMapper());
 
         if(userDetailBeanList==null || userDetailBeanList.size()==0) {
-            //return error and do not process
+           throw new RuntimeException("Cannot fetch details with the given parameters.");
         }
 
         UserDetailBean userDetailBean = userDetailBeanList.get(0);

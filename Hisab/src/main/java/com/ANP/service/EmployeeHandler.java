@@ -3,6 +3,8 @@ import java.util.*;
 import com.ANP.bean.*;
 import com.ANP.repository.AccountDAO;
 import com.ANP.repository.EmployeeDAO;
+import com.ANP.util.ANPConstants;
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +23,17 @@ public class EmployeeHandler {
         // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
         // In a Transaction
         boolean isemployeecreated = false;
+        if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
+            employeeBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
+        }
         employeeDAO.createEmployee(employeeBean);
+
+        //Now Create an associated account
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountnickname(employeeBean.getFirst() + " " +  employeeBean.getLast());
         accountBean.setCurrentbalance(employeeBean.getCurrentAccountBalance());
         accountBean.setCreatedbyid(employeeBean.getCreatedbyId());
-        accountBean.setType("E");
+        accountBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         accountBean.setOwnerid(employeeBean.getEmployeeId());
         isemployeecreated = accountDAO.createAccount(accountBean);
         return isemployeecreated;

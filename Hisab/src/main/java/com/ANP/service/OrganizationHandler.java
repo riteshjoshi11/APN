@@ -18,7 +18,7 @@ public class OrganizationHandler {
     OrgDAO orgDAO;
 
     @Autowired
-    EmployeeDAO employeeDAO;
+   EmployeeHandler employeeHandler;
 
     /*
        The method create Organization as well as the first default employee (SUPER_ADMIN)
@@ -29,7 +29,7 @@ public class OrganizationHandler {
       EmployeeBean employeeBean = organizationRegistrationBean.getEmployeeBean();
       employeeBean.setType(ANPConstants.EMPLOYEE_TYPE_SUPER_ADMIN);
       employeeBean.setOrgId(orgKey);
-      employeeDAO.createEmployee(employeeBean);
+      employeeHandler.createEmployee(employeeBean);
       return true;
     }
 }

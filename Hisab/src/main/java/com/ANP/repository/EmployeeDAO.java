@@ -25,11 +25,13 @@ public class EmployeeDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private JdbcTemplate jdbcTemplate;
+
     @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    private JdbcTemplate jdbcTemplate;
+
 
     public int createEmployee(EmployeeBean employeeBean) {
 
@@ -39,8 +41,8 @@ public class EmployeeDAO {
         employeeBean.setEmployeeId(id);
         return namedParameterJdbcTemplate.update(
                 "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
-                        ",lastsalarybalance,orgid) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
-                        ",:currentsalarybalance,:lastsalarybalance,:orgId)", new BeanPropertySqlParameterSource(employeeBean));
+                        ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
+                        ",:currentsalarybalance,:lastsalarybalance,:orgId, :type)", new BeanPropertySqlParameterSource(employeeBean));
     }
 
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {

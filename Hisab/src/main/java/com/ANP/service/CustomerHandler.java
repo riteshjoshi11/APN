@@ -4,6 +4,7 @@ import com.ANP.bean.AccountBean;
 import com.ANP.repository.AccountDAO;
 import com.ANP.repository.CustomerDao;
 import com.ANP.bean.CustomerBean;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class CustomerHandler {
         accountBean.setAccountnickname(getAccountNickName(customerBean.getFirmname(),customerBean.getName(), customerBean.getCity()));
         accountBean.setCreatedbyid(customerBean.getCreatedbyId());
         accountBean.setCurrentbalance(customerBean.getInitialBalance());
-        accountBean.setType("C");
+        accountBean.setType(ANPConstants.LOGIN_TYPE_CUSTOMER);
         iscustomercreated = accountDAO.createAccount(accountBean);
         return iscustomercreated;
     }
