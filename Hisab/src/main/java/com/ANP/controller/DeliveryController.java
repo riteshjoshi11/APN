@@ -30,7 +30,7 @@ public class DeliveryController {
         if (isDeliveryCreated) {
             responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
         } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+            responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
         }
         return responseEntity;
     }
@@ -41,9 +41,4 @@ public class DeliveryController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
 
     }
-
-
-
-
-
 }
