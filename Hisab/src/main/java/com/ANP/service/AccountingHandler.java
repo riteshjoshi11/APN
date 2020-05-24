@@ -27,7 +27,8 @@ public class AccountingHandler {
     @Autowired
     InternalTransferDAO internalTransferDAO ;
 
-
+    @Autowired
+    RetailSaleDAO retailSaleDAO;
     /*
      *
      */
@@ -83,6 +84,13 @@ public class AccountingHandler {
         accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
         accountDAO.updateAccountBalance(internalTransferBean.getFromAccountID(), internalTransferBean.getAmount(), "SUBTRACTED");
         return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean createRetailSale(RetailSale retailSale) {
+        retailSaleDAO.createRetailSale(retailSale);
+        accountDAO.updateAccountBalance(retailSale.getFromaccountid(), retailSale.getAmount(), "ADD");
+        return true ;
     }
 
 }

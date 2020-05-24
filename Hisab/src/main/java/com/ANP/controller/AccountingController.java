@@ -29,8 +29,6 @@ public class AccountingController {
     @Autowired
     PurchaseFromVendorDAO purchaseFromVendorDAO ;
 
-    @Autowired
-    RetailSaleDAO retailSaleDAO;
 
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
@@ -147,11 +145,12 @@ public class AccountingController {
     @PostMapping(path = "/createRetailSale", produces = "application/json")
     public ResponseEntity createRetailSale(@RequestBody RetailSale retailSale) {
         ResponseEntity<String> responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
-        int created = retailSaleDAO.createRetailSale(retailSale);
-        if(created>0) {
+        boolean created = accountingHandler.createRetailSale(retailSale);
+        if(created) {
             responseEntity =  new ResponseEntity<>("Success", HttpStatus.OK);
         }
         return  responseEntity;
     }
 
-}
+
+    }
