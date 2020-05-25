@@ -13,6 +13,19 @@ public class PayToVendorBean extends CommonAttribute {
     private double amount;
     private String details;
     private boolean includeInCalc;
+    private CustomerBean customerBean;
+
+    public PayToVendorBean() {
+        this.customerBean =  new CustomerBean();
+    }
+
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
 
     public boolean isIncludeInCalc() {
         return includeInCalc;

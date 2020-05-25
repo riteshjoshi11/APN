@@ -14,9 +14,27 @@ public class CustomerInvoiceBean extends CommonAttribute {
     private double extra;
     private double totalAmount;
     private String note;
+
     private String invoiceNo;
+
     private boolean includeInReport;
     private boolean includeInCalc;
+
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
+
+    public CustomerInvoiceBean()
+    {
+        this.customerBean = new CustomerBean();
+    }
+    private CustomerBean customerBean;
+
+
 
     public long getInvoiceID() {
         return invoiceID;

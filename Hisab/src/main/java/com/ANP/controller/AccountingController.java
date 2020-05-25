@@ -141,6 +141,28 @@ public class AccountingController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
+    @PostMapping(path = "/listSalesPaged", produces = "application/json")
+    public List<CustomerInvoiceBean> listSalesPaged(@RequestBody ListParametersBean listParametersBean)
+    {
+        return accountDAO.listSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+
+    @PostMapping(path = "/listPayToVendorPaged", produces = "application/json")
+    public List<PayToVendorBean> listPayToVendorPaged(@RequestBody ListParametersBean listParametersBean)
+    {
+        return accountDAO.listPayToVendorPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/listInternalTransfer", produces = "application/json")
+    public List<InternalTransferBean> listInternalTransfer(@RequestBody ListParametersBean listParametersBean)
+    {
+        return accountDAO.listInternalTransfer(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
 
     @PostMapping(path = "/createRetailSale", produces = "application/json")
     public ResponseEntity createRetailSale(@RequestBody RetailSale retailSale) {

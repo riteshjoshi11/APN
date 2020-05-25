@@ -13,6 +13,30 @@ public class InternalTransferBean extends CommonAttribute {
     private String fromEmployeeID;
     private boolean includeInCalc;
 
+    private EmployeeBean toEmployee;
+    private EmployeeBean fromEmployee;
+
+    public InternalTransferBean()
+    {
+        this.toEmployee = new EmployeeBean();
+        this.fromEmployee = new EmployeeBean();
+    }
+    public EmployeeBean getToEmployee() {
+        return toEmployee;
+    }
+
+    public void setToEmployee(EmployeeBean toEmployee) {
+        this.toEmployee = toEmployee;
+    }
+
+    public EmployeeBean getFromEmployee() {
+        return fromEmployee;
+    }
+
+    public void setFromEmployee(EmployeeBean fromEmployee) {
+        this.fromEmployee = fromEmployee;
+    }
+
     public long getInternalTransferID() {
         return internalTransferID;
     }
