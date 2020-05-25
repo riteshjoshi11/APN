@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.*;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -96,7 +97,8 @@ public class AccountDAO {
         }
 
         List<AccountBean> accountBeanList =
-                jdbcTemplate.query("select id,ownerid,accountnickname from account where accountnickname like ? and orgid = ? and type='Customer' ",
+                jdbcTemplate.query("select id,ownerid,accountnickname from account where " +
+                                "accountnickname like ? and orgid = ? and type='" + ANPConstants.LOGIN_TYPE_CUSTOMER +  "'",
                         new String[]{"%" + accountnickname + "%", orgId}
                         , new AccountMapper());
         return accountBeanList;

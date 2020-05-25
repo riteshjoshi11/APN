@@ -24,6 +24,7 @@ public class CustomerHandler {
 
         //Preparing Account & creating account
         AccountBean accountBean = new AccountBean();
+        accountBean.setOrgId(customerBean.getOrgId());
         accountBean.setOwnerid(customerBean.getCustomerID());
         accountBean.setAccountnickname(getAccountNickName(customerBean.getFirmname(),customerBean.getName(), customerBean.getCity()));
         accountBean.setCreatedbyid(customerBean.getCreatedbyId());

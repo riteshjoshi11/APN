@@ -10,11 +10,11 @@ public class CommonAttribute {
     @ApiModelProperty(hidden = true)
     protected String statusMessage;
   //  @ApiModelProperty(hidden = true)
-    protected String createdbyId = "E1";
+    protected String createdbyId;
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
  //   @ApiModelProperty(hidden = true)
-    protected long orgId = 1; //TODO remove 1
+    protected long orgId; //TODO remove 1
 
     //protected boolean includeInCalc;
 

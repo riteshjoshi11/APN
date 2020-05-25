@@ -35,6 +35,7 @@ public class EmployeeHandler {
         accountBean.setCreatedbyid(employeeBean.getCreatedbyId());
         accountBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         accountBean.setOwnerid(employeeBean.getEmployeeId());
+        accountBean.setOrgId(employeeBean.getOrgId());
         isemployeecreated = accountDAO.createAccount(accountBean);
         return isemployeecreated;
     }
