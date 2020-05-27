@@ -22,7 +22,7 @@ public class CalculationTrackerDAO {
                 "select * from calculationtracker where orgid=" + orgId,
                 new BeanPropertySqlParameterSource(new CalculationTrackerBean()), new CalculationMapper());
 
-        CalculationTrackerBean trackerBean = null ;
+        CalculationTrackerBean trackerBean = new CalculationTrackerBean() ;
         if(trackerBeanList!=null && trackerBeanList.size()>0) {
             trackerBean = trackerBeanList.get(1);
         }
