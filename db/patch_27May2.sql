@@ -1,4 +1,4 @@
-DROP TABLE `antrackerdb`.`calculationtracker`;
+DROP TABLE `antrackerdb`.`CalculationTracker`;
 
 CREATE TABLE `calculationtracker` (
   `orgid` int NOT NULL AUTO_INCREMENT,
