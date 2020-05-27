@@ -77,11 +77,11 @@ public class EmployeeDAO {
         mapSqlParameterSource.addValue("toemployeeid", toEmployeeID);
         mapSqlParameterSource.addValue("balance", balance);
         if (operation.equals("ADD"))
-            updateSuccess = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "+ :balance where toemployeeid = :toemployeeid", mapSqlParameterSource);
+            updateSuccess = namedParameterJdbcTemplate.update("update employee set lastsalarybalance = currentsalarybalance, " +
+                    "currentsalarybalance = currentsalarybalance + :balance where id = :toemployeeid", mapSqlParameterSource);
         else
-            updateSuccess = namedParameterJdbcTemplate.update("update employeesalary set amount = amount" +
-                    "- :balance where toemployeeid = :toemployeeid", mapSqlParameterSource);
+            updateSuccess = namedParameterJdbcTemplate.update("update employee set lastsalarybalance = currentsalarybalance, " +
+                    "currentsalarybalance = currentsalarybalance - :balance where id = :toemployeeid", mapSqlParameterSource);
         if (updateSuccess != 0)
             return true;
         else
