@@ -9,6 +9,21 @@ public class RetailSale extends CommonAttribute {
     private int fromaccountid;
     private Date date;
     private boolean includeincalc;
+    public EmployeeBean fromEmployeeBean;
+
+
+    public RetailSale()
+    {
+        fromEmployeeBean = new EmployeeBean();
+    }
+
+    public EmployeeBean getFromEmployee() {
+        return fromEmployeeBean;
+    }
+
+    public void setFromEmployee(EmployeeBean fromEmployee) {
+        this.fromEmployeeBean = fromEmployee;
+    }
 
     public boolean isIncludeincalc() {
         return includeincalc;

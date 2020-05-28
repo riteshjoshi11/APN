@@ -1,10 +1,7 @@
 package com.ANP.controller;
 
 import com.ANP.bean.*;
-import com.ANP.repository.AccountDAO;
-import com.ANP.repository.ExpenseDAO;
-import com.ANP.repository.PurchaseFromVendorDAO;
-import com.ANP.repository.RetailSaleDAO;
+import com.ANP.repository.*;
 import com.ANP.service.AccountingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +26,17 @@ public class AccountingController {
     @Autowired
     PurchaseFromVendorDAO purchaseFromVendorDAO ;
 
+    @Autowired
+    RetailSaleDAO retailSaleDAO;
 
+    @Autowired
+    InternalTransferDAO internalTransferDAO;
+
+    @Autowired
+    PayToVendorDAO payToVendorDAO;
+
+    @Autowired
+    CustomerInvoiceDAO customerInvoiceDAO;
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
@@ -100,6 +107,15 @@ public class AccountingController {
         return responseEntity;
     }
 
+    @PostMapping(path = "/createRetailSale", produces = "application/json")
+    public ResponseEntity createRetailSale(@RequestBody RetailSale retailSale) {
+        ResponseEntity<String> responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
+        boolean created = accountingHandler.createRetailSale(retailSale);
+        if(created) {
+            responseEntity =  new ResponseEntity<>("Success", HttpStatus.OK);
+        }
+        return  responseEntity;
+    }
     @PostMapping(path = "/getAccountsByNickName", produces = "application/json")
     public List<AccountBean> getAccountsByNickName(@RequestBody AccountBean accountBean) {
         return accountDAO.searchAccounts(accountBean);
@@ -129,6 +145,7 @@ public class AccountingController {
 
     @PostMapping(path = "/listPurchasesPaged", produces = "application/json")
     public List<PurchaseFromVendorBean> listPurchasesPaged(@RequestBody ListParametersBean listParametersBean) {
+
         return purchaseFromVendorDAO.listPurchasesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
 
@@ -144,33 +161,28 @@ public class AccountingController {
     @PostMapping(path = "/listSalesPaged", produces = "application/json")
     public List<CustomerInvoiceBean> listSalesPaged(@RequestBody ListParametersBean listParametersBean)
     {
-        return accountDAO.listSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+        return customerInvoiceDAO.listSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
-
 
     @PostMapping(path = "/listPayToVendorPaged", produces = "application/json")
     public List<PayToVendorBean> listPayToVendorPaged(@RequestBody ListParametersBean listParametersBean)
     {
-        return accountDAO.listPayToVendorPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+        return payToVendorDAO.listPayToVendorPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listInternalTransfer", produces = "application/json")
     public List<InternalTransferBean> listInternalTransfer(@RequestBody ListParametersBean listParametersBean)
     {
-        return accountDAO.listInternalTransfer(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+        return internalTransferDAO.listInternalTransfer(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
-
-    @PostMapping(path = "/createRetailSale", produces = "application/json")
-    public ResponseEntity createRetailSale(@RequestBody RetailSale retailSale) {
-        ResponseEntity<String> responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
-        boolean created = accountingHandler.createRetailSale(retailSale);
-        if(created) {
-            responseEntity =  new ResponseEntity<>("Success", HttpStatus.OK);
-        }
-        return  responseEntity;
+    @PostMapping(path = "/listRetailEntryPaged", produces = "application/json")
+    public List<RetailSale> listRetailEntryPaged(@RequestBody ListParametersBean listParametersBean)
+    {
+        return retailSaleDAO.listRetailEntryPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
   }
