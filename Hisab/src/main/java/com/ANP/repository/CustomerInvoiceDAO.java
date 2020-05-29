@@ -43,7 +43,7 @@ public class CustomerInvoiceDAO {
         return namedParameterJdbcTemplate.query(
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
-                        "cusinv.includeincalc, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
+                        "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -58,6 +58,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));
             customerInvoiceBean.getCustomerBean().setGstin(rs.getString("c.gstin"));
             customerInvoiceBean.getCustomerBean().setMobile1(rs.getString("c.mobile1"));
+            customerInvoiceBean.getCustomerBean().setState(rs.getString("c.state"));
 //          customerInvoiceBean.getCustomerBean().setMobile2(rs.getString("c.mobile2"));
             customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
             customerInvoiceBean.setCGST(rs.getDouble("cusinv.cgst"));

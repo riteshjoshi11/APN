@@ -30,8 +30,8 @@ public class CustomerDao {
         customerBean.setCustomerID(customerId);
 
         System.out.println("customer id " + customerId);
-        String sql = "insert into customer (id,name,city,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
-                "values(:customerID,:name,:city,:gstin,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgId,:createdbyId)";
+        String sql = "insert into customer (id,name,city,state,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
+                "values(:customerID,:name,:city,:gstin,:state,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgId,:createdbyId)";
         int updated = namedParameterJdbcTemplate.update(sql
                 , new BeanPropertySqlParameterSource(customerBean));
 
@@ -108,6 +108,7 @@ public class CustomerDao {
             cus.setFirmname(rs.getString("customer.firmname"));
             cus.setBillingadress(rs.getString("customer.billingadress"));
             cus.setOrgId(rs.getLong("customer.orgid"));
+            cus.setState(rs.getString("customer.state"));
             cus.setSendPaymentReminders(rs.getBoolean("customer.sendPaymentReminders"));
             cus.setAccountBalance(rs.getFloat("account.currentbalance"));
             return cus;

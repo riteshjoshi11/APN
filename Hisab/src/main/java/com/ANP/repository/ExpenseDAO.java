@@ -24,9 +24,10 @@ public class ExpenseDAO {
     public int createExpense(Expense expense) {
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno)" +
-                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO);",
+                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO);",
                 new BeanPropertySqlParameterSource(expense));
     }
+
     public List<Expense> listExpensesPaged(long orgId, Collection<SearchParam> searchParams,
                                            String orderBy, int noOfRecordsToShow, int startIndex) {
         if(startIndex == 0)
@@ -47,22 +48,22 @@ public class ExpenseDAO {
     private static final class FullExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
-            obj.setExpenseId(rs.getInt("id"));
-            obj.setCategory(rs.getString("category"));
-            obj.setTotalAmount(rs.getFloat("totalamount"));
-            obj.setOrgId(rs.getLong("orgid"));
-            obj.setIncludeInCalc(rs.getBoolean("includeincalc"));
-            obj.setIncludeInReport(rs.getBoolean("includeinreport"));
-            obj.setCreatedbyId(rs.getString("createdbyid"));
-            obj.setOrderAmount(rs.getDouble("orderamount"));
-            obj.setCGST(rs.getDouble("cgst"));
-            obj.setSGST(rs.getDouble("sgst"));
-            obj.setIGST(rs.getDouble("igst"));
-            obj.setExtra(rs.getDouble("extra"));
-            obj.setToPartyGSTNO(rs.getString("topartygstno"));
-            obj.setToPartyMobileNO(rs.getString("topartymobileno"));
-            obj.setEmpFirstName(rs.getString("first"));
-            obj.setEmpLastName(rs.getString("last"));
+            obj.setExpenseId(rs.getInt("exp.id"));
+            obj.setCategory(rs.getString("exp.category"));
+            obj.setTotalAmount(rs.getFloat("exp.totalamount"));
+            obj.setOrgId(rs.getLong("exp.orgid"));
+            obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
+            obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
+            obj.setCreatedbyId(rs.getString("exp.createdbyid"));
+            obj.setOrderAmount(rs.getDouble("exp.orderamount"));
+            obj.setCGST(rs.getDouble("exp.cgst"));
+            obj.setSGST(rs.getDouble("exp.sgst"));
+            obj.setIGST(rs.getDouble("exp.igst"));
+            obj.setExtra(rs.getDouble("exp.extra"));
+            obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
+            obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
+            obj.setEmpFirstName(rs.getString("e.first"));
+            obj.setEmpLastName(rs.getString("e.last"));
             //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
             // e.first and e.last into the expense Bean, I have created two corresponding fields
             // in the Exepense Bean (empFirstName, empLastName)

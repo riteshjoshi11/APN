@@ -12,9 +12,21 @@ public class CustomerBean extends CommonAttribute {
     private String customerID;
     private double initialBalance = 0;
     private boolean sendPaymentReminders;
+    private String state;
+
+
+
     //This is account attribute
     private double accountBalance;
 
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
     public double getAccountBalance() {
         return accountBalance;
     }

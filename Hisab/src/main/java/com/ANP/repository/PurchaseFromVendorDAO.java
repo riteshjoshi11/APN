@@ -49,7 +49,7 @@ public class PurchaseFromVendorDAO {
 
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
-                        "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, " +
+                        "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno " +
@@ -70,6 +70,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.getCustomerBean().setMobile1(rs.getString("customer.mobile1"));
             purchaseFromVendorBean.getCustomerBean().setFirmname(rs.getString("customer.firmname"));
             purchaseFromVendorBean.getCustomerBean().setOrgId(rs.getLong("customer.orgid"));
+            purchaseFromVendorBean.getCustomerBean().setState(rs.getString("customer.state"));
             purchaseFromVendorBean.setPurchaseID(rs.getLong("p.id"));
             purchaseFromVendorBean.setDate(rs.getDate("p.date"));
             purchaseFromVendorBean.setCGST(rs.getFloat("p.CGST"));
@@ -85,4 +86,3 @@ public class PurchaseFromVendorDAO {
         }
     }
 }
-

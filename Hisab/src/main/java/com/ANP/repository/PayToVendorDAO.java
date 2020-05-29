@@ -41,8 +41,8 @@ public class PayToVendorDAO {
         return namedParameterJdbcTemplate.query(
                 "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
                         " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
-                        " c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
-                        " paytovendor paytov where c.id=paytov.tocustomerid and paytov.orgid=:orgID " +
+                        " c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
+                        " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new PayToVendorMapper());
@@ -56,6 +56,7 @@ public class PayToVendorDAO {
             payToVendorBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));
             payToVendorBean.getCustomerBean().setGstin(rs.getString("c.gstin"));
             payToVendorBean.getCustomerBean().setMobile1(rs.getString("c.mobile1"));
+            payToVendorBean.getCustomerBean().setState(rs.getString("c.state"));
             payToVendorBean.setFromAccountID(rs.getLong("paytov.fromaccountid"));
             payToVendorBean.setToAccountID(rs.getLong("paytov.toaccountid"));
             payToVendorBean.setPaymentDate(rs.getDate("paytov.date"));
@@ -65,6 +66,9 @@ public class PayToVendorDAO {
             payToVendorBean.setOrgId(rs.getLong("paytov.orgid"));
             payToVendorBean.setToCustomerID(rs.getString("paytov.tocustomerid"));
             payToVendorBean.setIncludeInCalc(rs.getBoolean("paytov.includeincalc"));
+            payToVendorBean.getEmployeeBean().setFirst(rs.getString("e.first"));
+            payToVendorBean.getEmployeeBean().setLast(rs.getString("e.last"));
+            payToVendorBean.getEmployeeBean().setMobile(rs.getString("e.mobile"));
             return payToVendorBean;
         }
     }
