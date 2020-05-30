@@ -192,7 +192,7 @@ public class EmployeeDAO {
             empbean.setLoginusername(rs.getString("e.loginusername"));
             empbean.setType(rs.getString("e.type"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
-           // empbean.setCurrentAccountBalance(rs.getFloat("e.currentbalance"));
+            empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
             return empbean;
         }
     }//end FullEmployeeMapper

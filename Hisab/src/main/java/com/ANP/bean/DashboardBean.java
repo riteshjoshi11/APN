@@ -82,7 +82,7 @@ public class DashboardBean {
     }
 
     public double getBusinessHealth() {
-        this.businessHealth =  (this.totalAssets-this.totalLiability);
+        this.businessHealth =  (getTotalAssets() - getTotalLiability()) ;
         return businessHealth ;
     }
 

@@ -13,9 +13,6 @@ public class CustomerBean extends CommonAttribute {
     private double initialBalance = 0;
     private boolean sendPaymentReminders;
     private String state;
-
-
-
     //This is account attribute
     private double accountBalance;
 
@@ -27,6 +24,7 @@ public class CustomerBean extends CommonAttribute {
     public void setState(String state) {
         this.state = state;
     }
+
     public double getAccountBalance() {
         return accountBalance;
     }
@@ -46,9 +44,11 @@ public class CustomerBean extends CommonAttribute {
     public String getCustomerID() {
         return customerID;
     }
+
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
+
     public double getInitialBalance() {
         return initialBalance;
     }
@@ -104,7 +104,6 @@ public class CustomerBean extends CommonAttribute {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public String getCity() {
         return city;

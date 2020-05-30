@@ -38,20 +38,14 @@ public class DashboardDAO {
                 new SqlOutParameter("negativeBalance", Types.DOUBLE),
                 new SqlOutParameter("totalBalance", Types.DOUBLE),
         };
-        // ModelMap parameter = new ModelMap();
-        // parameter.addAttribute("ParamOrgId",orgId);
+
         procedure.setParameters(declareparameters);
         procedure.compile();
         Map<String, Object> result = procedure.execute(orgId);
         System.out.println("Status " + result);
         System.out.println("Status  " + result.get("positiveBalance"));
         dashboardBean.setNeedToPay((Double) result.get("positiveBalance"));
-        dashboardBean.setNeedToCollect((Double) result.get("positiveBalance"));
-
-
-
-
-
+        dashboardBean.setNeedToCollect((Double) result.get("negativeBalance"));
 
         StoredProcedure procedure1 = new GenericStoredProcedure();
         procedure1.setDataSource(dataSource);
@@ -67,13 +61,6 @@ public class DashboardDAO {
         Map<String, Object> result1 = procedure1.execute(orgId);
         System.out.println("Status tot cash in hand " + result1.get("totalCashInHand"));
         dashboardBean.setTotalCashInHand((Double)result1.get("totalCashInHand"));
-
-
-
-
-
-
-
 
 
         StoredProcedure procedure2 = new GenericStoredProcedure();
