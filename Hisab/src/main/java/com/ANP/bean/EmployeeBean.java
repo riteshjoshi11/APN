@@ -1,8 +1,15 @@
 package com.ANP.bean;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class EmployeeBean extends CommonAttribute {
 
+
     private String employeeId;
+    @NotNull(message = "first cannot be null")
+    @Size(max=5, message = "size must be less than 5")
     private String first;
     private String last;
     private String mobile;

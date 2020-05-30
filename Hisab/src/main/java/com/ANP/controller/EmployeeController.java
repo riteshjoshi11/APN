@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +26,7 @@ public class EmployeeController {
 
 
     @PostMapping(path = "/createEmployee", produces = "application/json")
-    public ResponseEntity createEmployee(@RequestBody EmployeeBean employeeBean) {
+    public ResponseEntity createEmployee(@Valid @RequestBody EmployeeBean employeeBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isEmployeeCreated = employeeHandler.createEmployee(employeeBean);
         if (isEmployeeCreated) {
@@ -125,9 +126,6 @@ public class EmployeeController {
         return employeeDAO.listEmployeesWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
-
-
-
     /*
      * This method returns the list of employee  Salaries with almost all employee attributes
      * This will be used in list employee Salary screen
