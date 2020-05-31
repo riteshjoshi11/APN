@@ -60,6 +60,8 @@ public class ExpenseDAO {
             obj.setSGST(rs.getDouble("exp.sgst"));
             obj.setIGST(rs.getDouble("exp.igst"));
             obj.setExtra(rs.getDouble("exp.extra"));
+            obj.setToPartyName(rs.getString("exp.topartyname"));
+            obj.setDate(rs.getDate("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
             obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
             obj.setEmpFirstName(rs.getString("e.first"));

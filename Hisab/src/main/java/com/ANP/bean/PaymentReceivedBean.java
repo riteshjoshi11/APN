@@ -7,13 +7,39 @@ public class PaymentReceivedBean extends CommonAttribute {
     private long paymentReceivedID;
     private long fromAccountID;
     private String fromCustomerID;
+
     private long toAccountID;
     private String toEmployeeID;
+
     private String paymentType;
     private java.util.Date receivedDate;
     private double amount;
     private boolean includeInCalc;
     private String details;
+
+    private CustomerBean customerBean;
+    private EmployeeBean employeeBean;
+
+    public PaymentReceivedBean() {
+        this.customerBean = new CustomerBean();
+        this.employeeBean = new EmployeeBean();
+    }
+
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
+
+    public EmployeeBean getEmployeeBean() {
+        return employeeBean;
+    }
+
+    public void setEmployeeBean(EmployeeBean employeeBean) {
+        this.employeeBean = employeeBean;
+    }
 
     public String getDetails() {
         return details;

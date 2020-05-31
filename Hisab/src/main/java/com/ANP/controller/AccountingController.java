@@ -38,6 +38,9 @@ public class AccountingController {
     @Autowired
     CustomerInvoiceDAO customerInvoiceDAO;
 
+    @Autowired
+    PaymentReceivedDAO paymentReceivedDAO;
+
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
         ResponseEntity<String> responseEntity = null;
@@ -183,6 +186,13 @@ public class AccountingController {
     public List<RetailSale> listRetailEntryPaged(@RequestBody ListParametersBean listParametersBean)
     {
         return retailSaleDAO.listRetailEntryPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/listPaymentReceivedPaged", produces = "application/json")
+    public List<PaymentReceivedBean> listPaymentReceivedPaged(@RequestBody ListParametersBean listParametersBean)
+    {
+        return paymentReceivedDAO.listPaymentReceivedPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
   }

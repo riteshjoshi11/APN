@@ -1,6 +1,6 @@
 package com.ANP.repository;
 
-import com.ANP.bean.PurchaseFromVendorBean;
+
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
@@ -40,13 +40,14 @@ public class RetailSaleDAO {
         param.put("orderBy", orderBy);
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
-                        "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.includeincalc" +
+                        "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +
                        " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new RetailEntryMapper());
 
     }
+
     public static final class RetailEntryMapper implements RowMapper<RetailSale>
     {
         public RetailSale mapRow (ResultSet rs, int rowNum) throws SQLException
@@ -57,6 +58,7 @@ public class RetailSaleDAO {
             ret.setIncludeincalc(rs.getBoolean("retail.includeincalc"));
             ret.setFromaccountid(rs.getInt("retail.fromaccountid"));
             ret.setFromemployeeid(rs.getString("retail.fromemployeeid"));
+            ret.setNotes(rs.getString("retail.notes"));
             ret.setOrgId(rs.getLong("retail.orgid"));
             ret.getFromEmployee().setFirst(rs.getString("e.first"));
             ret.getFromEmployee().setLast(rs.getString("e.last"));

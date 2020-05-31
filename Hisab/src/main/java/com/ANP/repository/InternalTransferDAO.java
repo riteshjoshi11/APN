@@ -39,16 +39,14 @@ public class InternalTransferDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         param.put("orderBy", orderBy);
-        return namedParameterJdbcTemplate.query(
-                "select e.mobile,e.first,e.last, internal.details," +
-                        " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
-                        " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
-                        " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
-                        "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
-                        + " offset :startIndex",
-                param, new InternalTransferMapper());
 
+        return namedParameterJdbcTemplate.query("select e.mobile,e.first,e.last, internal.details, internal.rcvddate,internal.amount," +
+                    " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
+                    " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
+                    " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
+                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
+                    ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",
+                param, new InternalTransferMapper());
     }
 
     private static final class InternalTransferMapper implements RowMapper<InternalTransferBean> {
@@ -61,6 +59,8 @@ public class InternalTransferDAO {
             internalTransferBean.getToEmployee().setFirst(rs.getString("e.first"));
             internalTransferBean.getToEmployee().setLast(rs.getString("e.last"));
             internalTransferBean.getToEmployee().setMobile(rs.getString("e.mobile"));
+            internalTransferBean.setAmount(rs.getDouble("internal.amount"));
+            internalTransferBean.setReceivedDate(rs.getDate("internal.rcvddate"));
             return internalTransferBean;
         }
     }

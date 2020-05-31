@@ -261,7 +261,7 @@ public class EmployeeDAO {
                 param, new FullEmployeeSalaryPayment());
         return EmployeeSalaryPaymentlist;
     }
-    //TODO Nitesh: Please fill the TO Employee Details
+
     private static final class FullEmployeeSalaryPayment implements RowMapper<EmployeeSalaryPayment> {
         public EmployeeSalaryPayment mapRow(ResultSet rs, int rowNum) throws SQLException {
             EmployeeSalaryPayment employeeSalaryPayment = new EmployeeSalaryPayment();
@@ -273,9 +273,10 @@ public class EmployeeDAO {
             employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
-           employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("empsalpay.fromemployeeid"));
+            employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("empsalpay.fromemployeeid"));
             employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("fromEmpFirstName"));
             employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("fromEmpLastName"));
+            employeeSalaryPayment.setTransferDate(rs.getDate("empsalpay.transferdate"));
             return employeeSalaryPayment;
         }
     }
