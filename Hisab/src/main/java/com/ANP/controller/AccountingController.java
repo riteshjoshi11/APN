@@ -41,6 +41,7 @@ public class AccountingController {
     @Autowired
     PaymentReceivedDAO paymentReceivedDAO;
 
+
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
         ResponseEntity<String> responseEntity = null;
@@ -68,7 +69,7 @@ public class AccountingController {
 
     @PostMapping(path = "/createGeneralExpense", produces = "application/json")
     public ResponseEntity createExpense(@RequestBody Expense expense) {
-        expenseDao.createExpense(expense);
+        accountingHandler.createExpense(expense);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
@@ -194,5 +195,16 @@ public class AccountingController {
     {
         return paymentReceivedDAO.listPaymentReceivedPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/makeExpenseUnpaidToPaid", produces = "application/json")
+    public ResponseEntity makeExpenseUnpaidToPaid(@RequestBody Expense expense) {
+        ResponseEntity<String> responseEntity = null;
+        if(accountingHandler.makeExpenseUnpaidToPaid(expense)) {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
+        } else {
+            responseEntity = new ResponseEntity<>("Success", HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
     }
   }

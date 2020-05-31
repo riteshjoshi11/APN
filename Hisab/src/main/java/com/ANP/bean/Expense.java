@@ -23,7 +23,7 @@ public class Expense extends CommonAttribute {
     private double extra;
     private String toPartyGSTNO;
     private String toPartyMobileNO;
-
+    private boolean paid;
     private String empFirstName;
     private String empLastName;
 
@@ -41,6 +41,14 @@ public class Expense extends CommonAttribute {
 
     public void setEmpLastName(String empLastName) {
         this.empLastName = empLastName;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 
     public String getToPartyGSTNO() {

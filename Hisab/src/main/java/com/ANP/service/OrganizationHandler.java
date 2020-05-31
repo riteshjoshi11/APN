@@ -1,8 +1,10 @@
 package com.ANP.service;
 
+import com.ANP.bean.CalculationTrackerBean;
 import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.Organization;
 import com.ANP.bean.OrganizationRegistrationBean;
+import com.ANP.repository.CalculationTrackerDAO;
 import com.ANP.repository.CustomerDao;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.repository.OrgDAO;
@@ -18,10 +20,14 @@ public class OrganizationHandler {
     OrgDAO orgDAO;
 
     @Autowired
-   EmployeeHandler employeeHandler;
+    EmployeeHandler employeeHandler;
+
+    @Autowired
+    CalculationTrackerDAO calculationTrackerDAO;
 
     /*
-       The method create Organization as well as the first default employee (SUPER_ADMIN)
+       * The method create Organization as well as the first default employee (SUPER_ADMIN)
+       * It also initializes (create) entry into Calculation Table
      */
     @Transactional(rollbackFor = Exception.class)
     public boolean createOrganization(OrganizationRegistrationBean organizationRegistrationBean) {
@@ -30,6 +36,7 @@ public class OrganizationHandler {
       employeeBean.setType(ANPConstants.EMPLOYEE_TYPE_SUPER_ADMIN);
       employeeBean.setOrgId(orgKey);
       employeeHandler.createEmployee(employeeBean);
+      calculationTrackerDAO.createCalculationTracker(orgKey);
       return true;
     }
 }

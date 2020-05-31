@@ -1,6 +1,6 @@
 package com.ANP.bean;
 
-public class CalculationTrackerBean {
+public class CalculationTrackerBean extends CommonAttribute {
 
     private float unPaidExpense;
     private float paidExpense;

@@ -29,6 +29,13 @@ public class AccountingHandler {
 
     @Autowired
     RetailSaleDAO retailSaleDAO;
+
+    @Autowired
+    ExpenseDAO expenseDAO;
+
+    @Autowired
+    CalculationTrackerDAO calculationTrackerDAO;
+
     /*
      *
      */
@@ -82,7 +89,7 @@ public class AccountingHandler {
     public boolean createInternalTransfer(InternalTransferBean internalTransferBean) {
         internalTransferDAO.createInternalTransfer(internalTransferBean);
         accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
-        accountDAO.updateAccountBalance(internalTransferBean.getFromAccountID(), internalTransferBean.getAmount(), "SUBTRACTED");
+        accountDAO.updateAccountBalance(internalTransferBean.getFromAccountID(), internalTransferBean.getAmount(), "SUBTRACT");
         return true;
     }
 
@@ -93,4 +100,27 @@ public class AccountingHandler {
         return true ;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public boolean createExpense(Expense expense) {
+        expenseDAO.createExpense(expense);
+        if(expense.isPaid()) {
+            accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
+            //From Employee Balance is only subtracted (Debited) when Paid Expense is created
+            calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
+        } else {
+            calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(),expense.getTotalAmount(),"ADD");
+        }
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean makeExpenseUnpaidToPaid(Expense expense) {
+        //Subtract from Employee Balance
+        accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
+        //Subtract from unpaid expense Balance
+        calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(),expense.getTotalAmount(),"SUBTRACT");
+        //Add into the Paid Expense Balance
+        calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
+        return true;
+    }
 }
