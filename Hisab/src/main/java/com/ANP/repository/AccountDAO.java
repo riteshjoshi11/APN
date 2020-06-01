@@ -235,5 +235,22 @@ public class AccountDAO {
         }
     }
 
+    public double getCashWithYou(String employeeID, long orgId) {
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("employeeID", employeeID);
+        in.addValue("orgId", orgId);
+        double retValue = 0.0 ;
+        List<Double> cashwithyouList =  namedParameterJdbcTemplate.query("select sum(currentbalance) as cashwithyou from account where ownerid=':employeeID' " +
+                " and orgId=:orgId group by ownerid",in,new CashWithYouMapper());
+        if(cashwithyouList!=null && !cashwithyouList.isEmpty()) {
+            retValue = cashwithyouList.get(0);
+        }
+        return retValue;
+    }
 
+    private static final class CashWithYouMapper implements RowMapper<Double> {
+        public Double mapRow(ResultSet rs, int rowNum) throws SQLException {
+          return rs.getDouble("cashwithyou");
+        }
+    }
 }

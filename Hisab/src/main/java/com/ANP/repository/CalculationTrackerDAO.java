@@ -76,7 +76,7 @@ public class CalculationTrackerDAO {
 
         CalculationTrackerBean trackerBean = null ;
         if(trackerBeanList!=null && trackerBeanList.size()>0) {
-            trackerBean = trackerBeanList.get(1);
+            trackerBean = trackerBeanList.get(0);
         }
         return trackerBean ;
     }

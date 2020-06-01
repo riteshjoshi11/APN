@@ -15,17 +15,20 @@ import java.util.Map;
 
 @Repository
 public class DashboardDAO {
-
-
     @Autowired
     CalculationTrackerDAO calculationTrackerDAO ;
 
     @Autowired
+    AccountDAO accountDAO ;
+
+    @Autowired
     DataSource dataSource;
 
-    public DashboardBean prepareDashBoard(long orgId) {
+    public DashboardBean prepareDashBoard(long orgId, String employeeID) {
         System.out.println(orgId);
         DashboardBean dashboardBean = new DashboardBean();
+
+        dashboardBean.setCashWithYou(accountDAO.getCashWithYou(employeeID, orgId));
 
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
@@ -100,10 +103,11 @@ public class DashboardDAO {
         //@totalSalaryDue: [dashboardBean:totalSalaryDue]
 
         CalculationTrackerBean calculationTrackerBean = calculationTrackerDAO.getCalculationTracker(orgId);
-        dashboardBean.setPaidExpense(calculationTrackerBean.getPaidExpense());
-        dashboardBean.setUnpaidExpense(calculationTrackerBean.getUnPaidExpense());
-        dashboardBean.setTotalExpense(calculationTrackerBean.getTotalExpense());
-
+        if(calculationTrackerBean!=null) {
+            dashboardBean.setPaidExpense(calculationTrackerBean.getPaidExpense());
+            dashboardBean.setUnpaidExpense(calculationTrackerBean.getUnPaidExpense());
+            dashboardBean.setTotalExpense(calculationTrackerBean.getTotalExpense());
+        }
         return dashboardBean;
     }
 }
