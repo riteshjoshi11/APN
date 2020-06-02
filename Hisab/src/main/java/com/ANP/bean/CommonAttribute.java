@@ -2,7 +2,11 @@ package com.ANP.bean;
 
 
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class CommonAttribute {
@@ -14,6 +18,7 @@ public class CommonAttribute {
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
  //   @ApiModelProperty(hidden = true)
+    @Min(value = 1, message = "orgid is mandatory")
     protected long orgId; //TODO remove 1
 
     //protected boolean includeInCalc;

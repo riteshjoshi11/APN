@@ -38,7 +38,7 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/createEmpSalary", produces = "application/json")
-    public ResponseEntity createEmployeeSalary(@RequestBody EmployeeSalary employeeSalaryBean) {
+    public ResponseEntity createEmployeeSalary(@Valid @RequestBody EmployeeSalary employeeSalaryBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isEmployeeSalCreated = employeeHandler.createSalary(employeeSalaryBean);
         if (isEmployeeSalCreated) {
@@ -51,7 +51,7 @@ public class EmployeeController {
 
 
     @PostMapping(path = "/createEmpSalaryPayment", produces = "application/json")
-    public ResponseEntity createEmployeeSalaryPayment(@RequestBody EmployeeSalaryPayment employeeSalaryPayment) {
+    public ResponseEntity createEmployeeSalaryPayment(@Valid @RequestBody EmployeeSalaryPayment employeeSalaryPayment) {
         ResponseEntity<String> responseEntity = null;
         boolean isEmployeeSalPaymentCreated = employeeHandler.createSalaryPayment(employeeSalaryPayment);
         if (isEmployeeSalPaymentCreated) {
@@ -122,7 +122,7 @@ public class EmployeeController {
      * The filter can be dynamic and can start with "e.<employee table attribute>"
      */
     @PostMapping(path = "/listEmployeesWithBalancePaged", produces = "application/json")
-    public List<EmployeeBean> listEmployeesWithBalancePaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<EmployeeBean> listEmployeesWithBalancePaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return employeeDAO.listEmployeesWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
@@ -132,13 +132,13 @@ public class EmployeeController {
      * The filter can be dynamic and can start with "e.<employee table attribute>" or "empsal.<Employee Salary Table attribute>"
      */
     @PostMapping(path = "/listEmpSalariesPaged", produces = "application/json")
-    public List<EmployeeSalary> listEmpSalariesPaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<EmployeeSalary> listEmpSalariesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return employeeDAO.listEmpSalariesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listEmpPaidSalariesPaged", produces = "application/json")
-    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return employeeDAO.listEmpPaidSalariesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }

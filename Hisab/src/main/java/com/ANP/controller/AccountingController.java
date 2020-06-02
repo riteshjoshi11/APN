@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,7 @@ public class AccountingController {
 
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
-    public ResponseEntity createCustomerInvoice(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
+    public ResponseEntity createCustomerInvoice(@Valid @RequestBody CustomerInvoiceBean customerInvoiceBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isCustomerInvoiceCreated = accountingHandler.createCustomerInvoice(customerInvoiceBean);
         if (isCustomerInvoiceCreated) {
@@ -56,7 +57,7 @@ public class AccountingController {
 
 
     @PostMapping(path = "/createPurchaseEntry", produces = "application/json")
-    public ResponseEntity createPurchaseFromVendor(@RequestBody PurchaseFromVendorBean purchaseFromVendorBean) {
+    public ResponseEntity createPurchaseFromVendor(@Valid @RequestBody PurchaseFromVendorBean purchaseFromVendorBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isPurchaseFromVendorCreated = accountingHandler.createVendorPurchase(purchaseFromVendorBean);
         if (isPurchaseFromVendorCreated) {
@@ -68,13 +69,13 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/createGeneralExpense", produces = "application/json")
-    public ResponseEntity createExpense(@RequestBody Expense expense) {
+    public ResponseEntity createExpense(@Valid @RequestBody Expense expense) {
         accountingHandler.createExpense(expense);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/createPayToVendor", produces = "application/json")
-    public ResponseEntity createPayToVendor(@RequestBody PayToVendorBean payToVendorBean) {
+    public ResponseEntity createPayToVendor(@Valid @RequestBody PayToVendorBean payToVendorBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isPayToVendorCreated = accountingHandler.createPayToVendor(payToVendorBean);
         if (isPayToVendorCreated) {
@@ -87,7 +88,7 @@ public class AccountingController {
 
 
     @PostMapping(path = "/createPaymentReceived", produces = "application/json")
-    public ResponseEntity createPaymentReceived(@RequestBody PaymentReceivedBean paymentReceivedBean) {
+    public ResponseEntity createPaymentReceived(@Valid @RequestBody PaymentReceivedBean paymentReceivedBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isPaymentReceivedCreated = accountingHandler.createPaymentReceived(paymentReceivedBean);
         if (isPaymentReceivedCreated) {
@@ -100,7 +101,7 @@ public class AccountingController {
 
 
     @PostMapping(path = "/createInternalTransfer", produces = "application/json")
-    public ResponseEntity createInternalTransfer(@RequestBody InternalTransferBean internalTransferBean) {
+    public ResponseEntity createInternalTransfer(@Valid @RequestBody InternalTransferBean internalTransferBean) {
         ResponseEntity<String> responseEntity = null;
         boolean isInternalTransferCreated = accountingHandler.createInternalTransfer(internalTransferBean);
         if (isInternalTransferCreated) {
@@ -112,7 +113,7 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/createRetailSale", produces = "application/json")
-    public ResponseEntity createRetailSale(@RequestBody RetailSale retailSale) {
+    public ResponseEntity createRetailSale(@Valid @RequestBody RetailSale retailSale) {
         ResponseEntity<String> responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
         boolean created = accountingHandler.createRetailSale(retailSale);
         if(created) {
@@ -148,7 +149,7 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/listPurchasesPaged", produces = "application/json")
-    public List<PurchaseFromVendorBean> listPurchasesPaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<PurchaseFromVendorBean> listPurchasesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
 
         return purchaseFromVendorDAO.listPurchasesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
@@ -156,49 +157,49 @@ public class AccountingController {
     }
 
     @PostMapping(path = "/listExpensesPaged", produces = "application/json")
-    public List<Expense> listExpensesPaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<Expense> listExpensesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
 
         return expenseDao.listExpensesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listSalesPaged", produces = "application/json")
-    public List<CustomerInvoiceBean> listSalesPaged(@RequestBody ListParametersBean listParametersBean)
+    public List<CustomerInvoiceBean> listSalesPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return customerInvoiceDAO.listSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listPayToVendorPaged", produces = "application/json")
-    public List<PayToVendorBean> listPayToVendorPaged(@RequestBody ListParametersBean listParametersBean)
+    public List<PayToVendorBean> listPayToVendorPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return payToVendorDAO.listPayToVendorPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listInternalTransfer", produces = "application/json")
-    public List<InternalTransferBean> listInternalTransfer(@RequestBody ListParametersBean listParametersBean)
+    public List<InternalTransferBean> listInternalTransfer(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return internalTransferDAO.listInternalTransfer(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listRetailEntryPaged", produces = "application/json")
-    public List<RetailSale> listRetailEntryPaged(@RequestBody ListParametersBean listParametersBean)
+    public List<RetailSale> listRetailEntryPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return retailSaleDAO.listRetailEntryPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/listPaymentReceivedPaged", produces = "application/json")
-    public List<PaymentReceivedBean> listPaymentReceivedPaged(@RequestBody ListParametersBean listParametersBean)
+    public List<PaymentReceivedBean> listPaymentReceivedPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return paymentReceivedDAO.listPaymentReceivedPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
     @PostMapping(path = "/makeExpenseUnpaidToPaid", produces = "application/json")
-    public ResponseEntity makeExpenseUnpaidToPaid(@RequestBody Expense expense) {
+    public ResponseEntity makeExpenseUnpaidToPaid(@Valid @RequestBody Expense expense) {
         ResponseEntity<String> responseEntity = null;
         if(accountingHandler.makeExpenseUnpaidToPaid(expense)) {
             responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);

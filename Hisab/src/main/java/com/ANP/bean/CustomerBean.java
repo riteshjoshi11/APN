@@ -1,11 +1,15 @@
 package com.ANP.bean;
 
+import javax.validation.constraints.Size;
+
 public class CustomerBean extends CommonAttribute {
     private String name;
     private String city;
     private String gstin;
     private String transporter;
+    @Size(max=10,min=10, message = "mobile no. should be of 10 digits")
     private String mobile1;
+    @Size(max=10,min=10, message = "mobile no. should be of 10 digits")
     private String mobile2;
     private String firmname;
     private String billingadress;

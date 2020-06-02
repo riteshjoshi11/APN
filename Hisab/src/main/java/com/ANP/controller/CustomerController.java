@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping(path = "/customer")
@@ -34,7 +36,7 @@ public class CustomerController {
     private PurchaseFromVendorDAO billDao;
 
     @PostMapping(path = "/create", produces = "application/json")
-    public ResponseEntity createCustomer(@RequestBody CustomerBean customerBean) {
+    public ResponseEntity createCustomer(@Valid @RequestBody CustomerBean customerBean) {
         boolean isCustomerCreated = customerHandler.createCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
@@ -42,7 +44,7 @@ public class CustomerController {
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */
     @PostMapping(path = "/listCustomerANDVendorWithBalancePaged", produces = "application/json")
-    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(@RequestBody ListParametersBean listParametersBean) {
+    public List<CustomerBean> listCustomerANDVendorWithBalancePaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return customerDao.listCustomerANDVendorWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }

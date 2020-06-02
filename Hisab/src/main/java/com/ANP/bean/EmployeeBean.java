@@ -8,10 +8,9 @@ public class EmployeeBean extends CommonAttribute {
 
 
     private String employeeId;
-    @NotNull(message = "first cannot be null")
-    @Size(max=5, message = "size must be less than 5")
     private String first;
     private String last;
+    @Size(max=10,min=10, message = "mobile no. should be of 10 digits")
     private String mobile;
     private String loginusername;
     private String type;
