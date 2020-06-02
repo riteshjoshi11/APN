@@ -236,11 +236,12 @@ public class AccountDAO {
     }
 
     public double getCashWithYou(String employeeID, long orgId) {
+        System.out.println("getCashWithYou : employeeID[" + employeeID +"] orgid[" + orgId+ "]");
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("employeeID", employeeID);
         in.addValue("orgId", orgId);
         double retValue = 0.0 ;
-        List<Double> cashwithyouList =  namedParameterJdbcTemplate.query("select sum(currentbalance) as cashwithyou from account where ownerid=':employeeID' " +
+        List<Double> cashwithyouList =  namedParameterJdbcTemplate.query("select sum(currentbalance) as cashwithyou from account where ownerid=:employeeID " +
                 " and orgId=:orgId group by ownerid",in,new CashWithYouMapper());
         if(cashwithyouList!=null && !cashwithyouList.isEmpty()) {
             retValue = cashwithyouList.get(0);

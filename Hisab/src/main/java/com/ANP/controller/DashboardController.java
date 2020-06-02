@@ -15,6 +15,6 @@ public class DashboardController {
     @PostMapping(path = "/buildDashboard", produces = "application/json")
     //Please ask for logged in Employee ID as well to give CashInHand value in the dashboard
     public DashboardBean buildDashboard(@RequestParam long orgId, String employeeID) {
-        return dashboardDAO.prepareDashBoard(orgId, employeeID );
+        return dashboardDAO.prepareDashBoard(orgId,employeeID);
     }
 }
