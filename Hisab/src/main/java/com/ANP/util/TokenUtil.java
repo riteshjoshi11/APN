@@ -16,6 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class TokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
+    //TODO need to pass from property file or environment
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     //TODO nitesh Find place to store secreat key
     private String secret = "abcdefg";
@@ -48,7 +49,9 @@ public class TokenUtil implements Serializable {
 
     //generate token for user
     public String generateToken(UserDetails userDetails) {
+        //TODO priority 2 need to add user mobile number
         Map<String, Object> claims = new HashMap<>();
+
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
