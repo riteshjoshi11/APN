@@ -9,4 +9,9 @@ public interface ANPConstants {
       public static final String SEARCH_FIELDTYPE_STRING="String" ;
       public static final String SEARCH_FIELDTYPE_DATE="Date" ;
 
+      public  static final String CUSTOMER_AUDIT_TYPE_SALE="Sale";
+      public  static final String CUSTOMER_AUDIT_TYPE_PURCHASE="Purchase";
+
+      public  static final String OPERATION_TYPE_ADD="ADD" ;
+      public  static final String OPERATION_TYPE_SUBTRACT="SUBTRACT";
 }

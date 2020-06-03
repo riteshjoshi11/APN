@@ -6,14 +6,19 @@ import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.object.GenericStoredProcedure;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,5 +258,46 @@ public class AccountDAO {
         public Double mapRow(ResultSet rs, int rowNum) throws SQLException {
           return rs.getDouble("cashwithyou");
         }
+    }
+
+    public boolean updateAccountBalance(CustomerAuditBean customerAuditBean) {
+        StoredProcedure procedure = new GenericStoredProcedure();
+        procedure.setDataSource(dataSource);
+        procedure.setSql("UpdateCustomerBalanceWithAudit_Procedure");
+        procedure.setFunction(false);
+/*
+        SqlParameter[] declareparameters = {
+                new SqlParameter(Types.VARCHAR),
+                new SqlParameter(Types.INTEGER),
+                new SqlParameter(Types.FLOAT),
+                new SqlParameter(Types.VARCHAR),
+                new SqlParameter(Types.VARCHAR),
+                new SqlParameter(Types.VARCHAR),
+                new SqlParameter(Types.VARCHAR)
+        };
+        */
+        SqlParameter[] declareparameters = {
+                new SqlParameter("customerid", Types.VARCHAR),
+                new SqlParameter("accountid", Types.INTEGER),
+                new SqlParameter("amount",Types.FLOAT),
+                new SqlParameter("otherparty", Types.VARCHAR),
+                new SqlParameter("txntype",Types.VARCHAR),
+                new SqlParameter("operation",Types.VARCHAR),
+        };
+
+        procedure.setParameters(declareparameters);
+        procedure.compile();
+        System.out.println(customerAuditBean.getCustomerid() + "," +  customerAuditBean.getAccountid() + "," +
+                customerAuditBean.getAmount() + "," +    customerAuditBean.getOtherparty() + "," +  customerAuditBean.getOperation());
+        Map<String, Object> result = procedure.execute(
+                customerAuditBean.getCustomerid(),
+                customerAuditBean.getAccountid(),
+                customerAuditBean.getAmount(),
+                customerAuditBean.getOtherparty(),
+                customerAuditBean.getType(),
+                customerAuditBean.getOperation()
+        );
+        System.out.println("Status " + result);
+        return true;
     }
 }

@@ -2,6 +2,7 @@ package com.ANP.service;
 
 import com.ANP.bean.*;
 import com.ANP.repository.*;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,15 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createCustomerInvoice(CustomerInvoiceBean customerInvoiceBean) {
         customerInvoiceDAO.createInvoice(customerInvoiceBean);
-        accountDAO.updateAccountBalance(customerInvoiceBean.getToAccountId(), customerInvoiceBean.getTotalAmount(), "SUBTRACT");
+        //accountDAO.updateAccountBalance(customerInvoiceBean.getToAccountId(), customerInvoiceBean.getTotalAmount(), "SUBTRACT");
+        CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+        customerAuditBean.setCustomerid(customerInvoiceBean.getToCustomerId());
+        customerAuditBean.setAccountid(customerInvoiceBean.getToAccountId());
+        customerAuditBean.setAmount(customerInvoiceBean.getTotalAmount());
+        customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_SALE);
+        customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+        customerAuditBean.setOtherparty("-");
+        accountDAO.updateAccountBalance(customerAuditBean);
         return true;
     }
 
@@ -52,7 +61,15 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createVendorPurchase(PurchaseFromVendorBean purchaseFromVendorBean) {
         purchaseFromVendorDAO.createBill(purchaseFromVendorBean);
-        accountDAO.updateAccountBalance(purchaseFromVendorBean.getFromAccountId(), purchaseFromVendorBean.getTotalAmount(), "ADD");
+      //  accountDAO.updateAccountBalance(purchaseFromVendorBean.getFromAccountId(), purchaseFromVendorBean.getTotalAmount(), "ADD");
+        CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+        customerAuditBean.setCustomerid(purchaseFromVendorBean.getFromCustomerId());
+        customerAuditBean.setAccountid(purchaseFromVendorBean.getFromAccountId());
+        customerAuditBean.setAmount(purchaseFromVendorBean.getTotalAmount());
+        customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_PURCHASE);
+        customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+        customerAuditBean.setOtherparty("-");
+        accountDAO.updateAccountBalance(customerAuditBean);
         return true;
     }
 
