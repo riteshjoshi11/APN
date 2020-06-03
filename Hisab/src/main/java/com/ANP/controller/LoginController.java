@@ -61,9 +61,7 @@ public class LoginController {
         TokenUtil tu = new TokenUtil();
         if (isValidOtp) {
             Token token = new Token();
-
             //  authenticate(otpBean.getMobileNumber(),otpBean.getOtp());
-
             final UserDetails userDetails = userDetailsService
                     .loadUserByUsername(otpBean.getMobileNumber());
 
@@ -71,8 +69,9 @@ public class LoginController {
 
             token.setToken(tok);
             responseEntity = new ResponseEntity<>(token, HttpStatus.OK);
-        } else throw new HisabException(HisabError.INVALID_OTP);
-
+        } else {
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.EXPECTATION_FAILED);
+        }
         return responseEntity;
     }
 

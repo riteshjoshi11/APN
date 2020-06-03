@@ -50,7 +50,7 @@ public class AccountingController {
         if (isCustomerInvoiceCreated) {
             responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
         } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
+            responseEntity = new ResponseEntity<>("Failure", HttpStatus.EXPECTATION_FAILED);
         }
         return responseEntity;
     }
