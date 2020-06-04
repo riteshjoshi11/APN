@@ -204,15 +204,15 @@ public class AccountingController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
-    @PostMapping(path = "/listCustomerAudit", produces = "application/json")
-    public List<CustomerAuditBean> listCustomerAudit(@Valid @RequestBody ListParametersBean listParametersBean)
+    @PostMapping(path = "/listCustomerAuditPaged", produces = "application/json")
+    public List<CustomerAuditBean> listCustomerAuditPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return customerAuditDao.listCustomerAudit(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
-    @PostMapping(path = "/listEmployeeAudit", produces = "application/json")
-    public List<EmployeeAuditBean> listEmployeeAudit(@Valid @RequestBody ListParametersBean listParametersBean)
+    @PostMapping(path = "/listEmployeeAuditPaged", produces = "application/json")
+    public List<EmployeeAuditBean> listEmployeeAuditPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return employeeAuditDao.listEmployeeAudit(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
