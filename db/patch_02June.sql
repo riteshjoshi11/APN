@@ -6,7 +6,7 @@ CREATE TABLE `customeraudit` (
   `id` int NOT NULL AUTO_INCREMENT,
   `customerid` varchar(45) DEFAULT NULL,
   `accountid` int(11) DEFAULT NULL,
-  `type` varchar(10) DEFAULT NULL,
+  `type` varchar(25) DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,
   `forwhat` varchar(45) DEFAULT NULL,
   `otherparty` varchar(80) DEFAULT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `employeeaudit` (
   `id` int NOT NULL AUTO_INCREMENT,
   `employeeid` varchar(45) DEFAULT NULL,
   `accountid` int DEFAULT NULL,
-  `type` varchar(10) DEFAULT NULL,
+  `type` varchar(25) DEFAULT NULL,
   `amount` int DEFAULT NULL,
   `forwhat` varchar(45) DEFAULT NULL,
   `otherparty` varchar(80) DEFAULT NULL,
@@ -48,6 +48,14 @@ CHANGE COLUMN `forwhat` `operation` VARCHAR(45) NULL DEFAULT NULL ;
 
 
 
+ALTER TABLE `antrackerdb`.`customeraudit` ADD COLUMN `date` datetime  default CURRENT_TIMESTAMP ;
+ALTER TABLE `antrackerdb`.`employeeaudit` ADD COLUMN `date` datetime  default CURRENT_TIMESTAMP ;
+
+ALTER TABLE `antrackerdb`.`employeeaudit` 
+ADD COLUMN `forwhat` VARCHAR(30) NULL AFTER `date`;
+
+
+
 USE `antrackerdb`;
 DROP procedure IF EXISTS `UpdateCustomerBalanceWithAudit_Procedure`;
 
@@ -58,7 +66,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `UpdateCustomerBalanceWithAudit_Procedure`(
     IN accountid bigint,
 	IN amount double,
 	IN otherparty  varchar(80),
-    IN txntype varchar(10),
+    IN txntype varchar(25),
     IN operation varchar(15)
 )
 BEGIN
@@ -87,8 +95,9 @@ CREATE DEFINER=`root`@`%` PROCEDURE `UpdateEmployeeBalanceWithAudit_Procedure`(
     IN accountid bigint,
 	IN amount double,
 	IN otherparty  varchar(80),
-    IN txntype varchar(10),
-    IN operation varchar(15)
+    IN txntype varchar(25),
+    IN operation varchar(15),
+    IN forwhat varchar(30)
 )
 BEGIN
 DECLARE newlastBalance INT DEFAULT 0;
@@ -100,10 +109,11 @@ ELSE
 update account set currentbalance = (currentbalance - amount) where id = accountid;
 END IF;
 select lastbalance,currentbalance INTO newlastBalance,newcurrentBalance from account where id=accountid;
-insert into employeeaudit(`employeeid`,`accountid`,`amount`,`operation`,`otherparty`,`newbalance`,`previousbalance`,`type`)
- values (employeeid,accountid,amount,operation, otherparty,newcurrentBalance,newlastbalance,txntype);
+insert into employeeaudit(`employeeid`,`accountid`,`amount`,`operation`,`otherparty`,`newbalance`,`previousbalance`,`type`,`forwhat`)
+ values (employeeid,accountid,amount,operation, otherparty,newcurrentBalance,newlastbalance,txntype,forwhat);
 END$$
 
 DELIMITER ;
+
 
 
