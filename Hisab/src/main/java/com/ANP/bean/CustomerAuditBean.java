@@ -9,6 +9,20 @@ public class CustomerAuditBean extends CommonAttribute {
     private double previousbalance;
     private String operation;
     private String otherPartyName;
+    private CustomerBean customerBean;
+
+
+    public CustomerAuditBean() {
+        this.customerBean = new CustomerBean();
+    }
+
+    public CustomerBean getCustomerBean() {
+        return customerBean;
+    }
+
+    public void setCustomerBean(CustomerBean customerBean) {
+        this.customerBean = customerBean;
+    }
 
     public String getOtherPartyName() {
         return this.otherPartyName;

@@ -42,6 +42,12 @@ public class AccountingController {
     @Autowired
     PaymentReceivedDAO paymentReceivedDAO;
 
+    @Autowired
+    CustomerAuditDAO customerAuditDao;
+
+    @Autowired
+    EmployeeAuditDAO employeeAuditDao;
+
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@Valid @RequestBody CustomerInvoiceBean customerInvoiceBean) {
@@ -195,6 +201,20 @@ public class AccountingController {
     public List<PaymentReceivedBean> listPaymentReceivedPaged(@Valid @RequestBody ListParametersBean listParametersBean)
     {
         return paymentReceivedDAO.listPaymentReceivedPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/listCustomerAudit", produces = "application/json")
+    public List<CustomerAuditBean> listCustomerAudit(@Valid @RequestBody ListParametersBean listParametersBean)
+    {
+        return customerAuditDao.listCustomerAudit(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/listEmployeeAudit", produces = "application/json")
+    public List<EmployeeAuditBean> listEmployeeAudit(@Valid @RequestBody ListParametersBean listParametersBean)
+    {
+        return employeeAuditDao.listEmployeeAudit(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 

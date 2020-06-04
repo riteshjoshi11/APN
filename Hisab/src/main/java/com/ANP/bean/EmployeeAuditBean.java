@@ -13,6 +13,21 @@ public class EmployeeAuditBean extends CommonAttribute {
     private String operation;
     private String otherPartyName;
     private String forWhat;
+    private EmployeeBean employeeBean;
+
+
+    public EmployeeAuditBean() {
+        this.employeeBean = new EmployeeBean();
+    }
+
+    public EmployeeBean getEmployeeBean() {
+        return employeeBean;
+    }
+
+    public void setEmployeeBean(EmployeeBean employeeBean) {
+        this.employeeBean = employeeBean;
+    }
+
 
     public String getForWhat() {
         return forWhat;
