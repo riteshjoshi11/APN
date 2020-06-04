@@ -16,6 +16,14 @@ public interface ANPConstants {
 
       public  static final String EMPLOYEE_AUDIT_TYPE_PAY="Pay";
       public  static final String EMPLOYEE_AUDIT_TYPE_RCVD="Receive";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_SALARYPAY="Salary";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_RETAILSALE="Retail";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_EXPENSE="Expense";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_VENDORPAY="VendorPay";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD="Customer";
+      public  static final String EMPLOYEE_AUDIT_FORWHAT_INTERNAL="Internal";
+
+
 
       public  static final String OPERATION_TYPE_ADD="ADD" ;
       public  static final String OPERATION_TYPE_SUBTRACT="SUBTRACT";

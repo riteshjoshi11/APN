@@ -11,6 +11,29 @@ public class EmployeeAuditBean extends CommonAttribute {
     private double newbalance;
     private double previousbalance;
     private String operation;
+    private String otherPartyName;
+    private String forWhat;
+
+    public String getForWhat() {
+        return forWhat;
+    }
+
+    public void setForWhat(String forWhat) {
+        this.forWhat = forWhat;
+    }
+
+    public String getOtherPartyName() {
+        return otherPartyName;
+    }
+
+    //WE allow only 80 chars for otherParty
+    public void setOtherPartyName(String pOtherPartyName) {
+        if(pOtherPartyName!=null && pOtherPartyName.trim().length()>80) {
+            this.otherPartyName=(pOtherPartyName.trim()).substring(0,80);
+        } else {
+            this.otherPartyName = pOtherPartyName;
+        }
+    }
 
     public String getEmployeeid() {
         return employeeid;

@@ -16,6 +16,28 @@ public class InternalTransferBean extends CommonAttribute {
     private EmployeeBean toEmployee;
     private EmployeeBean fromEmployee;
 
+    //For Audit Entry
+    private String fromPartyName;
+    private String toPartyName;
+
+
+    public String getFromPartyName() {
+        return fromPartyName;
+    }
+
+    public void setFromPartyName(String fromPartyName) {
+        this.fromPartyName = fromPartyName;
+    }
+
+    public String getToPartyName() {
+        return toPartyName;
+    }
+
+    public void setToPartyName(String toPartyName) {
+        this.toPartyName = toPartyName;
+    }
+
+
     public InternalTransferBean()
     {
         this.toEmployee = new EmployeeBean();

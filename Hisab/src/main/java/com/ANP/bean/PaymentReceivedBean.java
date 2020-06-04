@@ -3,7 +3,6 @@ package com.ANP.bean;
 import java.util.Date;
 
 public class PaymentReceivedBean extends CommonAttribute {
-
     private long paymentReceivedID;
     private long fromAccountID;
     private String fromCustomerID;
@@ -23,6 +22,26 @@ public class PaymentReceivedBean extends CommonAttribute {
     public PaymentReceivedBean() {
         this.customerBean = new CustomerBean();
         this.employeeBean = new EmployeeBean();
+    }
+
+    //For Audit Entry
+    private String fromPartyName;
+    private String toPartyName;
+
+    public String getFromPartyName() {
+        return fromPartyName;
+    }
+
+    public void setFromPartyName(String fromPartyName) {
+        this.fromPartyName = fromPartyName;
+    }
+
+    public String getToPartyName() {
+        return toPartyName;
+    }
+
+    public void setToPartyName(String toPartyName) {
+        this.toPartyName = toPartyName;
     }
 
     public CustomerBean getCustomerBean() {

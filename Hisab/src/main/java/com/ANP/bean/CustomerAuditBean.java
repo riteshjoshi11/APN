@@ -8,6 +8,20 @@ public class CustomerAuditBean extends CommonAttribute {
     private double newbalance;
     private double previousbalance;
     private String operation;
+    private String otherPartyName;
+
+    public String getOtherPartyName() {
+        return this.otherPartyName;
+    }
+
+    //WE allow only 80 chars for otherParty
+    public void setOtherPartyName(String pOtherPartyName) {
+       if(pOtherPartyName!=null && pOtherPartyName.trim().length()>80) {
+           this.otherPartyName=(pOtherPartyName.trim()).substring(0,80);
+        } else {
+           this.otherPartyName = pOtherPartyName;
+       }
+    }
 
     public String getOperation() {
         return operation;
@@ -64,4 +78,6 @@ public class CustomerAuditBean extends CommonAttribute {
     public void setPreviousbalance(double previousbalance) {
         this.previousbalance = previousbalance;
     }
+
+
 }

@@ -15,10 +15,29 @@ public class PayToVendorBean extends CommonAttribute {
     private boolean includeInCalc;
     private CustomerBean customerBean;
     private EmployeeBean employeeBean;
+    //For Audit Entry
+    private String fromPartyName;
+    private String toPartyName;
 
     public PayToVendorBean() {
         this.customerBean =  new CustomerBean();
         this.employeeBean = new EmployeeBean();
+    }
+
+    public String getFromPartyName() {
+        return fromPartyName;
+    }
+
+    public void setFromPartyName(String fromPartyName) {
+        this.fromPartyName = fromPartyName;
+    }
+
+    public String getToPartyName() {
+        return toPartyName;
+    }
+
+    public void setToPartyName(String toPartyName) {
+        this.toPartyName = toPartyName;
     }
 
     public EmployeeBean getEmployeeBean() {

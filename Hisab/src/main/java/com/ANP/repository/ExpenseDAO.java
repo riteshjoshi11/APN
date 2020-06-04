@@ -23,8 +23,8 @@ public class ExpenseDAO {
 
     public int createExpense(Expense expense) {
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno)" +
-                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO);",
+                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno,paid)" +
+                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO,:paid);",
                 new BeanPropertySqlParameterSource(expense));
     }
 
@@ -66,6 +66,7 @@ public class ExpenseDAO {
             obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
             obj.setEmpFirstName(rs.getString("e.first"));
             obj.setEmpLastName(rs.getString("e.last"));
+            obj.setPaid(rs.getBoolean("paid"));
             //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
             // e.first and e.last into the expense Bean, I have created two corresponding fields
             // in the Exepense Bean (empFirstName, empLastName)
@@ -116,5 +117,21 @@ public class ExpenseDAO {
         } else {
             return false;
         }
+    }
+
+
+    /*
+        you need to update Expense Table:includeInCalc field with the passed value
+  */
+    public boolean updateExpenseStatus(long expenseID,boolean paidStatus) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", expenseID);
+        parameterSource.addValue("paidStatus", paidStatus);
+        if (namedParameterJdbcTemplate.update("update generalexpense set paid = :paidStatus where id = :id", parameterSource)!= 0) {
+            return true; //operation success
+        }
+
+        return false;
+
     }
 }

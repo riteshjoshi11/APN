@@ -52,7 +52,7 @@ public class AccountingHandler {
         customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_SALE);
         customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
         customerAuditBean.setOtherPartyName("-");
-        accountDAO.updateAccountBalance(customerAuditBean);
+        accountDAO.updateCustomerAccountBalance(customerAuditBean);
         return true;
     }
 
@@ -71,7 +71,7 @@ public class AccountingHandler {
         customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_PURCHASE);
         customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
         customerAuditBean.setOtherPartyName("-");
-        accountDAO.updateAccountBalance(customerAuditBean);
+        accountDAO.updateCustomerAccountBalance(customerAuditBean);
         return true;
     }
 
@@ -93,8 +93,8 @@ public class AccountingHandler {
         customerAuditBean.setAmount(payToVendorBean.getAmount());
         customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_PAYTOVENDOR);
         customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        customerAuditBean.setOtherPartyName(payToVendorBean.getOtherPartyName());
-        accountDAO.updateAccountBalance(customerAuditBean);
+        customerAuditBean.setOtherPartyName(payToVendorBean.getFromPartyName()); //This will be opposite party
+        accountDAO.updateCustomerAccountBalance(customerAuditBean);
 
         //Update Employee Balance and Audit
         //accountDAO.updateAccountBalance(payToVendorBean.getFromAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
@@ -105,7 +105,8 @@ public class AccountingHandler {
         employeeAuditBean.setAmount(payToVendorBean.getAmount());
         employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        employeeAuditBean.setOtherPartyName(payToVendorBean.getOtherPartyName());
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
+        employeeAuditBean.setOtherPartyName(payToVendorBean.getToPartyName()); //This will be opposite party
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
 
         return true;
@@ -125,8 +126,8 @@ public class AccountingHandler {
         customerAuditBean.setAmount(paymentReceivedBean.getAmount());
         customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_PAYMENTRCVDFROMVENDOR);
         customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-        customerAuditBean.setOtherPartyName(paymentReceivedBean.getOtherPartyName());
-        accountDAO.updateAccountBalance(customerAuditBean);
+        customerAuditBean.setOtherPartyName(paymentReceivedBean.getToPartyName()); //This will be opposite party
+        accountDAO.updateCustomerAccountBalance(customerAuditBean);
 
 
         //accountDAO.updateAccountBalance(paymentReceivedBean.getToAccountID(), paymentReceivedBean.getAmount(), "ADD");
@@ -136,7 +137,8 @@ public class AccountingHandler {
         employeeAuditBean.setAmount(paymentReceivedBean.getAmount());
         employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-        employeeAuditBean.setOtherPartyName(paymentReceivedBean.getOtherPartyName());
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
+        employeeAuditBean.setOtherPartyName(paymentReceivedBean.getFromPartyName());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
 
         return true;
@@ -158,7 +160,8 @@ public class AccountingHandler {
         fromEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
         fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
         fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getOtherPartyName());
+        fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+        fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getToPartyName()); //This will be opposite party
         accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
 
         //accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
@@ -169,7 +172,8 @@ public class AccountingHandler {
         toEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
         toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
         toEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-        toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromEmployee().getDisplayName());
+        toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+        toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromPartyName());
         accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);
 
         return true;
@@ -188,7 +192,8 @@ public class AccountingHandler {
         employeeAuditBean.setAmount(retailSale.getAmount());
         employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-        employeeAuditBean.setOtherPartyName(retailSale.getOtherPartyName());
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
+        employeeAuditBean.setOtherPartyName("-");
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         return true ;
     }
@@ -206,14 +211,15 @@ public class AccountingHandler {
 
             //From Employee Balance is only subtracted (Debited) when Paid Expense is created
            //accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
-            EmployeeAuditBean fromEmployeeAuditBean = new EmployeeAuditBean();
-            fromEmployeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
-            fromEmployeeAuditBean.setAccountid(expense.getFromAccountID());
-            fromEmployeeAuditBean.setAmount(expense.getTotalAmount());
-            fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
-            fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            fromEmployeeAuditBean.setOtherPartyName(expense.getToPartyName());
-            accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
+            employeeAuditBean.setAccountid(expense.getFromAccountID());
+            employeeAuditBean.setAmount(expense.getTotalAmount());
+            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+            employeeAuditBean.setOtherPartyName(expense.getToPartyName());
+            accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         } else {
             calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(),expense.getTotalAmount(),"ADD");
         }
@@ -226,18 +232,20 @@ public class AccountingHandler {
         calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(),expense.getTotalAmount(),"SUBTRACT");
         //Add into the Paid Expense Balance
         calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
-
-
         //Subtract from Employee Balance
        // accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
-        EmployeeAuditBean fromEmployeeAuditBean = new EmployeeAuditBean();
-        fromEmployeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
-        fromEmployeeAuditBean.setAccountid(expense.getFromAccountID());
-        fromEmployeeAuditBean.setAmount(expense.getTotalAmount());
-        fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
-        fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        fromEmployeeAuditBean.setOtherPartyName(expense.getToPartyName());
-        accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
+        employeeAuditBean.setAccountid(expense.getFromAccountID());
+        employeeAuditBean.setAmount(expense.getTotalAmount());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+        employeeAuditBean.setOtherPartyName(expense.getToPartyName());
+        accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+
+        //Make status change in the Expense Table from Unpaid to Paid
+        expenseDAO.updateExpenseStatus(expense.getExpenseId(),true);
         return true;
     }
 }

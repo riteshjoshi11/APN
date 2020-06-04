@@ -52,8 +52,8 @@ public class AccountDAO {
     }
 
     //Operations: (ADD,SUBTRACT)
-
-    public boolean updateAccountBalance(long accountId, double balance, String operation) {
+  /*
+    public boolean updateCustomerAccountBalance(long accountId, double balance, String operation) {
         int updateSuccessful;
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", accountId);
@@ -72,7 +72,7 @@ public class AccountDAO {
         //1. Get the  account:currentBalance & update the value over to account:LastBalance
         // 2. New account:currentBalance= currentBalance (operations +/-) Balance
     }
-
+*/
     public DataSource getDataSource() {
         return dataSource;
     }
@@ -260,7 +260,7 @@ public class AccountDAO {
         }
     }
 
-    public boolean updateAccountBalance(CustomerAuditBean customerAuditBean) {
+    public boolean updateCustomerAccountBalance(CustomerAuditBean customerAuditBean) {
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
         procedure.setSql("UpdateCustomerBalanceWithAudit_Procedure");
@@ -293,7 +293,7 @@ public class AccountDAO {
     public boolean updateEmployeeAccountBalance(EmployeeAuditBean employeeAuditBean) {
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
-        procedure.setSql("UpdateCustomerBalanceWithAudit_Procedure");
+        procedure.setSql("UpdateEmployeeBalanceWithAudit_Procedure");
         procedure.setFunction(false);
         SqlParameter[] declareparameters = {
                 new SqlParameter("employeeid", Types.VARCHAR),
@@ -302,6 +302,7 @@ public class AccountDAO {
                 new SqlParameter("otherparty", Types.VARCHAR),
                 new SqlParameter("txntype",Types.VARCHAR),
                 new SqlParameter("operation",Types.VARCHAR),
+                new SqlParameter("forwhat",Types.VARCHAR),
         };
 
         procedure.setParameters(declareparameters);
@@ -314,7 +315,8 @@ public class AccountDAO {
                 employeeAuditBean.getAmount(),
                 employeeAuditBean.getOtherparty(),
                 employeeAuditBean.getType(),
-                employeeAuditBean.getOperation()
+                employeeAuditBean.getOperation(),
+                employeeAuditBean.getForWhat()
         );
         System.out.println("Status " + result);
         return true;
