@@ -11,18 +11,29 @@ public class CommonAttribute {
 
     @ApiModelProperty(hidden = true)
     protected String statusMessage;
-  //  @ApiModelProperty(hidden = true)
     protected String createdbyId;
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
- //   @ApiModelProperty(hidden = true)
     @Min(value = 1, message = "orgid is mandatory")
     protected long orgId; //TODO remove 1
 
-    //protected boolean includeInCalc;
+    //This will be sent from UI for audit entry
+    protected String otherPartyName;
 
     @ApiModelProperty(hidden = true)
     protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
+
+    public String getOtherPartyName() {
+        return otherPartyName;
+    }
+
+    //WE will only allow 80 characters for otherPartyName
+    public void setOtherPartyName(String otherPartyName) {
+        if(otherPartyName!=null && otherPartyName.length()>80) {
+            this.otherPartyName = otherPartyName.substring(0,79);
+        }
+        this.otherPartyName = otherPartyName;
+    }
 
     public String getCreatedbyId() {
         return createdbyId;
@@ -40,7 +51,6 @@ public class CommonAttribute {
         return createDate;
     }
 
-
     public long getOrgId() {
         return orgId;
     }
@@ -56,11 +66,4 @@ public class CommonAttribute {
     public void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
     }
-
-
-    //public boolean getIncludeInCalc(){ return includeInCalc;}
-
-    //public void setIncludeInCalc(){ this.includeInCalc= includeInCalc;}
-
-
 }

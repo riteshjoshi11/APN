@@ -1,12 +1,10 @@
 package com.ANP.bean;
 
-public class CustomerAuditBean {
+public class CustomerAuditBean extends CommonAttribute {
     private String customerid;
     private long accountid;
     private String type;
     private double amount;
-
-    private String otherparty;
     private double newbalance;
     private double previousbalance;
     private String operation;
@@ -49,14 +47,6 @@ public class CustomerAuditBean {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public String getOtherparty() {
-        return otherparty;
-    }
-
-    public void setOtherparty(String otherparty) {
-        this.otherparty = otherparty;
     }
 
     public double getNewbalance() {

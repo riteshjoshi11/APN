@@ -265,20 +265,9 @@ public class AccountDAO {
         procedure.setDataSource(dataSource);
         procedure.setSql("UpdateCustomerBalanceWithAudit_Procedure");
         procedure.setFunction(false);
-/*
-        SqlParameter[] declareparameters = {
-                new SqlParameter(Types.VARCHAR),
-                new SqlParameter(Types.INTEGER),
-                new SqlParameter(Types.FLOAT),
-                new SqlParameter(Types.VARCHAR),
-                new SqlParameter(Types.VARCHAR),
-                new SqlParameter(Types.VARCHAR),
-                new SqlParameter(Types.VARCHAR)
-        };
-        */
         SqlParameter[] declareparameters = {
                 new SqlParameter("customerid", Types.VARCHAR),
-                new SqlParameter("accountid", Types.INTEGER),
+                new SqlParameter("accountid", Types.BIGINT),
                 new SqlParameter("amount",Types.FLOAT),
                 new SqlParameter("otherparty", Types.VARCHAR),
                 new SqlParameter("txntype",Types.VARCHAR),
@@ -288,14 +277,44 @@ public class AccountDAO {
         procedure.setParameters(declareparameters);
         procedure.compile();
         System.out.println(customerAuditBean.getCustomerid() + "," +  customerAuditBean.getAccountid() + "," +
-                customerAuditBean.getAmount() + "," +    customerAuditBean.getOtherparty() + "," +  customerAuditBean.getOperation());
+                customerAuditBean.getAmount() + "," +    customerAuditBean.getOtherPartyName() + "," +  customerAuditBean.getOperation());
         Map<String, Object> result = procedure.execute(
                 customerAuditBean.getCustomerid(),
                 customerAuditBean.getAccountid(),
                 customerAuditBean.getAmount(),
-                customerAuditBean.getOtherparty(),
+                customerAuditBean.getOtherPartyName(),
                 customerAuditBean.getType(),
                 customerAuditBean.getOperation()
+        );
+        System.out.println("Status " + result);
+        return true;
+    }
+
+    public boolean updateEmployeeAccountBalance(EmployeeAuditBean employeeAuditBean) {
+        StoredProcedure procedure = new GenericStoredProcedure();
+        procedure.setDataSource(dataSource);
+        procedure.setSql("UpdateCustomerBalanceWithAudit_Procedure");
+        procedure.setFunction(false);
+        SqlParameter[] declareparameters = {
+                new SqlParameter("employeeid", Types.VARCHAR),
+                new SqlParameter("accountid", Types.BIGINT),
+                new SqlParameter("amount",Types.FLOAT),
+                new SqlParameter("otherparty", Types.VARCHAR),
+                new SqlParameter("txntype",Types.VARCHAR),
+                new SqlParameter("operation",Types.VARCHAR),
+        };
+
+        procedure.setParameters(declareparameters);
+        procedure.compile();
+        System.out.println(employeeAuditBean.getEmployeeid() + "," +  employeeAuditBean.getAccountid() + "," +
+        employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherparty() + "," +  employeeAuditBean.getOperation());
+        Map<String, Object> result = procedure.execute(
+                employeeAuditBean.getEmployeeid(),
+                employeeAuditBean.getAccountid(),
+                employeeAuditBean.getAmount(),
+                employeeAuditBean.getOtherparty(),
+                employeeAuditBean.getType(),
+                employeeAuditBean.getOperation()
         );
         System.out.println("Status " + result);
         return true;

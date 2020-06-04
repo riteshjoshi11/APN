@@ -1,14 +1,16 @@
 package com.ANP.bean;
 
-public class EmployeeAuditBean {
+public class EmployeeAuditBean extends CommonAttribute {
     private String employeeid;
+
     private long accountid;
     private String type;
     private double amount;
-    private String forwhat;
+
     private String otherparty;
     private double newbalance;
     private double previousbalance;
+    private String operation;
 
     public String getEmployeeid() {
         return employeeid;
@@ -16,6 +18,14 @@ public class EmployeeAuditBean {
 
     public void setEmployeeid(String employeeid) {
         this.employeeid = employeeid;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
     public long getAccountid() {
@@ -42,14 +52,6 @@ public class EmployeeAuditBean {
         this.amount = amount;
     }
 
-    public String getForwhat() {
-        return forwhat;
-    }
-
-    public void setForwhat(String forwhat) {
-        this.forwhat = forwhat;
-    }
-
     public String getOtherparty() {
         return otherparty;
     }
@@ -73,6 +75,7 @@ public class EmployeeAuditBean {
     public void setPreviousbalance(double previousbalance) {
         this.previousbalance = previousbalance;
     }
+
 }
 
 
