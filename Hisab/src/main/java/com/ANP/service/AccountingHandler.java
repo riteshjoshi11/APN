@@ -106,6 +106,7 @@ public class AccountingHandler {
         //accountDAO.updateAccountBalance(payToVendorBean.getFromAccountID(), payToVendorBean.getAmount(), "SUBTRACT");
 
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(payToVendorBean.getOrgId());
         employeeAuditBean.setEmployeeid(payToVendorBean.getFromEmployeeID());
         employeeAuditBean.setAccountid(payToVendorBean.getFromAccountID());
         employeeAuditBean.setAmount(payToVendorBean.getAmount());
