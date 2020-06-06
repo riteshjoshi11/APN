@@ -42,7 +42,7 @@ public class ANPUtils implements ANPConstants {
                     value = "'" + value + "'";
                 }
                 where = where + " " + searchParam.getCondition() + " " + searchParam.getFieldName() + " " +
-                            searchParam.getOperator() + " " + value;
+                            searchParam.getSoperator() + " " + value;
             }
         }
         return where;
@@ -54,7 +54,7 @@ public class ANPUtils implements ANPConstants {
         searchParam.setCondition("OR");
         searchParam.setFieldName("city");
         searchParam.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
-        searchParam.setOperator("=");
+        searchParam.setSoperator("=");
         searchParam.setValue("Pune");
 
         l.add(searchParam);
@@ -63,7 +63,7 @@ public class ANPUtils implements ANPConstants {
         searchParam1.setCondition("AND");
         searchParam1.setFieldName("city");
         searchParam1.setFieldType("Number");
-        searchParam1.setOperator(">");
+        searchParam1.setSoperator(">");
         searchParam1.setValue("30000");
         l.add(searchParam1);
         System.out.println(getWhereClause(l));

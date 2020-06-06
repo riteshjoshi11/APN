@@ -1,18 +1,26 @@
 package com.ANP.bean;
 
+import java.util.Date;
+
 public class EmployeeAuditBean extends CommonAttribute {
     private String employeeid;
-
     private long accountid;
     private String type;
     private double amount;
-
-    private String otherparty;
     private double newbalance;
     private double previousbalance;
     private String operation;
     private String otherPartyName;
     private String forWhat;
+    private Date transactionDate;
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
     private EmployeeBean employeeBean;
 
 
@@ -88,14 +96,6 @@ public class EmployeeAuditBean extends CommonAttribute {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public String getOtherparty() {
-        return otherparty;
-    }
-
-    public void setOtherparty(String otherparty) {
-        this.otherparty = otherparty;
     }
 
     public double getNewbalance() {

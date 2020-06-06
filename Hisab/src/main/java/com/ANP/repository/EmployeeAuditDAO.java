@@ -53,6 +53,9 @@ public class EmployeeAuditDAO {
             employeeAuditBean.setForWhat(rs.getString("empau.forwhat"));
             employeeAuditBean.getEmployeeBean().setFirst(rs.getString("e.first"));
             employeeAuditBean.getEmployeeBean().setLast(rs.getString("e.last"));
+            employeeAuditBean.setOrgId(rs.getLong("empau.orgid"));
+            employeeAuditBean.setTransactionDate(rs.getDate("empau.txndate"));
+            employeeAuditBean.setCreateDate(rs.getDate("empau.date"));
             return employeeAuditBean;
         }
     }

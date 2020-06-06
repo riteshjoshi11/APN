@@ -30,12 +30,12 @@ public class CustomerAuditDAO {
         param.put("startIndex", startIndex - 1);
         param.put("orderBy", orderBy);
 
-        return namedParameterJdbcTemplate.query("select custau.* , c.name " +
+        return namedParameterJdbcTemplate.query("select custau.* , c.name, c.firmname, c.city " +
                         "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",
-                param, new CustomerAuditMapper());
-
+                         param, new CustomerAuditMapper());
     }
+
     private static final class CustomerAuditMapper implements RowMapper<CustomerAuditBean> {
         public CustomerAuditBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
@@ -47,7 +47,12 @@ public class CustomerAuditDAO {
             customerAuditBean.setOperation(rs.getString("custau.operation"));
             customerAuditBean.setOtherPartyName(rs.getString("custau.otherparty"));
             customerAuditBean.setPreviousbalance(rs.getLong("custau.previousbalance"));
+            customerAuditBean.setTransactionDate(rs.getDate("custau.txndate"));
+            customerAuditBean.setCreateDate(rs.getDate("custau.date"));
+            customerAuditBean.setOrgId(rs.getLong("custau.orgid"));
             customerAuditBean.getCustomerBean().setName(rs.getString("c.name"));
+            customerAuditBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));
+            customerAuditBean.getCustomerBean().setCity(rs.getString("c.city"));
             return customerAuditBean;
         }
     }

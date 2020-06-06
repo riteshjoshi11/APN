@@ -1,5 +1,7 @@
 package com.ANP.bean;
 
+import java.util.Date;
+
 public class CustomerAuditBean extends CommonAttribute {
     private String customerid;
     private long accountid;
@@ -10,7 +12,15 @@ public class CustomerAuditBean extends CommonAttribute {
     private String operation;
     private String otherPartyName;
     private CustomerBean customerBean;
+    private Date transactionDate;
 
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
 
     public CustomerAuditBean() {
         this.customerBean = new CustomerBean();

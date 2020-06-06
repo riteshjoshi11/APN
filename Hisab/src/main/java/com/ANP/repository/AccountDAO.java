@@ -272,6 +272,8 @@ public class AccountDAO {
                 new SqlParameter("otherparty", Types.VARCHAR),
                 new SqlParameter("txntype",Types.VARCHAR),
                 new SqlParameter("operation",Types.VARCHAR),
+                new SqlParameter("orgid",Types.BIGINT),
+                new SqlParameter("txndate",Types.DATE),
         };
 
         procedure.setParameters(declareparameters);
@@ -284,7 +286,9 @@ public class AccountDAO {
                 customerAuditBean.getAmount(),
                 customerAuditBean.getOtherPartyName(),
                 customerAuditBean.getType(),
-                customerAuditBean.getOperation()
+                customerAuditBean.getOperation(),
+                customerAuditBean.getOrgId(),
+                customerAuditBean.getTransactionDate()
         );
         System.out.println("Status " + result);
         return true;
@@ -303,20 +307,24 @@ public class AccountDAO {
                 new SqlParameter("txntype",Types.VARCHAR),
                 new SqlParameter("operation",Types.VARCHAR),
                 new SqlParameter("forwhat",Types.VARCHAR),
+                new SqlParameter("orgid",Types.BIGINT),
+                new SqlParameter("txndate",Types.DATE),
         };
 
         procedure.setParameters(declareparameters);
         procedure.compile();
         System.out.println(employeeAuditBean.getEmployeeid() + "," +  employeeAuditBean.getAccountid() + "," +
-        employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherparty() + "," +  employeeAuditBean.getOperation());
+        employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherPartyName() + "," +  employeeAuditBean.getOperation());
         Map<String, Object> result = procedure.execute(
                 employeeAuditBean.getEmployeeid(),
                 employeeAuditBean.getAccountid(),
                 employeeAuditBean.getAmount(),
-                employeeAuditBean.getOtherparty(),
+                employeeAuditBean.getOtherPartyName(),
                 employeeAuditBean.getType(),
                 employeeAuditBean.getOperation(),
-                employeeAuditBean.getForWhat()
+                employeeAuditBean.getForWhat(),
+                employeeAuditBean.getOrgId(),
+                employeeAuditBean.getTransactionDate()
         );
         System.out.println("Status " + result);
         return true;
