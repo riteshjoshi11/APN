@@ -1,6 +1,9 @@
 package com.ANP.bean;
 
+import org.springframework.lang.Nullable;
+
 import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CustomerBean extends CommonAttribute {
@@ -8,7 +11,9 @@ public class CustomerBean extends CommonAttribute {
     private String city;
     private String gstin;
     private String transporter;
+    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile1;
+    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile2;
     private String firmname;
     private String billingadress;

@@ -1,6 +1,9 @@
 package com.ANP.bean;
 
 
+import org.springframework.lang.Nullable;
+
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class EmployeeBean extends CommonAttribute {
@@ -9,7 +12,7 @@ public class EmployeeBean extends CommonAttribute {
     private String employeeId;
     private String first;
     private String last;
-    @Size(max=10,min=10, message = "mobile no. should be of 10 digits")
+    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile;
     private String loginusername;
     private String type;
