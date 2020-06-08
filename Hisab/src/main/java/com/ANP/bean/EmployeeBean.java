@@ -3,6 +3,8 @@ package com.ANP.bean;
 
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -10,7 +12,11 @@ public class EmployeeBean extends CommonAttribute {
 
 
     private String employeeId;
+    @NotBlank(message = "first is not allowed to be null")
+    @NotNull(message = "first is not allowed to be null")
     private String first;
+    @NotBlank(message = "last is not allowed to be null")
+    @NotNull(message = "last is not allowed to be null")
     private String last;
     @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile;

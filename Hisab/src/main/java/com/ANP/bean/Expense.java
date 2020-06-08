@@ -2,6 +2,7 @@ package com.ANP.bean;
 
 import com.ANP.util.ANPUtils;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class Expense extends CommonAttribute {
@@ -21,7 +22,9 @@ public class Expense extends CommonAttribute {
     private double SGST;
     private double IGST;
     private double extra;
+    @Pattern(regexp = "\\s*|.{15}", message = "gstin should be of 15 digits")
     private String toPartyGSTNO;
+    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String toPartyMobileNO;
     private boolean paid;
     private String empFirstName;
