@@ -71,7 +71,6 @@ public class EmployeeDAO {
 
     //operation values(ADD,SUBTRACT)
     public boolean UpdateEmpSalaryBalance(String toEmployeeID, double balance, String operation) {
-        //TODO Joshi: Here you need to update the 'Employee:CurrentSalaryBalance' field based on the 'operation' passed
         int updateSuccess;
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("toemployeeid", toEmployeeID);

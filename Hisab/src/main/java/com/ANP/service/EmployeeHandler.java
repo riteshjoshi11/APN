@@ -82,16 +82,26 @@ public class EmployeeHandler {
 
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
-    public boolean createSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
-        //TODO Joshi: Call EmployeeDAO:create
-        // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
-        // In a Transaction
-        employeeDAO.UpdateEmpSalaryBalance(employeeSalaryPaymentBean.getToEmployeeId(),employeeSalaryPaymentBean.getAmount(), "SUBTRACT" );
-        if(employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean))
-            return true;
-        else
-            return false;
+    //SUBTRACT PAYING PARTY BALANCE
+    public void createSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
+        //create an Employee Salary Entry
+        employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean);
 
+        //Update Employee Salary Balance
+        employeeDAO.UpdateEmpSalaryBalance(employeeSalaryPaymentBean.getToEmployeeId(),employeeSalaryPaymentBean.getAmount(), "SUBTRACT" );
+
+        //Update/SUBTRACT From Employee Balance
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
+        employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
+        employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
+        employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+        employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getToEmployeeName()); //This will be opposite party
+        employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
+        accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
     }
 
 }
