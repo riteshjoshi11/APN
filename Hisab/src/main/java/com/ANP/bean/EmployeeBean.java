@@ -12,11 +12,9 @@ public class EmployeeBean extends CommonAttribute {
 
 
     private String employeeId;
-    @NotBlank(message = "first is not allowed to be null")
-    @NotNull(message = "first is not allowed to be null")
+    @NotBlank(message = "first name is mandatory")
+    @NotNull(message = "first name is mandatory")
     private String first;
-    @NotBlank(message = "last is not allowed to be null")
-    @NotNull(message = "last is not allowed to be null")
     private String last;
     @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile;

@@ -5,16 +5,16 @@ import org.springframework.lang.Nullable;
 import javax.validation.constraints.*;
 
 public class CustomerBean extends CommonAttribute {
-    @NotBlank(message = "name is not allowed to be null")
-    @NotNull(message = "name is not allowed to be null")
+    @NotBlank(message = "Customer Name is mandatory")
+    @NotNull(message = "Customer Name is mandatory")
     private String name;
     private String city;
-    @Pattern(regexp = "\\s*|.{15}", message = "gstin should be of 15 digits")
+    @Pattern(regexp = "\\s*|.{15}", message = "GSTIN should be of 15 characters")
     private String gstin;
     private String transporter;
-    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
+    @Pattern(regexp = "\\s*|.{10}", message = "Mobile no. should be of 10 digits")
     private String mobile1;
-    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
+    @Pattern(regexp = "\\s*|.{10}", message = "Mobile2 no. should be of 10 digits")
     private String mobile2;
     private String firmname;
     private String billingadress;

@@ -22,9 +22,9 @@ public class Expense extends CommonAttribute {
     private double SGST;
     private double IGST;
     private double extra;
-    @Pattern(regexp = "\\s*|.{15}", message = "gstin should be of 15 digits")
+    @Pattern(regexp = "\\s*|.{15}", message = "GSTIN should be of 15 characters")
     private String toPartyGSTNO;
-    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
+    @Pattern(regexp = "\\s*|.{10}", message = "To Party Mobile no. should be of 10 digits")
     private String toPartyMobileNO;
     private boolean paid;
     private String empFirstName;
