@@ -52,14 +52,8 @@ public class EmployeeController {
 
     @PostMapping(path = "/createEmpSalaryPayment", produces = "application/json")
     public ResponseEntity createEmployeeSalaryPayment(@Valid @RequestBody EmployeeSalaryPayment employeeSalaryPayment) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isEmployeeSalPaymentCreated = employeeHandler.createSalaryPayment(employeeSalaryPayment);
-        if (isEmployeeSalPaymentCreated) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.createSalaryPayment(employeeSalaryPayment);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/updateLoginRequired", produces = "application/json")
