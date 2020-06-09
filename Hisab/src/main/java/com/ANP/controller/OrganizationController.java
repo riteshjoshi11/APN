@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/organization")
 public class OrganizationController {
@@ -18,7 +20,7 @@ public class OrganizationController {
     private OrganizationHandler orghandler;
 
     @PostMapping(path = "/createOrganization", produces = "application/json" )
-    public ResponseEntity createOrganization(@RequestBody OrganizationRegistrationBean organizationRegistrationBean) {
+    public ResponseEntity createOrganization(@Valid @RequestBody OrganizationRegistrationBean organizationRegistrationBean) {
         boolean isOrganizationCreated = orghandler.createOrganization(organizationRegistrationBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

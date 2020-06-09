@@ -31,7 +31,7 @@ public class OrganizationHandler {
      */
     @Transactional(rollbackFor = Exception.class)
     public boolean createOrganization(OrganizationRegistrationBean organizationRegistrationBean) {
-      long orgKey = orgDAO.createOrganization(organizationRegistrationBean.getOrgBean());
+      long orgKey = orgDAO.createOrganization(organizationRegistrationBean.getOrgBean(),organizationRegistrationBean.getEmployeeBean());
       EmployeeBean employeeBean = organizationRegistrationBean.getEmployeeBean();
       employeeBean.setType(ANPConstants.EMPLOYEE_TYPE_SUPER_ADMIN);
       employeeBean.setOrgId(orgKey);

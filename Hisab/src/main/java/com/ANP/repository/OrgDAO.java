@@ -1,9 +1,12 @@
 package com.ANP.repository;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.Organization;
 import com.ANP.service.OrganizationHandler;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,7 +26,18 @@ public class OrgDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public long createOrganization(Organization organization) {
+    public long createOrganization(Organization organization, EmployeeBean employeeBean) {
+
+
+        Map<String, Object> sparam = new HashMap<String, Object>();
+        sparam.put("mobile", employeeBean.getMobile());
+        Integer countRows  = namedParameterJdbcTemplate.queryForObject("select count(org.id) as countorg from organization org, Employee " +
+                "emp where org.id = emp.orgid and emp.mobile = :mobile and emp.type = 'SUPER_ADMIN'",sparam, Integer.class);
+        System.out.println(countRows);
+        if(countRows>=1){
+            throw new CustomAppException("duplicate organization","SERVER.ORGANIZATION.DUPLICATE_ORGANIZATION", HttpStatus.EXPECTATION_FAILED);
+        }
+
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
                 "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization), holder);
@@ -63,5 +77,4 @@ public class OrgDAO {
                 " (select orgid from employee where mobile=:mobileNumber)", param, new OrgMapper());
         return organizations;
     }
-
 }
