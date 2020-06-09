@@ -39,7 +39,12 @@ public class CustomerInvoiceDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
         return namedParameterJdbcTemplate.query(
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +

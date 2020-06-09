@@ -38,7 +38,12 @@ public class ExpenseDAO {
         param.put("orgID", orgId);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
         return namedParameterJdbcTemplate.query(
                 "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"

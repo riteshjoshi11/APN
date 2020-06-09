@@ -28,8 +28,11 @@ public class CustomerAuditDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
-
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
         return namedParameterJdbcTemplate.query("select custau.* , c.name, c.firmname, c.city " +
                         "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",

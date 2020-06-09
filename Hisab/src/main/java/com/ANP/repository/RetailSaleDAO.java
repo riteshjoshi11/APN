@@ -37,7 +37,12 @@ public class RetailSaleDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +

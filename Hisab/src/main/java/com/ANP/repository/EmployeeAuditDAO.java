@@ -30,9 +30,11 @@ public class EmployeeAuditDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
-
-
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
         return namedParameterJdbcTemplate.query("select empau.* , e.first, e.last " +
                         "from employee e, employeeaudit empau where empau.employeeid = e.id and empau.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",

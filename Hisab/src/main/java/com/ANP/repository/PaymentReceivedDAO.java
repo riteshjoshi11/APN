@@ -37,7 +37,12 @@ public class PaymentReceivedDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
         return namedParameterJdbcTemplate.query(
                 "select c.name, c.city, c.firmname, c.gstin, c.mobile1, c.state, prcvd.id, prcvd.fromaccountid,prcvd.fromcustomerid,prcvd.toaccountid," +
                         "prcvd.toemployeeid,prcvd.rcvddate,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.orgid," +

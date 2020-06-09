@@ -170,7 +170,13 @@ public class EmployeeDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-        param.put("orderBy",orderBy);
+
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
 
         return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
@@ -207,7 +213,13 @@ public class EmployeeDAO {
         param.put("orgid", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-        param.put("orderBy",orderBy);
+
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
                         " empsal.details, empsal.includeincalc,empsal.createdate " +
@@ -248,7 +260,11 @@ public class EmployeeDAO {
         param.put("orgid", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-        param.put("orderBy",orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
         List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
                         "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.fromemployeeid," +
                         "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +

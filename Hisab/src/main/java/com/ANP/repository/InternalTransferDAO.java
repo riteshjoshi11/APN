@@ -38,7 +38,12 @@ public class InternalTransferDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
+
 
         return namedParameterJdbcTemplate.query("select e.mobile,e.first,e.last, internal.details, internal.rcvddate,internal.amount," +
                     " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +

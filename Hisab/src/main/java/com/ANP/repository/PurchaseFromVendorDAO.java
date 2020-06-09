@@ -45,8 +45,12 @@ public class PurchaseFromVendorDAO {
         param.put("orgId", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
 
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            param.put("orderBy", "id desc");
+        } else {
+            param.put("orderBy", orderBy);
+        }
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
