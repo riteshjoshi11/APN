@@ -2,7 +2,11 @@ package com.ANP.repository;
 
 import com.ANP.bean.*;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -34,16 +38,20 @@ public class EmployeeDAO {
 
 
     public int createEmployee(EmployeeBean employeeBean) {
-
-        String idSql = "SELECT getEmployeeId() ";
-        Map param = new HashMap<String, Object>();
-        String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
-        employeeBean.setEmployeeId(id);
-        return namedParameterJdbcTemplate.update(
-                "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
-                        ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
-                        ",:currentsalarybalance,:lastsalarybalance,:orgId, :type)", new BeanPropertySqlParameterSource(employeeBean));
-    }
+        try {
+            String idSql = "SELECT getEmployeeId() ";
+            Map param = new HashMap<String, Object>();
+            String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
+            employeeBean.setEmployeeId(id);
+            return  namedParameterJdbcTemplate.update(
+                    "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
+                            ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
+                            ",:currentsalarybalance,:lastsalarybalance,:orgId, :type)", new BeanPropertySqlParameterSource(employeeBean));
+        }
+        catch (DuplicateKeyException e) {
+            throw new CustomAppException("Duplicate Entry","SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+        }
+        }
 
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
         //TODO Joshi: Update loginRequired attribute for employeeID passed

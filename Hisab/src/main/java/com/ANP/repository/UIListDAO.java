@@ -2,7 +2,10 @@ package com.ANP.repository;
 
 import com.ANP.bean.City;
 import com.ANP.bean.ExpenseCategory;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,9 +27,14 @@ public class UIListDAO {
     }
 
     public int createCity(City city) {
+        try {
         return namedParameterJdbcTemplate.update(
                 "insert into city (name) values(:name)",
                 new BeanPropertySqlParameterSource(city));
+        }
+        catch (DuplicateKeyException e) {
+            throw new CustomAppException("Duplicate Entry","SERVER.CREATE_CITY.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     private static final class CityMapper implements RowMapper<City> {
