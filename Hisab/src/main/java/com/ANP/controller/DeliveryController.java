@@ -25,14 +25,8 @@ public class DeliveryController {
 
     @PostMapping(path = "/createDelivery", produces = "application/json")
     public ResponseEntity createDelivery(@RequestBody DeliveryBean deliveryBean) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isDeliveryCreated = deliveryDAO.createDelivery(deliveryBean);
-        if (isDeliveryCreated) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
-        }
-        return responseEntity;
+        deliveryDAO.createDelivery(deliveryBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/listDeliveriesPaged", produces = "application/json")

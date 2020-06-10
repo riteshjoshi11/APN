@@ -29,7 +29,7 @@ public class CustomerAuditDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
+            param.put("orderBy", "custau.id desc");
         } else {
             param.put("orderBy", orderBy);
         }

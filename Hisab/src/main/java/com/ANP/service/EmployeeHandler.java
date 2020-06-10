@@ -18,7 +18,7 @@ public class EmployeeHandler {
 
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
-    public boolean createEmployee(EmployeeBean employeeBean) {
+    public void createEmployee(EmployeeBean employeeBean) {
         //TODO Joshi: Call EmployeeDAO:create
         // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
         // In a Transaction
@@ -36,8 +36,8 @@ public class EmployeeHandler {
         accountBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         accountBean.setOwnerid(employeeBean.getEmployeeId());
         accountBean.setOrgId(employeeBean.getOrgId());
-        isemployeecreated = accountDAO.createAccount(accountBean);
-        return isemployeecreated;
+        accountDAO.createAccount(accountBean);
+
     }
 
     @Transactional(rollbackFor = Exception.class)

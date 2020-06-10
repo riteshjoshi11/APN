@@ -3,7 +3,9 @@ package com.ANP.repository;
 import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -13,12 +15,15 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.GenericStoredProcedure;
 import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,16 +44,48 @@ public class AccountDAO {
     @Autowired
     private DataSource dataSource;
 
-    public boolean createAccount(AccountBean accountBean) {
-        boolean result = false;
-        int accountCreated = namedParameterJdbcTemplate.update(
-                "insert into account (ownerid,accountnickname,type,details,currentbalance,lastbalance,orgid,createdbyid)" +
-                        " values(:ownerid,:accountnickname,:type,:details,:currentbalance,:lastbalance,:orgId,:createdbyId)",
-                new BeanPropertySqlParameterSource(accountBean));
-        if (accountCreated > 0) {
-            result = true;
+    public void createAccount(AccountBean accountBean) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(
+                "insert into account (ownerid,accountnickname,type,details,orgid,createdbyid)" +
+                        " values(:ownerid,:accountnickname,:type,:details,:orgId,:createdbyId)",
+                new BeanPropertySqlParameterSource(accountBean),holder);
+
+        long generatedAccKey = holder.getKey().longValue();
+        System.out.println("createAccount: Generated Key=" + generatedAccKey);
+
+        if( ( (accountBean.getCurrentbalance()==0 || accountBean.getCurrentbalance()==0.0)) ) {
+            System.out.println("Current Balance is 0 So not updating the value into DB");
+            return;
         }
-        return result;
+
+        if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(accountBean.getOrgId());
+            customerAuditBean.setCustomerid(accountBean.getOwnerid());
+            customerAuditBean.setAccountid(generatedAccKey);
+            customerAuditBean.setAmount(accountBean.getCurrentbalance());
+            customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setTransactionDate(new Date());
+            this.updateCustomerAccountBalance(customerAuditBean);
+
+        } else if(ANPConstants.LOGIN_TYPE_EMPLOYEE.equalsIgnoreCase(accountBean.getType())) {
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setOrgId(accountBean.getOrgId());
+            employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
+            employeeAuditBean.setAccountid(generatedAccKey);
+            employeeAuditBean.setAmount(accountBean.getCurrentbalance());
+            employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setTransactionDate(new Date());
+            this.updateEmployeeAccountBalance(employeeAuditBean);
+        } else {
+            throw new CustomAppException("Account Creation Login type is invalid","SERVER.ACCOUNT_CREATE.LOGIN_TYPE_INVALID", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     //Operations: (ADD,SUBTRACT)

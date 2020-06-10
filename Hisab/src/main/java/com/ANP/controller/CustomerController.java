@@ -37,7 +37,7 @@ public class CustomerController {
 
     @PostMapping(path = "/create", produces = "application/json")
     public ResponseEntity createCustomer(@Valid @RequestBody CustomerBean customerBean) {
-        boolean isCustomerCreated = customerHandler.createCustomer(customerBean);
+        customerHandler.createCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     /*

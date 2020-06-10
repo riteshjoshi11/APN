@@ -27,26 +27,15 @@ public class EmployeeController {
 
     @PostMapping(path = "/createEmployee", produces = "application/json")
     public ResponseEntity createEmployee(@Valid @RequestBody EmployeeBean employeeBean) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isEmployeeCreated = employeeHandler.createEmployee(employeeBean);
-        if (isEmployeeCreated) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.createEmployee(employeeBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+
     }
 
     @PostMapping(path = "/createEmpSalary", produces = "application/json")
     public ResponseEntity createEmployeeSalary(@Valid @RequestBody EmployeeSalary employeeSalaryBean) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isEmployeeSalCreated = employeeHandler.createSalary(employeeSalaryBean);
-        if (isEmployeeSalCreated) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.createSalary(employeeSalaryBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
 
@@ -59,39 +48,21 @@ public class EmployeeController {
     @PostMapping(path = "/updateLoginRequired", produces = "application/json")
     @ResponseBody
     public ResponseEntity updateLoginRequired(@RequestBody EmployeeBean employeeBean) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isupdateLoginRequired = employeeHandler.updateLoginRequired(employeeBean.getEmployeeId(), employeeBean.getLoginrequired());
-        if (isupdateLoginRequired) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.updateLoginRequired(employeeBean.getEmployeeId(), employeeBean.getLoginrequired());
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/updateMobile", produces = "application/json")
     @ResponseBody
     public ResponseEntity updateMobile(@RequestBody EmployeeBean employeeBean) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isupdateMobile = employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
-        if (isupdateMobile) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/updateSalaryBalance", produces = "application/json")
     public ResponseEntity updateSalaryBalance(@RequestParam String EmployeeId, @RequestParam double balance, @RequestParam String operation) {
-        ResponseEntity<String> responseEntity = null;
-        boolean isupdateSalaryBalance = employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);
-        if (isupdateSalaryBalance) {
-            responseEntity = new ResponseEntity<>("Success", HttpStatus.OK);
-        } else {
-            responseEntity = new ResponseEntity<>("Failure", HttpStatus.OK);
-        }
-        return responseEntity;
+        employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     /*
@@ -120,6 +91,7 @@ public class EmployeeController {
         return employeeDAO.listEmployeesWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
+
     /*
      * This method returns the list of employee  Salaries with almost all employee attributes
      * This will be used in list employee Salary screen
