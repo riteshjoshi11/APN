@@ -48,7 +48,7 @@ public class PurchaseFromVendorDAO {
 
 
             if(ANPUtils.isNullOrEmpty(orderBy)) {
-                orderBy = "id desc";
+                orderBy = "p.id desc";
             }
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +

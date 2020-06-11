@@ -38,7 +38,7 @@ public class PayToVendorDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "paytov.id desc";
         }
         return namedParameterJdbcTemplate.query(
                 "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +

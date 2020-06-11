@@ -39,7 +39,7 @@ public class InternalTransferDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "internal.id desc";
         }
 
 

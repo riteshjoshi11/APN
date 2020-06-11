@@ -37,8 +37,9 @@ public class RetailSaleDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
+
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "retail.id desc";
         }
 
         return namedParameterJdbcTemplate.query(
