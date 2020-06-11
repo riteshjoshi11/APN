@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
 
+@AtLeastOneNotEmpty(fields = {"name", "firmname"})
 public class CustomerBean extends CommonAttribute {
     private String name;
     private String city;
@@ -128,3 +129,4 @@ public class CustomerBean extends CommonAttribute {
         this.transporter = transporter;
     }
 }
+
