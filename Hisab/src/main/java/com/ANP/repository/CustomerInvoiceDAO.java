@@ -40,9 +40,7 @@ public class CustomerInvoiceDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "id desc";
         }
 
         return namedParameterJdbcTemplate.query(
@@ -50,7 +48,7 @@ public class CustomerInvoiceDAO {
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
                         "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new SalesPagedMapper());
     }

@@ -38,16 +38,14 @@ public class PayToVendorDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
                 "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
                         " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
                         " c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
                         " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new PayToVendorMapper());
     }

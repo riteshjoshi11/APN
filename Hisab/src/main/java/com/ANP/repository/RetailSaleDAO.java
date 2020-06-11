@@ -38,16 +38,14 @@ public class RetailSaleDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "id desc";
         }
 
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +
                        " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new RetailEntryMapper());
 

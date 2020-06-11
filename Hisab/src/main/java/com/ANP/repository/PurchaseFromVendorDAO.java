@@ -46,11 +46,10 @@ public class PurchaseFromVendorDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
 
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
-        }
+
+            if(ANPUtils.isNullOrEmpty(orderBy)) {
+                orderBy = "id desc";
+            }
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
@@ -58,7 +57,7 @@ public class PurchaseFromVendorDAO {
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno " +
                         " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullPurchaseFromVendorMapper());
 

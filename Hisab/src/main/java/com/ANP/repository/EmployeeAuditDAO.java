@@ -31,13 +31,11 @@ public class EmployeeAuditDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "empau.id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "empau.id desc";
         }
         return namedParameterJdbcTemplate.query("select empau.* , e.first, e.last " +
                         "from employee e, employeeaudit empau where empau.employeeid = e.id and empau.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",
+                        ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new EmployeeAuditMapper());
 
     }

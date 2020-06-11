@@ -29,13 +29,11 @@ public class CustomerAuditDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "custau.id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "custau.id desc";
         }
         return namedParameterJdbcTemplate.query("select custau.* , c.name, c.firmname, c.city " +
                         "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow" + " offset :startIndex",
+                        ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow" + " offset :startIndex",
                          param, new CustomerAuditMapper());
     }
 

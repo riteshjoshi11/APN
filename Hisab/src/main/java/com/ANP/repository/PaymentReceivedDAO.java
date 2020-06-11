@@ -38,9 +38,7 @@ public class PaymentReceivedDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "id desc";
         }
 
         return namedParameterJdbcTemplate.query(
@@ -49,7 +47,7 @@ public class PaymentReceivedDAO {
                         "(select emp.first from employee emp where emp.id = prcvd.toemployeeid) as firstName," +
                         "(select emp.last from employee emp where emp.id = prcvd.toemployeeid) as lastName from customer c, paymentreceived " +
                         "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParam) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParam) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new PaymentReceivedDAO.PaymentReceivedMapper());
     }

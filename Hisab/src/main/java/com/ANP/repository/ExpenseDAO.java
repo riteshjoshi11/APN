@@ -40,13 +40,11 @@ public class ExpenseDAO {
         param.put("startIndex", startIndex - 1);
 
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            param.put("orderBy", "id desc");
-        } else {
-            param.put("orderBy", orderBy);
+            orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
                 "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+ "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
     }

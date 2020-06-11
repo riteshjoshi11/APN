@@ -89,13 +89,15 @@ public class CustomerDao {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-        param.put("orderBy",orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            orderBy = "account.id desc";
+        }
 
 
 
         return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
                          " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
-                           ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                           ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                            param, new FullCustomerMapper()) ;
     }
