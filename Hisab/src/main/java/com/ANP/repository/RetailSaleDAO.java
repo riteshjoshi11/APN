@@ -4,7 +4,9 @@ package com.ANP.repository;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +24,9 @@ public class RetailSaleDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public int createRetailSale(RetailSale retailSale) {
+        if(!retailSale.isForceCreate()) {
+            isDuplicateSuspect(retailSale);
+        }
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO retailsale(date,amount,orgid,createdbyid,notes,includeincalc,fromaccountid,fromemployeeid,createdate) " +
                         " VALUES(:date,:amount,:orgId,:createdbyId,:notes,:includeincalc,:fromaccountid,:fromemployeeid,:createDate); ",
@@ -70,4 +75,14 @@ public class RetailSaleDAO {
             return ret;
         }
     }
+
+    /*
+      //Check for duplicate entry here programmatically
+      //if found then throw an error
+
+     */
+    private void isDuplicateSuspect(RetailSale retailSale){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        throw new CustomAppException("The Retail Sale looks like duplicate","SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+   }
 }
