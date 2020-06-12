@@ -10,10 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +84,19 @@ public class RetailSaleDAO {
       //if found then throw an error
 
      */
-    private void isDuplicateSuspect(RetailSale retailSale){
+    public void isDuplicateSuspect(RetailSale retailSale){
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        throw new CustomAppException("The Retail Sale looks like duplicate","SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
-   }
+        Map<String,Object> params = new HashMap<>();
+        params.put("date", retailSale.getDate());
+        params.put("orgid", retailSale.getOrgId());
+        params.put("amount", retailSale.getAmount());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from retailsale where orgid = :orgid and amount = :amount" +
+                " and date = :date",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            System.out.println("count =" + count);
+            throw new CustomAppException("The Retail Sale looks like duplicate", "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
 }

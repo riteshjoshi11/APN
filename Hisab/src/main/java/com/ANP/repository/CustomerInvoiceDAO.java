@@ -2,9 +2,12 @@ package com.ANP.repository;
 
 import com.ANP.bean.CustomerInvoiceBean;
 import com.ANP.bean.PurchaseFromVendorBean;
+import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -75,6 +78,22 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setIncludeInReport(rs.getBoolean("cusinv.includeinreport"));
             customerInvoiceBean.setDate(rs.getDate("cusinv.date"));
             return customerInvoiceBean;
+        }
+    }
+
+    public void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", customerInvoiceBean.getOrgId());
+        params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
+        params.put("amount", customerInvoiceBean.getOrderAmount());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from customerinvoice where orgid = :orgid and orderamount = :amount" +
+                " and tocustomerid = :tocustomerid",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            System.out.println("count =" + count);
+            throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

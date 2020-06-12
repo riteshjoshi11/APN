@@ -31,7 +31,7 @@ public class OrgDAO {
 
         Map<String, Object> sparam = new HashMap<String, Object>();
         sparam.put("mobile", employeeBean.getMobile());
-        Integer countRows  = namedParameterJdbcTemplate.queryForObject("select count(org.id) as countorg from organization org, Employee " +
+        Integer countRows  = namedParameterJdbcTemplate.queryForObject("select count(org.id) as countorg from organization org, employee " +
                 "emp where org.id = emp.orgid and emp.mobile = :mobile and emp.type = 'SUPER_ADMIN'",sparam, Integer.class);
         System.out.println(countRows);
         if(countRows>=1){
