@@ -2,9 +2,12 @@ package com.ANP.repository;
 
 import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.PaymentReceivedBean;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -65,6 +68,21 @@ public class InternalTransferDAO {
             internalTransferBean.setAmount(rs.getDouble("internal.amount"));
             internalTransferBean.setReceivedDate(rs.getDate("internal.rcvddate"));
             return internalTransferBean;
+        }
+    }
+    public void isDuplicateSuspect(InternalTransferBean internalTransferBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", internalTransferBean.getOrgId());
+        params.put("amount", internalTransferBean.getAmount());
+        params.put("fromemployeeid", internalTransferBean.getFromEmployeeID());
+        params.put("toemployeeid", internalTransferBean.getToEmployeeID());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from internaltransfer where orgid = :orgid and amount = :amount" +
+                " and fromemployeeid = :fromemployeeid and toemployeeid = :toemployeeid",params, Integer.class);
+
+        if(count>0) {
+            throw new CustomAppException("The Internal Transfer looks like duplicate", "SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

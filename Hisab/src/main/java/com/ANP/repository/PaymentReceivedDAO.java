@@ -2,9 +2,12 @@ package com.ANP.repository;
 
 import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.PaymentReceivedBean;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -76,6 +79,20 @@ public class PaymentReceivedDAO {
             paymentReceivedBean.getEmployeeBean().setFirst(rs.getString("firstName"));
             paymentReceivedBean.getEmployeeBean().setLast(rs.getString("lastName"));
             return paymentReceivedBean;
+        }
+    }
+    public void isDuplicateSuspect(PaymentReceivedBean paymentReceivedBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", paymentReceivedBean.getOrgId());
+        params.put("fromcustomerid", paymentReceivedBean.getFromCustomerID());
+        params.put("amount", paymentReceivedBean.getAmount());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from paymentreceived where orgid = :orgid and amount = :amount" +
+                " and fromcustomerid = :fromcustomerid",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The Payment Received looks like duplicate", "SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

@@ -1,9 +1,12 @@
 package com.ANP.repository;
 
 import com.ANP.bean.PayToVendorBean;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -72,6 +75,21 @@ public class PayToVendorDAO {
             payToVendorBean.getEmployeeBean().setLast(rs.getString("e.last"));
             payToVendorBean.getEmployeeBean().setMobile(rs.getString("e.mobile"));
             return payToVendorBean;
+        }
+    }
+
+    public void isDuplicateSuspect(PayToVendorBean payToVendorBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", payToVendorBean.getOrgId());
+        params.put("tocustomerid", payToVendorBean.getToCustomerID());
+        params.put("amount", payToVendorBean.getAmount());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from paytovendor where orgid = :orgid and amount = :amount" +
+                " and tocustomerid = :tocustomerid",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The pay to vendor looks like duplicate", "SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

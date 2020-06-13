@@ -1,11 +1,10 @@
 package com.ANP.repository;
 
-import com.ANP.bean.CustomerBean;
-import com.ANP.bean.PurchaseFromVendorBean;
-import com.ANP.bean.Expense;
-import com.ANP.bean.SearchParam;
+import com.ANP.bean.*;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -86,6 +85,22 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setIncludeInCalc(rs.getBoolean("p.includeincalc"));
             purchaseFromVendorBean.setBillNo(rs.getString("p.billno"));
             return purchaseFromVendorBean;
+        }
+    }
+
+    public void isDuplicateSuspect(PurchaseFromVendorBean purchaseFromVendorBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", purchaseFromVendorBean.getOrgId());
+        params.put("fromcustomerid", purchaseFromVendorBean.getFromCustomerId());
+        params.put("amount", purchaseFromVendorBean.getTotalAmount());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from purchasefromvendor where orgid = :orgid and totalamount = :amount" +
+                " and fromcustomerid = :fromcustomerid",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            System.out.println("count =" + count);
+            throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

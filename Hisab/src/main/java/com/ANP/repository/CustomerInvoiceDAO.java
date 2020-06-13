@@ -29,10 +29,11 @@ public class CustomerInvoiceDAO {
      */
     public int createInvoice(CustomerInvoiceBean invoiceBean) {
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO customerinvoice(tocustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,toaccountid,invoiceno) "+
+                "INSERT INTO customerinvoice(tocustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,toaccountid,invoiceno) " +
                         " VALUES(:toCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdbyId,:note,:includeInReport,:includeInCalc,:toAccountId,:invoiceNo); ",
                 new BeanPropertySqlParameterSource(invoiceBean));
     }
+
     public List<CustomerInvoiceBean> listSalesPaged(long orgID, List<SearchParam> searchParams,
                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
         if (startIndex == 0) {
@@ -42,7 +43,7 @@ public class CustomerInvoiceDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "id desc";
         }
 
@@ -51,7 +52,7 @@ public class CustomerInvoiceDAO {
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
                         "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new SalesPagedMapper());
     }
@@ -81,19 +82,40 @@ public class CustomerInvoiceDAO {
         }
     }
 
-    public void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean){
+    public void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        Map<String,Object> params = new HashMap<>();
+
+        Map<String, Object> params = new HashMap<>();
         params.put("orgid", customerInvoiceBean.getOrgId());
         params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
         params.put("amount", customerInvoiceBean.getOrderAmount());
 
+        List<CustomerInvoiceBean> customerInvoiceBeanList = namedParameterJdbcTemplate.query("select * from customerinvoice " +
+                "order by id desc limit 1", params, new DuplicateSalesMapper());
+        CustomerInvoiceBean cIB = customerInvoiceBeanList.get(0);
+        boolean lastduplicate = false;
+
+        if (cIB.getToCustomerId().equals(customerInvoiceBean.getToCustomerId()) &&
+                cIB.getOrgId() == customerInvoiceBean.getOrgId() &&
+                cIB.getOrderAmount() == customerInvoiceBean.getOrderAmount()) {
+            lastduplicate = true;
+            System.out.println("here is last duplicate = "+lastduplicate);
+        }
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from customerinvoice where orgid = :orgid and orderamount = :amount" +
-                " and tocustomerid = :tocustomerid",params, Integer.class);
-        System.out.println(count);
-        if(count>0) {
-            System.out.println("count =" + count);
+                " and tocustomerid = :tocustomerid", params, Integer.class);
+        System.out.println("count =" + count);
+        if (count > 0 || lastduplicate) {
             throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
+
+    private static final class DuplicateSalesMapper implements RowMapper<CustomerInvoiceBean> {
+        public CustomerInvoiceBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
+            customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
+            customerInvoiceBean.setToCustomerId(rs.getString("tocustomerid"));
+            customerInvoiceBean.setOrgId(rs.getLong("orgid"));
+            return customerInvoiceBean;
         }
     }
 }
