@@ -88,7 +88,9 @@ public class CustomerInvoiceDAO {
         Map<String, Object> params = new HashMap<>();
         params.put("orgid", customerInvoiceBean.getOrgId());
         params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
-        params.put("amount", customerInvoiceBean.getOrderAmount());
+
+        long actualamount = (long)(customerInvoiceBean.getOrderAmount());
+        params.put("amount", actualamount);
 
         List<CustomerInvoiceBean> customerInvoiceBeanList = namedParameterJdbcTemplate.query("select * from customerinvoice " +
                 "order by id desc limit 1", params, new DuplicateSalesMapper());
@@ -101,8 +103,9 @@ public class CustomerInvoiceDAO {
             lastduplicate = true;
             System.out.println("here is last duplicate = "+lastduplicate);
         }
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from customerinvoice where orgid = :orgid and orderamount = :amount" +
-                " and tocustomerid = :tocustomerid", params, Integer.class);
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(orderamount) as orderamount ,id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
+                "  order by id desc limit 1) purchase where orderamount = :amount",params, Integer.class);
+
         System.out.println("count =" + count);
         if (count > 0 || lastduplicate) {
             throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);

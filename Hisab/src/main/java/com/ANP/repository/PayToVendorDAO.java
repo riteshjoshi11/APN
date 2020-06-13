@@ -83,10 +83,11 @@ public class PayToVendorDAO {
         Map<String,Object> params = new HashMap<>();
         params.put("orgid", payToVendorBean.getOrgId());
         params.put("tocustomerid", payToVendorBean.getToCustomerID());
-        params.put("amount", payToVendorBean.getAmount());
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from paytovendor where orgid = :orgid and amount = :amount" +
-                " and tocustomerid = :tocustomerid",params, Integer.class);
+        long actualamount = (long)(payToVendorBean.getAmount());
+        params.put("amount", actualamount);
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id from paytovendor where orgid=:orgid and tocustomerid=:tocustomerid" +
+                "  order by id desc limit 1) pay where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {
             throw new CustomAppException("The pay to vendor looks like duplicate", "SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);

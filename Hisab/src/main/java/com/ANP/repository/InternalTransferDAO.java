@@ -74,12 +74,15 @@ public class InternalTransferDAO {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
         Map<String,Object> params = new HashMap<>();
         params.put("orgid", internalTransferBean.getOrgId());
-        params.put("amount", internalTransferBean.getAmount());
         params.put("fromemployeeid", internalTransferBean.getFromEmployeeID());
         params.put("toemployeeid", internalTransferBean.getToEmployeeID());
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from internaltransfer where orgid = :orgid and amount = :amount" +
-                " and fromemployeeid = :fromemployeeid and toemployeeid = :toemployeeid",params, Integer.class);
+        long actualamount = (long)(internalTransferBean.getAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid" +
+        " and toemployeeid = :toemployeeid order by id desc limit 1) purchase where amount = :amount",params, Integer.class);
+
 
         if(count>0) {
             throw new CustomAppException("The Internal Transfer looks like duplicate", "SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);

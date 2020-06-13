@@ -93,14 +93,37 @@ public class PurchaseFromVendorDAO {
         Map<String,Object> params = new HashMap<>();
         params.put("orgid", purchaseFromVendorBean.getOrgId());
         params.put("fromcustomerid", purchaseFromVendorBean.getFromCustomerId());
-        params.put("amount", purchaseFromVendorBean.getTotalAmount());
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from purchasefromvendor where orgid = :orgid and totalamount = :amount" +
-                " and fromcustomerid = :fromcustomerid",params, Integer.class);
+        long actualamount = (long)(purchaseFromVendorBean.getTotalAmount());
+        params.put("amount", actualamount);
+
+        List<PurchaseFromVendorBean> purchaseFromVendorBeanList = namedParameterJdbcTemplate.query("select * from purchasefromvendor " +
+                "order by id desc limit 1", params, new DuplicateSalesMapper());
+        PurchaseFromVendorBean pFVB = purchaseFromVendorBeanList.get(0);
+        boolean lastduplicate = false;
+
+        if (pFVB.getFromCustomerId().equals(purchaseFromVendorBean.getFromCustomerId()) &&
+                pFVB.getOrgId() == purchaseFromVendorBean.getOrgId()&&
+                pFVB.getTotalAmount() == purchaseFromVendorBean.getTotalAmount())
+        {
+            lastduplicate = true;
+            System.out.println("here is last duplicate = "+lastduplicate);
+        }
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount ,id FROM purchasefromvendor where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+                "  order by id desc limit 1) purchase where totalamount = :amount",params, Integer.class);
         System.out.println(count);
-        if(count>0) {
-            System.out.println("count =" + count);
+        if(count>0 || lastduplicate) {
             throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
+    private static final class DuplicateSalesMapper implements RowMapper<PurchaseFromVendorBean> {
+        public PurchaseFromVendorBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            PurchaseFromVendorBean purchaseFromVendorBean = new PurchaseFromVendorBean();
+            purchaseFromVendorBean.setTotalAmount(rs.getDouble("totalamount"));
+            purchaseFromVendorBean.setFromCustomerId(rs.getString("fromcustomerid"));
+            purchaseFromVendorBean.setOrgId(rs.getLong("orgid"));
+            return purchaseFromVendorBean;
         }
     }
 }

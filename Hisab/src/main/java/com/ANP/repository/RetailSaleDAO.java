@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 
+import com.ANP.bean.CustomerInvoiceBean;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
@@ -89,14 +90,39 @@ public class RetailSaleDAO {
         Map<String,Object> params = new HashMap<>();
         params.put("date", retailSale.getDate());
         params.put("orgid", retailSale.getOrgId());
-        params.put("amount", retailSale.getAmount());
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from retailsale where orgid = :orgid and amount = :amount" +
-                " and date = :date",params, Integer.class);
+        long actualamount = (long)(retailSale.getAmount());
+        params.put("amount", actualamount);
+
+        List<RetailSale> retailSaleList = namedParameterJdbcTemplate.query("select * from retailsale " +
+                "order by id desc limit 1", params, new DuplicateSalesMapper());
+        RetailSale rS = retailSaleList.get(0);
+        boolean lastduplicate = false;
+
+        if (rS.getDate().equals(retailSale.getDate()) &&
+                rS.getOrgId() == retailSale.getOrgId()&&
+                rS.getAmount() == retailSale.getAmount())
+        {
+            lastduplicate = true;
+            System.out.println("here is last duplicate = "+lastduplicate);
+        }
+
+        Integer count = namedParameterJdbcTemplate.queryForObject(   "select count(*) from ( SELECT  floor(amount) as amount ,id FROM retailsale where orgid=:orgid and date=:date" +
+                "  order by id desc limit 1) purchase where amount = :amount",params, Integer.class);
+
         System.out.println(count);
-        if(count>0) {
-            System.out.println("count =" + count);
+        if(count>0 || lastduplicate) {
             throw new CustomAppException("The Retail Sale looks like duplicate", "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
+
+    private static final class DuplicateSalesMapper implements RowMapper<RetailSale> {
+        public RetailSale mapRow(ResultSet rs, int rowNum) throws SQLException {
+            RetailSale retailSale = new RetailSale();
+            retailSale.setAmount(rs.getDouble("amount"));
+            retailSale.setDate(rs.getDate("date"));
+            retailSale.setOrgId(rs.getLong("orgid"));
+            return retailSale;
         }
     }
 }

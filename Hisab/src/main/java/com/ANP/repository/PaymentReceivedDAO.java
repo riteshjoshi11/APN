@@ -86,10 +86,15 @@ public class PaymentReceivedDAO {
         Map<String,Object> params = new HashMap<>();
         params.put("orgid", paymentReceivedBean.getOrgId());
         params.put("fromcustomerid", paymentReceivedBean.getFromCustomerID());
-        params.put("amount", paymentReceivedBean.getAmount());
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(id) as countnum from paymentreceived where orgid = :orgid and amount = :amount" +
-                " and fromcustomerid = :fromcustomerid",params, Integer.class);
+
+        long actualamount = (long)(paymentReceivedBean.getAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+                "  order by id desc limit 1) purchase where amount = :amount",params, Integer.class);
+
+
         System.out.println(count);
         if(count>0) {
             throw new CustomAppException("The Payment Received looks like duplicate", "SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
