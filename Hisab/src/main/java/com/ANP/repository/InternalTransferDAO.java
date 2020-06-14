@@ -27,6 +27,9 @@ public class InternalTransferDAO {
 
 
     public int createInternalTransfer(InternalTransferBean internalTransferBean) {
+        if(!internalTransferBean.isForceCreate()) {
+            isDuplicateSuspect(internalTransferBean);
+        }
         return namedParameterJdbcTemplate.update(
                 "insert into internaltransfer (fromaccountid,fromemployeeid,toaccountid,toemployeeid,rcvddate,amount,details,includeincalc,orgid,createdbyid,createdate)" +
                         " values(:fromAccountID,:fromEmployeeID,:toAccountID,:toEmployeeID,:receivedDate,:amount,:details,:includeInCalc,:orgId,:createdbyId,:createDate)",

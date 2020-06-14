@@ -26,6 +26,10 @@ public class PaymentReceivedDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public int createPaymentReceived(PaymentReceivedBean paymentReceivedBean) {
+        if(!paymentReceivedBean.isForceCreate()) {
+            isDuplicateSuspect(paymentReceivedBean);
+        }
+
         return namedParameterJdbcTemplate.update(
                 "insert into paymentreceived (fromaccountid,fromcustomerid,toaccountid,toemployeeid,rcvddate,amount,details,includeincalc,orgid,createdbyid,createdate)" +
                         " values(:fromAccountID,:fromCustomerID,:toAccountID,:toEmployeeID,:receivedDate,:amount,:details,:includeInCalc,:orgId,:createdbyId,:createDate)",

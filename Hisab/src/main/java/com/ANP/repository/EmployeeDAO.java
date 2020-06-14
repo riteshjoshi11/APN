@@ -99,7 +99,10 @@ public class EmployeeDAO {
     }
 
     public boolean createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
-        //TODO Joshi: Create a employee here
+        if(!employeeSalaryBean.isForceCreate()) {
+            this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
+        }
+
         if (namedParameterJdbcTemplate.update(
                 "insert into employeesalary(toemployeeid,amount,details,orgid,createdbyid,includeincalc) " +
                         "values(:toEmployeeID,:amount,:details,:orgId,:createdbyId,:includeInCalc)",
@@ -110,7 +113,11 @@ public class EmployeeDAO {
     }
 
     public boolean createEmployeeSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
-        //TODO Joshi: Create a employee here
+
+        if(!employeeSalaryPaymentBean.isForceCreate()) {
+            this.isDuplicatePaySalarySuspect(employeeSalaryPaymentBean);
+        }
+
         if (namedParameterJdbcTemplate.update("insert into employeesalarypayment(fromaccountid," +
                 "amount,details,toemployeeid,fromemployeeid,orgid,includeincalc,createdbyid) values(:fromAccountId," +
                 ":amount" +
@@ -221,7 +228,7 @@ public class EmployeeDAO {
         param.put("startIndex",startIndex-1);
 
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "empsal.id desc";
         }
 
 
@@ -264,8 +271,9 @@ public class EmployeeDAO {
         param.put("orgid", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
+
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "empsalpay.id desc";
         }
         List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
                         "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.fromemployeeid," +
@@ -307,7 +315,8 @@ public class EmployeeDAO {
         long actualamount = (long)(employeeSalaryPayment.getAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ," +
+                " id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid" +
                 " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) paysalary where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {
@@ -325,7 +334,8 @@ public class EmployeeDAO {
         long actualamount = (long)(employeeSalary.getAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount , " +
+                " id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid" +
                 " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) salarydue where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {

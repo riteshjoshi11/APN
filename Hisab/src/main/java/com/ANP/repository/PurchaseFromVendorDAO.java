@@ -26,6 +26,9 @@ public class PurchaseFromVendorDAO {
      *  No need to change anything here.
      */
     public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
+        if(!purchaseFromVendorBean.isForceCreate()) {
+            isDuplicateSuspect(purchaseFromVendorBean);
+        }
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO purchasefromvendor(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
                         " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdbyId,:note,:includeInReport,:includeInCalc,:fromAccountId,:billNo); ",

@@ -24,6 +24,10 @@ public class PayToVendorDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public int createPayToVendor(PayToVendorBean payToVendorBean) {
+        if(!payToVendorBean.isForceCreate()) {
+            isDuplicateSuspect(payToVendorBean);
+        }
+
         return namedParameterJdbcTemplate.update(
                 "insert into paytovendor(fromaccountid,fromemployeeid,toaccountid,tocustomerid,date,amount,details,includeincalc,orgid,createdbyid)" +
                         " values(:fromAccountID,:fromEmployeeID,:toAccountID,:toCustomerID,:paymentDate,:amount,:details,:includeInCalc,:orgId,:createdbyId)",

@@ -28,6 +28,11 @@ public class CustomerInvoiceDAO {
         TODO: JOSHI you need to run updated SQL, i have created this method and nothing need to change here.
      */
     public int createInvoice(CustomerInvoiceBean invoiceBean) {
+        System.out.println(" CreateInvoice: invoiceBean.forceCreate[" + invoiceBean.isForceCreate() + "]");
+        if(!invoiceBean.isForceCreate()) {
+            isDuplicateSuspect(invoiceBean);
+        }
+
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO customerinvoice(tocustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,toaccountid,invoiceno) " +
                         " VALUES(:toCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdbyId,:note,:includeInReport,:includeInCalc,:toAccountId,:invoiceNo); ",
@@ -84,7 +89,7 @@ public class CustomerInvoiceDAO {
 
     public void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-
+        System.out.println("isDuplicate Suspect...");
         Map<String, Object> params = new HashMap<>();
         params.put("orgid", customerInvoiceBean.getOrgId());
         params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
@@ -92,7 +97,8 @@ public class CustomerInvoiceDAO {
         long actualamount = (long)(customerInvoiceBean.getOrderAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(orderamount) as orderamount ,id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(orderamount) as orderamount ," +
+                "id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
                 "  order by id desc limit 1) sale where orderamount = :amount",params, Integer.class);
 
         System.out.println("count =" + count);
