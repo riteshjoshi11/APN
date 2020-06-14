@@ -1,9 +1,12 @@
 package com.ANP.repository;
 
 import com.ANP.bean.Expense;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -121,8 +124,6 @@ public class ExpenseDAO {
             return false;
         }
     }
-
-
     /*
         you need to update Expense Table:includeInCalc field with the passed value
   */
@@ -136,5 +137,21 @@ public class ExpenseDAO {
 
         return false;
 
+    }
+    public void isDuplicateSuspect(Expense expense){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", expense.getOrgId());
+        params.put("fromemployeeid", expense.getFromEmployeeID());
+
+        long actualamount = (long)(expense.getTotalAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid" +
+                "  order by id desc limit 1) expense where totalamount = :amount",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The created expense looks like duplicate", "SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
     }
 }

@@ -297,4 +297,39 @@ public class EmployeeDAO {
             return employeeSalaryPayment;
         }
     }
+
+    public void isDuplicatePaySalarySuspect(EmployeeSalaryPayment employeeSalaryPayment){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", employeeSalaryPayment.getOrgId());
+        params.put("toemployeeid", employeeSalaryPayment.getToEmployeeId());
+
+        long actualamount = (long)(employeeSalaryPayment.getAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid" +
+                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) paysalary where amount = :amount",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The Salary payment like duplicate", "SERVER.CREATE_SALARY_PAYMENT.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
+
+
+    public void isDuplicateSalaryDueSuspect(EmployeeSalary employeeSalary){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", employeeSalary.getOrgId());
+        params.put("toemployeeid", employeeSalary.getToEmployeeID());
+
+        long actualamount = (long)(employeeSalary.getAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid" +
+                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) salarydue where amount = :amount",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The Salary Due looks like duplicate", "SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+        }
+    }
 }

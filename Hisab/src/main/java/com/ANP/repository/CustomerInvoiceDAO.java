@@ -92,33 +92,12 @@ public class CustomerInvoiceDAO {
         long actualamount = (long)(customerInvoiceBean.getOrderAmount());
         params.put("amount", actualamount);
 
-        List<CustomerInvoiceBean> customerInvoiceBeanList = namedParameterJdbcTemplate.query("select * from customerinvoice " +
-                "order by id desc limit 1", params, new DuplicateSalesMapper());
-        CustomerInvoiceBean cIB = customerInvoiceBeanList.get(0);
-        boolean lastduplicate = false;
-
-        if (cIB.getToCustomerId().equals(customerInvoiceBean.getToCustomerId()) &&
-                cIB.getOrgId() == customerInvoiceBean.getOrgId() &&
-                cIB.getOrderAmount() == customerInvoiceBean.getOrderAmount()) {
-            lastduplicate = true;
-            System.out.println("here is last duplicate = "+lastduplicate);
-        }
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(orderamount) as orderamount ,id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
-                "  order by id desc limit 1) purchase where orderamount = :amount",params, Integer.class);
+                "  order by id desc limit 1) sale where orderamount = :amount",params, Integer.class);
 
         System.out.println("count =" + count);
-        if (count > 0 || lastduplicate) {
+        if (count > 0) {
             throw new CustomAppException("The Sales looks like duplicate", "SERVER.CREATE_SALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
-        }
-    }
-
-    private static final class DuplicateSalesMapper implements RowMapper<CustomerInvoiceBean> {
-        public CustomerInvoiceBean mapRow(ResultSet rs, int rowNum) throws SQLException {
-            CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
-            customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
-            customerInvoiceBean.setToCustomerId(rs.getString("tocustomerid"));
-            customerInvoiceBean.setOrgId(rs.getLong("orgid"));
-            return customerInvoiceBean;
         }
     }
 }

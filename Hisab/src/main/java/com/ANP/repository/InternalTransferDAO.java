@@ -81,7 +81,7 @@ public class InternalTransferDAO {
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid" +
-        " and toemployeeid = :toemployeeid order by id desc limit 1) purchase where amount = :amount",params, Integer.class);
+        " and toemployeeid = :toemployeeid order by id desc limit 1) internaltransfer where amount = :amount",params, Integer.class);
 
 
         if(count>0) {
