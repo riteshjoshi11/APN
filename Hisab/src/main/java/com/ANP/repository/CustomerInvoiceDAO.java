@@ -94,12 +94,12 @@ public class CustomerInvoiceDAO {
         params.put("orgid", customerInvoiceBean.getOrgId());
         params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
 
-        long actualamount = (long)(customerInvoiceBean.getOrderAmount());
+        long actualamount = (long)(customerInvoiceBean.getTotalAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(orderamount) as orderamount ," +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(totalamount) as totalamount ," +
                 "id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
-                "  order by id desc limit 1) sale where orderamount = :amount",params, Integer.class);
+                "  order by id desc limit 1) sale where totalamount = :amount",params, Integer.class);
 
         System.out.println("count =" + count);
         if (count > 0) {
