@@ -32,8 +32,8 @@ public class RetailSaleDAO {
             isDuplicateSuspect(retailSale);
         }
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO retailsale(date,amount,orgid,createdbyid,notes,includeincalc,fromaccountid,fromemployeeid,createdate) " +
-                        " VALUES(:date,:amount,:orgId,:createdbyId,:notes,:includeincalc,:fromaccountid,:fromemployeeid,:createDate); ",
+                "INSERT INTO retailsale(date,amount,orgid,createdbyid,notes,includeincalc,fromaccountid,fromemployeeid) " +
+                        " VALUES(:date,:amount,:orgId,:createdbyId,:notes,:includeincalc,:fromaccountid,:fromemployeeid); ",
                 new BeanPropertySqlParameterSource(retailSale));
     }
 
