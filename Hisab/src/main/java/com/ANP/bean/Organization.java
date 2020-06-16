@@ -38,4 +38,8 @@ public class Organization {
     public void setOrgName(String orgName) {
         this.orgName = orgName;
     }
+
+    public String toString() {
+        return "" + "orgName[" + orgName + "] city[" + city + "] state[" + state + "]" ;
+    }
 }

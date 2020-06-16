@@ -21,6 +21,7 @@ public class OrganizationController {
 
     @PostMapping(path = "/createOrganization", produces = "application/json" )
     public ResponseEntity createOrganization(@Valid @RequestBody OrganizationRegistrationBean organizationRegistrationBean) {
+        System.out.println("Controller:[" + organizationRegistrationBean.getOrgBean().getOrgName() + "]");
         boolean isOrganizationCreated = orghandler.createOrganization(organizationRegistrationBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
