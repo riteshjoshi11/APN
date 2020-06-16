@@ -77,7 +77,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.getCustomerBean().setOrgId(rs.getLong("customer.orgid"));
             purchaseFromVendorBean.getCustomerBean().setState(rs.getString("customer.state"));
             purchaseFromVendorBean.setPurchaseID(rs.getLong("p.id"));
-            purchaseFromVendorBean.setDate(rs.getDate("p.date"));
+            purchaseFromVendorBean.setDate(rs.getTimestamp("p.date"));
             purchaseFromVendorBean.setCGST(rs.getFloat("p.CGST"));
             purchaseFromVendorBean.setSGST(rs.getFloat("p.SGST"));
             purchaseFromVendorBean.setIGST(rs.getFloat("p.IGST"));

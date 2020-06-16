@@ -69,7 +69,7 @@ public class InternalTransferDAO {
             internalTransferBean.getToEmployee().setLast(rs.getString("e.last"));
             internalTransferBean.getToEmployee().setMobile(rs.getString("e.mobile"));
             internalTransferBean.setAmount(rs.getDouble("internal.amount"));
-            internalTransferBean.setReceivedDate(rs.getDate("internal.rcvddate"));
+            internalTransferBean.setReceivedDate(rs.getTimestamp("internal.rcvddate"));
             return internalTransferBean;
         }
     }

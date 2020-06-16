@@ -82,7 +82,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setToAccountId(rs.getLong("cusinv.toaccountid"));
             customerInvoiceBean.setIncludeInCalc(rs.getBoolean("cusinv.includeincalc"));
             customerInvoiceBean.setIncludeInReport(rs.getBoolean("cusinv.includeinreport"));
-            customerInvoiceBean.setDate(rs.getDate("cusinv.date"));
+            customerInvoiceBean.setDate(rs.getTimestamp("cusinv.date"));
             return customerInvoiceBean;
         }
     }

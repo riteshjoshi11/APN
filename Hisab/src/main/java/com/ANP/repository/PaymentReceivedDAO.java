@@ -75,7 +75,7 @@ public class PaymentReceivedDAO {
 
             paymentReceivedBean.setToAccountID(rs.getLong("prcvd.toaccountid"));
             paymentReceivedBean.setToEmployeeID(rs.getString("prcvd.toemployeeid"));
-            paymentReceivedBean.setReceivedDate(rs.getDate("prcvd.rcvddate"));
+            paymentReceivedBean.setReceivedDate(rs.getTimestamp("prcvd.rcvddate"));
             paymentReceivedBean.setAmount(rs.getFloat("prcvd.amount"));
             paymentReceivedBean.setDetails(rs.getString("prcvd.details"));
             paymentReceivedBean.setOrgId(rs.getLong("prcvd.orgid"));

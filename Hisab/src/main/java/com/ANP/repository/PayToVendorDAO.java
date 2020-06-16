@@ -68,7 +68,7 @@ public class PayToVendorDAO {
             payToVendorBean.getCustomerBean().setState(rs.getString("c.state"));
             payToVendorBean.setFromAccountID(rs.getLong("paytov.fromaccountid"));
             payToVendorBean.setToAccountID(rs.getLong("paytov.toaccountid"));
-            payToVendorBean.setPaymentDate(rs.getDate("paytov.date"));
+            payToVendorBean.setPaymentDate(rs.getTimestamp("paytov.date"));
             payToVendorBean.setAmount(rs.getFloat("paytov.amount"));
             payToVendorBean.setDetails(rs.getString("paytov.details"));
             payToVendorBean.setFromEmployeeID(rs.getString("paytov.fromemployeeid"));

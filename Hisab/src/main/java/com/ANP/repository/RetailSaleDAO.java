@@ -67,7 +67,7 @@ public class RetailSaleDAO {
         {
             RetailSale ret = new RetailSale();
             ret.setAmount(rs.getLong("retail.amount"));
-            ret.setDate(rs.getDate("retail.date"));
+            ret.setDate(rs.getTimestamp("retail.date"));
             ret.setIncludeincalc(rs.getBoolean("retail.includeincalc"));
             ret.setFromaccountid(rs.getInt("retail.fromaccountid"));
             ret.setFromemployeeid(rs.getString("retail.fromemployeeid"));

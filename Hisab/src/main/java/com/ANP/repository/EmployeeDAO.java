@@ -252,7 +252,7 @@ public class EmployeeDAO {
             employeeSalary.setAmount(rs.getFloat("empsal.amount"));
             employeeSalary.setDetails(rs.getString("empsal.details"));
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
-            employeeSalary.setCreateDate(rs.getDate("empsal.createdate"));
+            employeeSalary.setCreateDate(rs.getTimestamp("empsal.createdate"));
             return employeeSalary;
         }
     }//end
@@ -301,7 +301,7 @@ public class EmployeeDAO {
             employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("empsalpay.fromemployeeid"));
             employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("fromEmpFirstName"));
             employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("fromEmpLastName"));
-            employeeSalaryPayment.setTransferDate(rs.getDate("empsalpay.transferdate"));
+            employeeSalaryPayment.setTransferDate(rs.getTimestamp("empsalpay.transferdate"));
             return employeeSalaryPayment;
         }
     }

@@ -48,8 +48,8 @@ public class CustomerAuditDAO {
             customerAuditBean.setOperation(rs.getString("custau.operation"));
             customerAuditBean.setOtherPartyName(rs.getString("custau.otherparty"));
             customerAuditBean.setPreviousbalance(rs.getLong("custau.previousbalance"));
-            customerAuditBean.setTransactionDate(rs.getDate("custau.txndate"));
-            customerAuditBean.setCreateDate(rs.getDate("custau.date"));
+            customerAuditBean.setTransactionDate(rs.getTimestamp("custau.txndate"));
+            customerAuditBean.setCreateDate(rs.getTimestamp("custau.date"));
             customerAuditBean.setOrgId(rs.getLong("custau.orgid"));
             customerAuditBean.getCustomerBean().setName(rs.getString("c.name"));
             customerAuditBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));
