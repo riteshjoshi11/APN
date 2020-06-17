@@ -28,7 +28,7 @@ public class CustomerInvoiceDAO {
         TODO: JOSHI you need to run updated SQL, i have created this method and nothing need to change here.
      */
     public int createInvoice(CustomerInvoiceBean invoiceBean) {
-        System.out.println(" CreateInvoice: invoiceBean.forceCreate[" + invoiceBean.isForceCreate() + "]");
+        System.out.println(" CreateInvoice: invoiceBean.forceCreate[" + invoiceBean.isForceCreate() + "] date[" + invoiceBean.getDate() + "]");
         if(!invoiceBean.isForceCreate()) {
             isDuplicateSuspect(invoiceBean);
         }
