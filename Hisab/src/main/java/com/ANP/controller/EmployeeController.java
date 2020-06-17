@@ -80,7 +80,10 @@ public class EmployeeController {
         return employeeDAO.searchEmployees(employeeBean);
     }
 
-
+    @PostMapping(path = "/getEmployeeAccountsByName", produces = "application/json")
+    public List<AccountBean> getEmployeeAccountsByName(@RequestBody AccountBean accountBean) {
+        return employeeDAO.getEmployeeAccountsByNames(accountBean);
+    }
     /*
      * This method returns the list of employee with almost all employee attributes along with Salary and Current Balance
      * This will be used in list employee screen

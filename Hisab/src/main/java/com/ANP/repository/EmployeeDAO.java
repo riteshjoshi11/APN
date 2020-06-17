@@ -147,14 +147,14 @@ public class EmployeeDAO {
         String orgId = Long.toString(employeeBean.getOrgId());
         String firstName = employeeBean.getFirst();
         String lastName = employeeBean.getLast();
-        if(firstName==null)
+    /*    if(firstName==null)
             firstName = "";
         if(lastName==null)
-            lastName = "";
+            lastName = "";*/
         List<EmployeeBean> employeeBeanList=
-                jdbcTemplate.query("select employee.first,employee.last,employee.id,account.id from employee, account " +
-                                " where  employee.id = account.ownerid and employee.orgid = ? and (employee.first" +
-                                " like ? or employee.last like ?)  ",
+                jdbcTemplate.query("select first,last,id from employee " +
+                                " where orgid = ? and (first" +
+                                " like ? or last like ?)  ",
                         new String[]{orgId,"%"+firstName+"%","%"+lastName+"%"}
                         ,new EmployeeDAO.EmployeeMapper());
         return employeeBeanList;
@@ -168,7 +168,7 @@ public class EmployeeDAO {
             empbean.setFirst(rs.getString("first"));
             empbean.setLast(rs.getString("last"));
             empbean.setEmployeeId(rs.getString("id"));
-            empbean.setAccountId(rs.getLong("account.id"));
+            //empbean.setAccountId(rs.getLong("account.id"));
  //           empbean.setOrgId(rs.getLong("orgid"));
             return empbean;
         }
@@ -341,5 +341,27 @@ public class EmployeeDAO {
         if(count>0) {
             throw new CustomAppException("The Salary Due looks like duplicate", "SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
+    }
+
+    public List<AccountBean> getEmployeeAccountsByNames(AccountBean accountBean) {
+        if(accountBean.getOrgId()<=0) {
+            throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+        }
+        System.out.println(accountBean.getOrgId());
+        String orgId = Long.toString(accountBean.getOrgId());
+        String nickname = accountBean.getAccountnickname();
+       return jdbcTemplate.query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
+                                " like ?)  ", new String[]{orgId,"%"+nickname+"%"}
+                                ,new EmployeeDAO.AccByNickMapper());
+
+    }
+    private static final class AccByNickMapper implements RowMapper<AccountBean> {
+    public AccountBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+        AccountBean accountBean = new AccountBean();
+        accountBean.setOwnerid(rs.getString("ownerid"));
+        accountBean.setAccountnickname(rs.getString("accountnickname"));
+        accountBean.setAccountId(rs.getLong("id"));
+        return accountBean;
+    }
     }
 }
