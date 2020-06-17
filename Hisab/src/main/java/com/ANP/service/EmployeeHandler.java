@@ -19,11 +19,7 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
     public void createEmployee(EmployeeBean employeeBean) {
-        //TODO Joshi: Call EmployeeDAO:create
-        // Create Account: generate AccountNickName as (First Name<Space>Last Name)  here as per the logic given
-        // In a Transaction
-        boolean isemployeecreated = false;
-        if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
+       if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
             employeeBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         }
         employeeDAO.createEmployee(employeeBean);

@@ -32,10 +32,23 @@ public class OrganizationHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createOrganization(OrganizationRegistrationBean organizationRegistrationBean) {
       long orgKey = orgDAO.createOrganization(organizationRegistrationBean.getOrgBean(),organizationRegistrationBean.getEmployeeBean());
+
+      //Create Default Employee
       EmployeeBean employeeBean = organizationRegistrationBean.getEmployeeBean();
       employeeBean.setType(ANPConstants.EMPLOYEE_TYPE_SUPER_ADMIN);
       employeeBean.setOrgId(orgKey);
       employeeHandler.createEmployee(employeeBean);
+
+      //Create a virtual employee for tracking company account.
+      EmployeeBean employeeBeanVirtual = new EmployeeBean();
+      employeeBeanVirtual.setFirst("COMPANY");
+      employeeBeanVirtual.setFirst("ACCOUNT");
+      employeeBeanVirtual.setMobile("0000000000");
+      employeeBeanVirtual.setType(ANPConstants.EMPLOYEE_TYPE_VIRTUAL);
+      employeeBeanVirtual.setOrgId(orgKey);
+      employeeHandler.createEmployee(employeeBean);
+
+      //Initialize Calculation Tracker for the Org
       calculationTrackerDAO.createCalculationTracker(orgKey);
       return true;
     }
