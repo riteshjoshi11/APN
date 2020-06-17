@@ -141,16 +141,18 @@ public class EmployeeDAO {
 
     public List<EmployeeBean> searchEmployees(EmployeeBean employeeBean) {
 
-        if(employeeBean.getOrgId()==0)
-            throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+        if(employeeBean.getOrgId()<=0) {
+//          throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+            throw new CustomAppException("orgId is mandatory", "SERVER.SEARCH_EMPLOYEE.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+        }
         System.out.println(employeeBean.getOrgId());
         String orgId = Long.toString(employeeBean.getOrgId());
         String firstName = employeeBean.getFirst();
         String lastName = employeeBean.getLast();
-    /*    if(firstName==null)
-            firstName = "";
-        if(lastName==null)
-            lastName = "";*/
+        if(firstName == "")
+            firstName = null;
+        if(lastName == "")
+            lastName = null;
         List<EmployeeBean> employeeBeanList=
                 jdbcTemplate.query("select first,last,id from employee " +
                                 " where orgid = ? and (first" +
@@ -168,8 +170,8 @@ public class EmployeeDAO {
             empbean.setFirst(rs.getString("first"));
             empbean.setLast(rs.getString("last"));
             empbean.setEmployeeId(rs.getString("id"));
-            //empbean.setAccountId(rs.getLong("account.id"));
- //           empbean.setOrgId(rs.getLong("orgid"));
+//         empbean.setAccountId(rs.getLong("account.id"));
+//         empbean.setOrgId(rs.getLong("orgid"));
             return empbean;
         }
     }
@@ -344,13 +346,14 @@ public class EmployeeDAO {
     }
 
     public List<AccountBean> getEmployeeAccountsByNames(AccountBean accountBean) {
+
         if(accountBean.getOrgId()<=0) {
-            throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+            throw new CustomAppException("orgId is mandatory","SERVER.GET_EMPLOYEE_ACCOUNT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
         }
         System.out.println(accountBean.getOrgId());
         String orgId = Long.toString(accountBean.getOrgId());
         String nickname = accountBean.getAccountnickname();
-       return jdbcTemplate.query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
+        return jdbcTemplate.query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
                                 " like ?)  ", new String[]{orgId,"%"+nickname+"%"}
                                 ,new EmployeeDAO.AccByNickMapper());
 
@@ -362,6 +365,6 @@ public class EmployeeDAO {
         accountBean.setAccountnickname(rs.getString("accountnickname"));
         accountBean.setAccountId(rs.getLong("id"));
         return accountBean;
-    }
+        }
     }
 }
