@@ -105,7 +105,7 @@
     <string name="lbl_Details">Details</string>
     <string name="lbl_createEmployeeSalaryNote">Note : This is not a salary payment, just an entry of monthly/weekly salary. To pay salary go to \"Pay Salary\" link \"Outgoing Payments\".</string>
     <string name="lbl_CityVillageName">City / Village Name</string>
-    <string name="lbl_AddCityVillage">Add City / Village</string>
+    <string name="lbl_AddCityVillage">Add New City / Village</string>
 
     <string name="text_Cancel">Cancel</string>
     <string name="text_Submit">Submit</string>

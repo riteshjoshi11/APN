@@ -1,3 +1,5 @@
+use antrackerdb;
+
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteOrganizationTransaction_Procedure`(
 	IN ParamOrgId INT,
