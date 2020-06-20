@@ -17,7 +17,8 @@ public class SystemController {
     @PostMapping(path = "/deleteOrganizationTransaction", produces = "application/json")
     public ResponseEntity deleteOrganizationTranaction(@RequestBody SystemBean systemBean)
     {
-        systemDAO.deleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData());
+        systemDAO.deleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),
+                systemBean.isDeleteEmployeeSalaryBalance(), systemBean.isDeleteEmployeeCompanyBalance(), systemBean.isDeleteCustomerBalance());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }
