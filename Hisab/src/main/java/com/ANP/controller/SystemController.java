@@ -14,7 +14,7 @@ public class SystemController {
     @Autowired
     SystemDAO systemDAO;
 
-    @PostMapping(path = "/deleteOrganizationTransaction", produces = "application/json")
+    @PostMapping(path = "/deleteDataForOrganization", produces = "application/json")
     public ResponseEntity deleteOrganizationTranaction(@RequestBody SystemBean systemBean)
     {
         systemDAO.deleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),

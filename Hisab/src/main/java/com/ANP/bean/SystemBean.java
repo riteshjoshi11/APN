@@ -4,14 +4,14 @@ import javax.validation.constraints.Min;
 
 public class SystemBean {
 
-    @Min(value=1, message = "orgid is mandatory")
+    @Min(value=1, message = "OrgID is mandatory")
     private long orgID;
-    private boolean deleteCompanyData;
-    private boolean deleteSalaryData;
-    private boolean deleteAuditData;
-    private boolean deleteEmployeeSalaryBalance;
-    private boolean deleteEmployeeCompanyBalance;
-    private boolean deleteCustomerBalance;
+    private boolean deleteCompanyData = false;
+    private boolean deleteSalaryData = false;;
+    private boolean deleteAuditData= false;
+    private boolean deleteEmployeeSalaryBalance = false;
+    private boolean deleteEmployeeCompanyBalance = false;
+    private boolean deleteCustomerBalance = false;
 
     public boolean isDeleteEmployeeSalaryBalance() {
         return deleteEmployeeSalaryBalance;
