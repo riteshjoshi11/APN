@@ -49,7 +49,7 @@ public class ExpenseDAO {
             orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
-                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
+                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID and exp.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+ "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());

@@ -53,7 +53,7 @@ public class InternalTransferDAO {
                     " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
                     " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
                     " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
-                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
+                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID and internal.isdeleted <> true " +
                     ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new InternalTransferMapper());
     }

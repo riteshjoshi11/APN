@@ -56,7 +56,7 @@ public class CustomerInvoiceDAO {
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
                         "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
-                        " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID " +
+                        " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and cusinv.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new SalesPagedMapper());

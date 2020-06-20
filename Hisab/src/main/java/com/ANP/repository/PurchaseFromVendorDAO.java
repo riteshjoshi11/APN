@@ -58,7 +58,7 @@ public class PurchaseFromVendorDAO {
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno " +
-                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid " +
+                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and p.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullPurchaseFromVendorMapper());

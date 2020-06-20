@@ -236,7 +236,7 @@ public class EmployeeDAO {
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
                         " empsal.details, empsal.includeincalc,empsal.createdate " +
-                        " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
+                        " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid and empsal.isdeleted <> true " +
                           ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryMapper()) ;
@@ -282,7 +282,7 @@ public class EmployeeDAO {
                         "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +
                         "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
                         " from employee e, employeesalarypayment empsalpay " +
-                        "where e.id=empsalpay.toemployeeid and e.orgid=:orgid " +
+                        "where e.id=empsalpay.toemployeeid and e.orgid=:orgid and empsalpay.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryPayment());

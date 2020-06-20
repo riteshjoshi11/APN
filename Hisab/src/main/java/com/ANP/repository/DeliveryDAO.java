@@ -54,7 +54,7 @@ public class DeliveryDAO {
         return namedParameterJdbcTemplate.query("select customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, " +
                         " delivery.id, delivery.date,delivery.description " +
-                        " from customer,delivery where customer.id=delivery.tocustomerid and delivery.orgid=:orgID " +
+                        " from customer,delivery where customer.id=delivery.tocustomerid and delivery.orgid=:orgID and delivery.isdeleted <> true " +
                          ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                          + " offset :startIndex",
                      param, new DeliveryDAO.FullDeliveryMapper()) ;

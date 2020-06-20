@@ -54,7 +54,7 @@ public class RetailSaleDAO {
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +
-                       " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
+                       " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID and retail.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new RetailEntryMapper());

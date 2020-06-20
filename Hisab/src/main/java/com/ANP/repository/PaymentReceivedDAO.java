@@ -53,7 +53,7 @@ public class PaymentReceivedDAO {
                         "prcvd.toemployeeid,prcvd.rcvddate,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.orgid," +
                         "(select emp.first from employee emp where emp.id = prcvd.toemployeeid) as firstName," +
                         "(select emp.last from employee emp where emp.id = prcvd.toemployeeid) as lastName from customer c, paymentreceived " +
-                        "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID " +
+                        "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID and prcvd.isdeleted <> true " +
                         ANPUtils.getWhereClause(searchParam) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new PaymentReceivedDAO.PaymentReceivedMapper());
