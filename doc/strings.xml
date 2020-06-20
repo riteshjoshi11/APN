@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">MPS</string>
+    <string name="TxtWelcome">Bienvenido a la nueva tecnología</string>
+
+    <!--Menu-->
+    <!--Home-->
+    <string name="menu_navHome">Home</string>
+
+    <!--Sales-->
+    <string name="menu_navSales">Sales</string>
+    <string name="menu_navCreateDelivery">Delivery Entry</string>
+    <string name="menu_navSaleEntryCreateInvoice">Sale / Invoice Entry</string>
+    <string name="menu_navListDelivery">List Delivery</string>
+    <string name="menu_navListSales">List Sales/Invoice</string>
+
+    <!--Purchase-->
+    <string name="menu_navPurchase">Purchase</string>
+    <string name="menu_navPurchaseEntryReceivedBillEntry">Purchase / Received Bill Entry</string>
+    <string name="menu_navListPurchases">List Purchases</string>
+
+    <!--Incoming Payment-->
+    
+    <string name="menu_navIncomingPayment">Incoming Payment</string>
+    <string name="menu_navPaymentReceivedEntry">Customer Payment Received Entry</string>
+    <string name="menu_navRetailEntryFragment">Retail Sale Entry</string>
+    <string name="menu_navListPaymentReceived">List Payment Received</string>
+    <string name="menu_navListRetail">List Retail</string>
+
+    <!--Outgoing Payment-->
+    <string name="menu_navOutgoingPayment">Outgoing Payment</string>
+    <string name="menu_navVendorPaymentEntry">Vendor Payment Entry</string>
+    <string name="menu_navGeneralExpenseEntry">Expense Entry</string>
+    <string name="menu_navInternalTransferEntry">Internal Transfer Entry</string>
+    <string name="menu_navPaySalary">Pay Salary</string>
+    <string name="menu_navListVendorPayment">List Vendor Payment</string>
+    <string name="menu_navListExpense">List Expense</string>
+    <string name="menu_navListInternalTransfer">List Internal Transfer</string>
+    
+    <string name="menu_navListSalaryPaid">List Salary Paid</string>
+
+    <!--People / Firm-->
+    <string name="menu_navPeopleFirm">People / Firm</string>
+    <string name="menu_navCustomerVendorEntry">Customer / Vendor Entry</string>
+    <string name="menu_navEmployeeEntry">Employee Entry</string>
+    <string name="menu_navSalaryEntry">Salary Due Entry</string>
+    <string name="menu_navListCustomerVendor">List Customer / Vendor</string>
+    <string name="menu_navListEmployee">List Employee</string>
+    <string name="menu_navListSalary">List Salary Due</string>
+
+    <!--Settings-->
+    <string name="menu_navSettings">Settings</string>
+
+     <!--LogOut-->
+    <string name="menu_navLogout">Logout</string>
+
+    <!--Action Menu-->
+    <string name="menu_AddNew">Add New</string>
+    <string name="menu_ShowList">Show List</string>
+
+
+    <!--TextView-->
+    <string name="lbl_workInProgress">Work In Progress</string>
+    <string name="lbl_loading">Loading Please Wait...</string>
+    <string name="lbl_date">Date *</string>
+    <string name="lbl_receivedDate">Received Date *</string>
+    <string name="lbl_paymentDate">Payment Date *</string>
+    <string name="lbl_transferDate">Transfer Date *</string>
+    <string name="lbl_customer">Customer *</string>
+    <string name="lbl_toPartyName">To Party Name *</string>
+    <string name="lbl_toPersonAcc">To Person / Account *</string>
+    <string name="lbl_customerVendor">Vendor*</string>
+    <string name="lbl_supplierVendor">Supplier / Vendor *</string>
+    <string name="lbl_name">Name</string>
+    <string name="lbl_firstName">First Name *</string>
+    <string name="lbl_lastName">Last Name</string>
+    <string name="lbl_employeeName">Employee Name *</string>
+    <string name="lbl_amount1">Amount</string>
+    <string name="lbl_description">Description</string>
+    <string name="lbl_billingAddress">Billing Address</string>
+    <string name="lbl_firm">Firm</string>
+    <string name="lbl_transporter">Transporter</string>
+    <string name="lbl_cityVillage">City / Village *</string>
+    <string name="lbl_mobileNumber">10 Digit Mobile Number *</string>
+    <string name="lbl_mobileNumber2">10 Digit Mobile Number 2</string>
+    <string name="lbl_toPartyMoNo">To Party (10 Digit Mobile Number)</string>
+    <string name="lbl_gstNumber">GST Number</string>
+    <string name="lbl_toPartyGstNo">To Party (GST Number)</string>
+    <string name="lbl_aiNumber">Actual Invoice Number</string>
+    <string name="lbl_abNumber">Actual Bill Number</string>
+    <string name="lbl_cgst">CGST</string>
+    <string name="lbl_sgst">SGST</string>
+    <string name="lbl_igst">IGST</string>
+    <string name="lbl_amount">Amount *</string>
+    <string name="lbl_totalAmount">Total Amount (Gross) *</string>
+    <string name="lbl_extraAmount">Extra Amount</string>
+    <string name="lbl_orderAmount">Order Amount (Net)</string>
+    <string name="lbl_initialBalance">Initial Balance</string>
+    <string name="lbl_inCalculation">Include In Calculation</string>
+    <string name="lbl_inCAReport">Include In CA Report</string>
+    <string name="lbl_loginRequired">Login Required?</string>
+    <string name="lbl_paid">Paid?</string>
+    <string name="lbl_category">Category</string>
+    <string name="lbl_notes">Notes</string>
+    <string name="lbl_Details">Details</string>
+    <string name="lbl_createEmployeeSalaryNote">Note : This is not a salary payment, just an entry of monthly/weekly salary. To pay salary go to \"Pay Salary\" link \"Outgoing Payments\".</string>
+    <string name="lbl_CityVillageName">City / Village Name</string>
+    <string name="lbl_AddCityVillage">Add City / Village</string>
+
+    <string name="text_Cancel">Cancel</string>
+    <string name="text_Submit">Submit</string>
+    <string name="text_Success">Success</string>
+    <string name="text_DuplicateWarning">Duplicate Warning</string>
+    <string name="text_ContinueAnyway">Continue Anyway</string>
+    <string name="text_Swap">Swap</string>
+    <string name="text_BalancedWithUs">Balanced With Us :  </string>
+    <string name="text_SendPaymentReminders">Send Payment Reminders :  </string>
+    <string name="text_BillingAddress">Billing Address :  </string>
+    <string name="text_Transports">Transports :  </string>
+    <string name="text_Details">Details : </string>
+    <string name="text_Type">Type : </string>
+    <string name="text_Amount">Amount : </string>
+    <string name="text_ForWhat">For What</string>
+    <string name="text_OtherParty">Other Party</string>
+    <string name="text_Date">Date</string>
+    <string name="text_CurrentBalance">Current Balance</string>
+    <string name="text_PreviousBalance">Previous Balance</string>
+    <string name="text_Operation">Operation</string>
+    <string name="text_CompanyBalance">Company Balance : </string>
+    <string name="text_SalaryToBePaid">Salary To Be Paid : </string>
+    <string name="text_LogInEnabled">LogIn Enabled : </string>
+    <string name="text_Description">Description : </string>
+    <string name="text_IncludeInCAReport">Include In CA Report : </string>
+    <string name="text_IncludeInCalculation">Include In Calculation : </string>
+    <string name="text_ToPartyMobile">To Party Mobile : </string>
+    <string name="text_Cashwithyou">Cash with you</string>
+    <string name="text_TotalCash">Total Cash</string>
+    <string name="text_TotalExpense">Total Expense</string>
+    <string name="text_UnpaidExpense">Unpaid Expense</string>
+    <string name="text_PaidExpense">Paid Expense</string>
+    <string name="text_Assets">Assets</string>
+    <string name="text_NeedToCollect">Need To Collect</string>
+    <string name="text_TotalcashInHand">Total Company Cash</string>
+    <string name="text_Liabilities">Liabilities</string>
+    <string name="text_TotalSalaryDue">Total Salary Due</string>
+    <string name="text_NeedToPay">Need To Pay</string>
+    <string name="text_YourBusinesshealth">Your Business Health (Asset - Liabilities)</string>
+    <string name="text_From">From : </string>
+    <string name="text_To">To : </string>
+    <string name="text_LOGINHERE">LOG IN HERE</string>
+    <string name="text_NotRegistered">Not Registered your bussiness yet? click here</string>
+    <string name="text_RegisteredMobileNumber">Registered Mobile Number</string>
+    <string name="text_OTPwillbesent">OTP will be sent to this number and you will not be change this later</string>
+    <string name="text_Login">Login</string>
+    <string name="text_OTP">OTP</string>
+    <string name="text_Resend">Re-send OTP</string>
+    <string name="text_Enter6digitOTP">Enter 6 digit OTP received on the given mobile number</string>
+    <string name="text_VerifyOTP">Verify OTP</string>
+    <string name="text_MultipleBusinessAlert">Multiple Business / Firm / Company Alert!</string>
+    <string name="text_MoNoExists">The entered mobile number is already registered with following business : </string>
+    <string name="text_RegisterNewBusiness">Register New Business</string>
+    <string name="text_TermsandConditions">Note : By registering here, you agree to the Terms and Conditions!</string>
+    <string name="text_ReceivedInAccount">Received In Account</string>
+    <string name="text_ReceivedBy">Received By : </string>
+    <string name="text_PaidByAccount">Paid By Account</string>
+    <string name="text_Notes">Notes : </string>
+    <string name="text_BillNo">Bill No : </string>
+    <string name="text_RegisterYourBusiness">Register Your Business / Firm / Company</string>
+    <string name="text_PleaseEnterFullBusiness">Please Enter Full Business/Firm/Company </string>
+    <string name="text_State">State</string>
+    <string name="text_Register">Register</string>
+    <string name="text_Salary">Salary : </string>
+    <string name="text_PaidDate">Paid Date : </string>
+    <string name="text_PaidBy">Paid By : </string>
+    <string name="text_InvoiceNo">Invoice No : </string>
+    <string name="text_AccountUsedForPayment">Account Used For Payment</string>
+    <string name="text_DoneBy">Done By : </string>
+    <string name="text_CustomerName">Customer Name : </string>
+    <string name="text_EmployeeName">Employee Name : </string>
+    <string name="text_Balance"> (Balance: </string>
+    <string name="text_AlreadyRegistered">Already Registered? Log In</string>
+    <string name="text_10DigitMobileNumber">10 Digit Mobile Number (without Country Code)</string>
+    <string name="text_GetOTP">Get OTP</string>
+    
+    <!--Validation Message-->
+    <string name="message_Logout">You will redirected to Login Page</string>
+    <string name="message_Continue">Continue Anyway</string>
+    <string name="message_MoNo10digits">Mobile number should have 10 digits.</string>
+    <string name="message_OTP6digits">OTP should have 6 digits.</string>
+    <string name="message_EnterCityName">Please Enter City Name First"</string>
+    <string name="message_EnterBusinessName">Please Business / Company Name First</string>
+    <string name="message_EnterFirstName">Please Enter First Name First</string>
+    <string name="message_EnterLastName">Please Enter Last Name First</string>
+    <string name="message_EnterStateName">Please Select State Name First</string>
+    <string name="message_SelectCityName">Please Select City Name First</string>
+    <string name="message_SelectDate">Please Select Date First</string>
+    <string name="message_SelectCustomerName">Please Select Customer Name First</string>
+    <string name="message_EnterAmount">Please Enter Amount First</string>
+    <string name="message_EnterReceivedInAccount">Please Enter Received In Account First</string>
+    <string name="message_SelectValidRecord">Please Select Valid Record First</string>
+    <string name="message_EnterTotalAmount">Please Enter Total Amount First</string>
+    <string name="message_EnterToPartyName">Please Enter ToParty Name First</string>
+    <string name="message_ToPartyName3digit">To Party Name atleast 3 characters.</string>
+    <string name="message_EnterPaidByAccount">Please Enter Paid By Account First</string>
+    <string name="message_Mobilenumber10digit">Mobile number should have 10 digits.</string>
+    <string name="message_GSTNO15digit">To Party GST NO should have 15 characters.</string>
+    <string name="message_SelectEmployeeAcc">Please Select Employee / Account Name First</string>
+    <string name="message_SelectPersonAcc">Please Select Person / Account Name First</string>
+    <string name="message_SelectCustomerVendor">Please Select Customer / Vendor Name First</string>
+    <string name="message_EnterAccountUsed">Please Enter Account Used For Payment First</string>
+    <string name="message_SelectSupplierName">Please Select Supplier Name First</string>
+    <string name="message_EnterNameorFirm">Please Enter Name or Firm Name First</string>
+    <string name="message_Name2Digit">Name atleast 2 characters.</string>
+    <string name="message_FirmName2Digit">Firm Name atleast 2 characters.</string>
+    <string name="message_InvalidContactNumber">Invalid Contact Number</string>
+    <string name="message_SelectEmployeeName">Please Select Employee Name First</string>
+    <string name="message_TokengettingBlank">Token getting Blank</string>
+    
+    <!--Title-->
+    <string name="title_AccountView">Account View</string>
+    <string name="title_SelectContact">Select Contact</string>
+    <string name="title_SelectBusiness">Select Business / Firm / Company For Login</string>
+    
+    <!--Sign-->
+    <string name="sign_Addition">+</string>
+    <string name="sign_Substraction">-</string>
+    <string name="sign_Division">/</string>
+    <string name="sign_Multiplication">*</string>
+    <string name="sign_EqualTo">=</string>
+    <string name="sign_Colon">:</string>
+
+    <!--HintText-->
+    <string name="hint_typeHere">Type Here</string>
+
+    <!--Button-->
+    <string name="btn_save">Save</string>
+    <string name="btn_advanced">Show More</string>
+    <string name="btn_less">Less</string>
+    
+    <!--Response Messages-->
+    <string name="ResponseCode200">Success</string>
+    <string name="ResponseCode500">Error: There is problem with this function on the server. Please try after some time.</string>
+    <string name="ResponseCode400">Error: Bad Request</string>
+    <string name="ResponseCode409">Conflict while creating this entry, do you want to continue?</string>
+    <string name="ServerFailureResponseCode">The server looks to be currently off. It may be due to some maintenance activity at the server-side. Please try after some time.</string>
+    <string name="NoInternetConnection">Error: No Internet. Please check if your phone is connected to internet</string>
+    
+	<!--Duplicate Error Messages-->
+	<string name="SERVER.CREATE_CUSTOMER.DUPLICATE">Error: The customer already exists. Please check if you already entered customer with same [Mobile] or Name/Firm Name </string>
+	<string name="SERVER.CREATE_EMPLOYEE.DUPLICATE">Error: The employee already exists. Please check if you already entered employee with same [Mobile] or (First Name and Last Name)</string>
+	<string name="SERVER.ORGANIZATION.DUPLICATE_ORGANIZATION">Error: You have already registered this business/company. You can directly go to login screen to login</string>
+	<string name="SERVER.VALIDATEOTP.OTP_INVALID">Error: You have entered incorrect OTP. Please check carefully and re-enter.</string>
+	<string name="SERVER.VALIDATEOTP.OTP_EXPIRED">Error: The OTP you entered is correct but already expired. Please retry.</string>
+	<string name="SERVER.CREATE_CITY.DUPLICATE">Error:The city already exist. Please directly use search instead of create</string>
+	
+	<!-- Suspect Duplicate Warning Messages-->
+	<string name="SERVER.CREATE_SALE.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Sale] looks like already entered by you or someone else in your company</string>
+	<string name="SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT">Duplicate Suspect Warning : The [salary due] looks like already entered by you or someone else in your company </string>
+	<string name="SERVER.CREATE_SALARY_PAYMENT.DUPLICATE_SUSPECT">Duplicate Suspect Warning:  The [salary Payment] looks like already entered by you or someone else in your company</string>
+	<string name="SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT">Duplicate Suspect Warning:  The [Expense] looks like already entered by you</string>
+	<string name="SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Internal Transfer] looks like already entered by you</string>
+	<string name="SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Payment Received] looks like already entered by you or someone else in your company</string>
+	<string name="SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Payment to Vendor] looks like already entered by you or someone else in your company</string>
+	<string name="SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Purchase] looks like already entered by you or someone else in your company from the same vendor</string>
+	<string name="SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT">Duplicate Suspect Warning:  The [Retail Sale] looks like already entered by you or someone else in your company</string>
+	
+
+</resources>
