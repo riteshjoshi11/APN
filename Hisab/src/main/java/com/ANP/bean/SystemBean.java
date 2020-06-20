@@ -9,6 +9,33 @@ public class SystemBean {
     private boolean deleteCompanyData;
     private boolean deleteSalaryData;
     private boolean deleteAuditData;
+    private boolean deleteEmployeeSalaryBalance;
+    private boolean deleteEmployeeCompanyBalance;
+    private boolean deleteCustomerBalance;
+
+    public boolean isDeleteEmployeeSalaryBalance() {
+        return deleteEmployeeSalaryBalance;
+    }
+
+    public void setDeleteEmployeeSalaryBalance(boolean deleteEmployeeSalaryBalance) {
+        this.deleteEmployeeSalaryBalance = deleteEmployeeSalaryBalance;
+    }
+
+    public boolean isDeleteEmployeeCompanyBalance() {
+        return deleteEmployeeCompanyBalance;
+    }
+
+    public void setDeleteEmployeeCompanyBalance(boolean deleteEmployeeCompanyBalance) {
+        this.deleteEmployeeCompanyBalance = deleteEmployeeCompanyBalance;
+    }
+
+    public boolean isDeleteCustomerBalance() {
+        return deleteCustomerBalance;
+    }
+
+    public void setDeleteCustomerBalance(boolean deleteCustomerBalance) {
+        this.deleteCustomerBalance = deleteCustomerBalance;
+    }
 
     public long getOrgID() {
         return orgID;

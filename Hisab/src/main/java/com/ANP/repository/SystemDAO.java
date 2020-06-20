@@ -16,7 +16,8 @@ public class SystemDAO {
     @Autowired
     DataSource dataSource;
 
-    public void deleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData)
+    public void deleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
+                                              boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
     {
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
@@ -28,10 +29,14 @@ public class SystemDAO {
                 new SqlParameter(Types.BOOLEAN),
                 new SqlParameter(Types.BOOLEAN),
                 new SqlParameter(Types.BOOLEAN),
+                new SqlParameter(Types.BOOLEAN),
+                new SqlParameter(Types.BOOLEAN),
+                new SqlParameter(Types.BOOLEAN),
         };
 
         procedure.setParameters(declareparameters);
         procedure.compile();
-        procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData);
+        procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,
+                deleteEmployeeCompanyBalance, deleteCustomerBalance);
     }
 }
