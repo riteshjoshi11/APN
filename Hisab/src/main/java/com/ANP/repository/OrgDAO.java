@@ -78,7 +78,7 @@ public class OrgDAO {
         sparam.put("city", organization.getCity());
 
         Integer countRows  = namedParameterJdbcTemplate.queryForObject("select count(org.id) as countorg from organization org, employee " +
-                "emp where org.id = emp.orgid and emp.mobile = :mobile and " +
+                " emp where org.id = emp.orgid and emp.mobile = :mobile and " +
                 " emp.type = 'SUPER_ADMIN' and org.orgname= :orgName and org.city= :city",sparam, Integer.class);
         System.out.println(countRows);
         if(countRows>=1){

@@ -96,7 +96,7 @@ public class PaymentReceivedDAO {
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) " +
-                " as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+                " as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid and " +
                 " (isdeleted is null or isdeleted<> true)" +
                 "  order by id desc limit 1) paymentreceived where amount = :amount",params, Integer.class);
 

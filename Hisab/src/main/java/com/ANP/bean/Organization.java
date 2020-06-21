@@ -35,9 +35,9 @@ public class Organization {
 
     public String getOrgName() {
         if(!ANPUtils.isNullOrEmpty(this.orgName)) {
-            return this.orgName.trim().toUpperCase();
+            return (this.orgName.trim()).toUpperCase();
         }
-        return null;
+        return this.orgName;
     }
 
     public void setOrgName(String orgName) {

@@ -102,7 +102,8 @@ public class RetailSaleDAO {
 
         System.out.println(count);
         if(count>0) {
-            throw new CustomAppException("The Retail Sale looks like duplicate", "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECTSERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+            throw new CustomAppException("The Retail Sale looks like duplicate",
+                    "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECTSERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

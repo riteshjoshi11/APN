@@ -17,10 +17,10 @@ public class City {
     }
 
     public String getName() {
-        if (ANPUtils.isNullOrEmpty(this.name)) {
-            return (this.name.toUpperCase());
+        if (!ANPUtils.isNullOrEmpty(this.name)) {
+            return (this.name.trim().toUpperCase());
         }
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
