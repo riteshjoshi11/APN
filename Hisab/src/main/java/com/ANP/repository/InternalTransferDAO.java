@@ -53,7 +53,8 @@ public class InternalTransferDAO {
                     " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
                     " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
                     " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
-                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID and internal.isdeleted <> true " +
+                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
+                        " and (internal.isdeleted is null or  internal.isdeleted <> true) " +
                     ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new InternalTransferMapper());
     }
@@ -83,8 +84,10 @@ public class InternalTransferDAO {
         long actualamount = (long)(internalTransferBean.getAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid" +
-        " and toemployeeid = :toemployeeid order by id desc limit 1) internaltransfer where amount = :amount",params, Integer.class);
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) " +
+                " as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid " +
+                " and (isdeleted is null or isdeleted<> true)  and toemployeeid = :toemployeeid order by id desc limit 1) " +
+                " internaltransfer where amount = :amount",params, Integer.class);
 
 
         if(count>0) {

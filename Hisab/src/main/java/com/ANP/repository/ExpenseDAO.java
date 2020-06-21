@@ -49,7 +49,8 @@ public class ExpenseDAO {
             orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
-                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID and exp.isdeleted <> true " +
+                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
+                        "and (exp.isdeleted is null or exp.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+ "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
@@ -150,7 +151,8 @@ public class ExpenseDAO {
         long actualamount = (long)(expense.getTotalAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) " +
+                " as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid and (isdeleted is null or isdeleted<> true) " +
                 "  order by id desc limit 1) expense where totalamount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {

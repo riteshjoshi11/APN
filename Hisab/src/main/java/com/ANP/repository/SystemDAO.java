@@ -35,7 +35,6 @@ public class SystemDAO {
                 new SqlParameter(Types.BOOLEAN),
                 new SqlParameter(Types.BOOLEAN),
         };
-
         procedure.setParameters(declareparameters);
         procedure.compile();
         procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,

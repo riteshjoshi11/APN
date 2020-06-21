@@ -56,7 +56,7 @@ public class CustomerInvoiceDAO {
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
                         "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
-                        " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and cusinv.isdeleted <> true " +
+                        " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and (cusinv.isdeleted is null or cusinv.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new SalesPagedMapper());
@@ -98,7 +98,7 @@ public class CustomerInvoiceDAO {
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(totalamount) as totalamount ," +
-                "id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid" +
+                "id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid and (isdeleted is null or isdeleted <> true) " +
                 "  order by id desc limit 1) sale where totalamount = :amount",params, Integer.class);
 
         System.out.println("count =" + count);

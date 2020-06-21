@@ -58,7 +58,8 @@ public class PurchaseFromVendorDAO {
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno " +
-                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and p.isdeleted <> true " +
+                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and " +
+                        " (p.isdeleted is null or p.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullPurchaseFromVendorMapper());
@@ -100,7 +101,8 @@ public class PurchaseFromVendorDAO {
         long actualamount = (long)(purchaseFromVendorBean.getTotalAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount ,id FROM purchasefromvendor where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount " +
+                ",id FROM purchasefromvendor where orgid=:orgid and fromcustomerid=:fromcustomerid and (isdeleted is null or isdeleted <> true) " +
                 "  order by id desc limit 1) purchase where totalamount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {

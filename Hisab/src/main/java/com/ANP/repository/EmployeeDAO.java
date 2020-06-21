@@ -236,7 +236,8 @@ public class EmployeeDAO {
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
                         " empsal.details, empsal.includeincalc,empsal.createdate " +
-                        " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid and empsal.isdeleted <> true " +
+                        " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
+                        " and (empsal.isdeleted is null or  empsal.isdeleted <> true) " +
                           ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryMapper()) ;
@@ -282,7 +283,7 @@ public class EmployeeDAO {
                         "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +
                         "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
                         " from employee e, employeesalarypayment empsalpay " +
-                        "where e.id=empsalpay.toemployeeid and e.orgid=:orgid and empsalpay.isdeleted <> true " +
+                        "where e.id=empsalpay.toemployeeid and e.orgid=:orgid and (empsalpay.isdeleted is null or empsalpay.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryPayment());
@@ -318,7 +319,7 @@ public class EmployeeDAO {
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ," +
-                " id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid" +
+                " id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +
                 " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) paysalary where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {
@@ -337,7 +338,7 @@ public class EmployeeDAO {
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount , " +
-                " id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid" +
+                " id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +
                 " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) salarydue where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {

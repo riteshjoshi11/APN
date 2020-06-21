@@ -54,7 +54,8 @@ public class RetailSaleDAO {
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +
-                       " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID and retail.isdeleted <> true " +
+                       " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
+                        " and (retail.isdeleted is null or retail.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new RetailEntryMapper());
@@ -95,12 +96,13 @@ public class RetailSaleDAO {
         params.put("amount", actualamount);
 
 
-        Integer count = namedParameterJdbcTemplate.queryForObject(   "select count(*) from ( SELECT  floor(amount) as amount ,id FROM retailsale where orgid=:orgid and date=:date" +
+        Integer count = namedParameterJdbcTemplate.queryForObject(   "select count(*) from ( SELECT  floor(amount) " +
+                " as amount ,id FROM retailsale where orgid=:orgid and date=:date and (isdeleted is null or isdeleted <> true) " +
                 "  order by id desc limit 1) retailsale where amount = :amount",params, Integer.class);
 
         System.out.println(count);
         if(count>0) {
-            throw new CustomAppException("The Retail Sale looks like duplicate", "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
+            throw new CustomAppException("The Retail Sale looks like duplicate", "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECTSERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

@@ -49,11 +49,12 @@ public class PayToVendorDAO {
         }
         return namedParameterJdbcTemplate.query(
                 "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
-                        " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
-                        " c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
-                        " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID and paytov.isdeleted <> true " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
-                        + " offset :startIndex",
+                     " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
+                     " c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
+                     " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
+                     " and (paytov.isdeleted is null or paytov.isdeleted <> true) " +
+                      ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" +
+                        " offset :startIndex",
                 param, new PayToVendorMapper());
     }
 
@@ -90,8 +91,9 @@ public class PayToVendorDAO {
 
         long actualamount = (long)(payToVendorBean.getAmount());
         params.put("amount", actualamount);
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id from paytovendor where orgid=:orgid and tocustomerid=:tocustomerid" +
-                "  order by id desc limit 1) pay where amount = :amount",params, Integer.class);
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as " +
+                " amount ,id from paytovendor where orgid=:orgid and tocustomerid=:tocustomerid and (isdeleted is null or isdeleted <> true) " +
+                " order by id desc limit 1) pay where amount = :amount",params, Integer.class);
         System.out.println(count);
         if(count>0) {
             throw new CustomAppException("The pay to vendor looks like duplicate", "SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);

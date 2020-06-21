@@ -34,7 +34,7 @@ public class EmployeeAuditDAO {
             orderBy = "empau.id desc";
         }
         return namedParameterJdbcTemplate.query("select empau.* , e.first, e.last " +
-                        "from employee e, employeeaudit empau where empau.employeeid = e.id and empau.orgid=:orgID and empau.isdeleted <> true " +
+                        "from employee e, employeeaudit empau where empau.employeeid = e.id and empau.orgid=:orgID and (empau.isdeleted is null or empau.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new EmployeeAuditMapper());
 

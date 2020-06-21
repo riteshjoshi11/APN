@@ -32,7 +32,7 @@ public class CustomerAuditDAO {
             orderBy = "custau.id desc";
         }
         return namedParameterJdbcTemplate.query("select custau.* , c.name, c.firmname, c.city " +
-                        "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID and custau.isdeleted <> true " +
+                        "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID and (custau.isdeleted is null or  custau.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow" + " offset :startIndex",
                          param, new CustomerAuditMapper());
     }

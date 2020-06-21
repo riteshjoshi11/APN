@@ -53,7 +53,7 @@ public class PaymentReceivedDAO {
                         "prcvd.toemployeeid,prcvd.rcvddate,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.orgid," +
                         "(select emp.first from employee emp where emp.id = prcvd.toemployeeid) as firstName," +
                         "(select emp.last from employee emp where emp.id = prcvd.toemployeeid) as lastName from customer c, paymentreceived " +
-                        "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID and prcvd.isdeleted <> true " +
+                        "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID and (prcvd.isdeleted is null or prcvd.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParam) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new PaymentReceivedDAO.PaymentReceivedMapper());
@@ -95,7 +95,9 @@ public class PaymentReceivedDAO {
         long actualamount = (long)(paymentReceivedBean.getAmount());
         params.put("amount", actualamount);
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) " +
+                " as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid" +
+                " (isdeleted is null or isdeleted<> true)" +
                 "  order by id desc limit 1) paymentreceived where amount = :amount",params, Integer.class);
 
 
