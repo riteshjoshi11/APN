@@ -1,5 +1,7 @@
 package com.ANP.bean;
 
+import com.ANP.util.ANPUtils;
+
 public class Organization {
 
     private long orgId;
@@ -32,7 +34,10 @@ public class Organization {
     }
 
     public String getOrgName() {
-        return orgName;
+        if(!ANPUtils.isNullOrEmpty(this.orgName)) {
+            return this.orgName.trim().toUpperCase();
+        }
+        return null;
     }
 
     public void setOrgName(String orgName) {

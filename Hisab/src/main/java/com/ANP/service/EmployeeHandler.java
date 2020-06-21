@@ -19,6 +19,7 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
     public void createEmployee(EmployeeBean employeeBean) {
+        System.out.println("Start CreateEmployee");
        if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
             employeeBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         }
@@ -33,6 +34,7 @@ public class EmployeeHandler {
         accountBean.setOwnerid(employeeBean.getEmployeeId());
         accountBean.setOrgId(employeeBean.getOrgId());
         accountDAO.createAccount(accountBean);
+        System.out.println("End CreateEmployee");
 
     }
 

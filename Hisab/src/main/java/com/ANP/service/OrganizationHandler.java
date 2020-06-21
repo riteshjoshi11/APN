@@ -42,11 +42,11 @@ public class OrganizationHandler {
       //Create a virtual employee for tracking company account.
       EmployeeBean employeeBeanVirtual = new EmployeeBean();
       employeeBeanVirtual.setFirst("COMPANY");
-      employeeBeanVirtual.setFirst("ACCOUNT");
+      employeeBeanVirtual.setLast("ACCOUNT");
       employeeBeanVirtual.setMobile("0000000000");
       employeeBeanVirtual.setType(ANPConstants.EMPLOYEE_TYPE_VIRTUAL);
       employeeBeanVirtual.setOrgId(orgKey);
-      employeeHandler.createEmployee(employeeBean);
+      employeeHandler.createEmployee(employeeBeanVirtual);
 
       //Initialize Calculation Tracker for the Org
       calculationTrackerDAO.createCalculationTracker(orgKey);

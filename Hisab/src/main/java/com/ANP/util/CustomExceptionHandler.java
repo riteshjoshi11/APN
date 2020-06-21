@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     ResponseEntity handleCustomException(HttpServletRequest request, Exception ex) {
         System.out.println("Exception Caught");
-        //ex.printStackTrace();
+        ex.printStackTrace();
 
         if (ex!= null && ex instanceof CustomAppException ) {
             CustomAppException hisabException = (CustomAppException) ex;
