@@ -1,3 +1,3 @@
 use `antrackerdb``;
-insert into `systemconfigurations`(`key`) values('ArchiveAndPurgeTableList');
-insert into `systemconfigurations`(`key`) values('daysafterdeletelist');
+insert into `systemconfigurations`(`key`) values('ArchivePurge.archiveandpurgetablelist');
+insert into `systemconfigurations`(`key`) values('ArchivePurge.DeleteAfterNumberOfDays');
