@@ -1,10 +1,17 @@
 package com.ANP.repository;
 
+import com.ANP.bean.RetailSale;
+import com.ANP.bean.SystemConfigurationBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 @Repository
 public class SystemUtilityDAO {
@@ -12,25 +19,38 @@ public class SystemUtilityDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    SystemDAO systemDAO;
 
-    public int insertDeletedTablesInSystem(String listType)
+    public Map<String,String> getSystemConfigurationMap()
     {
         Map<String, Object> param = new HashMap<>();
-        return namedParameterJdbcTemplate.update("update systemconfigurations set `value` = concat(ifnull(value,''),',"+ listType +"')" +
-                " where `key` = 'archiveandpurgetablelist' ", param);
-    }
+        Map<String,String> systemConfigMap = new HashMap<>();
+        List<SystemConfigurationBean> commaSeperatedList = namedParameterJdbcTemplate.query("select `key`, `value` from systemconfigurations ",param, new SystemConfigMapper());
 
-    public Map<String,String> getDeletedTablesListInMap()
+        for(Object listIterator : commaSeperatedList)
+        {
+            int index = 0;
+            System.out.println(listIterator);
+            systemConfigMap.put(commaSeperatedList.get(index).getKey(),commaSeperatedList.get(index).getValue());
+            System.out.println(systemConfigMap.values());
+
+            index++;
+        }
+
+        //uISystemDAO.actualDeletion(purgeTableList,15);
+
+        return systemConfigMap;
+
+    }
+    public static final class SystemConfigMapper implements RowMapper<SystemConfigurationBean>
     {
-        Map<String, Object> param = new HashMap<>();
-        Map<String,String> purgeTableList = new HashMap<>();
-        String commaSeperatedList = namedParameterJdbcTemplate.queryForObject("select value from systemconfigurations where `key` = 'ArchiveAndPurgeTableList'",param, String.class);
-        purgeTableList.put("archiveandpurgetablelist",commaSeperatedList);
-
-        //systemDAO.actualDeletion(purgeTableList,15);
-        return purgeTableList;
-
+        public SystemConfigurationBean mapRow (ResultSet rs, int rowNum) throws SQLException
+        {
+            SystemConfigurationBean systemConfigurationBean = new SystemConfigurationBean();
+            systemConfigurationBean.setKey(rs.getString("key"));
+            systemConfigurationBean.setValue(rs.getString("value"));
+            //l1.add(rs.getString("value"));
+            return systemConfigurationBean;
+        }
     }
+
 }
