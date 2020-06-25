@@ -1,4 +1,6 @@
 use `antrackerdb`;
+DELIMITER //
+
 DROP procedure IF EXISTS `PurgeProcess_Procedure`;
 
 CREATE DEFINER=`root`@`%` PROCEDURE `PurgeProcess_Procedure`(
@@ -14,3 +16,5 @@ BEGIN
 	PREPARE stmt2 from @sql2;
     EXECUTE stmt2 ;
 END
+//
+DELIMITER ;
