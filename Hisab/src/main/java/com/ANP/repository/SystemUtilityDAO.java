@@ -25,15 +25,13 @@ public class SystemUtilityDAO {
         Map<String, Object> param = new HashMap<>();
         Map<String,String> systemConfigMap = new HashMap<>();
         List<SystemConfigurationBean> commaSeperatedList = namedParameterJdbcTemplate.query("select `key`, `value` from systemconfigurations ",param, new SystemConfigMapper());
-
+        int listIndex = 0;
         for(Object listIterator : commaSeperatedList)
         {
-            int index = 0;
             System.out.println(listIterator);
-            systemConfigMap.put(commaSeperatedList.get(index).getKey(),commaSeperatedList.get(index).getValue());
+            systemConfigMap.put(commaSeperatedList.get(listIndex).getKey(),commaSeperatedList.get(listIndex).getValue());
             System.out.println(systemConfigMap.values());
-
-            index++;
+            listIndex++;
         }
 
         //uISystemDAO.actualDeletion(purgeTableList,15);
