@@ -21,6 +21,9 @@ import java.sql.Types;
 import java.util.*;
 
 @Repository
+/*
+    This class is mainly used by the Controller/UI to soft delete organization data
+ */
 public class UISystemDAO {
 
     @Autowired
@@ -30,22 +33,22 @@ public class UISystemDAO {
     DataSource dataSource;
 
    @Transactional(rollbackFor = Exception.class)
-        public void deleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
-                                                  boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
+        public void softDeleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
+                                                      boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
         {
             StoredProcedure procedure = new GenericStoredProcedure();
             procedure.setDataSource(dataSource);
-            procedure.setSql("DeleteOrganizationTransaction_Procedure");
+            procedure.setSql("SoftDeleteOrgData_Procedure");
             procedure.setFunction(false);
 
             SqlParameter[] declareparameters = {
-                    new SqlParameter(Types.INTEGER),
-                    new SqlParameter(Types.BOOLEAN),
-                    new SqlParameter(Types.BOOLEAN),
-                    new SqlParameter(Types.BOOLEAN),
-                    new SqlParameter(Types.BOOLEAN),
-                    new SqlParameter(Types.BOOLEAN),
-                    new SqlParameter(Types.BOOLEAN),
+                    new SqlParameter("ParamOrgId",Types.INTEGER),
+                    new SqlParameter("deleteCompanyData",Types.BOOLEAN),
+                    new SqlParameter("deleteSalaryData",Types.BOOLEAN),
+                    new SqlParameter("deleteAuditData",Types.BOOLEAN),
+                    new SqlParameter("deleteEmployeeSalaryBalance",Types.BOOLEAN),
+                    new SqlParameter("deleteEmployeeCompanyBalance",Types.BOOLEAN),
+                    new SqlParameter("deleteCustomerBalance",Types.BOOLEAN),
             };
             procedure.setParameters(declareparameters);
             procedure.compile();

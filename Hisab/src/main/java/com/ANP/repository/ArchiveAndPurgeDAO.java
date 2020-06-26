@@ -1,6 +1,5 @@
 package com.ANP.repository;
 
-import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +14,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Repository
+/*
+* This process is offline process based on the scheduler
+* This process will kick-off as per the configured schedule
+* This will actually archive and purge/delete organization data based on the table names and number of days after soft deletion configuration parameters
+ */
 public class ArchiveAndPurgeDAO {
 
     @Autowired
-    SystemUtilityDAO systemUtilityDAO;
+    SystemConfigurationReaderDAO systemConfigurationReaderDAO;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
     @Transactional(rollbackFor = Exception.class)
-    public void actualDeletion()
+    public void invokeArchiveAndPurgeProcess()
     {
         Map<String,String> systemConfigMap ;
         int noOfDaysAfterDelete;
-        systemConfigMap = systemUtilityDAO.getSystemConfigurationMap();
+        systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
         String commaSeperatedArchiveList = systemConfigMap.get("ArchivePurge.archiveandpurgetablelist");
         String deleteDays = systemConfigMap.get("ArchivePurge.DeleteAfterNumberOfDays");
 
@@ -58,7 +63,7 @@ public class ArchiveAndPurgeDAO {
 
         List<String> resultArchiveTableList = Arrays.asList(commaSeperatedArchiveList.split("\\s*,\\s*"));
 
-        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("PurgeProcess_Procedure");
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ArchiveAndPurgeProcess_Procedure");
         Map<String, Object> inParamMap = new HashMap<>();
 
 
