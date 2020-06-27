@@ -12,7 +12,7 @@ public class PayToVendorBean extends CommonAttribute {
     private java.util.Date paymentDate;
     private double amount;
     private String details;
-    private boolean includeInCalc;
+    private boolean includeInCalc = true;
     private CustomerBean customerBean;
     private EmployeeBean employeeBean;
     //For Audit Entry

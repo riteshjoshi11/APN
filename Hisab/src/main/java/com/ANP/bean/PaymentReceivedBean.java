@@ -13,7 +13,7 @@ public class PaymentReceivedBean extends CommonAttribute {
     private String paymentType;
     private java.util.Date receivedDate;
     private double amount;
-    private boolean includeInCalc;
+    private boolean includeInCalc=true;
     private String details;
 
     private CustomerBean customerBean;

@@ -15,7 +15,7 @@ public class Expense extends CommonAttribute {
     private String toPartyName;
     private long fromAccountID;
     private String fromEmployeeID;
-    private boolean includeInCalc;
+    private boolean includeInCalc = true;
     private boolean includeInReport;
     private double orderAmount;
     private double CGST;

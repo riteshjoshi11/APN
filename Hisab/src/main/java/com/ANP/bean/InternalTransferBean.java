@@ -11,7 +11,7 @@ public class InternalTransferBean extends CommonAttribute {
     private String details;
     private String toEmployeeID;
     private String fromEmployeeID;
-    private boolean includeInCalc;
+    private boolean includeInCalc = true;
 
     private EmployeeBean toEmployee;
     private EmployeeBean fromEmployee;
