@@ -213,6 +213,7 @@ public class EmployeeDAO {
             empbean.setType(rs.getString("e.type"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
+            empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             return empbean;
         }
     }//end FullEmployeeMapper
@@ -235,7 +236,7 @@ public class EmployeeDAO {
 
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
-                        " empsal.details, empsal.includeincalc,empsal.createdate " +
+                        " empsal.details, empsal.includeincalc,empsal.createdate,empsal.createdbyid " +
                         " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
                         " and (empsal.isdeleted is null or  empsal.isdeleted <> true) " +
                           ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
@@ -256,6 +257,7 @@ public class EmployeeDAO {
             employeeSalary.setDetails(rs.getString("empsal.details"));
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
             employeeSalary.setCreateDate(rs.getTimestamp("empsal.createdate"));
+            employeeSalary.setCreatedbyId(rs.getString("empsal.createdbyid"));
             return employeeSalary;
         }
     }//end
@@ -279,7 +281,7 @@ public class EmployeeDAO {
             orderBy = "empsalpay.id desc";
         }
         List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
-                        "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.fromemployeeid," +
+                        "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.createdate,empsalpay.createdbyid,empsalpay.fromemployeeid," +
                         "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +
                         "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
                         " from employee e, employeesalarypayment empsalpay " +
@@ -305,6 +307,8 @@ public class EmployeeDAO {
             employeeSalaryPayment.getFromEmployeeBean().setFirst(rs.getString("fromEmpFirstName"));
             employeeSalaryPayment.getFromEmployeeBean().setLast(rs.getString("fromEmpLastName"));
             employeeSalaryPayment.setTransferDate(rs.getTimestamp("empsalpay.transferdate"));
+            employeeSalaryPayment.setCreateDate(rs.getTimestamp("empsalpay.createdate"));
+            employeeSalaryPayment.setCreatedbyId(rs.getString("empsalpay.createdbyid"));
             return employeeSalaryPayment;
         }
     }

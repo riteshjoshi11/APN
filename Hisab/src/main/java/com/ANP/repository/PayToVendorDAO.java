@@ -50,7 +50,7 @@ public class PayToVendorDAO {
         return namedParameterJdbcTemplate.query(
                 "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
                      " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
-                     " c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
+                     " paytov.createdate,paytov.createdbyid,c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
                      " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
                      " and (paytov.isdeleted is null or paytov.isdeleted <> true) " +
                       ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" +
@@ -76,9 +76,13 @@ public class PayToVendorDAO {
             payToVendorBean.setOrgId(rs.getLong("paytov.orgid"));
             payToVendorBean.setToCustomerID(rs.getString("paytov.tocustomerid"));
             payToVendorBean.setIncludeInCalc(rs.getBoolean("paytov.includeincalc"));
+            payToVendorBean.setCreateDate(rs.getTimestamp("paytov.createdate"));
+            payToVendorBean.setCreatedbyId(rs.getString("paytov.createdbyid"));
+
             payToVendorBean.getEmployeeBean().setFirst(rs.getString("e.first"));
             payToVendorBean.getEmployeeBean().setLast(rs.getString("e.last"));
             payToVendorBean.getEmployeeBean().setMobile(rs.getString("e.mobile"));
+
             return payToVendorBean;
         }
     }

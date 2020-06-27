@@ -55,7 +55,7 @@ public class CustomerInvoiceDAO {
         return namedParameterJdbcTemplate.query(
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
-                        "cusinv.includeincalc,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
+                        "cusinv.includeincalc,cusinv.createdate,cusinv.createdbyid,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and (cusinv.isdeleted is null or cusinv.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -83,6 +83,8 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setIncludeInCalc(rs.getBoolean("cusinv.includeincalc"));
             customerInvoiceBean.setIncludeInReport(rs.getBoolean("cusinv.includeinreport"));
             customerInvoiceBean.setDate(rs.getTimestamp("cusinv.date"));
+            customerInvoiceBean.setCreateDate(rs.getTimestamp("cusinv.createdate"));
+            customerInvoiceBean.setCreatedbyId(rs.getString("cusinv.createdbyid"));
             return customerInvoiceBean;
         }
     }

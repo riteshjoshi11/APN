@@ -49,7 +49,7 @@ public class InternalTransferDAO {
         }
 
 
-        return namedParameterJdbcTemplate.query("select e.mobile,e.first,e.last, internal.details, internal.rcvddate,internal.amount," +
+        return namedParameterJdbcTemplate.query("select e.mobile,e.first,e.last, internal.details,internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
                     " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
                     " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
                     " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
@@ -71,6 +71,8 @@ public class InternalTransferDAO {
             internalTransferBean.getToEmployee().setMobile(rs.getString("e.mobile"));
             internalTransferBean.setAmount(rs.getDouble("internal.amount"));
             internalTransferBean.setReceivedDate(rs.getTimestamp("internal.rcvddate"));
+            internalTransferBean.setCreateDate(rs.getTimestamp("internal.createdate"));
+            internalTransferBean.setCreatedbyId(rs.getString("internal.createdbyid"));
             return internalTransferBean;
         }
     }

@@ -53,7 +53,7 @@ public class DeliveryDAO {
 
         return namedParameterJdbcTemplate.query("select customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, " +
-                        " delivery.id, delivery.date,delivery.description " +
+                        " delivery.id, delivery.date,delivery.createdate,delivery.createdbyid,delivery.description " +
                         " from customer,delivery where customer.id=delivery.tocustomerid and delivery.orgid=:orgID and" +
                         " (delivery.isdeleted is null or  delivery.isdeleted <> true) " +
                          ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
@@ -72,6 +72,7 @@ public class DeliveryDAO {
             deliveryBean.setDeliveryID(rs.getLong("delivery.id"));
             deliveryBean.setDate(rs.getTimestamp("delivery.date"));
             deliveryBean.setDescription(rs.getString("delivery.description"));
+            deliveryBean.setCreateDate(rs.getTimestamp("delivery.createdate"));
             return deliveryBean;
         }
     }

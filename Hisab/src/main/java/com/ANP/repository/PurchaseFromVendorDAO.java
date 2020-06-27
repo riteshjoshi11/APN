@@ -57,7 +57,7 @@ public class PurchaseFromVendorDAO {
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
-                        "p.includeincalc,p.billno " +
+                        "p.includeincalc,p.billno,p.createdate,p.createdbyid " +
                         " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and " +
                         " (p.isdeleted is null or p.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow"
@@ -88,6 +88,8 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setIncludeInReport(rs.getBoolean("p.includeInReport"));
             purchaseFromVendorBean.setIncludeInCalc(rs.getBoolean("p.includeincalc"));
             purchaseFromVendorBean.setBillNo(rs.getString("p.billno"));
+            purchaseFromVendorBean.setCreateDate(rs.getTimestamp("p.createdate"));
+            purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
             return purchaseFromVendorBean;
         }
     }

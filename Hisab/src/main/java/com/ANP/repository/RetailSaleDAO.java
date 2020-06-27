@@ -53,7 +53,7 @@ public class RetailSaleDAO {
 
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
-                        "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc" +
+                        "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc,retail.createdate, retail.createdbyid " +
                        " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
                         " and (retail.isdeleted is null or retail.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
@@ -77,6 +77,8 @@ public class RetailSaleDAO {
             ret.getFromEmployee().setFirst(rs.getString("e.first"));
             ret.getFromEmployee().setLast(rs.getString("e.last"));
             ret.getFromEmployee().setMobile(rs.getString("e.mobile"));
+            ret.setCreateDate(rs.getTimestamp("retail.createdate"));
+            ret.setCreatedbyId(rs.getString("retail.createdbyid"));
             return ret;
         }
     }

@@ -77,6 +77,7 @@ public class ExpenseDAO {
             obj.setEmpFirstName(rs.getString("e.first"));
             obj.setEmpLastName(rs.getString("e.last"));
             obj.setPaid(rs.getBoolean("paid"));
+            obj.setCreateDate(rs.getTimestamp("exp.createdate"));
             //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
             // e.first and e.last into the expense Bean, I have created two corresponding fields
             // in the Exepense Bean (empFirstName, empLastName)

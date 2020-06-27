@@ -50,7 +50,7 @@ public class PaymentReceivedDAO {
 
         return namedParameterJdbcTemplate.query(
                 "select c.name, c.city, c.firmname, c.gstin, c.mobile1, c.state, prcvd.id, prcvd.fromaccountid,prcvd.fromcustomerid,prcvd.toaccountid," +
-                        "prcvd.toemployeeid,prcvd.rcvddate,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.orgid," +
+                        "prcvd.toemployeeid,prcvd.rcvddate,prcvd.createdbyid,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.createdate,prcvd.orgid," +
                         "(select emp.first from employee emp where emp.id = prcvd.toemployeeid) as firstName," +
                         "(select emp.last from employee emp where emp.id = prcvd.toemployeeid) as lastName from customer c, paymentreceived " +
                         "prcvd where c.id=prcvd.fromcustomerid and prcvd.orgid=:orgID and (prcvd.isdeleted is null or prcvd.isdeleted <> true) " +
@@ -82,6 +82,9 @@ public class PaymentReceivedDAO {
             paymentReceivedBean.setIncludeInCalc(rs.getBoolean("prcvd.includeincalc"));
             paymentReceivedBean.getEmployeeBean().setFirst(rs.getString("firstName"));
             paymentReceivedBean.getEmployeeBean().setLast(rs.getString("lastName"));
+
+            paymentReceivedBean.setCreateDate(rs.getTimestamp("prcvd.createdate"));
+            paymentReceivedBean.setCreatedbyId(rs.getString("prcvd.createdbyid"));
             return paymentReceivedBean;
         }
     }

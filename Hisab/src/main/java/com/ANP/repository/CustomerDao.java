@@ -119,6 +119,8 @@ public class CustomerDao {
             cus.setState(rs.getString("customer.state"));
             cus.setSendPaymentReminders(rs.getBoolean("customer.sendPaymentReminders"));
             cus.setAccountBalance(rs.getFloat("account.currentbalance"));
+            cus.setCreateDate(rs.getTimestamp("customer.createdate"));
+            cus.setCreatedbyId(rs.getString("customer.createdbyid"));
             return cus;
         }
     }
