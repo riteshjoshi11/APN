@@ -258,13 +258,13 @@ public class AccountingHandler {
 
     @Transactional(rollbackFor = Exception.class)
     public boolean makeExpenseUnpaidToPaid(Expense expense) {
+        if(expense.isIncludeInCalc()) {
         //Subtract from unpaid expense Balance
         calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(),expense.getTotalAmount(),"SUBTRACT");
         //Add into the Paid Expense Balance
         calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
         //Subtract from Employee Balance
         // accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
-        if(expense.isIncludeInCalc()) {
             EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
             employeeAuditBean.setOrgId(expense.getOrgId());
             employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
