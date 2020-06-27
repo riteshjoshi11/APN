@@ -6,6 +6,7 @@ import com.ANP.repository.UISystemDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ public class SystemController {
     @Autowired
     UISystemDAO systemDAO;
 
+    @Async
     @PostMapping(path = "/deleteDataForOrganization", produces = "application/json")
     public ResponseEntity deleteOrganizationTranaction(@RequestBody SystemBean systemBean)
     {
