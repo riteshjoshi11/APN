@@ -3,7 +3,10 @@ package com.ANP.repository;
 import com.ANP.bean.CustomerBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,19 +26,22 @@ public class CustomerDao {
 
     public int createCustomer(CustomerBean customerBean) {
         System.out.println("customer " + customerBean.getName());
+        try {
+            String idSql = "SELECT getcustomerId() ";
+            Map param = new HashMap<String, Object>();
+            String customerId = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
+            customerBean.setCustomerID(customerId);
 
-        String idSql = "SELECT getcustomerId() ";
-        Map param = new HashMap<String, Object>();
-        String customerId = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
-        customerBean.setCustomerID(customerId);
-
-        System.out.println("customer id " + customerId);
-        String sql = "insert into customer (id,name,city,state,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
-                "values(:customerID,:name,:city,:gstin,:state,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgId,:createdbyId)";
-        int updated = namedParameterJdbcTemplate.update(sql
-                , new BeanPropertySqlParameterSource(customerBean));
-
-        return updated;
+            System.out.println("customer id " + customerId);
+            String sql = "insert into customer (id,name,city,state,gstin,transporter,mobile1,mobile2,firmname,billingadress,orgid,createdbyid) " +
+                    "values(:customerID,:name,:city,:gstin,:state,:transporter,:mobile1,:mobile2,:firmname,:billingadress,:orgId,:createdbyId)";
+            int updated = namedParameterJdbcTemplate.update(sql
+                    , new BeanPropertySqlParameterSource(customerBean));
+            return updated;
+        }
+        catch (DuplicateKeyException e) {
+            throw new CustomAppException("Duplicate Entry","SERVER.CREATE_CUSTOMER.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     private static final class CustomerMapper implements RowMapper<CustomerBean> {
@@ -83,13 +89,15 @@ public class CustomerDao {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-        param.put("orderBy",orderBy);
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            orderBy = "account.id desc";
+        }
 
 
 
         return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
                          " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
-                           ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                           ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                            param, new FullCustomerMapper()) ;
     }
@@ -111,6 +119,8 @@ public class CustomerDao {
             cus.setState(rs.getString("customer.state"));
             cus.setSendPaymentReminders(rs.getBoolean("customer.sendPaymentReminders"));
             cus.setAccountBalance(rs.getFloat("account.currentbalance"));
+            cus.setCreateDate(rs.getTimestamp("customer.createdate"));
+            cus.setCreatedbyId(rs.getString("customer.createdbyid"));
             return cus;
         }
     }

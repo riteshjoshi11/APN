@@ -1,14 +1,11 @@
 package com.ANP.bean;
 
 public class SearchParam {
-    String operator;  //e.g (greater than, less than, equal to ...)
+    String soperator;  //e.g (greater than, less than, equal to ...)
     String fieldType; //e.g String, DATE, NUMBER
     String fieldName; //e.g Name
     String condition; //e.g AND,OR
     String value;//   String operator;
-
-
-
 
     public String getFieldType() {
         return fieldType;
@@ -33,7 +30,6 @@ public class SearchParam {
         this.condition = condition;
     }
 
-
     public  String getValue() {
         return value;
     }
@@ -42,10 +38,10 @@ public class SearchParam {
         this.value = value;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getSoperator() {
+        return soperator;
     }
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setSoperator(String soperator) {
+        this.soperator = soperator;
     }
 }

@@ -3,23 +3,29 @@ package com.ANP.bean;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Min;
+
 import java.util.Date;
 
 public class CommonAttribute {
 
-    @ApiModelProperty(hidden = true)
-    protected String statusMessage;
-  //  @ApiModelProperty(hidden = true)
     protected String createdbyId;
+
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
- //   @ApiModelProperty(hidden = true)
-    protected long orgId; //TODO remove 1
 
-    //protected boolean includeInCalc;
+    @Min(value = 1, message = "OrgID is Mandatory")
+    protected long orgId;
 
-    @ApiModelProperty(hidden = true)
-    protected String userID = "E1"; //TODo values will be set after log in from Token hardcoded till implementation
+    private boolean forceCreate=true;
+
+    public boolean isForceCreate() {
+        return forceCreate;
+    }
+
+    public void setForceCreate(boolean forceCreate) {
+        this.forceCreate = forceCreate;
+    }
 
     public String getCreatedbyId() {
         return createdbyId;
@@ -37,7 +43,6 @@ public class CommonAttribute {
         return createDate;
     }
 
-
     public long getOrgId() {
         return orgId;
     }
@@ -45,19 +50,6 @@ public class CommonAttribute {
     public void setOrgId(long orgId) {
         this.orgId = orgId;
     }
-
-    public String getStatusMessage() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-
-    //public boolean getIncludeInCalc(){ return includeInCalc;}
-
-    //public void setIncludeInCalc(){ this.includeInCalc= includeInCalc;}
 
 
 }

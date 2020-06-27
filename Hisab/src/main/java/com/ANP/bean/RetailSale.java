@@ -8,7 +8,7 @@ public class RetailSale extends CommonAttribute {
     private String fromemployeeid;
     private int fromaccountid;
     private Date date;
-    private boolean includeincalc;
+    private boolean includeincalc = true;
     private EmployeeBean fromEmployee;
 
 

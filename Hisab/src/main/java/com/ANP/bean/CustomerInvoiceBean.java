@@ -18,7 +18,7 @@ public class CustomerInvoiceBean extends CommonAttribute {
     private String invoiceNo;
 
     private boolean includeInReport;
-    private boolean includeInCalc;
+    private boolean includeInCalc = true;
 
     public CustomerBean getCustomerBean() {
         return customerBean;

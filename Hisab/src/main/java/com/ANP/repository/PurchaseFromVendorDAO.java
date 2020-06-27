@@ -1,11 +1,10 @@
 package com.ANP.repository;
 
-import com.ANP.bean.CustomerBean;
-import com.ANP.bean.PurchaseFromVendorBean;
-import com.ANP.bean.Expense;
-import com.ANP.bean.SearchParam;
+import com.ANP.bean.*;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,6 +26,9 @@ public class PurchaseFromVendorDAO {
      *  No need to change anything here.
      */
     public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
+        if(!purchaseFromVendorBean.isForceCreate()) {
+            isDuplicateSuspect(purchaseFromVendorBean);
+        }
         return namedParameterJdbcTemplate.update(
                 "INSERT INTO purchasefromvendor(fromcustomerId,date,CGST,orderamount,SGST,IGST,extra,totalamount,orgId,createdById,note,includeInReport,includeincalc,fromaccountid,billno) " +
                         " VALUES(:fromCustomerId,:date,:CGST,:orderAmount,:SGST,:IGST,:extra,:totalAmount,:orgId,:createdbyId,:note,:includeInReport,:includeInCalc,:fromAccountId,:billNo); ",
@@ -45,16 +47,20 @@ public class PurchaseFromVendorDAO {
         param.put("orgId", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
 
+
+            if(ANPUtils.isNullOrEmpty(orderBy)) {
+                orderBy = "p.id desc";
+            }
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
                         "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
-                        "p.includeincalc,p.billno " +
-                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        "p.includeincalc,p.billno,p.createdate,p.createdbyid " +
+                        " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and " +
+                        " (p.isdeleted is null or p.isdeleted <> true) " +
+                        ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullPurchaseFromVendorMapper());
 
@@ -72,7 +78,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.getCustomerBean().setOrgId(rs.getLong("customer.orgid"));
             purchaseFromVendorBean.getCustomerBean().setState(rs.getString("customer.state"));
             purchaseFromVendorBean.setPurchaseID(rs.getLong("p.id"));
-            purchaseFromVendorBean.setDate(rs.getDate("p.date"));
+            purchaseFromVendorBean.setDate(rs.getTimestamp("p.date"));
             purchaseFromVendorBean.setCGST(rs.getFloat("p.CGST"));
             purchaseFromVendorBean.setSGST(rs.getFloat("p.SGST"));
             purchaseFromVendorBean.setIGST(rs.getFloat("p.IGST"));
@@ -82,7 +88,27 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setIncludeInReport(rs.getBoolean("p.includeInReport"));
             purchaseFromVendorBean.setIncludeInCalc(rs.getBoolean("p.includeincalc"));
             purchaseFromVendorBean.setBillNo(rs.getString("p.billno"));
+            purchaseFromVendorBean.setCreateDate(rs.getTimestamp("p.createdate"));
+            purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
             return purchaseFromVendorBean;
+        }
+    }
+
+    public void isDuplicateSuspect(PurchaseFromVendorBean purchaseFromVendorBean){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", purchaseFromVendorBean.getOrgId());
+        params.put("fromcustomerid", purchaseFromVendorBean.getFromCustomerId());
+
+        long actualamount = (long)(purchaseFromVendorBean.getTotalAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount " +
+                ",id FROM purchasefromvendor where orgid=:orgid and fromcustomerid=:fromcustomerid and (isdeleted is null or isdeleted <> true) " +
+                "  order by id desc limit 1) purchase where totalamount = :amount",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The purchase from vendor looks like duplicate", "SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

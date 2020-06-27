@@ -1,9 +1,12 @@
 package com.ANP.repository;
 
 import com.ANP.bean.Expense;
+import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,9 +25,12 @@ public class ExpenseDAO {
 
 
     public int createExpense(Expense expense) {
+        if(!expense.isForceCreate()) {
+            isDuplicateSuspect(expense);
+        }
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno)" +
-                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO);",
+                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno,paid)" +
+                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO,:paid);",
                 new BeanPropertySqlParameterSource(expense));
     }
 
@@ -38,10 +44,14 @@ public class ExpenseDAO {
         param.put("orgID", orgId);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        param.put("orderBy", orderBy);
+
+        if(ANPUtils.isNullOrEmpty(orderBy)) {
+            orderBy = "id desc";
+        }
         return namedParameterJdbcTemplate.query(
                 "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by :orderBy limit  :noOfRecordsToShow"
+                        "and (exp.isdeleted is null or exp.isdeleted <> true) " +
+                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+ "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
     }
@@ -61,11 +71,13 @@ public class ExpenseDAO {
             obj.setIGST(rs.getDouble("exp.igst"));
             obj.setExtra(rs.getDouble("exp.extra"));
             obj.setToPartyName(rs.getString("exp.topartyname"));
-            obj.setDate(rs.getDate("exp.date"));
+            obj.setDate(rs.getTimestamp("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
             obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
             obj.setEmpFirstName(rs.getString("e.first"));
             obj.setEmpLastName(rs.getString("e.last"));
+            obj.setPaid(rs.getBoolean("paid"));
+            obj.setCreateDate(rs.getTimestamp("exp.createdate"));
             //TODO Paras: Please add all expense related fields (other than fromEmployeeID,fromAccountID) please note that you will also be adding
             // e.first and e.last into the expense Bean, I have created two corresponding fields
             // in the Exepense Bean (empFirstName, empLastName)
@@ -115,6 +127,37 @@ public class ExpenseDAO {
             return true;
         } else {
             return false;
+        }
+    }
+    /*
+        you need to update Expense Table:includeInCalc field with the passed value
+  */
+    public boolean updateExpenseStatus(long expenseID,boolean paidStatus) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", expenseID);
+        parameterSource.addValue("paidStatus", paidStatus);
+        if (namedParameterJdbcTemplate.update("update generalexpense set paid = :paidStatus where id = :id", parameterSource)!= 0) {
+            return true; //operation success
+        }
+
+        return false;
+
+    }
+    public void isDuplicateSuspect(Expense expense){
+        //Do a count(*) query and if you found count>0 then throw this error else nothing
+        Map<String,Object> params = new HashMap<>();
+        params.put("orgid", expense.getOrgId());
+        params.put("fromemployeeid", expense.getFromEmployeeID());
+
+        long actualamount = (long)(expense.getTotalAmount());
+        params.put("amount", actualamount);
+
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) " +
+                " as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid and (isdeleted is null or isdeleted<> true) " +
+                "  order by id desc limit 1) expense where totalamount = :amount",params, Integer.class);
+        System.out.println(count);
+        if(count>0) {
+            throw new CustomAppException("The created expense looks like duplicate", "SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 }

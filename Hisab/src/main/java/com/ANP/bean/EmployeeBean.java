@@ -1,17 +1,22 @@
 package com.ANP.bean;
 
-import javax.validation.Valid;
+
+import org.springframework.lang.Nullable;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class EmployeeBean extends CommonAttribute {
 
 
     private String employeeId;
-    @NotNull(message = "first cannot be null")
-    @Size(max=5, message = "size must be less than 5")
+    @NotBlank(message = "first name is mandatory")
+    @NotNull(message = "first name is mandatory")
     private String first;
     private String last;
+    @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile;
     private String loginusername;
     private String type;

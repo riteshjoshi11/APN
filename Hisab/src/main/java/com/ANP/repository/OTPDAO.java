@@ -1,13 +1,15 @@
 package com.ANP.repository;
 
-import com.ANP.bean.CustomerBean;
 import com.ANP.bean.OTPBean;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.Valid;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -29,8 +31,7 @@ public class OTPDAO {
                 "values (:mobileNumber,:otp)", new BeanPropertySqlParameterSource(otpBean));
     }
 
-    public boolean validateOTP(OTPBean otpBean) {
-        boolean otpValid=false;
+    public void validateOTP(@Valid OTPBean otpBean) {
         List<OTPBean> otpBeanList = namedParameterJdbcTemplate.query(
                 "select generatedtime from otphandler where mobileNumber=:mobileNumber "
                         + " and otp=:otp",new BeanPropertySqlParameterSource(otpBean), new OTPDAO.OTPMapper());
@@ -41,13 +42,16 @@ public class OTPDAO {
             long timeDiff = dateNow.getTime() - generatedTimeFromDB.getTime();
             long timeDiffInMinutes = TimeUnit.MILLISECONDS.toMinutes(timeDiff);
             if(timeDiffInMinutes<10) {
-                otpValid = true;
-                namedParameterJdbcTemplate.update("delete from otphandler where mobileNumber=:mobileNumber",
-                        new BeanPropertySqlParameterSource(otpBean));
+                   namedParameterJdbcTemplate.update("delete from otphandler where mobileNumber=:mobileNumber",
+                    new BeanPropertySqlParameterSource(otpBean));
+            } else {
+                throw new CustomAppException("OTP has been expired","SERVER.VALIDATEOTP.OTP_EXPIRED", HttpStatus.EXPECTATION_FAILED);
             }
             //If yes then set true else false
+        } else {
+            throw new CustomAppException("The OTP is invalid","SERVER.VALIDATEOTP.OTP_INVALID", HttpStatus.EXPECTATION_FAILED);
         }
-        return otpValid;
+
     }
 
     private static final class OTPMapper implements RowMapper<OTPBean> {
@@ -57,5 +61,4 @@ public class OTPDAO {
             return otpBean;
         }
     }
-
 }

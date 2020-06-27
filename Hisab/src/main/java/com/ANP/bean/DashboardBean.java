@@ -65,7 +65,8 @@ public class DashboardBean {
     }
 
     public double getTotalAssets() {
-        return (this.needToCollect + this.totalCashInHand);
+        //need to collect is negative number and need to convert to positive
+        return (getNeedToCollect() + getTotalCashInHand());
      }
 
     public double getNeedToPay() {
@@ -77,7 +78,7 @@ public class DashboardBean {
     }
 
     public double getTotalLiability() {
-        this.totalLiability = (this.totalExpense + this.totalSalaryDue + this.needToPay);
+        this.totalLiability = (getTotalExpense() + getTotalSalaryDue() + getNeedToPay());
         return totalLiability ;
     }
 
@@ -87,7 +88,7 @@ public class DashboardBean {
     }
 
     public double getNeedToCollect() {
-        return needToCollect;
+        return Math.abs(needToCollect);
     }
 
     public void setNeedToCollect(double needToCollect) {

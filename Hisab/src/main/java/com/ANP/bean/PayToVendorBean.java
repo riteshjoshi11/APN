@@ -12,13 +12,32 @@ public class PayToVendorBean extends CommonAttribute {
     private java.util.Date paymentDate;
     private double amount;
     private String details;
-    private boolean includeInCalc;
+    private boolean includeInCalc = true;
     private CustomerBean customerBean;
     private EmployeeBean employeeBean;
+    //For Audit Entry
+    private String fromPartyName;
+    private String toPartyName;
 
     public PayToVendorBean() {
         this.customerBean =  new CustomerBean();
         this.employeeBean = new EmployeeBean();
+    }
+
+    public String getFromPartyName() {
+        return fromPartyName;
+    }
+
+    public void setFromPartyName(String fromPartyName) {
+        this.fromPartyName = fromPartyName;
+    }
+
+    public String getToPartyName() {
+        return toPartyName;
+    }
+
+    public void setToPartyName(String toPartyName) {
+        this.toPartyName = toPartyName;
     }
 
     public EmployeeBean getEmployeeBean() {

@@ -18,8 +18,7 @@ public class CustomerHandler {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean createCustomer(CustomerBean customerBean) {
-        boolean iscustomercreated = false;
+    public void createCustomer(CustomerBean customerBean) {
         customerDao.createCustomer(customerBean);
 
         //Preparing Account & creating account
@@ -30,8 +29,7 @@ public class CustomerHandler {
         accountBean.setCreatedbyid(customerBean.getCreatedbyId());
         accountBean.setCurrentbalance(customerBean.getInitialBalance());
         accountBean.setType(ANPConstants.LOGIN_TYPE_CUSTOMER);
-        iscustomercreated = accountDAO.createAccount(accountBean);
-        return iscustomercreated;
+        accountDAO.createAccount(accountBean);
     }
 
     public String getAccountNickName(String name, String orgName) {

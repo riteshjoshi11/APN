@@ -17,7 +17,7 @@ public class PurchaseFromVendorBean extends CommonAttribute {
     private String note;
     private boolean includeInReport;
     private String billNo;
-    private boolean includeInCalc;
+    private boolean includeInCalc=true;
 
     private CustomerBean customerBean;
 

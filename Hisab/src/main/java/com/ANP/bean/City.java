@@ -1,24 +1,29 @@
 package com.ANP.bean;
 
+import com.ANP.util.ANPUtils;
+
 public class City {
 
-        private long id;
-private String name;
+    private long id;
+    private String name;
 
 
-        public void setId(long id) {
-                this.id = id;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        if (!ANPUtils.isNullOrEmpty(this.name)) {
+            return (this.name.trim().toUpperCase());
         }
+        return this.name;
+    }
 
-        public long getId() {
-                return id;
-        }
-
-        public String getName() {
-                return name;
-        }
-
-        public void setName(String name) {
-                this.name = name;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 }

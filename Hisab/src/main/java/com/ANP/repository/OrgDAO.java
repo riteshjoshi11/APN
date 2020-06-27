@@ -1,9 +1,12 @@
 package com.ANP.repository;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.Organization;
 import com.ANP.service.OrganizationHandler;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,14 +26,18 @@ public class OrgDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public long createOrganization(Organization organization) {
+    /*
+        return orgKey
+     */
+    public long createOrganization(Organization organization, EmployeeBean employeeBean) {
+        System.out.println("createOrganization: Organization Bean:" + organization);
+        isDuplicate(organization,employeeBean);
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
                 "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("CreateOrganization: Generated Key=" + generatedOrgKey);
         return generatedOrgKey ;
-
     }
 
     public Organization getOrganization(Long id) {
@@ -64,4 +71,18 @@ public class OrgDAO {
         return organizations;
     }
 
+    private void isDuplicate(Organization organization, EmployeeBean employeeBean) {
+        Map<String, Object> sparam = new HashMap<String, Object>();
+        sparam.put("mobile", employeeBean.getMobile());
+        sparam.put("orgName", organization.getOrgName());
+        sparam.put("city", organization.getCity());
+
+        Integer countRows  = namedParameterJdbcTemplate.queryForObject("select count(org.id) as countorg from organization org, employee " +
+                " emp where org.id = emp.orgid and emp.mobile = :mobile and " +
+                " emp.type = 'SUPER_ADMIN' and org.orgname= :orgName and org.city= :city",sparam, Integer.class);
+        System.out.println(countRows);
+        if(countRows>=1){
+            throw new CustomAppException("duplicate organization","SERVER.ORGANIZATION.DUPLICATE_ORGANIZATION", HttpStatus.EXPECTATION_FAILED);
+        }
+    }
 }

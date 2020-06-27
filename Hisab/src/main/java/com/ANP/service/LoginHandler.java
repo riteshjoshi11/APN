@@ -6,7 +6,11 @@ import com.ANP.repository.CustomerDao;
 import com.ANP.repository.OrgDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +26,11 @@ public class LoginHandler {
     AccountDAO accountDAO;
     @Autowired
     OTPHandler otpHandler;
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
 
-
+    @Autowired
+    private TokenUtil tokenUtil;
     /*
     1. User Enter Mobile
     2. Send OTP
@@ -36,6 +43,17 @@ public class LoginHandler {
     public boolean sendOTP(String mobileNumber) {
         return otpHandler.sendOTP(mobileNumber);
     }
+
+
+    public Token validateOTPAndProvideToken(OTPBean otpBean) {
+        otpHandler.verifyOTP(otpBean);
+        Token token = new Token();
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(otpBean.getMobileNumber());
+        String tok = tokenUtil.generateToken(userDetails);
+        token.setToken(tok);
+        return token;
+    }
+
 
     /*
         This method assumes that the mobileNumber is already OTP verified.

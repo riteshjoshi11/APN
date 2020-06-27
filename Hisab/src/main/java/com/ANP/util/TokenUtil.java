@@ -51,7 +51,6 @@ public class TokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         //TODO priority 2 need to add user mobile number
         Map<String, Object> claims = new HashMap<>();
-
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
