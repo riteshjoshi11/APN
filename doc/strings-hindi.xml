@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">एमपीएस</string>
+    <string name="TxtWelcome">नई प्रौद्योगिकी में आपका स्वागत है</string>
+    <!--Menu-->
+    <!--Home-->
+    <string name="menu_navHome">होम</string>
+    <!--Sales-->
+    <string name="menu_navSales">बिक्री</string>
+    <string name="menu_navCreateDelivery">वितरण एंट्री</string>
+    <string name="menu_navSaleEntryCreateInvoice">बेचने ( सेल ) एंट्री</string>
+    <string name="menu_navListDelivery">वितरण देंखे</string>
+    <string name="menu_navListSales">बिक्री देंखे</string>
+    <!--Purchase-->
+    <string name="menu_navPurchase">खरीदी</string>
+    <string name="menu_navPurchaseEntryReceivedBillEntry">परचेस(खरीदी) एंट्री</string>
+    <string name="menu_navListPurchases">खरीदारी देंखे</string>
+    <!--Incoming Payment-->
+    <string name="menu_navIncomingPayment">पैसे आने पर</string>
+    <string name="menu_navPaymentReceivedEntry">ग्राहक से पैसे आने की एंट्री </string>
+    <string name="menu_navListPaymentReceived">ग्राहक से आये पैसे देंखे</string>
+	<string name="menu_navRetailEntryFragment">रिटेल (फुटकर) सेल की एंट्री</string>
+    <string name="menu_navListRetail">रिटेल सेल देंखे</string>
+    <!--Outgoing Payment-->
+    <string name="menu_navOutgoingPayment">पैसे जाने पर </string>
+    <string name="menu_navVendorPaymentEntry">वेंडर या सप्लायर को पैसे देने की एंट्री</string>
+    <string name="menu_navGeneralExpenseEntry">खर्चे की एंट्री</string>
+    <string name="menu_navInternalTransferEntry">अपने साथ वाले को पैसे देने की एंट्री</string>
+    <string name="menu_navPaySalary">वेतन  भुगतान  करने की एंट्री</string>
+    <string name="menu_navListVendorPayment">वेंडर या सप्लायर को दिया गए पैसे देंखे </string>
+    <string name="menu_navListExpense">खर्चा देंखे</string>
+	<string name="menu_navListInternalTransfer">साथ वाले को दिए गए पैसे देखें </string>
+    <string name="menu_navListSalaryPaid">वेतन भुगतान देंखे</string>
+    <!--People / Firm-->
+    <string name="menu_navPeopleFirm">ग्राहक / कर्मचारी / सप्लायर</string>
+    <string name="menu_navCustomerVendorEntry">ग्राहक / सप्लायर की एंट्री</string>
+    <string name="menu_navEmployeeEntry">कर्मचारी की एंट्री</string>
+    <string name="menu_navSalaryEntry">कितना वेतन बना उसकी एंट्री</string>
+    <string name="menu_navListCustomerVendor">ग्राहक / सप्लायर की सूची</string>
+    <string name="menu_navListEmployee">कर्मचारी की सूची</string>
+    <string name="menu_navListSalary">बने वेतन की सूची</string>
+    <!--Settings-->
+    <string name="menu_navSettings">एप सेटिंग्स</string>
+    <!--LogOut-->
+    <string name="menu_navLogout">लॉग आउट करें</string>
+	<!-- Action Menu -->
+    <string name="menu_AddNew">नया ऐड करें </string>
+    <string name="menu_ShowList">सूची देखें</string>
+    <!--TextView-->
+    <string name="lbl_workInProgress">कार्य प्रगति पर है</string>
+    <string name="lbl_loading">लोड हो रहा है कृपया प्रतीक्षा करें...</string>
+    <string name="lbl_date">तारीख *</string>
+    <string name="lbl_receivedDate">प्राप्त तारीख *</string>
+    <string name="lbl_paymentDate">भुगतान की तारीख *</string>
+    <string name="lbl_transferDate">ट्रांसफर  की तारीख *</string>
+    <string name="lbl_customer">ग्राहक *</string>
+    <string name="lbl_toPartyName"> पार्टी  का  नाम ( किसको दिए ) *</string>
+    <string name="lbl_toPersonAcc">व्यक्ति / खाता *</string>
+    <string name="lbl_customerVendor">वेंडर / सप्लायर  *</string>
+    <string name="lbl_supplierVendor">ग्राहक *</string>
+    <string name="lbl_name">व्यक्ति का नाम</string>
+    <string name="lbl_firstName">पहला नाम *</string>
+    <string name="lbl_lastName">उपनाम</string>
+    <string name="lbl_employeeName">कर्मचारी का नाम</string>
+    <string name="lbl_amount1">रकम</string>
+    <string name="lbl_description">और जानकारी </string>
+    <string name="lbl_billingAddress">बिल बनाने का पता</string>
+    <string name="lbl_firm">कंपनी (बिज़नेस) का नाम </string>
+    <string name="lbl_transporter">ट्रांसपोर्टर का नाम </string>
+    <string name="lbl_cityVillage">शहर / गाँव *</string>
+    <string name="lbl_mobileNumber">मोबाइल नंबर ( 10 अंको वाला) *</string>
+    <string name="lbl_mobileNumber2">अन्य मोबाइल नंबर</string>
+    <string name="lbl_toPartyMoNo">पार्टी का मोबाइल नंबर ( 10अंको वाला ) </string>
+    <string name="lbl_gstNumber">जीएसटी (GST) नंबर</string>
+    <string name="lbl_toPartyGstNo">पार्टी का जीएसटी (GST) नंबर</string>
+    <string name="lbl_aiNumber">बिल संख्या</string>
+    <string name="lbl_abNumber">बिल संख्या</string>
+    <string name="lbl_cgst">सी (C) जीएसटी</string>
+    <string name="lbl_sgst">एस  (S) जीएसटी</string>
+    <string name="lbl_igst">आई (I) जीएसटी </string>
+    <string name="lbl_amount">रकम *</string>
+    <string name="lbl_totalAmount">कुल राशि (सकल) *</string>
+    <string name="lbl_extraAmount">अतिरिक्त राशि (भाड़ा / हम्माली ) </string>
+    <string name="lbl_orderAmount">ऑर्डर राशि (नेट)</string>
+    <string name="lbl_initialBalance">शुरुवाती रकम</string>
+
+    <string name="lbl_inCalculation">गणना में शामिल करें</string>
+    <string name="lbl_inCAReport">सीए (CA) रिपोर्ट में शामिल करें</string>
+    <string name="lbl_loginRequired">लॉगिन आवश्यक (क्या यह एप चलाएंगे) ?</string>
+    <string name="lbl_paid">क्या भुगतान हो चूका हे ?</string>
+
+    <string name="lbl_category">किस लिए</string>
+    <string name="lbl_notes">और ज्यादा जानकरी</string>
+    <string name="lbl_Details">और ज्यादा जानकरी</string>
+    <string name="lbl_createEmployeeSalaryNote">नोट: यह फॉर्म  वेतन भुगतान के लिए नहीं है, केवल वेतन कितना बना हे उसके लिए हे! </string>
+	
+	<string name="lbl_CityVillageName">सिटी / गांव </string>
+<string name="lbl_AddCityVillage">नया सिटी / गांव बनाये</string>
+<string name="text_Cancel">कैंसल / रद्द</string>
+<string name="text_Submit">सेव</string>
+<string name="text_Success">सक्सेस</string>
+<string name="text_DuplicateWarning">डुप्लीकेट वार्निंग</string>
+<string name="text_ContinueAnyway">कंटिन्यू करें</string>
+<string name="text_Swap">अदल-बदल करें</string>
+<string name="text_BalancedWithUs">बैलेंस</string>
+<string name="text_SendPaymentReminders">पेमेंट का याद दिलाना हे?</string>
+<string name="text_BillingAddress">बिलिंग के लिए पता</string>
+<string name="text_Transports">ट्रांसपोर्टर का नाम:</string>
+<string name="text_Details">और जानकारी</string>
+<string name="text_Type">टाइप  : </string>
+<string name="text_Amount">रकम : </string>
+<string name="text_ForWhat">किसलिए </string>
+<string name="text_OtherParty">दूसरी पार्टी </string>
+<string name="text_Date">तारीख </string>
+<string name="text_CurrentBalance">अभी बैलेंस</string>
+<string name="text_PreviousBalance">पिछला बैलेंस</string>
+<string name="text_Operation">ऑपरेशन</string>
+<string name="text_CompanyBalance">कंपनी/बिज़नेस बैलेंस : </string>
+<string name="text_SalaryToBePaid">सैलरी देना हे : </string>
+<string name="text_LogInEnabled">क्या लॉगिन करेंगे : </string>
+<string name="text_Description">जानकारी : </string>
+<string name="text_IncludeInCAReport">सीऐ (CA)की रिपोर्ट में शामिल करना हे : </string>
+<string name="text_IncludeInCalculation">गणना में शामिल करना हे  : </string>
+<string name="text_ToPartyMobile">टू पार्टी नाम  : </string>
+<string name="text_Cashwithyou">आपके पास पैसे </string>
+<string name="text_TotalCash">टोटल केश </string>
+<string name="text_TotalExpense">टोटल खर्चा </string>
+<string name="text_UnpaidExpense">आने वाला खर्चा</string>
+<string name="text_PaidExpense">खर्चा हुआ</string>
+<string name="text_Assets">टोटल पूंजी (सिल्लक)</string>
+<string name="text_NeedToCollect">लेना हे (ग्राहकों से)</string>
+<string name="text_TotalcashInHand">टोटल कंपनी केश </string>
+<string name="text_Liabilities">टोटल देना हे </string>
+<string name="text_TotalSalaryDue">सैलरी देना हे</string>
+<string name="text_NeedToPay">देना हे (सप्लायरो को )</string>
+<string name="text_YourBusinesshealth">आपके बिज़नेस का स्वास्थ्य ? (Asset - Liabilities)</string>
+<string name="text_From">किस्से : </string>
+<string name="text_To">किसको : </string>
+<string name="text_LOGINHERE">यहाँ पे लॉगइन करें </string>
+<string name="text_NotRegistered">क्या आप किसी बिज़नेस के मालिक हे और अभी तक रजिस्टर नहीं किया ? यहाँ क्लिक करें </string>
+<string name="text_RegisteredMobileNumber">आपका रजिस्टर्ड मोबाइल न:  (10 अंको वाला )</string>
+<string name="text_OTPwillbesent">ओटीपी(OTP)इस नंबर पे भेजा जायेगा और आप बाद में चेंज नहीं कर पाएंगे </string>
+<string name="text_Login">लॉगिन</string>
+<string name="text_OTP">ओटीपी(OTP)</string>
+<string name="text_Resend">फिर से भेंजे - ओ टी पी</string>
+<string name="text_Enter6digitOTP">आपके दिए गए मोबाइल नंबर आया हुआ 6 अंको वाला ओ टी पी (OTP)डालें</string>
+<string name="text_VerifyOTP">ओटीपी(OTP)वेरीफाई करें </string>
+<string name="text_MultipleBusinessAlert">एक से ज्यादा बिज़नेस या कंपनी रजिस्टर अलर्ट</string>
+<string name="text_MoNoExists">दिया गया मोबाइल नंबर पहले से ही इन् बिज़नेसस या कंपनियों  से रजिस्टर हे  : </string>
+<string name="text_RegisterNewBusiness">नयी कंपनी या बिज़नेस रजिस्टर करें </string>
+<string name="text_TermsandConditions">नोट : यहाँ रजिस्टर करने पर, आप हमारे नियमो और शर्तो को स्वीकार करते हैं! </string>
+<string name="text_ReceivedInAccount">इनके अकाउंट में प्राप्त</string>
+<string name="text_ReceivedBy">रिसीव करने वाले  : </string>
+<string name="text_PaidByAccount">इस अकाउंट से दिए गए </string>
+<string name="text_Notes">जानकारी  : </string>
+<string name="text_BillNo">बिल न . : </string>
+<string name="text_RegisterYourBusiness">आपका बिज़नेस या कंपनी रजिस्टर करें </string>
+<string name="text_PleaseEnterFullBusiness">बिज़नेस या कंपनी का पूरा नाम </string>
+<string name="text_State">राज्य</string>
+<string name="text_Register">रजिस्टर</string>
+<string name="text_Salary">सैलरी (तनखा) : </string>
+<string name="text_PaidDate">पेमेंट की तारीख : </string>
+<string name="text_PaidBy">किसने दिए  : </string>
+<string name="text_InvoiceNo">बिल नंबर  : </string>
+<string name="text_AccountUsedForPayment">किस अकाउंट से पेमेंट किया</string>
+<string name="text_DoneBy">देने वाले  : </string>
+<string name="text_CustomerName">ग्राहक का नाम  : </string>
+<string name="text_EmployeeName">कर्मचारी का नाम  : </string>
+<string name="text_Balance"> (बैलेंस : </string>
+<string name="text_AlreadyRegistered">पहले रजिस्टर किया था ? यहाँ से डायरेक्ट लॉगिन करें </string>
+<string name="text_10DigitMobileNumber">10 अंको वाला आपका मोबाइल नंबर</string>
+<string name="text_GetOTP">ओ टी पी (OTP) प्राप्त करें  </string>
+<string name="SettingsLayout.TextView.SystemReset">पूरा हटाए  </string>
+<string name="SettingsLayout.TextView.ChooseLanguage">भाषा चयन करें </string>
+<string name="SettingsLayout.ChooseLanguageLayout.Button.Continue">कंटिन्यू  करें </string>
+<string name="SettingsLayout.ChooseLanguageLayout.Title.MyLanguage">मेरी भाषा</string>
+<string name="SettingsLayout.SystemResetLayout.Title.DeleteReset">मेरे बिज़नेस या कंपनी का डाटा डिलीट करें </string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEverything">सबकुछ डिलीट करें </string>
+<string name="SettingsLayout.SystemResetLayout.Text.Iwanttochoose...">में चयन करूँगा ...</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteSalePurchaseExpenseTransfer">अपने खरीदी, बिक्री, प्राप्त, दिया गया पेमेंट, खर्चे इत्यादि डाटा </string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEmployeeSalaryData">कर्मचारी की तनख्वा</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteCustomerBalance">ग्राहकों का बैलेंस </string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEmployeeCompanyBalance">अपने कर्मचारियों के पास का बिज़नेस या कंपनी का बैलेंस </string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteSalaryBalance">सैलरी (तनख्वा) का बैलेंस </string>
+<string name="SettingsLayout.SystemResetLayout.Validation.SelectAnyOne">कम से कम एक ऑप्शन सेलेक्ट करें </string>
+<string name="SettingsLayout.SystemResetLayout.Button.Confirm">कन्फर्म करें </string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.GoBack">पीछे जाये </string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.ConfirmDelete">डिलीट करें </string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.CheckBox.Agree">में, ये स्वीकार करता हूँ की एक बार डाटा डिलीट होने पर, वापस से रिकवर नहीं हो पायेगा! </string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.CheckBox.AgreeMessage">नियम और शर्तो को स्वीकार करें</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Title.YouHaveSelected">आपने सेलेक्ट किया </string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.ConfirmationMessage">ये डिलीट प्रोसेस को स्टार्ट कर देगा और आप वापस से डाटा को रिकवर नहीं कर पाओगे </string>
+
+<string name="EmployeeEntryLayout.TextView.InitialBalance">शुरवाती कंपनी या बिज़नेस बैलेंस</string>
+
+<string name="SignInActivity.TextView.Alert">अलर्ट</string>
+<string name="SignInActivity.TextView.You_are_not_currently_registered_in_any_company">आप अभी किसी कंपनी में रजिस्टर नहीं हे ! अगर आप किसी कंपनी में काम करते हे तो  तो अपने मालिक (सुपरवाइजर) को रजिस्टर करने के लिए बोले .\n\n अगर आप कंपनी के मालिक हे तो यहाँ  से रजिस्टर करें </string>
+<!-- Validation Message -->
+<string name="message_Logout">लॉगआउट कन्फर्म करें ? </string>
+<string name="message_Continue">कोई बात नहीं, कंटिन्यू करें </string>
+<string name="message_MoNo10digits">मोबाइल नंबर 10 अंको का होना चाहिए </string>
+<string name="message_OTP6digits">ओ टी पी 6 अंको का होना चाहिए </string>
+<string name="message_EnterCityName">सिटी का नाम डालें </string>
+<string name="message_EnterBusinessName">बिज़नेस या कंपनी का नाम डालें</string>
+<string name="message_EnterFirstName">आपका पहला नाम डालें</string>
+<string name="message_EnterLastName">आपका उपनाम (सरनेम) डालें</string>
+<string name="message_EnterStateName">आपका राज्य सेलेक्ट करें </string>
+<string name="message_SelectCityName">सिटी या गांव का नाम सेलेक्ट करें, नहीं मिलने पे बना सकते हे </string>
+<string name="message_SelectDate">तारीख सेलेक्ट करें</string>
+<string name="message_SelectCustomerName">ग्राहक का नाम सेलेक्ट करें </string>
+<string name="message_EnterAmount">रकम डालें</string>
+<string name="message_EnterReceivedInAccount">किस अकाउंट में प्राप्त हुए - डाले </string>
+<string name="message_SelectValidRecord">वैध रिकॉर्ड सेलेक्ट करें </string>
+<string name="message_EnterTotalAmount">टोटल रकम डाले </string>
+<string name="message_EnterToPartyName">टू पार्टी का नाम </string>
+<string name="message_ToPartyName3digit">[टू पार्टी ] का नाम कम से कम 3 अक्षरों का होना चाहिए </string>
+<string name="message_EnterPaidByAccount">किस अकाउंट से पेमेंट हुआ डालें </string>
+<string name="message_Mobilenumber10digit">मोबाइल नंबर 10 अंको का होना चाहिए</string>
+<string name="message_GSTNO15digit">[टू पार्टी ] का GST नंबर 15 अक्षरों का होना चाहिए </string>
+<string name="message_SelectEmployeeAcc">कर्मचारी या अकाउंट सेलेक्ट करें </string>
+<string name="message_SelectPersonAcc">कर्मचारी या अकाउंट सेलेक्ट करें </string>
+<string name="message_SelectCustomerVendor">ग्राहक सेलेक्ट करें </string>
+<string name="message_EnterAccountUsed">पेमेंट के लिए अकाउंट सेलेक्ट करें </string>
+<string name="message_SelectSupplierName">सप्लायर सेलेक्ट करें </string>
+<string name="message_EnterNameorFirm">बिज़नेस नाम या व्यक्ति का नाम डालें </string>
+<string name="message_Name2Digit">नाम कम से कम २ अक्षरों का होना चाहिए </string>
+<string name="message_FirmName2Digit">बिज़नेस का नाम कम से कम २ अक्षरों का होना चाहिए</string>
+<string name="message_InvalidContactNumber">गलत मोबाइल नंबर</string>
+<string name="message_SelectEmployeeName">कर्मचारी का नाम डालें</string>
+<string name="message_TokengettingBlank">गलत या खाली टोकन</string>
+<!-- Title -->
+<string name="title_AccountView">लेने-देन देखें </string>
+<string name="title_SelectContact">कांटेक्ट सेलेक्ट करें </string>
+<string name="title_SelectBusiness">लॉगिन के लिए, बिज़नेस या कंपनी सेलेक्ट करें</string>
+<!-- Sign -->
+<string name="sign_Addition">+</string>
+<string name="sign_Substraction">-</string>
+<string name="sign_Division">/</string>
+<string name="sign_Multiplication">*</string>
+<string name="sign_EqualTo">=</string>
+<string name="sign_Colon">:</string>
+<!--HintText-->
+<string name="hint_typeHere">यहा लिखें</string>
+
+
+
+    <!--Button-->
+    <string name="btn_save">सेव करें</string>
+    <string name="btn_advanced">ज्यादा जानकारी डाले</string>
+    <string name="btn_less">कम जानकारी </string>
+	
+<!-- Response Messages -->
+<string name="ResponseCode200">सक्सेस </string>
+<string name="ResponseCode500">एरर / प्रॉब्लम: इस फंक्शन का कुछ तो सर्वर पर अभी प्रॉब्लम हे, कृपया थोड़ी देर बाद कोशिश करें .</string>
+<string name="ResponseCode400">एरर / प्रॉब्लम:  बेड रिक्वेस्ट </string>
+<string name="ResponseCode409">रिकॉर्ड डुप्लीकेट लग रहा हे, क्या आप फिर भी बनाना चाहते हे ?</string>
+<string name="ServerFailureResponseCode">सर्वर अभी बंद लग रहा हे, हो सकता हे कुछ मेंटेनेंस चल रहा हो . कृपया थोड़ी देर बाद कोशिश करें</string>
+<string name="NoInternetConnection">एरर / प्रॉब्लम: नो इंटरनेट .कृपया आपके फ़ोन पे इंटरनेट चालू हे या नहीं चेक करें   </string>
+<!-- Duplicate एरर / प्रॉब्लम Messages -->
+<string name="SERVER.CREATE_CUSTOMER.DUPLICATE">एरर / प्रॉब्लम: ग्राहक या सप्लायर पहले से उपलब्ध हे . लिस्ट में जेक चेक करें की, आपने सेम [मोबाइल नंबर] या [बिज़नेस के नाम] से एंट्री करी हुए हे ! </string>
+<string name="SERVER.CREATE_EMPLOYEE.DUPLICATE">एरर / प्रॉब्लम: कर्मचारी  पहले से उपलब्ध हे . लिस्ट में जेक चेक करें की,  आपने सेम [मोबाइल नंबर] या [नाम] से एंट्री करी हुए हे ! </string>
+<string name="SERVER.ORGANIZATION.DUPLICATE_ORGANIZATION">एरर / प्रॉब्लम: पहले से हे इस बिज़नेस या कंपनी को रजिस्टर किया हुआ, सीधे लॉगिन करें</string>
+<string name="SERVER.VALIDATEOTP.OTP_INVALID">एरर / प्रॉब्लम: आपने  OTP गलत डाला हे,  फिर से कोशिश करें </string>
+<string name="SERVER.VALIDATEOTP.OTP_EXPIRED">एरर / प्रॉब्लम: आपने जो OTP डाला हे वो सही लेकिन एक्सपायर हो गया हे,  फिर से कोशिश करें</string>
+<string name="SERVER.CREATE_CITY.DUPLICATE">एरर / प्रॉब्लम:गावं या शहर पहले से उपलब्ध हे . सीधे सर्च करें </string>
+<!--  Suspect Duplicate Warning Messages -->
+<string name="SERVER.CREATE_SALE.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : जो सेल/बिक्री आप डाल रहे हो वो पहले से डाली हुई लग रही हे , लिस्ट में जाके चेक करें</string>
+<string name="SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT">डुप्लीकेट की शंका  : जो [सैलरी देय] आप डाल रहे हो वो पहले से डाली हुई लग रही हे, लिस्ट में जाके चेक करें </string>
+<string name="SERVER.CREATE_SALARY_PAYMENT.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : जो [सैलरी पेमेंट] आप डाल रहे हो वो पहले से डाला हुआ लग रहा हे, लिस्ट में जाके चेक करें</string>
+<string name="SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : जो [खर्चा]  आप डाल रहे होवो पहले से डाला हुआ लग रहा हे, लिस्ट में जाके चेक करें </string>
+<string name="SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : जो आप [आंतरीक ट्रांसफर] कर रहे हे वो पहले से डाला हुआ लग रहा हे, लिस्ट में जाके चेक करें </string>
+<string name="SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : ये [पेमेंट रिसीव] की एंट्री पहले से करी हुई लग रही हे, लिस्ट में जाके चेक करें </string>
+<string name="SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : ये [सप्लायर पेमेंट] की एंट्री पहले से करी हुई लग रही हे, लिस्ट में जाके चेक करें </string>
+<string name="SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT">डुप्लीकेट की शंका :  ये [खरीदी] पहले से की हुई लग रही हे, लिस्ट में जाके चेक करें</string>
+<string name="SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT">डुप्लीकेट की शंका : [रिटेल या फुटकर सेल] पहले से डाली हुई लग रही हे , लिस्ट में जाके चेक करें</string>
+
+    <string name="SettingsLayout.ChooseLanguageLayout.Button.Continue">जारी रखें</string>
+    <string name="SettingsLayout.ChooseLanguageLayout.Title.MyLanguage">मेरी भाषा</string>
+	
+</resources>
