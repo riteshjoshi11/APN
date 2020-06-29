@@ -2,6 +2,7 @@ package com.ANP.controller;
 
 
 import com.ANP.bean.City;
+import com.ANP.bean.EmployeeType;
 import com.ANP.bean.ExpenseCategory;
 import com.ANP.repository.UIListDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,11 @@ public class UIListController {
     public ResponseEntity createExpenseCategory(@RequestBody ExpenseCategory obj) {
         UIListDAO.createExpenseCat(obj);
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/getEmployeeType", produces = "application/json")
+    public List<EmployeeType> getEmployee() {
+        return UIListDAO.getEmployeeType();
     }
 
 }

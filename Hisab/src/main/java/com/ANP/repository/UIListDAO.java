@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.City;
+import com.ANP.bean.EmployeeType;
 import com.ANP.bean.ExpenseCategory;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,19 @@ public class UIListDAO {
             ExpenseCategory obj = new ExpenseCategory();
             obj.setName(rs.getString("name"));
             return obj;
+        }
+    }
+
+    public List<EmployeeType> getEmployeeType() {
+        return namedParameterJdbcTemplate.query("select * from employeetype", new EmployeeTypeMapper());
+    }
+
+    private static final class EmployeeTypeMapper implements RowMapper<EmployeeType> {
+        public EmployeeType mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeType employeeType = new EmployeeType();
+            employeeType.setId(rs.getLong("id"));
+            employeeType.setName((rs.getString("name")));
+            return employeeType;
         }
     }
 }
