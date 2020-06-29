@@ -51,7 +51,7 @@ public class EmployeeDAO {
         catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry","SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
-        }
+    }
 
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
         //TODO Joshi: Update loginRequired attribute for employeeID passed
@@ -193,7 +193,8 @@ public class EmployeeDAO {
         }
 
 
-        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance " +
+        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, " +
+                        " (select empt.`name` from employeetype empt where e.type = empt.id) as emptype " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -210,7 +211,7 @@ public class EmployeeDAO {
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
             empbean.setLoginusername(rs.getString("e.loginusername"));
-            empbean.setType(rs.getString("e.type"));
+            empbean.setType(rs.getString("emptype"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
             empbean.setCreateDate(rs.getTimestamp("e.createdate"));
