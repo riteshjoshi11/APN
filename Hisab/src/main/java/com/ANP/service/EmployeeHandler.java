@@ -22,8 +22,13 @@ public class EmployeeHandler {
 
         System.out.println("Start CreateEmployee");
 
-       if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
+/*       if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
             employeeBean.setType(employeeBean.getType());
+       }
+ */
+       if(employeeBean.getTypeInt()==0)
+       {
+           employeeBean.setTypeInt(7);
        }
         employeeDAO.createEmployee(employeeBean);
 

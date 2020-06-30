@@ -35,16 +35,16 @@ public class OrganizationHandler {
 
       //Create Default Employee
       EmployeeBean employeeBean = organizationRegistrationBean.getEmployeeBean();
-      employeeBean.setType(ANPConstants.EMPLOYEE_TYPE_SUPER_ADMIN);
+      employeeBean.setTypeInt(1);
       employeeBean.setOrgId(orgKey);
       employeeHandler.createEmployee(employeeBean);
-
+      orgDAO.createOrganizationDetails(orgKey);
       //Create a virtual employee for tracking company account.
       EmployeeBean employeeBeanVirtual = new EmployeeBean();
       employeeBeanVirtual.setFirst("COMPANY");
       employeeBeanVirtual.setLast("ACCOUNT");
       employeeBeanVirtual.setMobile("0000000000");
-      employeeBeanVirtual.setType(ANPConstants.EMPLOYEE_TYPE_VIRTUAL);
+      employeeBeanVirtual.setTypeInt(6);
       employeeBeanVirtual.setOrgId(orgKey);
       employeeHandler.createEmployee(employeeBeanVirtual);
 

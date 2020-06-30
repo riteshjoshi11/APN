@@ -44,6 +44,7 @@ CREATE TABLE `orgdetails` (
   `camobile` varchar(15) DEFAULT NULL,
   `orgid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `orgid_UNIQUE` (`orgid`),
   KEY `orgdetails_ibfk_1_idx` (`orgid`),
   KEY `orgdetails_ibfk_2_idx` (`numberofemployees`),
   KEY `orgdetails_ibfk_3_idx` (`businessnature`),

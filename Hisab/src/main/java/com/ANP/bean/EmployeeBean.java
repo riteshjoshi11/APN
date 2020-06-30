@@ -20,12 +20,21 @@ public class EmployeeBean extends CommonAttribute {
     private String mobile;
     private String loginusername;
     private String type;
+    private int typeInt;
     private double currentsalarybalance;
     private double lastsalarybalance;
     private float initialSalaryBalance;
     private float currentAccountBalance;
     private boolean loginrequired;
     private long accountId;
+
+    public int getTypeInt() {
+        return typeInt;
+    }
+
+    public void setTypeInt(int typeInt) {
+        this.typeInt = typeInt;
+    }
 
     public long getAccountId() {
         return accountId;

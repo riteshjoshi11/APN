@@ -46,7 +46,7 @@ public class EmployeeDAO {
             return  namedParameterJdbcTemplate.update(
                     "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
                             ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
-                            ",:currentsalarybalance,:lastsalarybalance,:orgId, :type)", new BeanPropertySqlParameterSource(employeeBean));
+                            ",:currentsalarybalance,:lastsalarybalance,:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
         }
         catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry","SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
@@ -253,7 +253,7 @@ public class EmployeeDAO {
             employeeSalary.getEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalary.getEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalary.getEmployeeBean().setMobile(rs.getString("e.mobile"));
-            employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
+    //      employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
             employeeSalary.setAmount(rs.getFloat("empsal.amount"));
             employeeSalary.setDetails(rs.getString("empsal.details"));
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
@@ -300,7 +300,7 @@ public class EmployeeDAO {
             employeeSalaryPayment.getToEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
-            employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
+    //      employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
             employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));

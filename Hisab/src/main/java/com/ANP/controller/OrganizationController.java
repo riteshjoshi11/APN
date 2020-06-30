@@ -1,5 +1,6 @@
 package com.ANP.controller;
 
+import com.ANP.bean.OrgDetails;
 import com.ANP.bean.OrganizationRegistrationBean;
 import com.ANP.service.OrganizationHandler;
 
@@ -24,5 +25,11 @@ public class OrganizationController {
         System.out.println("Controller:[" + organizationRegistrationBean.getOrgBean().getOrgName() + "]");
         orghandler.createOrganization(organizationRegistrationBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/updateOrganizationDetails", produces = "application/json" )
+    public ResponseEntity updateOrganizationDetails(@RequestBody OrgDetails orgDetails) {
+        orgdao.updateOrganizationDetails(orgDetails);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 }
