@@ -5,6 +5,8 @@ import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,9 +15,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 @Repository
 public class ExpenseDAO {
@@ -160,4 +164,82 @@ public class ExpenseDAO {
             throw new CustomAppException("The created expense looks like duplicate", "SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
+
+    public List<Expense> pdfListExpensePaged(long orgId, Collection<SearchParam> searchParams,
+                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+        if (startIndex == 0) {
+            startIndex = 1;
+        }
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgID", orgId);
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
+
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
+            orderBy = "id desc";
+        }
+
+        List<Expense> expenseList = namedParameterJdbcTemplate.query(
+                "select exp.* from generalexpense exp  where exp.orgid=:orgID " +
+                        "and exp.includeinreport = true and (exp.isdeleted is null or exp.isdeleted <> true) " +
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
+                        + " offset :startIndex",
+                param, new PDFExpenseMapper());
+
+
+        com.itextpdf.text.List list ;
+        try {
+
+            String file1 = "f:/";
+            Document document = new Document( PageSize.A4, 20, 20, 20, 20 );
+            Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+            PdfWriter.getInstance(document, new FileOutputStream(file1+ "expense"+(new Date().getTime()/1000)+".pdf"));
+            // PdfWriter.getInstance(document, new FileOutputStream(file1 +  "purchase" + dateFormat.format(new Date()) + ".pdf" ));
+            int index = 0;
+            document.open();
+            for(Object listIterator : expenseList) {
+                list = new com.itextpdf.text.List(false );
+                list.setListSymbol("");
+                list.add(new ListItem("Name :  "));
+                list.add(new ListItem("Date:  " + expenseList.get(index).getDate().toString()));
+                list.add(new ListItem("Total Amount:  "+expenseList.get(index).getTotalAmount()));
+                list.add(new ListItem("Extra:  "+expenseList.get(index).getExtra()));
+                list.add(new ListItem("IGST:  "+expenseList.get(index).getIGST()));
+                list.add(new ListItem("CGST:  "+expenseList.get(index).getCGST()));
+                list.add(new ListItem("SGST:  "+expenseList.get(index).getSGST()));
+                document.add(list);
+                document.add(new Paragraph("\n"));
+                index++;
+            }
+            document.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return expenseList;
+    }
+
+        private static final class PDFExpenseMapper implements RowMapper<Expense> {
+            public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Expense obj = new Expense();
+                obj.setExpenseId(rs.getInt("exp.id"));
+                obj.setCategory(rs.getString("exp.category"));
+                obj.setTotalAmount(rs.getFloat("exp.totalamount"));
+                obj.setOrgId(rs.getLong("exp.orgid"));
+                obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
+                obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
+                obj.setCreatedbyId(rs.getString("exp.createdbyid"));
+                obj.setOrderAmount(rs.getDouble("exp.orderamount"));
+                obj.setCGST(rs.getDouble("exp.cgst"));
+                obj.setSGST(rs.getDouble("exp.sgst"));
+                obj.setIGST(rs.getDouble("exp.igst"));
+                obj.setExtra(rs.getDouble("exp.extra"));
+                obj.setToPartyName(rs.getString("exp.topartyname"));
+                obj.setDate(rs.getTimestamp("exp.date"));
+                obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
+                obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
+                obj.setPaid(rs.getBoolean("exp.paid"));
+                obj.setCreateDate(rs.getTimestamp("exp.createdate"));
+                return obj;
+            }
+        }
 }
