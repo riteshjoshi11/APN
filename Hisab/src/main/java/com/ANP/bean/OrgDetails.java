@@ -11,11 +11,39 @@ public class OrgDetails {
     private String numberOfEmployees;
     private String extraDetails;
     private String accountDetails;
-    private String billinAddress;
+    private String billingAddress;
     private String cAName;
     private String cAEmail;
     private String cAMobile;
     private long orgId;
+
+    private int companyTypeInt;
+    private int businessNatureInt;
+    private int numberOfEmployeesInt;
+
+    public int getCompanyTypeInt() {
+        return companyTypeInt;
+    }
+
+    public void setCompanyTypeInt(int companyTypeInt) {
+        this.companyTypeInt = companyTypeInt;
+    }
+
+    public int getBusinessNatureInt() {
+        return businessNatureInt;
+    }
+
+    public void setBusinessNatureInt(int businessNatureInt) {
+        this.businessNatureInt = businessNatureInt;
+    }
+
+    public int getNumberOfEmployeesInt() {
+        return numberOfEmployeesInt;
+    }
+
+    public void setNumberOfEmployeesInt(int numberOfEmployeesInt) {
+        this.numberOfEmployeesInt = numberOfEmployeesInt;
+    }
 
     public String getMobile1() {
         return mobile1;
@@ -97,12 +125,12 @@ public class OrgDetails {
         this.accountDetails = accountDetails;
     }
 
-    public String getBillinAddress() {
-        return billinAddress;
+    public String getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setBillinAddress(String billinAddress) {
-        this.billinAddress = billinAddress;
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
     public String getcAName() {

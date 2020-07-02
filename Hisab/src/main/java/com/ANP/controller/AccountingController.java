@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/accounting")
@@ -20,6 +21,7 @@ public class AccountingController {
 
     @Autowired
     ExpenseDAO expenseDao;
+
 
     @Autowired
     AccountDAO accountDAO;
@@ -124,6 +126,30 @@ public class AccountingController {
 
     }
 
+    @PostMapping(path = "/pdfListPurchasesPaged", produces = "application/json")
+    public List<PurchaseFromVendorBean> pdfPurchasesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
+
+        return purchaseFromVendorDAO.pdfListPurchasesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+
+    }
+
+    @PostMapping(path = "/pdfListExpensePaged", produces = "application/json")
+    public List<Expense> pdfListExpensePaged(@Valid @RequestBody ListParametersBean listParametersBean) {
+
+        return expenseDao.pdfListExpensePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+
+    }
+
+    @PostMapping(path = "/pdfListSalesPaged", produces = "application/json")
+    public List<CustomerInvoiceBean> pdfListSalesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
+
+        return customerInvoiceDAO.pdfListSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+
+    }
+
     @PostMapping(path = "/listExpensesPaged", produces = "application/json")
     public List<Expense> listExpensesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
 
@@ -159,6 +185,7 @@ public class AccountingController {
     public List<PaymentReceivedBean> listPaymentReceivedPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return paymentReceivedDAO.listPaymentReceivedPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+
     }
 
     @PostMapping(path = "/listCustomerAuditPaged", produces = "application/json")

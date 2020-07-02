@@ -95,36 +95,25 @@ public class OrgDAO {
     public int updateOrganizationDetails(OrgDetails orgDetails)
     {
         Map<String,Object> param = new HashMap<>();
-       // Map param = new HashMap<String, Object>();
-        param.put("mobile1",orgDetails.getMobile1());
-        param.put("email",orgDetails.getEmail());
-        param.put("mobile2",orgDetails.getMobile2());
-        param.put("gstNumber",orgDetails.getGstNumber());
-        param.put("panNumber",orgDetails.getPanNumber());
-        param.put("companyType",orgDetails.getCompanyType());
-        param.put("businessNature",orgDetails.getBusinessNature());
-        param.put("numberofemployees",orgDetails.getNumberOfEmployees());
-        param.put("extraDetails",orgDetails.getExtraDetails());
-        param.put("accountDetails",orgDetails.getAccountDetails());
-        param.put("billingAddress",orgDetails.getBillinAddress());
-        param.put("cAName",orgDetails.getcAName());
-        param.put("cAMobile",orgDetails.getcAMobile());
-        param.put("cAEmail",orgDetails.getcAEmail());
-        param.put("orgId",orgDetails.getOrgId());
+
         return namedParameterJdbcTemplate.update("update orgdetails set mobile1 = :mobile1," +
                 "email=:email, mobile2=:mobile2, gstnumber = :gstNumber, pannumber = :panNumber," +
-                "companytype = :companyType, businessnature= :businessNature, numberofemployees = :numberofemployees," +
+                "companytype = :companyTypeInt, businessnature= :businessNatureInt, numberofemployees = :numberOfEmployeesInt," +
                 "extradetails = :extraDetails, accountdetails=:accountDetails, billingaddress=:billingAddress," +
-                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile where orgid = :orgId",param);
+                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile where orgid = :orgId",new BeanPropertySqlParameterSource(orgDetails));
     }
 
-    public List<OrgDetails> getOrgDetails(OrgDetails orgDetails){
+    public OrgDetails getOrgDetails(long orgId){
 
         Map<String,Object> param = new HashMap<>();
-        param.put("orgId",orgDetails.getOrgId());
-        return namedParameterJdbcTemplate.query("select * " +
-                        " from orgdetails where orgid=:orgID ", param, new OrgDetailsMapper()) ;
-
+        param.put("orgId",orgId);
+        List <OrgDetails> orgDetailsList = namedParameterJdbcTemplate.query("select orgdet.*, " +
+                " (select bus.`name` from businessnature bus where orgdet.businessnature = bus.id) as busnature," +
+                " (select noemp.`range` from noofemployee noemp where orgdet.numberofemployees = noemp.id) as noemployee," +
+                " (select com.`name` from companytype com where orgdet.companytype = com.id) as comptype" +
+                        " from orgdetails orgdet where orgid=:orgId ", param, new OrgDetailsMapper()) ;
+        System.out.println(orgDetailsList.size());
+        return orgDetailsList.get(0);
     }
 
     private static final class OrgDetailsMapper implements RowMapper<OrgDetails> {
@@ -133,15 +122,15 @@ public class OrgDAO {
             orgDetails.setMobile1(rs.getString("mobile1"));
             orgDetails.setEmail(rs.getString("email"));
             orgDetails.setAccountDetails(rs.getString("accountdetails"));
-            orgDetails.setBillinAddress(rs.getString("billingaddress"));
-            orgDetails.setBusinessNature(rs.getString("businessnature"));
+            orgDetails.setBillingAddress(rs.getString("billingaddress"));
+          orgDetails.setBusinessNature(rs.getString("busnature"));
             orgDetails.setcAEmail(rs.getString("caemail"));
             orgDetails.setcAMobile(rs.getString("camobile"));
             orgDetails.setcAName(rs.getString("caname"));
-            orgDetails.setCompanyType(rs.getString("companytype"));
+          orgDetails.setCompanyType(rs.getString("comptype"));
             orgDetails.setExtraDetails(rs.getString("extradetails"));
             orgDetails.setGstNumber(rs.getString("gstnumber"));
-            orgDetails.setNumberOfEmployees(rs.getString("numberofemployees"));
+          orgDetails.setNumberOfEmployees(rs.getString("noemployee"));
             orgDetails.setMobile2(rs.getString("mobile2"));
             orgDetails.setOrgId(rs.getLong("orgid"));
             orgDetails.setPanNumber(rs.getString("pannumber"));
