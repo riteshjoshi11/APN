@@ -209,6 +209,12 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setFromAccountId(rs.getLong("p.fromaccountid"));
             return purchaseFromVendorBean;
         }
-
     }
+
+    public int updatePurchaseGST(PurchaseFromVendorBean purchaseFromVendorBean){
+        return namedParameterJdbcTemplate.update("update purchasefromvendor set cgst = :CGST," +
+                "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(purchaseFromVendorBean));
+    }
+
+
 }

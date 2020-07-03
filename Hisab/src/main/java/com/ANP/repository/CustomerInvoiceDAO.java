@@ -1,8 +1,6 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerInvoiceBean;
-import com.ANP.bean.PurchaseFromVendorBean;
-import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
@@ -183,5 +181,10 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setCreatedbyId(rs.getString("cusinv.createdbyid"));
             return customerInvoiceBean;
         }
+    }
+
+    public int updateSalesGST(CustomerInvoiceBean customerInvoiceBean){
+        return namedParameterJdbcTemplate.update("update customerinvoice set cgst = :CGST," +
+                                "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(customerInvoiceBean));
     }
 }

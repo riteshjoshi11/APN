@@ -94,8 +94,6 @@ public class OrgDAO {
 
     public int updateOrganizationDetails(OrgDetails orgDetails)
     {
-        Map<String,Object> param = new HashMap<>();
-
         return namedParameterJdbcTemplate.update("update orgdetails set mobile1 = :mobile1," +
                 "email=:email, mobile2=:mobile2, gstnumber = :gstNumber, pannumber = :panNumber," +
                 "companytype = :companyTypeInt, businessnature= :businessNatureInt, numberofemployees = :numberOfEmployeesInt," +

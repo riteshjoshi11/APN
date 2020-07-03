@@ -242,4 +242,8 @@ public class ExpenseDAO {
                 return obj;
             }
         }
+    public int updateExpenseGST(Expense expense){
+        return namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
+                "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(expense));
+    }
 }
