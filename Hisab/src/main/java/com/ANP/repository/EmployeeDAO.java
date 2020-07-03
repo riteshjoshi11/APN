@@ -170,8 +170,6 @@ public class EmployeeDAO {
             empbean.setFirst(rs.getString("first"));
             empbean.setLast(rs.getString("last"));
             empbean.setEmployeeId(rs.getString("id"));
-//         empbean.setAccountId(rs.getLong("account.id"));
-//         empbean.setOrgId(rs.getLong("orgid"));
             return empbean;
         }
     }

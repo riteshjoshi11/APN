@@ -28,7 +28,7 @@ public class EmployeeHandler {
  */
        if(employeeBean.getTypeInt()==0)
        {
-           employeeBean.setTypeInt(7);
+           employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
        }
         employeeDAO.createEmployee(employeeBean);
 

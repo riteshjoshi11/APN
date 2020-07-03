@@ -1,8 +1,10 @@
 package com.ANP.util;
 
 public interface ANPConstants {
-      public static final String EMPLOYEE_TYPE_SUPER_ADMIN="SUPER_ADMIN";
-      public static final String EMPLOYEE_TYPE_VIRTUAL="VIRTUAL";
+      public static final int EMPLOYEE_TYPE_SUPER_ADMIN=1;
+      public static final int EMPLOYEE_TYPE_VIRTUAL=6;
+      public static final int EMPLOYEE_TYPE_DEFAULT=7;
+
 
       public static final String LOGIN_TYPE_EMPLOYEE="EMPLOYEE";
       public static final String LOGIN_TYPE_CUSTOMER="CUSTOMER";
@@ -25,10 +27,9 @@ public interface ANPConstants {
       public  static final String EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD="Customer";
       public  static final String EMPLOYEE_AUDIT_FORWHAT_INTERNAL="Internal";
 
-
-
       public  static final String OPERATION_TYPE_ADD="ADD" ;
       public  static final String OPERATION_TYPE_SUBTRACT="SUBTRACT";
+
 
 
 }
