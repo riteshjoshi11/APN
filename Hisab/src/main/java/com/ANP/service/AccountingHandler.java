@@ -3,9 +3,14 @@ package com.ANP.service;
 import com.ANP.bean.*;
 import com.ANP.repository.*;
 import com.ANP.util.ANPConstants;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountingHandler {
@@ -281,4 +286,118 @@ public class AccountingHandler {
             expenseDAO.updateExpenseStatus(expense.getExpenseId(),true);
         return true;
     }
+
+
+    /*
+     * Delete a invoice for a customer (Sale Entry)
+     * Only Affects the customer balance
+     * It will reverse the sale
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteCustomerInvoice(long orgId, long invoiceId) {
+
+        List<CustomerInvoiceBean> invoiceBeans = customerInvoiceDAO.listSalesPaged(orgId,getSearchParamsListForDelete("cusinv.id",invoiceId),null,1,0);
+
+        if(invoiceBeans==null || invoiceBeans.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_INVOICE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        CustomerInvoiceBean customerInvoiceBean = invoiceBeans.get(0);
+
+        if(customerInvoiceBean.isIncludeInCalc()) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(customerInvoiceBean.getOrgId());
+            customerAuditBean.setCustomerid(customerInvoiceBean.getToCustomerId());
+            customerAuditBean.setAccountid(customerInvoiceBean.getToAccountId());
+            customerAuditBean.setAmount(customerInvoiceBean.getTotalAmount());
+            customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_SALE);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            customerAuditBean.setTransactionDate(customerInvoiceBean.getDate());
+            customerAuditBean.setOtherPartyName("-");
+            accountDAO.updateCustomerAccountBalance(customerAuditBean);
+        }
+        return true;
+    }
+
+    /*
+     * Delete a Bill Received, Purchase Entry
+     * Only affects the vendor/customer balance
+     * It will reverse the Purchase
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteVendorPurchase(long orgId, long billId) {
+
+        List<PurchaseFromVendorBean> purchaseBeans = purchaseFromVendorDAO.listPurchasesPaged(orgId,getSearchParamsListForDelete("p.id",billId),null,1,0);
+        if(purchaseBeans==null || purchaseBeans.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_PURCHASE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+        PurchaseFromVendorBean purchaseFromVendorBean = purchaseBeans.get(0);
+        if(purchaseFromVendorBean.isIncludeInCalc()) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(purchaseFromVendorBean.getOrgId());
+            customerAuditBean.setCustomerid(purchaseFromVendorBean.getFromCustomerId());
+            customerAuditBean.setAccountid(purchaseFromVendorBean.getFromAccountId());
+            customerAuditBean.setAmount(purchaseFromVendorBean.getTotalAmount());
+            customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_PURCHASE);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT); //opposite to purchase
+            customerAuditBean.setTransactionDate(purchaseFromVendorBean.getDate());
+            customerAuditBean.setOtherPartyName("-");
+            accountDAO.updateCustomerAccountBalance(customerAuditBean);
+        }
+        return true;
+    }
+
+    /*
+     *   Logic
+     *   Payment Received 1. FromAccount (Customer who is paying)  is ADDED 2. ToAccount(Employee who received payment) is ADDED
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deletePaymentReceived(long orgId, long paymentRcvdId) {
+        List<PaymentReceivedBean> paymentReceivedBeans = paymentReceivedDAO.listPaymentReceivedPaged(orgId,getSearchParamsListForDelete("prcvd.id",paymentRcvdId),null,1,0);
+        if(paymentReceivedBeans==null || paymentReceivedBeans.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_PAYMENT_RECEIVED.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+        PaymentReceivedBean paymentReceivedBean = paymentReceivedBeans.get(0);
+
+        if(paymentReceivedBean.isIncludeInCalc()) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(paymentReceivedBean.getOrgId());
+            customerAuditBean.setCustomerid(paymentReceivedBean.getFromCustomerID());
+            customerAuditBean.setAccountid(paymentReceivedBean.getFromAccountID());
+            customerAuditBean.setAmount(paymentReceivedBean.getAmount());
+            customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_PAYMENTRCVDFROMVENDOR);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
+            accountDAO.updateCustomerAccountBalance(customerAuditBean);
+
+
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setOrgId(paymentReceivedBean.getOrgId());
+            employeeAuditBean.setEmployeeid(paymentReceivedBean.getToEmployeeID());
+            employeeAuditBean.setAccountid(paymentReceivedBean.getToAccountID());
+            employeeAuditBean.setAmount(paymentReceivedBean.getAmount());
+            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
+            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
+            accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+        }
+        return true;
+    }
+
+
+    private List<SearchParam> getSearchParamsListForDelete(String fieldName, long value) {
+        SearchParam searchParam = new SearchParam();
+        searchParam.setFieldType("int");
+        searchParam.setFieldName(fieldName);
+        searchParam.setCondition("AND");
+        searchParam.setSoperator("=");
+        searchParam.setValue(""+value);
+        List searchParams = new ArrayList<SearchParam>();
+        searchParams.add(searchParam);
+        return searchParams;
+    }
+
 }

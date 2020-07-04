@@ -50,8 +50,9 @@ public class CustomerInvoiceDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
+
         if (ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "cusinv.id desc";
         }
 
         return namedParameterJdbcTemplate.query(
@@ -67,6 +68,7 @@ public class CustomerInvoiceDAO {
     private static final class SalesPagedMapper implements RowMapper<CustomerInvoiceBean> {
         public CustomerInvoiceBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
+
             customerInvoiceBean.getCustomerBean().setName(rs.getString("c.name"));
             customerInvoiceBean.getCustomerBean().setCity(rs.getString("c.city"));
             customerInvoiceBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));
@@ -74,6 +76,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.getCustomerBean().setMobile1(rs.getString("c.mobile1"));
             customerInvoiceBean.getCustomerBean().setState(rs.getString("c.state"));
 //          customerInvoiceBean.getCustomerBean().setMobile2(rs.getString("c.mobile2"));
+            customerInvoiceBean.setInvoiceID(rs.getLong("cusinv.id"));
             customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
             customerInvoiceBean.setCGST(rs.getDouble("cusinv.cgst"));
             customerInvoiceBean.setIGST(rs.getFloat("cusinv.igst"));
@@ -82,6 +85,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setInvoiceNo(rs.getString("cusinv.invoiceno"));
             customerInvoiceBean.setOrgId(rs.getLong("cusinv.orgid"));
             customerInvoiceBean.setToAccountId(rs.getLong("cusinv.toaccountid"));
+            customerInvoiceBean.setToCustomerId(rs.getString("cusinv.tocustomerid"));
             customerInvoiceBean.setIncludeInCalc(rs.getBoolean("cusinv.includeincalc"));
             customerInvoiceBean.setIncludeInReport(rs.getBoolean("cusinv.includeinreport"));
             customerInvoiceBean.setDate(rs.getTimestamp("cusinv.date"));

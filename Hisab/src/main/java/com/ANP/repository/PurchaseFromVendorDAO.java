@@ -73,7 +73,7 @@ public class PurchaseFromVendorDAO {
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
-                        "p.id, p.date,p.CGST,p.orderamount,p.SGST," +
+                        "p.id, p.fromaccountid, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno,p.createdate,p.createdbyid " +
                         " from customer,purchasefromvendor p where p.orgid=:orgId and customer.id=p.fromcustomerid and " +
@@ -95,6 +95,8 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.getCustomerBean().setFirmname(rs.getString("customer.firmname"));
             purchaseFromVendorBean.getCustomerBean().setOrgId(rs.getLong("customer.orgid"));
             purchaseFromVendorBean.getCustomerBean().setState(rs.getString("customer.state"));
+
+            purchaseFromVendorBean.setOrgId(rs.getLong("customer.orgid"));
             purchaseFromVendorBean.setPurchaseID(rs.getLong("p.id"));
             purchaseFromVendorBean.setDate(rs.getTimestamp("p.date"));
             purchaseFromVendorBean.setCGST(rs.getFloat("p.CGST"));
@@ -108,6 +110,8 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setBillNo(rs.getString("p.billno"));
             purchaseFromVendorBean.setCreateDate(rs.getTimestamp("p.createdate"));
             purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
+            purchaseFromVendorBean.setFromAccountId(rs.getLong("p.fromaccountid"));
+            purchaseFromVendorBean.setFromCustomerId(rs.getString("customer.id"));
             return purchaseFromVendorBean;
         }
     }

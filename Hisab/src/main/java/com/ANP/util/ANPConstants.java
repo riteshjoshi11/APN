@@ -30,6 +30,16 @@ public interface ANPConstants {
       public  static final String OPERATION_TYPE_ADD="ADD" ;
       public  static final String OPERATION_TYPE_SUBTRACT="SUBTRACT";
 
+      public  static final String CUSTOMER_AUDIT_TYPE_DELETE_SALE="DeleteSale";
+      public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PURCHASE="DeletePurchase";
+
+
+      public  static final String EMPLOYEE_AUDIT_TYPE_DELETE_PAY="DELETE_Pay";
+      public  static final String EMPLOYEE_AUDIT_TYPE_DELETE_RCVD="DELETE_Receive";
+
+      public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PAYMENTRCVDFROMVENDOR="DeletePaymentReceivedFromVendor";
+
+
 
 
 }
