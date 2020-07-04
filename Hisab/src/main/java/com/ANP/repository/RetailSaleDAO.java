@@ -52,7 +52,7 @@ public class RetailSaleDAO {
         }
 
         return namedParameterJdbcTemplate.query(
-                "select e.mobile,e.first,e.last, retail.amount, retail.orgid," +
+                "select e.mobile,e.first,e.last, retail.id, retail.amount, retail.orgid," +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc,retail.createdate, retail.createdbyid " +
                        " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
                         " and (retail.isdeleted is null or retail.isdeleted <> true) " +
@@ -67,6 +67,7 @@ public class RetailSaleDAO {
         public RetailSale mapRow (ResultSet rs, int rowNum) throws SQLException
         {
             RetailSale ret = new RetailSale();
+            ret.setRetailSaleId(rs.getLong("retail.id"));
             ret.setAmount(rs.getLong("retail.amount"));
             ret.setDate(rs.getTimestamp("retail.date"));
             ret.setIncludeincalc(rs.getBoolean("retail.includeincalc"));

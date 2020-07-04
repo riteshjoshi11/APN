@@ -3,6 +3,7 @@ package com.ANP.bean;
 import java.util.Date;
 
 public class RetailSale extends CommonAttribute {
+    private long retailSaleId;
     private String notes;
     private double amount;
     private String fromemployeeid;
@@ -11,6 +12,13 @@ public class RetailSale extends CommonAttribute {
     private boolean includeincalc = true;
     private EmployeeBean fromEmployee;
 
+    public long getRetailSaleId() {
+        return retailSaleId;
+    }
+
+    public void setRetailSaleId(long retailSaleId) {
+        this.retailSaleId = retailSaleId;
+    }
 
     public RetailSale()
     {

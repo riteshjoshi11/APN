@@ -3,6 +3,7 @@ package com.ANP.bean;
 import java.util.Date;
 
 public class CustomerAuditBean extends CommonAttribute {
+    private long auditId;
     private String customerid;
     private long accountid;
     private String type;
@@ -13,6 +14,14 @@ public class CustomerAuditBean extends CommonAttribute {
     private String otherPartyName;
     private CustomerBean customerBean;
     private Date transactionDate;
+
+    public long getAuditId() {
+        return auditId;
+    }
+
+    public void setAuditId(long auditId) {
+        this.auditId = auditId;
+    }
 
     public Date getTransactionDate() {
         return transactionDate;

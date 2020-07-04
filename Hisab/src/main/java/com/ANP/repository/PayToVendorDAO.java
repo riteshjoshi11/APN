@@ -48,7 +48,7 @@ public class PayToVendorDAO {
             orderBy = "paytov.id desc";
         }
         return namedParameterJdbcTemplate.query(
-                "select paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
+                "select paytov.id, paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
                      " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
                      " paytov.createdate,paytov.createdbyid,c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
                      " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
@@ -61,6 +61,7 @@ public class PayToVendorDAO {
     private static final class PayToVendorMapper implements RowMapper<PayToVendorBean> {
         public PayToVendorBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             PayToVendorBean payToVendorBean = new PayToVendorBean();
+            payToVendorBean.setPayToVendorID(rs.getLong("paytov.id"));
             payToVendorBean.getCustomerBean().setName(rs.getString("c.name"));
             payToVendorBean.getCustomerBean().setCity(rs.getString("c.city"));
             payToVendorBean.getCustomerBean().setFirmname(rs.getString("c.firmname"));

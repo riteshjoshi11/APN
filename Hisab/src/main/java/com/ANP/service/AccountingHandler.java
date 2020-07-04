@@ -59,7 +59,7 @@ public class AccountingHandler {
             customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_SALE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
             customerAuditBean.setTransactionDate(customerInvoiceBean.getDate());
-            customerAuditBean.setOtherPartyName("-");
+            customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
         return true;
@@ -82,7 +82,7 @@ public class AccountingHandler {
             customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_PURCHASE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             customerAuditBean.setTransactionDate(purchaseFromVendorBean.getDate());
-            customerAuditBean.setOtherPartyName("-");
+            customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
         return true;
@@ -222,7 +222,7 @@ public class AccountingHandler {
             employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
-            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(retailSale.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         }
@@ -237,12 +237,14 @@ public class AccountingHandler {
     @Transactional(rollbackFor = Exception.class)
     public boolean createExpense(Expense expense) {
         expenseDAO.createExpense(expense);
-        if(expense.isPaid()) {
-            calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
+        if(expense.isIncludeInCalc()) {
 
             //From Employee Balance is only subtracted (Debited) when Paid Expense is created
             //accountDAO.updateAccountBalance(expense.getFromAccountID(), expense.getTotalAmount(), "SUBTRACT");
-            if (expense.isIncludeInCalc()) {
+            if (expense.isPaid()) {
+                //do it only when expense type is [paid]
+                calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
+                //Update Employee Balance only when type is [Paid]
                 EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
                 employeeAuditBean.setOrgId(expense.getOrgId());
                 employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
@@ -255,6 +257,7 @@ public class AccountingHandler {
                 employeeAuditBean.setTransactionDate(expense.getDate());
                 accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
             } else {
+                //do it only when expense type is unpaid
                 calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "ADD");
             }
         }
@@ -313,7 +316,7 @@ public class AccountingHandler {
             customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_SALE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             customerAuditBean.setTransactionDate(customerInvoiceBean.getDate());
-            customerAuditBean.setOtherPartyName("-");
+            customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
         return true;
@@ -341,7 +344,7 @@ public class AccountingHandler {
             customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_PURCHASE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT); //opposite to purchase
             customerAuditBean.setTransactionDate(purchaseFromVendorBean.getDate());
-            customerAuditBean.setOtherPartyName("-");
+            customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
         return true;
@@ -357,6 +360,7 @@ public class AccountingHandler {
         if(paymentReceivedBeans==null || paymentReceivedBeans.isEmpty()) {
             throw new CustomAppException("ID NOT VALID","SERVER.DELETE_PAYMENT_RECEIVED.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
         }
+
         PaymentReceivedBean paymentReceivedBean = paymentReceivedBeans.get(0);
 
         if(paymentReceivedBean.isIncludeInCalc()) {
@@ -367,10 +371,9 @@ public class AccountingHandler {
             customerAuditBean.setAmount(paymentReceivedBean.getAmount());
             customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_PAYMENTRCVDFROMVENDOR);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setOtherPartyName(""); //This will be opposite party
             customerAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
-
 
             EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
             employeeAuditBean.setOrgId(paymentReceivedBean.getOrgId());
@@ -380,9 +383,163 @@ public class AccountingHandler {
             employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
             employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
-            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+        }
+        return true;
+    }
+
+    /*
+     *   Logic:
+     *   Payment To Vendor: 1. TOAccount (To Whom payment is made)  is SUBTRACTED 2. FromAccount(Employee who made payment) is SUBTRACTED
+     *  Affect Customer + Employee both
+     *
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deletePayToVendor(long orgId, long paymentID) {
+
+        List<PayToVendorBean> payToVendorBeans = payToVendorDAO.listPayToVendorPaged(orgId,getSearchParamsListForDelete("paytov.id",paymentID),null,1,0);
+        if(payToVendorBeans==null || payToVendorBeans.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_PAY_TO_VENDOR.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+        PayToVendorBean payToVendorBean = payToVendorBeans.get(0);
+
+        //Update Customer Balance and Audit
+        if(payToVendorBean.isIncludeInCalc()) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(payToVendorBean.getOrgId());
+            customerAuditBean.setCustomerid(payToVendorBean.getToCustomerID());
+            customerAuditBean.setAccountid(payToVendorBean.getToAccountID());
+            customerAuditBean.setAmount(payToVendorBean.getAmount());
+            customerAuditBean.setType(ANPConstants.CUSTOMER_AUDIT_TYPE_DELETE_PAYTOVENDOR);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            customerAuditBean.setOtherPartyName(""); //This will be opposite party
+            customerAuditBean.setTransactionDate(payToVendorBean.getPaymentDate());
+            accountDAO.updateCustomerAccountBalance(customerAuditBean);
+
+            //Update Employee Balance and Audit
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setOrgId(payToVendorBean.getOrgId());
+            employeeAuditBean.setEmployeeid(payToVendorBean.getFromEmployeeID());
+            employeeAuditBean.setAccountid(payToVendorBean.getFromAccountID());
+            employeeAuditBean.setAmount(payToVendorBean.getAmount());
+            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
+            employeeAuditBean.setOtherPartyName(""); //This will be opposite party
+            employeeAuditBean.setTransactionDate(payToVendorBean.getPaymentDate());
+            accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+        }
+        return true;
+    }
+
+    /*
+     *   Logic
+     *   Payment Received 1. FromAccount (Employee who is paying) is SUBTRACTED 2. ToAccount(Employee who received payment) is ADDED
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteInternalTransfer(long orgId, long paymentID) {
+
+        List<InternalTransferBean> internalTransferBeans = internalTransferDAO.listInternalTransfer(orgId,getSearchParamsListForDelete("internal.id",paymentID),null,1,0);
+        if(internalTransferBeans==null || internalTransferBeans.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_INTERNAL_TRANSFER.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        InternalTransferBean internalTransferBean = internalTransferBeans.get(0);
+
+        if(internalTransferBean.isIncludeInCalc()) {
+            EmployeeAuditBean fromEmployeeAuditBean = new EmployeeAuditBean();
+            fromEmployeeAuditBean.setOrgId(internalTransferBean.getOrgId());
+            fromEmployeeAuditBean.setEmployeeid(internalTransferBean.getFromEmployeeID());
+            fromEmployeeAuditBean.setAccountid(internalTransferBean.getFromAccountID());
+            fromEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
+            fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+            fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getToPartyName()); //This will be opposite party
+            fromEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
+            accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
+
+            //accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
+            //Update TO Employee (ADD)
+            EmployeeAuditBean toEmployeeAuditBean = new EmployeeAuditBean();
+            toEmployeeAuditBean.setOrgId(internalTransferBean.getOrgId());
+            toEmployeeAuditBean.setEmployeeid(internalTransferBean.getToEmployeeID());
+            toEmployeeAuditBean.setAccountid(internalTransferBean.getToAccountID());
+            toEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
+            toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            toEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+            toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+            toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromPartyName());
+            toEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
+            accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);
+        }
+
+        return true;
+    }
+
+    /*
+     * Retail Sale only updates the employee Balance
+     * Delete
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteRetailSale(long orgId, long paymentID) {
+
+        List<RetailSale> retailSales = retailSaleDAO.listRetailEntryPaged(orgId,getSearchParamsListForDelete("retail.id",paymentID),null,1,0);
+        if(retailSales==null || retailSales.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_RETAIL_SALE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        RetailSale retailSale = retailSales.get(0);
+
+        if(retailSale.isIncludeincalc()) {
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setOrgId(retailSale.getOrgId());
+            employeeAuditBean.setEmployeeid(retailSale.getFromemployeeid());
+            employeeAuditBean.setAccountid(retailSale.getFromaccountid());
+            employeeAuditBean.setAmount(retailSale.getAmount());
+            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
+            employeeAuditBean.setOtherPartyName("");
+            employeeAuditBean.setTransactionDate(retailSale.getDate());
+            accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+        }
+        return true ;
+    }
+
+    /*
+     * Create an Expense
+     * Expense only updates the employee Balance
+     */
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteExpense(long orgId, long paymentID) {
+        List<Expense> expenseList = expenseDAO.listExpensesPaged(orgId,getSearchParamsListForDelete("exp.id",paymentID),null,1,0);
+        if(expenseList==null || expenseList.isEmpty()) {
+            throw new CustomAppException("ID NOT VALID","SERVER.DELETE_EXPENSE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        Expense expense = expenseList.get(0);
+        if(expense.isIncludeInCalc()) {
+            if (expense.isPaid()) {
+                calculationTrackerDAO.updatePaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "SUBTRACT");
+
+                EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+                employeeAuditBean.setOrgId(expense.getOrgId());
+                employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
+                employeeAuditBean.setAccountid(expense.getFromAccountID());
+                employeeAuditBean.setAmount(expense.getTotalAmount());
+                employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+                employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+                employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+                employeeAuditBean.setOtherPartyName(expense.getToPartyName());
+                employeeAuditBean.setTransactionDate(expense.getDate());
+                accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+            } else {
+                calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "SUBTRACT");
+            }
         }
         return true;
     }
@@ -399,5 +556,4 @@ public class AccountingHandler {
         searchParams.add(searchParam);
         return searchParams;
     }
-
 }

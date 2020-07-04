@@ -40,6 +40,7 @@ public class CustomerAuditDAO {
     private static final class CustomerAuditMapper implements RowMapper<CustomerAuditBean> {
         public CustomerAuditBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setAuditId(rs.getLong("custau.id"));
             customerAuditBean.setCustomerid(rs.getString("custau.customerid"));
             customerAuditBean.setAccountid(rs.getLong("custau.accountid"));
             customerAuditBean.setType(rs.getString("custau.type"));

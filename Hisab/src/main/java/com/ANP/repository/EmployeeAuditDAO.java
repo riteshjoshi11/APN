@@ -43,6 +43,7 @@ public class EmployeeAuditDAO {
     private static final class EmployeeAuditMapper implements RowMapper<EmployeeAuditBean> {
         public EmployeeAuditBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setAuditId(rs.getLong("empau.id"));
             employeeAuditBean.setEmployeeid(rs.getString("empau.employeeid"));
             employeeAuditBean.setAccountid(rs.getLong("empau.accountid"));
             employeeAuditBean.setType(rs.getString("empau.type"));

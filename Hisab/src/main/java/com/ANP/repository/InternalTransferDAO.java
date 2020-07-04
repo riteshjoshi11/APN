@@ -49,12 +49,14 @@ public class InternalTransferDAO {
         }
 
 
-        return namedParameterJdbcTemplate.query("select e.mobile,e.first,e.last, internal.details,internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
-                    " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
-                    " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
-                    " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
+        return namedParameterJdbcTemplate.query("select internal.id,internal.orgid, internal.fromemployeeid, internal.fromaccountid, " +
+                   "internal.toemployeeid,internal.toaccountid, internal.includeincalc, e.mobile,e.first,e.last, internal.details," +
+                   "internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
+                   " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
+                   " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
+                   " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
                    "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
-                        " and (internal.isdeleted is null or  internal.isdeleted <> true) " +
+                   " and (internal.isdeleted is null or  internal.isdeleted <> true) " +
                     ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new InternalTransferMapper());
     }
@@ -62,6 +64,8 @@ public class InternalTransferDAO {
     private static final class InternalTransferMapper implements RowMapper<InternalTransferBean> {
         public InternalTransferBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             InternalTransferBean internalTransferBean = new InternalTransferBean();
+            internalTransferBean.setInternalTransferID(rs.getLong("internal.id"));
+            internalTransferBean.setOrgId(rs.getLong("internal.orgid"));
             internalTransferBean.setDetails(rs.getString("internal.details"));
             internalTransferBean.getFromEmployee().setFirst(rs.getString("fromfirst"));
             internalTransferBean.getFromEmployee().setLast(rs.getString("fromlast"));
@@ -73,6 +77,13 @@ public class InternalTransferDAO {
             internalTransferBean.setReceivedDate(rs.getTimestamp("internal.rcvddate"));
             internalTransferBean.setCreateDate(rs.getTimestamp("internal.createdate"));
             internalTransferBean.setCreatedbyId(rs.getString("internal.createdbyid"));
+
+            internalTransferBean.setFromEmployeeID(rs.getString("internal.fromemployeeid"));
+            internalTransferBean.setFromAccountID(rs.getLong("internal.fromaccountid"));
+            internalTransferBean.setToEmployeeID(rs.getString("internal.toemployeeid"));
+            internalTransferBean.setToAccountID(rs.getLong("internal.toaccountid"));
+            internalTransferBean.setIncludeInCalc(rs.getBoolean("internal.includeincalc"));
+
             return internalTransferBean;
         }
     }
