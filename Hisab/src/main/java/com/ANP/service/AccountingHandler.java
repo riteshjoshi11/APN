@@ -42,6 +42,9 @@ public class AccountingHandler {
     @Autowired
     CalculationTrackerDAO calculationTrackerDAO;
 
+    @Autowired
+    CommonDAO commonDAO;
+
     /*
      * Create a invoice for a customer (Sale Entry)
      * Only Affects the customer balance
@@ -304,7 +307,6 @@ public class AccountingHandler {
         if(invoiceBeans==null || invoiceBeans.isEmpty()) {
             throw new CustomAppException("ID NOT VALID","SERVER.DELETE_INVOICE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
         }
-
         CustomerInvoiceBean customerInvoiceBean = invoiceBeans.get(0);
 
         if(customerInvoiceBean.isIncludeInCalc()) {
@@ -319,6 +321,7 @@ public class AccountingHandler {
             customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_customerinvoice,orgId,invoiceId);
         return true;
     }
 
@@ -347,6 +350,7 @@ public class AccountingHandler {
             customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_purchasefromvendor,orgId, billId);
         return true;
     }
 
@@ -387,6 +391,7 @@ public class AccountingHandler {
             employeeAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_paymentreceived,orgId,paymentRcvdId);
         return true;
     }
 
@@ -431,6 +436,7 @@ public class AccountingHandler {
             employeeAuditBean.setTransactionDate(payToVendorBean.getPaymentDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_paytovendor,orgId,paymentID);
         return true;
     }
 
@@ -475,7 +481,7 @@ public class AccountingHandler {
             toEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);
         }
-
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_internaltransfer,orgId,paymentID);
         return true;
     }
 
@@ -506,6 +512,7 @@ public class AccountingHandler {
             employeeAuditBean.setTransactionDate(retailSale.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_retailsale,orgId,paymentID);
         return true ;
     }
 
@@ -541,6 +548,7 @@ public class AccountingHandler {
                 calculationTrackerDAO.updateUnPaidExpenseBalance(expense.getOrgId(), expense.getTotalAmount(), "SUBTRACT");
             }
         }
+        commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_generalexpense,orgId,paymentID);
         return true;
     }
 

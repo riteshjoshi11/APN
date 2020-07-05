@@ -38,4 +38,13 @@ public interface ANPConstants {
 
       public  static final String EMPLOYEE_AUDIT_TYPE_DELETE_PAY="DELETE_Pay";
       public  static final String EMPLOYEE_AUDIT_TYPE_DELETE_RCVD="DELETE_Receive";
+
+      public static final String DB_TBL_customerinvoice = "customerinvoice";
+      public static final String DB_TBL_purchasefromvendor = "purchasefromvendor";
+      public static final String DB_TBL_delivery = "delivery";
+      public static final String DB_TBL_generalexpense = "generalexpense";
+      public static final String DB_TBL_internaltransfer = "internaltransfer";
+      public static final String DB_TBL_paymentreceived = "paymentreceived";
+      public static final String DB_TBL_paytovendor = "paytovendor";
+      public static final String DB_TBL_retailsale = "retailsale";
 }
