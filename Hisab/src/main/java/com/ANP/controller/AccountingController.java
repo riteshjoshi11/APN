@@ -3,6 +3,7 @@ package com.ANP.controller;
 import com.ANP.bean.*;
 import com.ANP.repository.*;
 import com.ANP.service.AccountingHandler;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ public class AccountingController {
 
     @Autowired
     ExpenseDAO expenseDao;
-
 
     @Autowired
     AccountDAO accountDAO;
@@ -206,4 +206,34 @@ public class AccountingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
     }
+
+    @PostMapping(path = "/deleteSingleTransaction", produces = "application/json")
+    public ResponseEntity deleteSingleTransaction(String transactionName, long orgID, long recordID, String loggedInUserName) {
+        switch(transactionName) {
+            case ANPConstants.TRANSACTION_NAME_SALE:
+                accountingHandler.deleteCustomerInvoice(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_PURCHASE:
+                accountingHandler.deleteVendorPurchase(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_PAY_TO_VENDOR:
+                accountingHandler.deletePayToVendor(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_PAYMENT_RECEIVED:
+                accountingHandler.deletePaymentReceived(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_EXPENSE:
+                accountingHandler.deleteExpense(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_INTERNAL_TRANSFER:
+                accountingHandler.deleteRetailSale(orgID,recordID,loggedInUserName);
+                break;
+            case ANPConstants.TRANSACTION_NAME_RETAIL_SALE:
+                accountingHandler.deleteInternalTransfer(orgID,recordID,loggedInUserName);
+                break;
+            default:
+        }
+       return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
 }

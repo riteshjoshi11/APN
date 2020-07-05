@@ -33,7 +33,7 @@ public interface ANPConstants {
       public  static final String CUSTOMER_AUDIT_TYPE_DELETE_SALE="DeleteSale";
       public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PURCHASE="DeletePurchase";
       public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PAYTOVENDOR="Delete_PayToVendor";
-      public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PAYMENTRCVDFROMVENDOR="Delete_PaymentReceivedFromVendor";
+      public  static final String CUSTOMER_AUDIT_TYPE_DELETE_PAYMENTRCVDFROMVENDOR="Delete_PaymentReceived";
 
 
       public  static final String EMPLOYEE_AUDIT_TYPE_DELETE_PAY="DELETE_Pay";
@@ -47,4 +47,14 @@ public interface ANPConstants {
       public static final String DB_TBL_paymentreceived = "paymentreceived";
       public static final String DB_TBL_paytovendor = "paytovendor";
       public static final String DB_TBL_retailsale = "retailsale";
+
+      public static final String TRANSACTION_NAME_SALE = "SALE";
+      public static final String TRANSACTION_NAME_PURCHASE = "PURCHASE";
+      public static final String TRANSACTION_NAME_PAYMENT_RECEIVED = "PAYMENT_RECEIVED";
+      public static final String TRANSACTION_NAME_PAY_TO_VENDOR = "PAY_TO_VENDOR";
+      public static final String TRANSACTION_NAME_EXPENSE = "EXPENSE";
+      public static final String TRANSACTION_NAME_INTERNAL_TRANSFER = "INTERNAL_TRANSFER";
+      public static final String TRANSACTION_NAME_RETAIL_SALE = "RETAIL_SALE";
+
+
 }

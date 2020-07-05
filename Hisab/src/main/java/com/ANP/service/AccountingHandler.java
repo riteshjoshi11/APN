@@ -300,7 +300,7 @@ public class AccountingHandler {
      * It will reverse the sale
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteCustomerInvoice(long orgId, long invoiceId) {
+    public boolean deleteCustomerInvoice(long orgId, long invoiceId, String loggedInUserName) {
 
         List<CustomerInvoiceBean> invoiceBeans = customerInvoiceDAO.listSalesPaged(orgId,getSearchParamsListForDelete("cusinv.id",invoiceId),null,1,0);
 
@@ -331,7 +331,7 @@ public class AccountingHandler {
      * It will reverse the Purchase
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteVendorPurchase(long orgId, long billId) {
+    public boolean deleteVendorPurchase(long orgId, long billId, String loggedInUserName) {
 
         List<PurchaseFromVendorBean> purchaseBeans = purchaseFromVendorDAO.listPurchasesPaged(orgId,getSearchParamsListForDelete("p.id",billId),null,1,0);
         if(purchaseBeans==null || purchaseBeans.isEmpty()) {
@@ -359,7 +359,7 @@ public class AccountingHandler {
      *   Payment Received 1. FromAccount (Customer who is paying)  is ADDED 2. ToAccount(Employee who received payment) is ADDED
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deletePaymentReceived(long orgId, long paymentRcvdId) {
+    public boolean deletePaymentReceived(long orgId, long paymentRcvdId, String loggedInUserName) {
         List<PaymentReceivedBean> paymentReceivedBeans = paymentReceivedDAO.listPaymentReceivedPaged(orgId,getSearchParamsListForDelete("prcvd.id",paymentRcvdId),null,1,0);
         if(paymentReceivedBeans==null || paymentReceivedBeans.isEmpty()) {
             throw new CustomAppException("ID NOT VALID","SERVER.DELETE_PAYMENT_RECEIVED.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
@@ -402,7 +402,7 @@ public class AccountingHandler {
      *
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deletePayToVendor(long orgId, long paymentID) {
+    public boolean deletePayToVendor(long orgId, long paymentID, String loggedInUserName) {
 
         List<PayToVendorBean> payToVendorBeans = payToVendorDAO.listPayToVendorPaged(orgId,getSearchParamsListForDelete("paytov.id",paymentID),null,1,0);
         if(payToVendorBeans==null || payToVendorBeans.isEmpty()) {
@@ -445,7 +445,7 @@ public class AccountingHandler {
      *   Payment Received 1. FromAccount (Employee who is paying) is SUBTRACTED 2. ToAccount(Employee who received payment) is ADDED
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteInternalTransfer(long orgId, long paymentID) {
+    public boolean deleteInternalTransfer(long orgId, long paymentID, String loggedInUserName) {
 
         List<InternalTransferBean> internalTransferBeans = internalTransferDAO.listInternalTransfer(orgId,getSearchParamsListForDelete("internal.id",paymentID),null,1,0);
         if(internalTransferBeans==null || internalTransferBeans.isEmpty()) {
@@ -490,7 +490,7 @@ public class AccountingHandler {
      * Delete
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteRetailSale(long orgId, long paymentID) {
+    public boolean deleteRetailSale(long orgId, long paymentID, String loggedInUserName) {
 
         List<RetailSale> retailSales = retailSaleDAO.listRetailEntryPaged(orgId,getSearchParamsListForDelete("retail.id",paymentID),null,1,0);
         if(retailSales==null || retailSales.isEmpty()) {
@@ -522,7 +522,7 @@ public class AccountingHandler {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteExpense(long orgId, long paymentID) {
+    public boolean deleteExpense(long orgId, long paymentID, String loggedInUserName) {
         List<Expense> expenseList = expenseDAO.listExpensesPaged(orgId,getSearchParamsListForDelete("exp.id",paymentID),null,1,0);
         if(expenseList==null || expenseList.isEmpty()) {
             throw new CustomAppException("ID NOT VALID","SERVER.DELETE_EXPENSE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
