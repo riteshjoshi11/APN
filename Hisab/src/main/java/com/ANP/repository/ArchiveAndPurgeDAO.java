@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.*;
 * This process will kick-off as per the configured schedule
 * This will actually archive and purge/delete organization data based on the table names and number of days after soft deletion configuration parameters
  */
+@EnableScheduling
 public class ArchiveAndPurgeDAO {
 
     @Autowired
@@ -27,9 +30,12 @@ public class ArchiveAndPurgeDAO {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Scheduled(cron="${cron.expression}")
     @Transactional(rollbackFor = Exception.class)
     public void invokeArchiveAndPurgeProcess()
     {
+        System.out.println("archive and purge procedure call");
+        /*
         Map<String,String> systemConfigMap ;
         int noOfDaysAfterDelete;
         systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
@@ -81,5 +87,6 @@ public class ArchiveAndPurgeDAO {
                 System.out.println("result = "+ simpleJdbcCallResult);
             }
         }
+    */
     }
 }
