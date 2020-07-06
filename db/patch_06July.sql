@@ -1,8 +1,8 @@
 use `antrackerdb`;
-DROP TABLE IF EXISTS `p_gst_reports`;
-CREATE TABLE `p_gst_reports` (
+DROP TABLE IF EXISTS `p_gst_report`;
+CREATE TABLE `p_gst_report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `org_id` int(11) NOT NULL,
+  `orgid` int(11) NOT NULL,
   `toemails` varchar(500) DEFAULT NULL,
   `generatedate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `pdffilepath` varchar(256) DEFAULT NULL,
@@ -12,6 +12,6 @@ CREATE TABLE `p_gst_reports` (
   `reportstatus` varchar(20) DEFAULT NULL,
   `formonth` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `p_gst_reports_ibfk_1_idx` (`org_id`),
-  CONSTRAINT `p_gst_reports_ibfk_1` FOREIGN KEY (`org_id`) REFERENCES `organization` (`id`)
+  KEY `p_gst_reports_ibfk_1_idx` (`orgid`),
+  CONSTRAINT `p_gst_reports_ibfk_1` FOREIGN KEY (`orgid`) REFERENCES `organization` (`id`)
 )
