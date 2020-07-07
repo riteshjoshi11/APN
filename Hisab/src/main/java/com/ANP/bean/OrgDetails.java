@@ -1,6 +1,7 @@
 package com.ANP.bean;
 
 public class OrgDetails {
+    private long orgDetailId;
     private String mobile1;
     private String email;
     private String mobile2;
@@ -20,6 +21,14 @@ public class OrgDetails {
     private int companyTypeInt;
     private int businessNatureInt;
     private int numberOfEmployeesInt;
+
+    public long getOrgDetailId() {
+        return orgDetailId;
+    }
+
+    public void setOrgDetailId(long orgDetailId) {
+        this.orgDetailId = orgDetailId;
+    }
 
     public int getCompanyTypeInt() {
         return companyTypeInt;
