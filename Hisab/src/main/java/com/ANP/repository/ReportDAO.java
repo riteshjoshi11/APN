@@ -4,11 +4,13 @@ import com.ANP.bean.CustomerBean;
 import com.ANP.bean.ReportBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,9 +20,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
@@ -41,19 +42,23 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws Exception {
-        Path pdfPath = Paths.get(filePath);
-        byte[] pdf = Files.readAllBytes(pdfPath);
-        ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.add("Content-Disposition", "inline; filename=ParasGeneratedPdf.pdf");
+    public ResponseEntity<InputStreamResource> fetchPdf (String filePath, long orgId, String loggedInEmployeeID) throws Exception {
+        try {
+            Path pdfPath = Paths.get(filePath);
+            byte[] pdf = Files.readAllBytes(pdfPath);
+            ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.add("Content-Disposition", "inline; filename=ParasGeneratedPdf.pdf");
 
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(pdfToByte));
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(pdfToByte));
+        }
+        catch (NoSuchFileException e) {
+            throw new CustomAppException("No PDF With that name","SERVER.FETCH_PDF.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+            }
     }
 
     /*
@@ -62,18 +67,23 @@ public class ReportDAO {
      */
 
     public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
-        Path excelPath = Paths.get(filePath);
-        byte[] excel = Files.readAllBytes(excelPath);
-        ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.add("Content-Disposition", "attachment; filename=ParasGeneratedExcel.xlsx");
+        try {
+            Path excelPath = Paths.get(filePath);
+            byte[] excel = Files.readAllBytes(excelPath);
+            ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.add("Content-Disposition", "inline; filename=ParasGeneratedExcel.xlsx");
 
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(new InputStreamResource(excelToByte));
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(new InputStreamResource(excelToByte));
+            }
+                catch (NoSuchFileException e) {
+                throw new CustomAppException("No Excel File With that name","SERVER.FETCH_EXCEL.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+            }
     }
 
     public int createGSTReport(ReportBean reportBean) {

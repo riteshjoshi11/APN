@@ -22,13 +22,13 @@ public class ReportController {
     ReportDAO reportDao;
 
     @PostMapping(path = "/reportPdf", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath1, long orgId, String loggedInEmployeeID) throws  Exception{
-        return reportDao.fetchPdf(filePath1,orgId,loggedInEmployeeID);
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
+        return reportDao.fetchPdf(filePath,orgId,loggedInEmployeeID);
     }
 
     @PostMapping(path = "/reportExcel", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchExcel(String filePath1, long orgId, String loggedInEmployeeID) throws  Exception{
-        return reportDao.fetchExcel(filePath1,orgId,loggedInEmployeeID);
+    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
+        return reportDao.fetchExcel(filePath,orgId,loggedInEmployeeID);
     }
 
 
