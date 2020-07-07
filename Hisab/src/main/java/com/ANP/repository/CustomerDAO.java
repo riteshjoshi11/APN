@@ -124,4 +124,10 @@ public class CustomerDAO {
             return cus;
         }
     }
+    public int updateCustomer(CustomerBean customerBean){
+        return namedParameterJdbcTemplate.update("update customer set name = :name," +
+                "city=:city, gstin=:gstin , transporter = :transporter , mobile1 = :mobile1 , mobile2 = :mobile2 " +
+                ", firmname = :firmname , billingadress = :billingadress , createdbyid = :createdbyId , sendPaymentReminders = :sendPaymentReminders," +
+                " state = :state where orgid = :orgId and id = :customerID",new BeanPropertySqlParameterSource(customerBean));
+    }
 }

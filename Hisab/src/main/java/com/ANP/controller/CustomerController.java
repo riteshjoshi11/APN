@@ -34,6 +34,12 @@ public class CustomerController {
         customerHandler.createCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
+    @PostMapping(path = "/updateCustomer", produces = "application/json")
+    public ResponseEntity updateCustomer(@Valid @RequestBody CustomerBean customerBean) {
+        customerDao.updateCustomer(customerBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
     /*
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */

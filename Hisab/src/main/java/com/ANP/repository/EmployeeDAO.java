@@ -371,4 +371,10 @@ public class EmployeeDAO {
         return accountBean;
         }
     }
+
+    public int updateEmployee(EmployeeBean employeeBean){
+        return namedParameterJdbcTemplate.update("update employee set first = :first," +
+                "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ," +
+                " currentsalarybalance = :currentsalarybalance ,lastsalarybalance = :lastsalarybalance where orgid = :orgId and id = :employeeId",new BeanPropertySqlParameterSource(employeeBean));
+    }
 }
