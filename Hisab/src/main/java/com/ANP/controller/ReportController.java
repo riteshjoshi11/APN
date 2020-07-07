@@ -1,7 +1,9 @@
 package com.ANP.controller;
 
-import com.ANP.bean.ListParametersBean;
-import com.ANP.bean.ReportBean;
+import com.ANP.bean.*;
+import com.ANP.repository.CustomerInvoiceDAO;
+import com.ANP.repository.ExpenseDAO;
+import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.repository.ReportDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -20,8 +22,13 @@ public class ReportController {
     ReportDAO reportDao;
 
     @PostMapping(path = "/reportPdf", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgid, String loggedInEmployeeID) throws  Exception{
-        return reportDao.fetchPdf(filePath,orgid,loggedInEmployeeID);
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath1, long orgId, String loggedInEmployeeID) throws  Exception{
+        return reportDao.fetchPdf(filePath1,orgId,loggedInEmployeeID);
+    }
+
+    @PostMapping(path = "/reportExcel", produces = "application/json")
+    public ResponseEntity<InputStreamResource> fetchExcel(String filePath1, long orgId, String loggedInEmployeeID) throws  Exception{
+        return reportDao.fetchExcel(filePath1,orgId,loggedInEmployeeID);
     }
 
 

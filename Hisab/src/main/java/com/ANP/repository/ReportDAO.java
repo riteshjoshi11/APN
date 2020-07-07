@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,29 +41,19 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
-        String filepath = ("f:/" + "generatedpdf" + (new Date().getTime() / 1000) + ".pdf");
-        Document document = new Document(PageSize.A4, 20, 20, 20, 20);
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        PdfWriter.getInstance(document, new FileOutputStream(filepath));
-        document.open();
-        document.add(new Paragraph("hello world"));
-        document.close();
-
-        Path pdfPath = Paths.get(filepath);
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws Exception {
+        Path pdfPath = Paths.get(filePath);
         byte[] pdf = Files.readAllBytes(pdfPath);
-        ByteArrayInputStream c = new ByteArrayInputStream(pdf);
-
-
+        ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.add("Content-Disposition", "inline; filename=ParasGenerated.pdf");
+        headers.add("Content-Disposition", "inline; filename=ParasGeneratedPdf.pdf");
 
         return ResponseEntity
                 .ok()
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(c));
+                .body(new InputStreamResource(pdfToByte));
     }
 
     /*
@@ -71,8 +62,18 @@ public class ReportDAO {
      */
 
     public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
-        //@TODO Paras please write code for Excel download
-        return null;
+        Path excelPath = Paths.get(filePath);
+        byte[] excel = Files.readAllBytes(excelPath);
+        ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add("Content-Disposition", "attachment; filename=ParasGeneratedExcel.xlsx");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(excelToByte));
     }
 
     public int createGSTReport(ReportBean reportBean) {
