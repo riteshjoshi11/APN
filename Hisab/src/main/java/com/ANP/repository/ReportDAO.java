@@ -33,24 +33,25 @@ import java.util.List;
 
 @Repository
 public class ReportDAO {
-
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /*
+     * This method will take fullFilePath as parameter return the pdf
+     * orgId and loggedInEmployeeId is used in future
+     */
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
+        String filepath = ("f:/" + "generatedpdf" + (new Date().getTime() / 1000) + ".pdf");
+        Document document = new Document(PageSize.A4, 20, 20, 20, 20);
+        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        PdfWriter.getInstance(document, new FileOutputStream(filepath));
+        document.open();
+        document.add(new Paragraph("hello world"));
+        document.close();
 
-    public ResponseEntity<InputStreamResource> fetchPdf ()throws Exception{
-
-            String filepath = ("f:/" + "generatedpdf"+(new Date().getTime()/1000)+".pdf");
-            Document document = new Document( PageSize.A4, 20, 20, 20, 20 );
-            Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-            PdfWriter.getInstance(document, new FileOutputStream(filepath));
-            document.open();
-            document.add(new Paragraph("hello world"));
-            document.close();
-
-            Path pdfPath = Paths.get(filepath);
-            byte[] pdf = Files.readAllBytes(pdfPath);
-           ByteArrayInputStream c =  new ByteArrayInputStream(pdf);
+        Path pdfPath = Paths.get(filepath);
+        byte[] pdf = Files.readAllBytes(pdfPath);
+        ByteArrayInputStream c = new ByteArrayInputStream(pdf);
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -64,14 +65,21 @@ public class ReportDAO {
                 .body(new InputStreamResource(c));
     }
 
+    /*
+     * This method will take fullFilePath as parameter return the excel
+     * orgId and loggedInEmployeeId is used in future
+     */
 
-    public int createGSTReport(ReportBean reportBean)
-    {
+    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
+        //@TODO Paras please write code for Excel download
+        return null;
+    }
+
+    public int createGSTReport(ReportBean reportBean) {
         return namedParameterJdbcTemplate.update("insert into p_gst_report(id,orgid,toemails,pdffilepath,excelfilepath," +
                 "fromemail,`mode`,reportstatus,formonth) values(:reportId, :orgId, :toEmails, :pdfFilePath, :excelFilePath, :fromEmail," +
                 " :mode, :reportStatus, :forMonth)", new BeanPropertySqlParameterSource(reportBean));
     }
-
 
 
     public List<ReportBean> listGSTReport(long orgID, Collection<SearchParam> searchParams,
@@ -89,9 +97,9 @@ public class ReportDAO {
         }
         return namedParameterJdbcTemplate.query("select p_gst_report.*" +
                         " from p_gst_report where orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
-                param, new ListGSTReportMapper()) ;
+                param, new ListGSTReportMapper());
     }
 
     private static final class ListGSTReportMapper implements RowMapper<ReportBean> {
