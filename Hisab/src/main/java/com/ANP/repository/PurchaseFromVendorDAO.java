@@ -221,7 +221,7 @@ public class PurchaseFromVendorDAO {
      */
     public int updatePurchase(PurchaseFromVendorBean purchaseFromVendorBean){
         return namedParameterJdbcTemplate.update("update purchasefromvendor set cgst = :CGST," +
-                "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(purchaseFromVendorBean));
+                "sgst=:SGST, igst=:IGST, note = :note where orgid = :orgId and id = :purchaseID",new BeanPropertySqlParameterSource(purchaseFromVendorBean));
     }
 
 

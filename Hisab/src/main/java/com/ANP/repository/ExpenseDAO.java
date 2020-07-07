@@ -255,6 +255,6 @@ public class ExpenseDAO {
      */
     public int updateExpense(Expense expense) {
         return namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
-                "sgst=:SGST, igst=:IGST where orgid = :orgId", new BeanPropertySqlParameterSource(expense));
+                "sgst=:SGST, igst=:IGST, description = :description where orgid = :orgId and id = :expenseId", new BeanPropertySqlParameterSource(expense));
     }
 }

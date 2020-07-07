@@ -53,8 +53,8 @@ public class AccountingController {
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@Valid @RequestBody CustomerInvoiceBean customerInvoiceBean) {
-       accountingHandler.createCustomerInvoice(customerInvoiceBean);
-       return new ResponseEntity<>("Success", HttpStatus.OK);
+        accountingHandler.createCustomerInvoice(customerInvoiceBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
 
@@ -233,7 +233,25 @@ public class AccountingController {
                 break;
             default:
         }
-       return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/updateSales", produces = "application/json")
+    public ResponseEntity updateSales(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
+        customerInvoiceDAO.updateSales(customerInvoiceBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/updatePurchase", produces = "application/json")
+    public ResponseEntity updatePurchase(@RequestBody PurchaseFromVendorBean purchaseFromVendorBean) {
+        purchaseFromVendorDAO.updatePurchase(purchaseFromVendorBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/updateExpense", produces = "application/json")
+    public ResponseEntity updateExpense(@RequestBody Expense expense) {
+        expenseDao.updateExpense(expense);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
 }
