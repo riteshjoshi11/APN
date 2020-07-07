@@ -214,8 +214,12 @@ public class PurchaseFromVendorDAO {
             return purchaseFromVendorBean;
         }
     }
-
-    public int updatePurchaseGST(PurchaseFromVendorBean purchaseFromVendorBean){
+    /*
+     * @TODO: Paras please include notes/details field as well.
+     * also there is big mistake here the current logic will update all the Purchase for an organization.
+     * Always include primary key for the update.
+     */
+    public int updatePurchase(PurchaseFromVendorBean purchaseFromVendorBean){
         return namedParameterJdbcTemplate.update("update purchasefromvendor set cgst = :CGST," +
                 "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(purchaseFromVendorBean));
     }

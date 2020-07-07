@@ -20,8 +20,8 @@ public class ReportController {
     ReportDAO reportDao;
 
     @PostMapping(path = "/reportPdf", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchPdf() throws  Exception{
-        return reportDao.fetchPdf();
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgid, String loggedInEmployeeID) throws  Exception{
+        return reportDao.fetchPdf(filePath,orgid,loggedInEmployeeID);
     }
 
 

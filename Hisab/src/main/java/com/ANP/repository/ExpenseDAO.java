@@ -29,7 +29,7 @@ public class ExpenseDAO {
 
 
     public int createExpense(Expense expense) {
-        if(!expense.isForceCreate()) {
+        if (!expense.isForceCreate()) {
             isDuplicateSuspect(expense);
         }
         return namedParameterJdbcTemplate.update(
@@ -40,8 +40,7 @@ public class ExpenseDAO {
 
     public List<Expense> listExpensesPaged(long orgId, Collection<SearchParam> searchParams,
                                            String orderBy, int noOfRecordsToShow, int startIndex) {
-        if(startIndex == 0)
-        {
+        if (startIndex == 0) {
             startIndex = 1;
         }
         Map<String, Object> param = new HashMap<String, Object>();
@@ -49,16 +48,17 @@ public class ExpenseDAO {
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
 
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
                 "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
                         "and (exp.isdeleted is null or exp.isdeleted <> true) " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+ "  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullExpenseMapper());
     }
+
     private static final class FullExpenseMapper implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
@@ -87,6 +87,7 @@ public class ExpenseDAO {
             return obj;
         }
     }
+
     private static final class ExpenseMapperLimited implements RowMapper<Expense> {
         public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
             Expense obj = new Expense();
@@ -96,16 +97,18 @@ public class ExpenseDAO {
             return obj;
         }
     }
+
     public List<Expense> findExpenseByToPartyName(String toPartyName, long orgId) {
-        String toPartyNameCriteria="";
-        if(!ANPUtils.isNullOrEmpty(toPartyName)) {
-            toPartyNameCriteria = " and topartyname like '%" + toPartyName + "%'" ;
+        String toPartyNameCriteria = "";
+        if (!ANPUtils.isNullOrEmpty(toPartyName)) {
+            toPartyNameCriteria = " and topartyname like '%" + toPartyName + "%'";
         }
         return namedParameterJdbcTemplate.query(
                 "select topartyname,topartygstno,topartymobileno from generalexpense where orgid=" + orgId
                         + toPartyNameCriteria,
                 new BeanPropertySqlParameterSource(new Expense()), new ExpenseMapperLimited());
     }
+
     /*
          you need to update Expense Table:IncludeInCAReport field with the passed value
      */
@@ -113,59 +116,62 @@ public class ExpenseDAO {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
         parameterSource.addValue("caSwitch", caSwitch);
-       if (namedParameterJdbcTemplate.update("update generalexpense set includeinreport = :caSwitch where id = :id", parameterSource)!= 0) {
+        if (namedParameterJdbcTemplate.update("update generalexpense set includeinreport = :caSwitch where id = :id", parameterSource) != 0) {
             return true;
         } else {
             return false;
         }
     }
+
     /*
           you need to update Expense Table:includeInCalc field with the passed value
     */
-    public boolean updateIncludeInCalc(long expenseID,boolean includeInCalcSwtich) {
+    public boolean updateIncludeInCalc(long expenseID, boolean includeInCalcSwtich) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
         parameterSource.addValue("includeInCalcSwtich", includeInCalcSwtich);
-        if (namedParameterJdbcTemplate.update("update generalexpense set includeincalc = :includeInCalcSwtich where id = :id", parameterSource)!= 0) {
+        if (namedParameterJdbcTemplate.update("update generalexpense set includeincalc = :includeInCalcSwtich where id = :id", parameterSource) != 0) {
             return true;
         } else {
             return false;
         }
     }
+
     /*
         you need to update Expense Table:includeInCalc field with the passed value
   */
-    public boolean updateExpenseStatus(long expenseID,boolean paidStatus) {
+    public boolean updateExpenseStatus(long expenseID, boolean paidStatus) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
         parameterSource.addValue("paidStatus", paidStatus);
-        if (namedParameterJdbcTemplate.update("update generalexpense set paid = :paidStatus where id = :id", parameterSource)!= 0) {
+        if (namedParameterJdbcTemplate.update("update generalexpense set paid = :paidStatus where id = :id", parameterSource) != 0) {
             return true; //operation success
         }
 
         return false;
 
     }
-    public void isDuplicateSuspect(Expense expense){
+
+    private void isDuplicateSuspect(Expense expense) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("orgid", expense.getOrgId());
         params.put("fromemployeeid", expense.getFromEmployeeID());
 
-        long actualamount = (long)(expense.getTotalAmount());
+        long actualamount = (long) (expense.getTotalAmount());
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) " +
                 " as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid and (isdeleted is null or isdeleted<> true) " +
-                "  order by id desc limit 1) expense where totalamount = :amount",params, Integer.class);
+                "  order by id desc limit 1) expense where totalamount = :amount", params, Integer.class);
         System.out.println(count);
-        if(count>0) {
+        if (count > 0) {
             throw new CustomAppException("The created expense looks like duplicate", "SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 
     public List<Expense> pdfListExpensePaged(long orgId, Collection<SearchParam> searchParams,
-                                           String orderBy, int noOfRecordsToShow, int startIndex) {
+                                             String orderBy, int noOfRecordsToShow, int startIndex) {
         if (startIndex == 0) {
             startIndex = 1;
         }
@@ -186,63 +192,69 @@ public class ExpenseDAO {
                 param, new PDFExpenseMapper());
 
 
-        com.itextpdf.text.List list ;
+        com.itextpdf.text.List list;
         try {
 
             String file1 = "f:/";
-            Document document = new Document( PageSize.A4, 20, 20, 20, 20 );
+            Document document = new Document(PageSize.A4, 20, 20, 20, 20);
             Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-            PdfWriter.getInstance(document, new FileOutputStream(file1+ "expense"+(new Date().getTime()/1000)+".pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream(file1 + "expense" + (new Date().getTime() / 1000) + ".pdf"));
             // PdfWriter.getInstance(document, new FileOutputStream(file1 +  "purchase" + dateFormat.format(new Date()) + ".pdf" ));
             int index = 0;
             document.open();
-            for(Object listIterator : expenseList) {
-                list = new com.itextpdf.text.List(false );
+            for (Object listIterator : expenseList) {
+                list = new com.itextpdf.text.List(false);
                 list.setListSymbol("");
                 list.add(new ListItem("Name :  "));
                 list.add(new ListItem("Date:  " + expenseList.get(index).getDate().toString()));
-                list.add(new ListItem("Total Amount:  "+expenseList.get(index).getTotalAmount()));
-                list.add(new ListItem("Extra:  "+expenseList.get(index).getExtra()));
-                list.add(new ListItem("IGST:  "+expenseList.get(index).getIGST()));
-                list.add(new ListItem("CGST:  "+expenseList.get(index).getCGST()));
-                list.add(new ListItem("SGST:  "+expenseList.get(index).getSGST()));
+                list.add(new ListItem("Total Amount:  " + expenseList.get(index).getTotalAmount()));
+                list.add(new ListItem("Extra:  " + expenseList.get(index).getExtra()));
+                list.add(new ListItem("IGST:  " + expenseList.get(index).getIGST()));
+                list.add(new ListItem("CGST:  " + expenseList.get(index).getCGST()));
+                list.add(new ListItem("SGST:  " + expenseList.get(index).getSGST()));
                 document.add(list);
                 document.add(new Paragraph("\n"));
                 index++;
             }
             document.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return expenseList;
     }
 
-        private static final class PDFExpenseMapper implements RowMapper<Expense> {
-            public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Expense obj = new Expense();
-                obj.setExpenseId(rs.getInt("exp.id"));
-                obj.setCategory(rs.getString("exp.category"));
-                obj.setTotalAmount(rs.getFloat("exp.totalamount"));
-                obj.setOrgId(rs.getLong("exp.orgid"));
-                obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
-                obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
-                obj.setCreatedbyId(rs.getString("exp.createdbyid"));
-                obj.setOrderAmount(rs.getDouble("exp.orderamount"));
-                obj.setCGST(rs.getDouble("exp.cgst"));
-                obj.setSGST(rs.getDouble("exp.sgst"));
-                obj.setIGST(rs.getDouble("exp.igst"));
-                obj.setExtra(rs.getDouble("exp.extra"));
-                obj.setToPartyName(rs.getString("exp.topartyname"));
-                obj.setDate(rs.getTimestamp("exp.date"));
-                obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
-                obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
-                obj.setPaid(rs.getBoolean("exp.paid"));
-                obj.setCreateDate(rs.getTimestamp("exp.createdate"));
-                return obj;
-            }
+    private static final class PDFExpenseMapper implements RowMapper<Expense> {
+        public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Expense obj = new Expense();
+            obj.setExpenseId(rs.getInt("exp.id"));
+            obj.setCategory(rs.getString("exp.category"));
+            obj.setTotalAmount(rs.getFloat("exp.totalamount"));
+            obj.setOrgId(rs.getLong("exp.orgid"));
+            obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
+            obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
+            obj.setCreatedbyId(rs.getString("exp.createdbyid"));
+            obj.setOrderAmount(rs.getDouble("exp.orderamount"));
+            obj.setCGST(rs.getDouble("exp.cgst"));
+            obj.setSGST(rs.getDouble("exp.sgst"));
+            obj.setIGST(rs.getDouble("exp.igst"));
+            obj.setExtra(rs.getDouble("exp.extra"));
+            obj.setToPartyName(rs.getString("exp.topartyname"));
+            obj.setDate(rs.getTimestamp("exp.date"));
+            obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
+            obj.setToPartyMobileNO(rs.getString("exp.topartymobileno"));
+            obj.setPaid(rs.getBoolean("exp.paid"));
+            obj.setCreateDate(rs.getTimestamp("exp.createdate"));
+            return obj;
         }
-    public int updateExpenseGST(Expense expense){
+    }
+
+    /*
+        * @TODO: Paras please include notes/details field as well.
+        * also there is big mistake here the current logic will update all the expense for an organization.
+        * Always include primary key for the update.
+     */
+    public int updateExpense(Expense expense) {
         return namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
-                "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(expense));
+                "sgst=:SGST, igst=:IGST where orgid = :orgId", new BeanPropertySqlParameterSource(expense));
     }
 }

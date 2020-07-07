@@ -95,7 +95,7 @@ public class CustomerInvoiceDAO {
         }
     }
 
-    public void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean) {
+    private void isDuplicateSuspect(CustomerInvoiceBean customerInvoiceBean) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
         System.out.println("isDuplicate Suspect...");
         Map<String, Object> params = new HashMap<>();
@@ -166,6 +166,7 @@ public class CustomerInvoiceDAO {
 
         return customerInvoiceBeanList;
     }
+
     private static final class PDFSalesPagedMapper implements RowMapper<CustomerInvoiceBean> {
         public CustomerInvoiceBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
@@ -187,7 +188,12 @@ public class CustomerInvoiceDAO {
         }
     }
 
-    public int updateSalesGST(CustomerInvoiceBean customerInvoiceBean){
+    /*
+     * @TODO: Paras please include notes/details field as well.
+     * also there is big mistake here the current logic will update all the Sales for an organization.
+     * Always include primary key for the update.
+     */
+    public int updateSales(CustomerInvoiceBean customerInvoiceBean){
         return namedParameterJdbcTemplate.update("update customerinvoice set cgst = :CGST," +
                                 "sgst=:SGST, igst=:IGST where orgid = :orgId",new BeanPropertySqlParameterSource(customerInvoiceBean));
     }
