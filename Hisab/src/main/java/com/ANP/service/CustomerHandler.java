@@ -2,7 +2,7 @@ package com.ANP.service;
 
 import com.ANP.bean.AccountBean;
 import com.ANP.repository.AccountDAO;
-import com.ANP.repository.CustomerDao;
+import com.ANP.repository.CustomerDAO;
 import com.ANP.bean.CustomerBean;
 import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomerHandler {
     @Autowired
-    CustomerDao customerDao;
+    CustomerDAO customerDao;
     @Autowired
     AccountDAO accountDAO;
 

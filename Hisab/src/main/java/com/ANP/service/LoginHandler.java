@@ -2,14 +2,12 @@ package com.ANP.service;
 
 import com.ANP.bean.*;
 import com.ANP.repository.AccountDAO;
-import com.ANP.repository.CustomerDao;
+import com.ANP.repository.CustomerDAO;
 import com.ANP.repository.OrgDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,7 @@ public class LoginHandler {
     @Autowired
     OrgDAO orgDAO;
     @Autowired
-    CustomerDao customerDao;
+    CustomerDAO customerDao;
     @Autowired
     AccountDAO accountDAO;
     @Autowired

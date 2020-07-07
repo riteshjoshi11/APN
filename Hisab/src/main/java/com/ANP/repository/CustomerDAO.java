@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
-public class CustomerDao {
+public class CustomerDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

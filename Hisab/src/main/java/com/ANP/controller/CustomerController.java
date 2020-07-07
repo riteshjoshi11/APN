@@ -1,18 +1,12 @@
 package com.ANP.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.ANP.bean.CustomerBean;
 import com.ANP.bean.ListParametersBean;
-import com.ANP.bean.PurchaseFromVendorBean;
-import com.ANP.bean.SearchParam;
 import com.ANP.service.CustomerHandler;
-import com.ANP.repository.CustomerDao;
+import com.ANP.repository.CustomerDAO;
 import com.ANP.repository.PurchaseFromVendorDAO;
-import com.ANP.util.ANPConstants;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -27,7 +21,7 @@ import javax.validation.Valid;
 public class CustomerController {
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerDAO customerDao;
 
     @Autowired
     private CustomerHandler customerHandler;

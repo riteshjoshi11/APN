@@ -32,7 +32,7 @@ import java.util.List;
 
 
 @Repository
-public class ReportDao {
+public class ReportDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
