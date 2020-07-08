@@ -373,8 +373,12 @@ public class EmployeeDAO {
     }
 
     public int updateEmployee(EmployeeBean employeeBean){
+        if(employeeBean.getTypeInt()==0)
+        {
+            throw new CustomAppException("Type cannot be 0 or blank","SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
+        }
         return namedParameterJdbcTemplate.update("update employee set first = :first," +
-                "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ," +
+                "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ,type = :typeInt " +
                 " currentsalarybalance = :currentsalarybalance ,lastsalarybalance = :lastsalarybalance where orgid = :orgId and id = :employeeId",new BeanPropertySqlParameterSource(employeeBean));
     }
 }

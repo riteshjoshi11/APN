@@ -49,7 +49,7 @@ public class ReportDAO {
             ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("Content-Disposition", "inline; filename=ParasGeneratedPdf.pdf");
+            headers.add("Content-Disposition", "inline; filename= "+ pdfPath.getFileName().toString());
 
             return ResponseEntity.ok()
                     .headers(headers)
@@ -73,7 +73,7 @@ public class ReportDAO {
             ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.add("Content-Disposition", "inline; filename=ParasGeneratedExcel.xlsx");
+            headers.add("Content-Disposition", "inline; filename= "+ excelPath.getFileName().toString());
 
             return ResponseEntity
                     .ok()
