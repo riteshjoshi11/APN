@@ -3,3 +3,8 @@ SET SQL_SAFE_UPDATES = 0;
 delete  from systemconfigurations;
 insert into `systemconfigurations`(`key`,`value`) values('ArchivePurge.archiveandpurgetablelist','retailsale,purchasefromvendor,paytovendor,paymentreceived,internaltransfer,generalexpense,employeesalarypayment,employeesalary,employeeaudit,delivery,customerinvoice,customeraudit');
 insert into `systemconfigurations`(`key`,`value`) values('ArchivePurge.DeleteAfterNumberOfDays',15);
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.HOST','smtp.gmail.com');
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.PORT','587');
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.PASSWORD','Qwerty1@3');
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.FROMEMAILADDRESS','mtest6551@gmail.com');
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.TRUST','smtp.gmail.com');
