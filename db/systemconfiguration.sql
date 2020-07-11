@@ -8,3 +8,4 @@ insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.PORT','
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.PASSWORD','Qwerty1@3');
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.FROMEMAILADDRESS','mtest6551@gmail.com');
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.TRUST','smtp.gmail.com');
+insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.SSLEnabled','true');
