@@ -373,7 +373,7 @@ public class EmployeeDAO {
     }
 
     public int updateEmployee(EmployeeBean employeeBean){
-        if(employeeBean.getTypeInt()==0)
+        if(employeeBean.getTypeInt()<=0)
         {
             throw new CustomAppException("Type cannot be 0 or blank","SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
