@@ -2,8 +2,11 @@ package com.ANP.repository;
 
 
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
+
 import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -19,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.*;
+
+import static com.ANP.util.ANPConstants.SYSTEM_AUDIT_CUSTOMER;
+import static com.ANP.util.ANPConstants.SYSTEM_AUDIT_EMPLOYEE;
 
 @Repository
 /*
@@ -43,17 +49,46 @@ public class UISystemDAO {
 
             SqlParameter[] declareparameters = {
                     new SqlParameter("ParamOrgId",Types.INTEGER),
-                    new SqlParameter("deleteCompanyData",Types.BOOLEAN),
-                    new SqlParameter("deleteSalaryData",Types.BOOLEAN),
-                    new SqlParameter("deleteAuditData",Types.BOOLEAN),
-                    new SqlParameter("deleteEmployeeSalaryBalance",Types.BOOLEAN),
-                    new SqlParameter("deleteEmployeeCompanyBalance",Types.BOOLEAN),
-                    new SqlParameter("deleteCustomerBalance",Types.BOOLEAN),
+                    new SqlParameter("DeleteCompanyData",Types.BOOLEAN),
+                    new SqlParameter("DeleteSalaryData",Types.BOOLEAN),
+                    new SqlParameter("DeleteEmployeeSalaryBalance",Types.BOOLEAN),
+                    new SqlParameter("DeleteEmployeeCompanyBalance",Types.BOOLEAN),
+                    new SqlParameter("DeleteCustomerBalance",Types.BOOLEAN),
             };
             procedure.setParameters(declareparameters);
             procedure.compile();
             procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,
                     deleteEmployeeCompanyBalance, deleteCustomerBalance);
+        }
+
+        public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll)
+        {
+            if(ANPUtils.isNullOrEmpty(identifier)){
+                throw new CustomAppException("identifier cannot be null","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+            }
+            else if(identifier.equals("customer")||identifier.equals("CUSTOMER")) {
+                identifier = SYSTEM_AUDIT_CUSTOMER;
+            }
+            else if(identifier.equals("employee")||identifier.equals("EMPLOYEE")){
+                identifier = SYSTEM_AUDIT_EMPLOYEE;
+            }
+            else {
+                throw new CustomAppException("supply right value for identifier","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+            }
+            StoredProcedure storedProcedure = new GenericStoredProcedure();
+            storedProcedure.setDataSource(dataSource);
+            storedProcedure.setSql("SoftDeleteAuditData_Procedure");
+            storedProcedure.setFunction(false);
+            System.out.println(identifier);
+            SqlParameter[] declareparameters = {
+                    new SqlParameter("ParamOrgId",Types.INTEGER),
+                    new SqlParameter("RecordNo",Types.INTEGER),
+                    new SqlParameter("Identifier",Types.VARCHAR),
+                    new SqlParameter("DeleteAll",Types.BOOLEAN),
+            };
+            storedProcedure.setParameters(declareparameters);
+            storedProcedure.compile();
+            storedProcedure.execute(orgId,recordNo,identifier,deleteAll);
         }
 
 

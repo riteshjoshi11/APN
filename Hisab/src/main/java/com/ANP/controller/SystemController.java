@@ -1,6 +1,7 @@
 package com.ANP.controller;
 
 
+import com.ANP.bean.SystemAuditBean;
 import com.ANP.bean.SystemBean;
 import com.ANP.repository.UISystemDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,15 @@ public class SystemController {
     {
         systemDAO.softDeleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),
                 systemBean.isDeleteEmployeeSalaryBalance(), systemBean.isDeleteEmployeeCompanyBalance(), systemBean.isDeleteCustomerBalance());
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @Async
+    @PostMapping(path = "/deleteAuditData", produces = "application/json")
+    public ResponseEntity deleteAuditData(@RequestBody SystemAuditBean systemAuditBean)
+    {
+        systemDAO.softDeleteAuditData(systemAuditBean.getOrgId(),systemAuditBean.getRecordNo(),
+                systemAuditBean.getIdentifier(),systemAuditBean.isDeleteAll());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

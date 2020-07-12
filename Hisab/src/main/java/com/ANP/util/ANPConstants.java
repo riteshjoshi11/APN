@@ -57,4 +57,8 @@ public interface ANPConstants {
       public static final String TRANSACTION_NAME_RETAIL_SALE = "RETAIL_SALE";
 
 
+      public static final String SYSTEM_AUDIT_CUSTOMER = "CUSTOMER";
+      public static final String SYSTEM_AUDIT_EMPLOYEE = "EMPLOYEE";
+
+
 }
