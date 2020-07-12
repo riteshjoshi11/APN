@@ -1,0 +1,145 @@
+Sales
+=====
+
+{
+  "noOfRecordsToShow": 50,
+  "orderBy": "",
+  "orgID": 24,
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "cusinv.date",
+      "fieldType": "string",
+      "soperator": ">=",
+      "value": "2020-06-01"
+    }
+  ],
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "cusinv.date",
+      "fieldType": "string",
+      "soperator": "<=",
+      "value": "2020-07-01"
+    }
+  ],
+"searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "customer.id",
+      "fieldType": "string",
+      "soperator": "=",
+      "value": "C57"
+    }
+  ],
+ "startIndex": 0
+}
+
+
+Purchase
+==========
+{
+  "noOfRecordsToShow": 50,
+  "orderBy": "",
+  "orgID": 24,
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "p.date",
+      "fieldType": "string",
+      "soperator": ">=",
+      "value": "2020-06-01"
+    }
+  ],
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "p.date",
+      "fieldType": "string",
+      "soperator": "<=",
+      "value": "2020-07-01"
+    }
+  ],
+"searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "customer.id",
+      "fieldType": "string",
+      "soperator": "=",
+      "value": "C57"
+    }
+  ],
+ "startIndex": 0
+}
+
+Pay to vendor
+==========
+{
+  "noOfRecordsToShow": 50,
+  "orderBy": "",
+  "orgID": 24,
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "paytov.date",
+      "fieldType": "string",
+      "soperator": ">=",
+      "value": "2020-06-01"
+    }
+  ],
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "paytov.date",
+      "fieldType": "string",
+      "soperator": "<=",
+      "value": "2020-07-01"
+    }
+  ],
+"searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "paytov.tocustomerid",
+      "fieldType": "string",
+      "soperator": "=",
+      "value": "C57"
+    }
+  ],
+ "startIndex": 0
+}
+
+Payment Received from Vendor
+==========
+{
+  "noOfRecordsToShow": 50,
+  "orderBy": "",
+  "orgID": 24,
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "prcvd.rcvddate",
+      "fieldType": "string",
+      "soperator": ">=",
+      "value": "2020-06-01"
+    }
+  ],
+  "searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "prcvd.rcvddate",
+      "fieldType": "string",
+      "soperator": "<=",
+      "value": "2020-07-01"
+    }
+  ],
+"searchParam": [
+    {
+      "condition": "AND",
+      "fieldName": "prcvd.fromcustomerid",
+      "fieldType": "string",
+      "soperator": "=",
+      "value": "C57"
+    }
+  ],
+ "startIndex": 0
+}
