@@ -4,6 +4,7 @@ package com.ANP.controller;
 import com.ANP.bean.City;
 import com.ANP.bean.EmployeeType;
 import com.ANP.bean.ExpenseCategory;
+import com.ANP.bean.OrgDetailsUIBean;
 import com.ANP.repository.UIListDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,10 @@ public class UIListController {
         return UIListDAO.getEmployeeType();
     }
 
+    @PostMapping(path = "/getOrgDetailsUILists", produces = "application/json")
+    public OrgDetailsUIBean getOrgDetailsUILists() {
+        return UIListDAO.getOrgDetailsUILists();
+    }
 }
 
 

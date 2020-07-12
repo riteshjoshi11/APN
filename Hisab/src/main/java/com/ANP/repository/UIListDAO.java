@@ -3,6 +3,7 @@ package com.ANP.repository;
 import com.ANP.bean.City;
 import com.ANP.bean.EmployeeType;
 import com.ANP.bean.ExpenseCategory;
+import com.ANP.bean.OrgDetailsUIBean;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -77,5 +78,10 @@ public class UIListDAO {
             employeeType.setName((rs.getString("name")));
             return employeeType;
         }
+    }
+
+    //please fill OrgDetailsUIBean with three lists
+    public OrgDetailsUIBean getOrgDetailsUILists() {
+        return null ;
     }
 }

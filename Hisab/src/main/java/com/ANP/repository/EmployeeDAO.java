@@ -379,6 +379,6 @@ public class EmployeeDAO {
         }
         return namedParameterJdbcTemplate.update("update employee set first = :first," +
                 "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ,type = :typeInt " +
-                " currentsalarybalance = :currentsalarybalance ,lastsalarybalance = :lastsalarybalance where orgid = :orgId and id = :employeeId",new BeanPropertySqlParameterSource(employeeBean));
+                " where orgid = :orgId and id = :employeeId",new BeanPropertySqlParameterSource(employeeBean));
     }
 }
