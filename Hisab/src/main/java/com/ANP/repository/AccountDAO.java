@@ -142,9 +142,8 @@ public class AccountDAO {
     }
 
     /*
-        TODO: Paras : Please write a single method querying three table Organization, Employee, Account
+        Paras : Please write a single method querying three table Organization, Employee, Account
         and Build Organization, Employee, Account and Set into the respective beans inside the Success Login Bean
-
      */
     public SuccessLoginBean getUserDetails(String mobileNumber, long orgId) {
         /*
@@ -155,7 +154,7 @@ public class AccountDAO {
         in.addValue("orgId", orgId);
 
         List<UserDetailBean> userDetailBeanList = namedParameterJdbcTemplate.query(
-                "select account.id,account.ownerid,account.accountnickname,account.createdbyid" +
+                "select employee.loginrequired, account.id,account.ownerid,account.accountnickname,account.createdbyid" +
                         ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
                         ", employee.last, employee.mobile, employee.loginusername, employee.currentsalarybalance" +
                         ",employee.lastsalarybalance, organization.id, organization.orgname" +
@@ -170,6 +169,11 @@ public class AccountDAO {
         }
 
         UserDetailBean userDetailBean = userDetailBeanList.get(0);
+
+        if(userDetailBean.getLoginrequired()==false) {
+            throw new CustomAppException("User Disabled", "SERVER.LOGIN.USER_LOGIN_DISABLED", HttpStatus.EXPECTATION_FAILED);
+        }
+
         EmployeeBean employeeBean = new EmployeeBean();
         SuccessLoginBean successLoginBean = new SuccessLoginBean();
 
@@ -228,7 +232,7 @@ public class AccountDAO {
             userDetailBean.setFirst(rs.getString("employee.first"));
             userDetailBean.setLast(rs.getString("employee.last"));
             userDetailBean.setMobile(rs.getString("employee.mobile"));
-            //   userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
+            userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
             //   userDetailBean.setType(rs.getString("employee.type"));
             userDetailBean.setLoginusername(rs.getString("employee.loginusername"));
             userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));

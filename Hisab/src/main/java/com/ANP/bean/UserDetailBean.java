@@ -11,9 +11,7 @@ public class UserDetailBean {
     private double lastbalance;
     private long accountId;
 
-
     //Employeebean
-
     private String employeeId;
     private String first;
     private String last;
@@ -28,11 +26,6 @@ public class UserDetailBean {
     private String orgName;
     private String city;
     private String state;
-
-
-
-
-
 
 
     public long getAccountId(){return  accountId;}
@@ -87,10 +80,6 @@ public class UserDetailBean {
     public void setLastbalance(double lastbalance) {
         this.lastbalance = lastbalance;
     }
-
-
-
-
 
     //employee
 
@@ -151,8 +140,6 @@ public class UserDetailBean {
         this.lastsalarybalance=lastsalarybalance;
     }
 
-
-
     //Organization
     public long getOrgId() {
         return orgId;
@@ -186,10 +173,7 @@ public class UserDetailBean {
         this.orgName = orgName;
     }
 
-
-
-
-   /* public boolean getLoginrequired(){ return loginrequired; }
+    public boolean getLoginrequired(){ return loginrequired; }
 
     public void setLoginrequired(boolean loginrequired){
         this.loginrequired = loginrequired;
@@ -201,5 +185,5 @@ public class UserDetailBean {
 
     public void setType(String type){
         this.type=type;
-    }*/
+    }
 }
