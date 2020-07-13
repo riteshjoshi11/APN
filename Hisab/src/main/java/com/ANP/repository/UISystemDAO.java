@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 
@@ -61,20 +62,16 @@ public class UISystemDAO {
                     deleteEmployeeCompanyBalance, deleteCustomerBalance);
         }
 
-        public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll)
-        {
+        public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll) {
+
             if(ANPUtils.isNullOrEmpty(identifier)){
                 throw new CustomAppException("identifier cannot be null","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
             }
-            else if(identifier.equals("customer")||identifier.equals("CUSTOMER")) {
-                identifier = SYSTEM_AUDIT_CUSTOMER;
+
+            if( !(identifier.equalsIgnoreCase (SYSTEM_AUDIT_CUSTOMER) || identifier.equalsIgnoreCase(SYSTEM_AUDIT_EMPLOYEE)) ) {
+                throw new CustomAppException("supply right value for identifier","SERVER.SOFT_DELETE_AUDIT.IDENTFIER_NOT_CORRECT", HttpStatus.EXPECTATION_FAILED);
             }
-            else if(identifier.equals("employee")||identifier.equals("EMPLOYEE")){
-                identifier = SYSTEM_AUDIT_EMPLOYEE;
-            }
-            else {
-                throw new CustomAppException("supply right value for identifier","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
-            }
+
             StoredProcedure storedProcedure = new GenericStoredProcedure();
             storedProcedure.setDataSource(dataSource);
             storedProcedure.setSql("SoftDeleteAuditData_Procedure");
@@ -88,7 +85,7 @@ public class UISystemDAO {
             };
             storedProcedure.setParameters(declareparameters);
             storedProcedure.compile();
-            storedProcedure.execute(orgId,recordNo,identifier,deleteAll);
+            storedProcedure.execute(orgId,recordNo,identifier.toUpperCase(),deleteAll);
         }
 
 
