@@ -2,9 +2,17 @@ package com.ANP.bean;
 
 public class SystemAuditBean {
     private long orgId;
-    private long recordNo;
+    private long recordId;
     private String identifier;
     private boolean deleteAll;
+
+    public long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(long recordId) {
+        this.recordId = recordId;
+    }
 
     public long getOrgId() {
         return orgId;
@@ -12,14 +20,6 @@ public class SystemAuditBean {
 
     public void setOrgId(long orgId) {
         this.orgId = orgId;
-    }
-
-    public long getRecordNo() {
-        return recordNo;
-    }
-
-    public void setRecordNo(long recordNo) {
-        this.recordNo = recordNo;
     }
 
     public String getIdentifier() {

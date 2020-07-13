@@ -29,7 +29,7 @@ public class SystemController {
     @PostMapping(path = "/deleteAuditData", produces = "application/json")
     public ResponseEntity deleteAuditData(@RequestBody SystemAuditBean systemAuditBean)
     {
-        systemDAO.softDeleteAuditData(systemAuditBean.getOrgId(),systemAuditBean.getRecordNo(),
+        systemDAO.softDeleteAuditData(systemAuditBean.getOrgId(),systemAuditBean.getRecordId(),
                 systemAuditBean.getIdentifier(),systemAuditBean.isDeleteAll());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
