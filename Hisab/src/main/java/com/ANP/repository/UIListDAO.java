@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.*;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,12 +29,11 @@ public class UIListDAO {
 
     public int createCity(City city) {
         try {
-        return namedParameterJdbcTemplate.update(
-                "insert into city (name) values(:name)",
-                new BeanPropertySqlParameterSource(city));
-        }
-        catch (DuplicateKeyException e) {
-            throw new CustomAppException("Duplicate Entry","SERVER.CREATE_CITY.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+            return namedParameterJdbcTemplate.update(
+                    "insert into city (name) values(:name)",
+                    new BeanPropertySqlParameterSource(city));
+        } catch (DuplicateKeyException e) {
+            throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_CITY.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -65,10 +65,11 @@ public class UIListDAO {
         }
     }
 
-    public List<EmployeeType> getEmployeeType() {
-        return namedParameterJdbcTemplate.query("select * from employeetype", new EmployeeTypeMapper());
+    public List<UIItem> getEmployeeType() {
+        //return namedParameterJdbcTemplate.query("select * from employeetype", new EmployeeTypeMapper());
+        return getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_EMPLOYEE_TYPE);
     }
-
+/*
     private static final class EmployeeTypeMapper implements RowMapper<EmployeeType> {
         public EmployeeType mapRow(ResultSet rs, int rowNum) throws SQLException {
             EmployeeType employeeType = new EmployeeType();
@@ -77,25 +78,20 @@ public class UIListDAO {
             return employeeType;
         }
     }
-
-    //please fill OrgDetailsUIBean with three lists
+*/
+    //OrgDetailsUIBean with three lists
     public OrgDetailsUIBean getOrgDetailsUILists() {
         OrgDetailsUIBean orgDetailsUIBean = new OrgDetailsUIBean();
-        String tableNameArray[] = {"companytype","businessnature","noofemployee"};
-        List<UIItem> uiItemList;
-        for(int i = 0 ; i<tableNameArray.length ; i++) {
-            uiItemList = namedParameterJdbcTemplate.query("select id,name from " + tableNameArray[i], new OrgSystemUIMapper());
-            if(i == 0) {
-                orgDetailsUIBean.setCompanyTypeList(uiItemList);
-            } else if(i == 1) {
-                orgDetailsUIBean.setBusinessNatureList(uiItemList);
-            } else {
-                orgDetailsUIBean.setNoOfEmployeeList(uiItemList);
-            }
-        }
+        //Get the list one by one and set on the orgDetailsBean
+        orgDetailsUIBean.setCompanyTypeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_COMAPANYTYPE));
+        orgDetailsUIBean.setBusinessNatureList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_BUSINESS_NATURE));
+        orgDetailsUIBean.setNoOfEmployeeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_NOOFEMPLOYEES));
         return orgDetailsUIBean;
     }
 
+    private List<UIItem> getUIItemListForATable(String tableName) {
+        return namedParameterJdbcTemplate.query("select id,name from " + tableName, new OrgSystemUIMapper());
+    }
 
     private static final class OrgSystemUIMapper implements RowMapper<UIItem> {
         public UIItem mapRow(ResultSet rs, int rowNum) throws SQLException {
