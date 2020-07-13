@@ -1,9 +1,6 @@
 package com.ANP.repository;
 
-import com.ANP.bean.City;
-import com.ANP.bean.EmployeeType;
-import com.ANP.bean.ExpenseCategory;
-import com.ANP.bean.OrgDetailsUIBean;
+import com.ANP.bean.*;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -82,6 +80,29 @@ public class UIListDAO {
 
     //please fill OrgDetailsUIBean with three lists
     public OrgDetailsUIBean getOrgDetailsUILists() {
-        return null ;
+        OrgDetailsUIBean orgDetailsUIBean = new OrgDetailsUIBean();
+        String tableNameArray[] = {"companytype","businessnature","noofemployee"};
+        List<UIItem> uiItemList;
+        for(int i = 0 ; i<tableNameArray.length ; i++) {
+            uiItemList = namedParameterJdbcTemplate.query("select id,name from " + tableNameArray[i], new OrgSystemUIMapper());
+            if(i == 0) {
+                orgDetailsUIBean.setCompanyTypeList(uiItemList);
+            } else if(i == 1) {
+                orgDetailsUIBean.setBusinessNatureList(uiItemList);
+            } else {
+                orgDetailsUIBean.setNoOfEmployeeList(uiItemList);
+            }
+        }
+        return orgDetailsUIBean;
+    }
+
+
+    private static final class OrgSystemUIMapper implements RowMapper<UIItem> {
+        public UIItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+            UIItem uiItem = new UIItem();
+            uiItem.setUiItemCode(rs.getString("id"));
+            uiItem.setUiItemName(rs.getString("name"));
+            return uiItem;
+        }
     }
 }

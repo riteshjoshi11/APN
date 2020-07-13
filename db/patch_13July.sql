@@ -5,14 +5,14 @@ DELIMITER $$
 USE `antrackerdb`$$
 CREATE DEFINER=`root`@`%` PROCEDURE `SoftDeleteOrgData_Procedure`(
 	IN ParamOrgId INT,
-    IN deleteCompanyData boolean,
-    IN deleteSalaryData boolean,
-    IN deleteEmployeeSalaryBalance boolean,
-    IN deleteEmployeeCompanyBalance  boolean,
-    IN deleteCustomerBalance boolean
+    IN DeleteCompanyData boolean,
+    IN DeleteSalaryData boolean,
+    IN DeleteEmployeeSalaryBalance boolean,
+    IN DeleteEmployeeCompanyBalance  boolean,
+    IN DeleteCustomerBalance boolean
 )
 BEGIN
-If(deleteCompanyData = true) then
+If(DeleteCompanyData = true) then
 	update customerinvoice SET `isdeleted` = true, `deletedate`= CURDATE() where orgid = ParamOrgId;
 	update delivery SET `isdeleted` = true, `deletedate`= CURDATE() where orgid = ParamOrgId;
 	update generalexpense SET `isdeleted` = true , `deletedate`= CURDATE() where orgid = ParamOrgId;
@@ -22,19 +22,19 @@ If(deleteCompanyData = true) then
 	update purchasefromvendor SET `isdeleted` = true , `deletedate`= CURDATE() where orgid = ParamOrgId;
 	update retailsale SET `isdeleted` = true , `deletedate`= CURDATE() where orgid = ParamOrgId;
 End if;
-IF(deleteSalaryData = true) then
+IF(DeleteSalaryData = true) then
 	update employeesalarypayment SET `isdeleted` = true , `deletedate`= CURDATE() where orgid = ParamOrgId;
 	update employeesalary SET `isdeleted` = true , `deletedate`= CURDATE() where orgid = ParamOrgId;
 END if;
 
 
-If(deleteEmployeeSalaryBalance = true) then
+If(DeleteEmployeeSalaryBalance = true) then
    update employee  SET `currentsalarybalance` = 0, `lastsalarybalance` = 0 where orgid = ParamOrgId;
 END if;
-If(deleteEmployeeCompanyBalance = true) then
+If(DeleteEmployeeCompanyBalance = true) then
 	update `account` SET `currentbalance` = 0, `lastbalance` = 0 where type = 'Employee' and orgid = ParamOrgId;
 END if;
-If(deleteCustomerBalance = true) then
+If(DeleteCustomerBalance = true) then
 	update `account` SET `currentbalance` = 0, `lastbalance` = 0 where type = 'Customer' and orgid = ParamOrgId;
 END if;
 
