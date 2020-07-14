@@ -39,54 +39,55 @@ public class UISystemDAO {
     @Autowired
     DataSource dataSource;
 
-   @Transactional(rollbackFor = Exception.class)
-        public void softDeleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
-                                                      boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
-        {
-            StoredProcedure procedure = new GenericStoredProcedure();
-            procedure.setDataSource(dataSource);
-            procedure.setSql("SoftDeleteOrgData_Procedure");
-            procedure.setFunction(false);
+    @Transactional(rollbackFor = Exception.class)
+    public void softDeleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
+                                                  boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
+    {
+        StoredProcedure procedure = new GenericStoredProcedure();
+        procedure.setDataSource(dataSource);
+        procedure.setSql("SoftDeleteOrgData_Procedure");
+        procedure.setFunction(false);
 
-            SqlParameter[] declareparameters = {
-                    new SqlParameter("ParamOrgId",Types.INTEGER),
-                    new SqlParameter("DeleteCompanyData",Types.BOOLEAN),
-                    new SqlParameter("DeleteSalaryData",Types.BOOLEAN),
-                    new SqlParameter("DeleteEmployeeSalaryBalance",Types.BOOLEAN),
-                    new SqlParameter("DeleteEmployeeCompanyBalance",Types.BOOLEAN),
-                    new SqlParameter("DeleteCustomerBalance",Types.BOOLEAN),
-            };
-            procedure.setParameters(declareparameters);
-            procedure.compile();
-            procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,
-                    deleteEmployeeCompanyBalance, deleteCustomerBalance);
+        SqlParameter[] declareparameters = {
+                new SqlParameter("ParamOrgId",Types.INTEGER),
+                new SqlParameter("DeleteCompanyData",Types.BOOLEAN),
+                new SqlParameter("DeleteSalaryData",Types.BOOLEAN),
+                new SqlParameter("DeleteAuditData",Types.BOOLEAN),
+                new SqlParameter("DeleteEmployeeSalaryBalance",Types.BOOLEAN),
+                new SqlParameter("DeleteEmployeeCompanyBalance",Types.BOOLEAN),
+                new SqlParameter("DeleteCustomerBalance",Types.BOOLEAN),
+        };
+        procedure.setParameters(declareparameters);
+        procedure.compile();
+        procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,
+                deleteEmployeeCompanyBalance, deleteCustomerBalance);
+    }
+
+    public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll) {
+
+        if(ANPUtils.isNullOrEmpty(identifier)){
+            throw new CustomAppException("identifier cannot be null","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
         }
 
-        public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll) {
-
-            if(ANPUtils.isNullOrEmpty(identifier)){
-                throw new CustomAppException("identifier cannot be null","SERVER.SOFT_DELETE_AUDIT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
-            }
-
-            if( !(identifier.equalsIgnoreCase (SYSTEM_AUDIT_CUSTOMER) || identifier.equalsIgnoreCase(SYSTEM_AUDIT_EMPLOYEE)) ) {
-                throw new CustomAppException("supply right value for identifier","SERVER.SOFT_DELETE_AUDIT.IDENTFIER_NOT_CORRECT", HttpStatus.EXPECTATION_FAILED);
-            }
-
-            StoredProcedure storedProcedure = new GenericStoredProcedure();
-            storedProcedure.setDataSource(dataSource);
-            storedProcedure.setSql("SoftDeleteAuditData_Procedure");
-            storedProcedure.setFunction(false);
-            System.out.println(identifier);
-            SqlParameter[] declareparameters = {
-                    new SqlParameter("ParamOrgId",Types.INTEGER),
-                    new SqlParameter("RecordNo",Types.INTEGER),
-                    new SqlParameter("Identifier",Types.VARCHAR),
-                    new SqlParameter("DeleteAll",Types.BOOLEAN),
-            };
-            storedProcedure.setParameters(declareparameters);
-            storedProcedure.compile();
-            storedProcedure.execute(orgId,recordNo,identifier.toUpperCase(),deleteAll);
+        if( !(identifier.equalsIgnoreCase (SYSTEM_AUDIT_CUSTOMER) || identifier.equalsIgnoreCase(SYSTEM_AUDIT_EMPLOYEE)) ) {
+            throw new CustomAppException("supply right value for identifier","SERVER.SOFT_DELETE_AUDIT.IDENTFIER_NOT_CORRECT", HttpStatus.EXPECTATION_FAILED);
         }
+
+        StoredProcedure storedProcedure = new GenericStoredProcedure();
+        storedProcedure.setDataSource(dataSource);
+        storedProcedure.setSql("SoftDeleteAuditData_Procedure");
+        storedProcedure.setFunction(false);
+        System.out.println(identifier);
+        SqlParameter[] declareparameters = {
+                new SqlParameter("ParamOrgId",Types.INTEGER),
+                new SqlParameter("RecordNo",Types.INTEGER),
+                new SqlParameter("Identifier",Types.VARCHAR),
+                new SqlParameter("DeleteAll",Types.BOOLEAN),
+        };
+        storedProcedure.setParameters(declareparameters);
+        storedProcedure.compile();
+        storedProcedure.execute(orgId,recordNo,identifier.toUpperCase(),deleteAll);
+    }
 
 
 }
