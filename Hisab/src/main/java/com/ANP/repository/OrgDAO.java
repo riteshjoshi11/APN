@@ -106,7 +106,6 @@ public class OrgDAO {
     }
 
     public OrgDetails getOrgDetails(long orgId) {
-
         Map<String, Object> param = new HashMap<>();
         param.put("orgId", orgId);
         List<OrgDetails> orgDetailsList = namedParameterJdbcTemplate.query("select orgdet.*, " +

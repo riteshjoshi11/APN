@@ -185,12 +185,9 @@ public class EmployeeDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
-
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
+            orderBy = "e.first,e.last desc";
         }
-
-
         return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, " +
                         " (select empt.`name` from employeetype empt where e.type = empt.id) as emptype " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
@@ -198,7 +195,6 @@ public class EmployeeDAO {
                         + " offset :startIndex",
                 param, new FullEmployeeMapper()) ;
     }
-
 
     private static final class FullEmployeeMapper implements RowMapper<EmployeeBean> {
         public EmployeeBean mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -208,11 +204,11 @@ public class EmployeeDAO {
             empbean.setEmployeeId(rs.getString("e.id"));
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
-            empbean.setLoginusername(rs.getString("e.loginusername"));
+          //  empbean.setLoginusername(rs.getString("e.loginusername"));
             empbean.setType(rs.getString("emptype"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
-            empbean.setCreateDate(rs.getTimestamp("e.createdate"));
+            //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             return empbean;
         }
     }//end FullEmployeeMapper
