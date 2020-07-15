@@ -2,6 +2,7 @@ package com.ANP.repository;
 
 import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
+import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -67,7 +68,24 @@ public class UIListDAO {
 
     public List<UIItem> getEmployeeType() {
         //return namedParameterJdbcTemplate.query("select * from employeetype", new EmployeeTypeMapper());
-        return getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_EMPLOYEE_TYPE);
+        List<SearchParam> searchParamList = new ArrayList<>();
+        SearchParam searchParam = new SearchParam();
+        searchParam.setCondition("");
+        searchParam.setFieldName("name");
+        searchParam.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam.setSoperator("<>");
+        searchParam.setValue("SUPER_ADMIN");
+
+
+        SearchParam searchParam1 = new SearchParam();
+        searchParam1.setCondition("and");
+        searchParam1.setFieldName("name");
+        searchParam1.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam1.setSoperator("<>");
+        searchParam1.setValue("VIRTUAL");
+        searchParamList.add(searchParam);
+        searchParamList.add(searchParam1);
+        return getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_EMPLOYEE_TYPE,searchParamList);
     }
 /*
     private static final class EmployeeTypeMapper implements RowMapper<EmployeeType> {
@@ -83,14 +101,20 @@ public class UIListDAO {
     public OrgDetailsUIBean getOrgDetailsUILists() {
         OrgDetailsUIBean orgDetailsUIBean = new OrgDetailsUIBean();
         //Get the list one by one and set on the orgDetailsBean
-        orgDetailsUIBean.setCompanyTypeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_COMAPANYTYPE));
-        orgDetailsUIBean.setBusinessNatureList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_BUSINESS_NATURE));
-        orgDetailsUIBean.setNoOfEmployeeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_NOOFEMPLOYEES));
+
+        orgDetailsUIBean.setCompanyTypeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_COMAPANYTYPE,null));
+        orgDetailsUIBean.setBusinessNatureList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_BUSINESS_NATURE,null));
+        orgDetailsUIBean.setNoOfEmployeeList(getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_NOOFEMPLOYEES,null));
+
         return orgDetailsUIBean;
     }
 
-    private List<UIItem> getUIItemListForATable(String tableName) {
-        return namedParameterJdbcTemplate.query("select id,name from " + tableName, new OrgSystemUIMapper());
+    private List<UIItem> getUIItemListForATable(String tableName, List<SearchParam> searchParams) {
+        String sql = "select id,name from " + tableName ;
+        if(searchParams != null) {
+            sql = "select id, name from " + tableName +" where " + ANPUtils.getWhereClause(searchParams);
+        }
+            return namedParameterJdbcTemplate.query( sql , new OrgSystemUIMapper());
     }
 
     private static final class OrgSystemUIMapper implements RowMapper<UIItem> {
