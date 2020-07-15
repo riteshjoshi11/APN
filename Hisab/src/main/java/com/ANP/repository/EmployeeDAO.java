@@ -43,13 +43,12 @@ public class EmployeeDAO {
             Map param = new HashMap<String, Object>();
             String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
-            return  namedParameterJdbcTemplate.update(
+            return namedParameterJdbcTemplate.update(
                     "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
                             ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
                             ",:currentsalarybalance,:lastsalarybalance,:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
-        }
-        catch (DuplicateKeyException e) {
-            throw new CustomAppException("Duplicate Entry","SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+        } catch (DuplicateKeyException e) {
+            throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -99,7 +98,7 @@ public class EmployeeDAO {
     }
 
     public boolean createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
-        if(!employeeSalaryBean.isForceCreate()) {
+        if (!employeeSalaryBean.isForceCreate()) {
             this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
         }
 
@@ -114,7 +113,7 @@ public class EmployeeDAO {
 
     public boolean createEmployeeSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
 
-        if(!employeeSalaryPaymentBean.isForceCreate()) {
+        if (!employeeSalaryPaymentBean.isForceCreate()) {
             this.isDuplicatePaySalarySuspect(employeeSalaryPaymentBean);
         }
 
@@ -140,28 +139,16 @@ public class EmployeeDAO {
      */
 
     public List<EmployeeBean> searchEmployees(EmployeeBean employeeBean) {
-
-        if(employeeBean.getOrgId()<=0) {
-//          throw new java.lang.RuntimeException("orgId is mandatory"); //we are throwing an error when orgId is not submitted
+        if (employeeBean.getOrgId() <= 0) {
             throw new CustomAppException("orgId is mandatory", "SERVER.SEARCH_EMPLOYEE.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
         }
-        System.out.println(employeeBean.getOrgId());
-        String orgId = Long.toString(employeeBean.getOrgId());
-        String firstName = employeeBean.getFirst();
-        String lastName = employeeBean.getLast();
-        if(firstName == "")
-            firstName = null;
-        if(lastName == "")
-            lastName = null;
-        List<EmployeeBean> employeeBeanList=
-                jdbcTemplate.query("select first,last,id from employee " +
-                                " where orgid = ? and (first" +
-                                " like ? or last like ?)  ",
-                        new String[]{orgId,"%"+firstName+"%","%"+lastName+"%"}
-                        ,new EmployeeDAO.EmployeeMapper());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgid", employeeBean.getOrgId());
+        List<EmployeeBean> employeeBeanList = namedParameterJdbcTemplate.query("select first,last,id from employee " +
+                " where orgid = :orgid", params, new EmployeeDAO.EmployeeMapper());
         return employeeBeanList;
     }
-
 
 
     private static final class EmployeeMapper implements RowMapper<EmployeeBean> {
@@ -177,23 +164,22 @@ public class EmployeeDAO {
 
     public List<EmployeeBean> listEmployeesWithBalancePaged(long orgID, Collection<SearchParam> searchParams,
                                                             String orderBy, int noOfRecordsToShow, int startIndex) {
-        if(startIndex == 0)
-        {
+        if (startIndex == 0) {
             startIndex = 1;
         }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
-        param.put("noOfRecordsToShow",noOfRecordsToShow);
-        param.put("startIndex",startIndex-1);
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "e.first,e.last desc";
         }
         return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, " +
                         " (select empt.`name` from employeetype empt where e.type = empt.id) as emptype " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
-                param, new FullEmployeeMapper()) ;
+                param, new FullEmployeeMapper());
     }
 
     private static final class FullEmployeeMapper implements RowMapper<EmployeeBean> {
@@ -204,7 +190,7 @@ public class EmployeeDAO {
             empbean.setEmployeeId(rs.getString("e.id"));
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
-          //  empbean.setLoginusername(rs.getString("e.loginusername"));
+            //  empbean.setLoginusername(rs.getString("e.loginusername"));
             empbean.setType(rs.getString("emptype"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
@@ -215,28 +201,27 @@ public class EmployeeDAO {
 
 
     public List<EmployeeSalary> listEmpSalariesPaged(long orgID, Collection<SearchParam> searchParams,
-                                                            String orderBy, int noOfRecordsToShow, int startIndex) {
-        if(startIndex == 0)
-        {
+                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
+        if (startIndex == 0) {
             startIndex = 1;
+
         }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgid", orgID);
-        param.put("noOfRecordsToShow",noOfRecordsToShow);
-        param.put("startIndex",startIndex-1);
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
 
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "empsal.id desc";
         }
-
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
                         " empsal.details, empsal.includeincalc,empsal.createdate,empsal.createdbyid " +
                         " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
                         " and (empsal.isdeleted is null or  empsal.isdeleted <> true) " +
-                          ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
-                param, new FullEmployeeSalaryMapper()) ;
+                param, new FullEmployeeSalaryMapper());
     }
 
 
@@ -247,7 +232,7 @@ public class EmployeeDAO {
             employeeSalary.getEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalary.getEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalary.getEmployeeBean().setMobile(rs.getString("e.mobile"));
-    //      employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
+            //      employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
             employeeSalary.setAmount(rs.getFloat("empsal.amount"));
             employeeSalary.setDetails(rs.getString("empsal.details"));
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
@@ -258,21 +243,20 @@ public class EmployeeDAO {
     }//end
 
     /*
-    *
+     *
      */
     public List<EmployeeSalaryPayment> listEmpPaidSalariesPaged(long orgID, Collection<SearchParam> searchParams,
                                                                 String orderBy, int noOfRecordsToShow, int startIndex) {
-        if(startIndex == 0)
-        {
+        if (startIndex == 0) {
             startIndex = 1;
         }
         Map<String, Object> param = new HashMap<String, Object>();
 
         param.put("orgid", orgID);
-        param.put("noOfRecordsToShow",noOfRecordsToShow);
-        param.put("startIndex",startIndex-1);
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
 
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "empsalpay.id desc";
         }
         List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
@@ -281,7 +265,7 @@ public class EmployeeDAO {
                         "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
                         " from employee e, employeesalarypayment empsalpay " +
                         "where e.id=empsalpay.toemployeeid and e.orgid=:orgid and (empsalpay.isdeleted is null or empsalpay.isdeleted <> true) " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
                 param, new FullEmployeeSalaryPayment());
         return EmployeeSalaryPaymentlist;
@@ -294,7 +278,7 @@ public class EmployeeDAO {
             employeeSalaryPayment.getToEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
-    //      employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
+            //      employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
             employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
@@ -308,73 +292,72 @@ public class EmployeeDAO {
         }
     }
 
-    public void isDuplicatePaySalarySuspect(EmployeeSalaryPayment employeeSalaryPayment){
+    public void isDuplicatePaySalarySuspect(EmployeeSalaryPayment employeeSalaryPayment) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("orgid", employeeSalaryPayment.getOrgId());
         params.put("toemployeeid", employeeSalaryPayment.getToEmployeeId());
 
-        long actualamount = (long)(employeeSalaryPayment.getAmount());
+        long actualamount = (long) (employeeSalaryPayment.getAmount());
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ," +
                 " id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +
-                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) paysalary where amount = :amount",params, Integer.class);
+                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) paysalary where amount = :amount", params, Integer.class);
         System.out.println(count);
-        if(count>0) {
+        if (count > 0) {
             throw new CustomAppException("The Salary payment like duplicate", "SERVER.CREATE_SALARY_PAYMENT.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 
 
-    public void isDuplicateSalaryDueSuspect(EmployeeSalary employeeSalary){
+    public void isDuplicateSalaryDueSuspect(EmployeeSalary employeeSalary) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("orgid", employeeSalary.getOrgId());
         params.put("toemployeeid", employeeSalary.getToEmployeeID());
 
-        long actualamount = (long)(employeeSalary.getAmount());
+        long actualamount = (long) (employeeSalary.getAmount());
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount , " +
                 " id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +
-                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) salarydue where amount = :amount",params, Integer.class);
+                " and createdate >= date(now()) + interval -5 day   order by id desc limit 1) salarydue where amount = :amount", params, Integer.class);
         System.out.println(count);
-        if(count>0) {
+        if (count > 0) {
             throw new CustomAppException("The Salary Due looks like duplicate", "SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
 
     public List<AccountBean> getEmployeeAccountsByNames(AccountBean accountBean) {
-
-        if(accountBean.getOrgId()<=0) {
-            throw new CustomAppException("orgId is mandatory","SERVER.GET_EMPLOYEE_ACCOUNT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+        if (accountBean.getOrgId() <= 0) {
+            throw new CustomAppException("orgId is mandatory", "SERVER.GET_EMPLOYEE_ACCOUNT.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
         }
         System.out.println(accountBean.getOrgId());
         String orgId = Long.toString(accountBean.getOrgId());
         String nickname = accountBean.getAccountnickname();
         return jdbcTemplate.query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
-                                " like ?)  ", new String[]{orgId,"%"+nickname+"%"}
-                                ,new EmployeeDAO.AccByNickMapper());
+                        " like ?)  ", new String[]{orgId, "%" + nickname + "%"}
+                , new EmployeeDAO.AccByNickMapper());
 
     }
+
     private static final class AccByNickMapper implements RowMapper<AccountBean> {
-    public AccountBean mapRow(ResultSet rs, int rowNum) throws SQLException {
-        AccountBean accountBean = new AccountBean();
-        accountBean.setOwnerid(rs.getString("ownerid"));
-        accountBean.setAccountnickname(rs.getString("accountnickname"));
-        accountBean.setAccountId(rs.getLong("id"));
-        return accountBean;
+        public AccountBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AccountBean accountBean = new AccountBean();
+            accountBean.setOwnerid(rs.getString("ownerid"));
+            accountBean.setAccountnickname(rs.getString("accountnickname"));
+            accountBean.setAccountId(rs.getLong("id"));
+            return accountBean;
         }
     }
 
-    public int updateEmployee(EmployeeBean employeeBean){
-        if(employeeBean.getTypeInt()<=0)
-        {
-            throw new CustomAppException("Type cannot be 0 or blank","SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
+    public int updateEmployee(EmployeeBean employeeBean) {
+        if (employeeBean.getTypeInt() <= 0) {
+            throw new CustomAppException("Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
         return namedParameterJdbcTemplate.update("update employee set first = :first," +
                 "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ,type = :typeInt " +
-                " where orgid = :orgId and id = :employeeId",new BeanPropertySqlParameterSource(employeeBean));
+                " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
     }
 }
