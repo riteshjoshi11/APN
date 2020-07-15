@@ -16,5 +16,6 @@ CREATE TABLE `phonebook` (
   `contactid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `phonebook_ibfk_1_idx` (`contactid`),
-  CONSTRAINT `phonebook_ibfk_1` FOREIGN KEY (`contactid`) REFERENCES `contact` (`id`)
+  CONSTRAINT `phonebook_ibfk_1` FOREIGN KEY (`contactid`) REFERENCES `contact` (`id`),
+  CONSTRAINT `phonebook_ibfk_2` FOREIGN KEY (`orgid`) REFERENCES `organization` (`id`)
 );
