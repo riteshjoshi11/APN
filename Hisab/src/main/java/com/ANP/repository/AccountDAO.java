@@ -156,7 +156,7 @@ public class AccountDAO {
         List<UserDetailBean> userDetailBeanList = namedParameterJdbcTemplate.query(
                 "select employee.loginrequired, account.id,account.ownerid,account.accountnickname,account.createdbyid" +
                         ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
-                        ", employee.last, employee.mobile, employee.loginusername, employee.currentsalarybalance" +
+                        ", employee.last, employee.mobile, employee.currentsalarybalance" +
                         ",employee.lastsalarybalance, organization.id, organization.orgname" +
                         ", organization.state, organization.city from organization,employee,account where " +
                         "employee.id = account.ownerid" +
@@ -183,7 +183,6 @@ public class AccountDAO {
         employeeBean.setFirst(userDetailBean.getFirst());
         employeeBean.setLast(userDetailBean.getLast());
         employeeBean.setMobile(userDetailBean.getMobile());
-        employeeBean.setLoginusername(userDetailBean.getLoginusername());
         employeeBean.setOrgId(userDetailBean.getOrgId());
 
         //employeeBean.setLoginrequired(userDetailBean.getLoginrequired());
@@ -234,7 +233,6 @@ public class AccountDAO {
             userDetailBean.setMobile(rs.getString("employee.mobile"));
             userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
             //   userDetailBean.setType(rs.getString("employee.type"));
-            userDetailBean.setLoginusername(rs.getString("employee.loginusername"));
             userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
             userDetailBean.setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
 

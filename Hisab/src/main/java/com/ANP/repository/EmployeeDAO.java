@@ -44,8 +44,8 @@ public class EmployeeDAO {
             String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
             return namedParameterJdbcTemplate.update(
-                    "insert into employee (id,first,last,mobile,loginrequired,loginusername,currentsalarybalance" +
-                            ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired,:loginusername" +
+                    "insert into employee (id,first,last,mobile,loginrequired,currentsalarybalance" +
+                            ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired" +
                             ",:currentsalarybalance,:lastsalarybalance,:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
@@ -190,7 +190,6 @@ public class EmployeeDAO {
             empbean.setEmployeeId(rs.getString("e.id"));
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
-            //  empbean.setLoginusername(rs.getString("e.loginusername"));
             empbean.setType(rs.getString("emptype"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
@@ -354,10 +353,10 @@ public class EmployeeDAO {
 
     public int updateEmployee(EmployeeBean employeeBean) {
         if (employeeBean.getTypeInt() <= 0) {
-            throw new CustomAppException("Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
+            throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
         return namedParameterJdbcTemplate.update("update employee set first = :first," +
-                "last=:last, mobile=:mobile, loginrequired = :loginrequired, loginusername = :loginusername ,type = :typeInt " +
+                "last=:last, loginrequired = :loginrequired, type = :typeInt " +
                 " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
     }
 }

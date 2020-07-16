@@ -18,7 +18,6 @@ public class EmployeeBean extends CommonAttribute {
     private String last;
     @Pattern(regexp = "\\s*|.{10}", message = "mobile no. should be of 10 digits")
     private String mobile;
-    private String loginusername;
     private String type;
     private int typeInt;
     private double currentsalarybalance;
@@ -97,14 +96,6 @@ public class EmployeeBean extends CommonAttribute {
 
     public void setMobile(String mobile){
         this.mobile=mobile;
-    }
-
-    public String getLoginusername(){
-        return loginusername;
-    }
-
-    public void setLoginusername(String loginusername){
-        this.loginusername=loginusername;
     }
 
     public String getType(){
