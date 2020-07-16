@@ -9,3 +9,7 @@ insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.PASSWOR
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.FROMEMAILADDRESS','mtest6551@gmail.com');
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.TRUST','smtp.gmail.com');
 insert into `systemconfigurations`(`key`,`value`) values ('EMAIL.UTILITY.SSLEnabled','true');
+insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.AUTOMATICDELETEAFTERDAYS','180');
+insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.AUTOMATICDELETEONNUMBEROFTRANSACTION','200');
+insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.PREMIUMDELETEDAYS','500');
+insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.PREMIUMCDELETEONNUMBEROFTRANSACTION','800');
