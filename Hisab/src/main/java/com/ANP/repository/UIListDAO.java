@@ -83,8 +83,18 @@ public class UIListDAO {
         searchParam1.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
         searchParam1.setSoperator("<>");
         searchParam1.setValue("VIRTUAL");
+
+        SearchParam searchParam2 = new SearchParam();
+        searchParam2.setCondition("and");
+        searchParam2.setFieldName("name");
+        searchParam2.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam2.setSoperator("<>");
+        searchParam2.setValue("default_employee");
+
         searchParamList.add(searchParam);
         searchParamList.add(searchParam1);
+        searchParamList.add(searchParam2);
+
         return getUIItemListForATable(ANPConstants.DB_TBL_UI_OBJ_EMPLOYEE_TYPE,searchParamList);
     }
 /*
