@@ -48,7 +48,12 @@ IN TableName Varchar(75)
 BEGIN
 declare count bigint;
 declare ParamOrgId long;
-declare FirstCursor cursor for select id from `organization`;
+declare FirstCursor cursor for select `organization`.`id`
+FROM  `organization`
+where
+`organization`.`id` not in
+(select `orgid` from `org_subscription`);
+
 set count = (select count(*) from `organization`);
 open FirstCursor;
      while(count>0) do
