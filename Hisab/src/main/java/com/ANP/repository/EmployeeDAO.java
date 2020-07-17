@@ -44,39 +44,15 @@ public class EmployeeDAO {
             String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
             return namedParameterJdbcTemplate.update(
-                    "insert into employee (id,first,last,mobile,loginrequired,currentsalarybalance" +
-                            ",lastsalarybalance,orgid,type) values(:employeeId,:first,:last,:mobile,:loginrequired" +
-                            ",:currentsalarybalance,:lastsalarybalance,:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
+                    "insert into employee (id,first,last,mobile,loginrequired,orgid,type) " +
+                            " values(:employeeId,:first,:last,:mobile,:loginrequired" +
+                            ",:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
-    public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
-        //TODO Joshi: Update loginRequired attribute for employeeID passed
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("id", employeeId);
-        in.addValue("loginrequired", loginRequired);
-        if (namedParameterJdbcTemplate.update("update employee set loginrequired = :loginrequired where id = :id", in) != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean updateMobile(String employeeID, String mobile) {
-        //TODO Joshi: Update mobile attribute for employeeID passed
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("id", employeeID);
-        in.addValue("mobile", mobile);
-        if (namedParameterJdbcTemplate.update("update employee set mobile = :mobile where id = :id", in) != 0)
-            return true;
-        else
-            return false;
-
-    }
-
-    //operation values(ADD,SUBTRACT)
+       //operation values(ADD,SUBTRACT)
     public boolean UpdateEmpSalaryBalance(String toEmployeeID, double balance, String operation) {
         int updateSuccess;
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -277,7 +253,6 @@ public class EmployeeDAO {
             employeeSalaryPayment.getToEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
-            //      employeeSalaryPayment.getToEmployeeBean().setType(rs.getString("e.type"));
             employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
@@ -351,11 +326,14 @@ public class EmployeeDAO {
         }
     }
 
-    public int updateEmployee(EmployeeBean employeeBean) {
+    /*
+    * This method is single update method to handle all the updates
+     */
+    public void updateEmployee(EmployeeBean employeeBean) {
         if (employeeBean.getTypeInt() <= 0) {
             throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
-        return namedParameterJdbcTemplate.update("update employee set first = :first," +
+        namedParameterJdbcTemplate.update("update employee set first = :first," +
                 "last=:last, loginrequired = :loginrequired, type = :typeInt " +
                 " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
     }

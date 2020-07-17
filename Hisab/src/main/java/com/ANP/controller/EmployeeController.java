@@ -50,7 +50,7 @@ public class EmployeeController {
         employeeHandler.createSalaryPayment(employeeSalaryPayment);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
+/*
     @PostMapping(path = "/updateLoginRequired", produces = "application/json")
     @ResponseBody
     public ResponseEntity updateLoginRequired(@RequestBody EmployeeBean employeeBean) {
@@ -64,7 +64,7 @@ public class EmployeeController {
         employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
+*/
     @PostMapping(path = "/updateSalaryBalance", produces = "application/json")
     public ResponseEntity updateSalaryBalance(@RequestParam String EmployeeId, @RequestParam double balance, @RequestParam String operation) {
         employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);

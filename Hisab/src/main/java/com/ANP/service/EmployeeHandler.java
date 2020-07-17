@@ -43,7 +43,7 @@ public class EmployeeHandler {
         accountDAO.createAccount(accountBean);
         System.out.println("End CreateEmployee");
     }
-
+    /*
     @Transactional(rollbackFor = Exception.class)
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
         if(employeeDAO.updateLoginRequired(employeeId,loginRequired)) {
@@ -63,7 +63,7 @@ public class EmployeeHandler {
             return false;
         }
     }
-
+  */
     @Transactional(rollbackFor = Exception.class)
     public boolean UpdateEmpSalaryBalance(String employeeID, double balance, String operation) {
         if(employeeDAO.UpdateEmpSalaryBalance(employeeID,balance,operation)) {
