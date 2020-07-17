@@ -1,7 +1,10 @@
 package com.ANP.util;
 
 import com.ANP.repository.SystemConfigurationReaderDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import javax.activation.DataHandler;
@@ -12,8 +15,12 @@ import javax.mail.internet.*;
 import javax.mail.Session;
 import javax.mail.Transport;
 
-
+@Repository
 public class EmailUtil {
+
+    @Autowired
+    SystemConfigurationReaderDAO systemConfigurationReaderDAO;
+
     /*
      * This method is common util method for sending email
      * It reads the host / port / fromAddress information from the systemconfiguration
@@ -25,12 +32,21 @@ public class EmailUtil {
      *
      */
     public void sendEmail(String body, String[] toAddresses, String[] ccAdresses,
-                          String subject, List<String> attachmentList) throws Exception {
+                          String subject, List<String> attachmentList)  {
+
+
+        //Getting the SystemConfigurations settings into a map
+        Map<String, String> systemConfigMap;
+        systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
+        System.out.println("systemConfigMap=" + systemConfigMap);
 
         //atleast one field from toAddresses or ccAddresses must be present
         if (toAddresses == null || (ANPUtils.isNullOrEmpty(toAddresses[0]) && (ccAdresses == null || ANPUtils.isNullOrEmpty(ccAdresses[0])))) {
-            throw new CustomAppException("No ToAddress or CCAddress present for sending Email", "SERVER.SEND_EMAIL.TOORCC_DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+            throw new CustomAppException("No ToAddress or CCAddress present for sending Email", "SERVER.SEND_EMAIL.TOORCC_DOESNOTEXIST", HttpStatus.BAD_REQUEST);
         }
+
+
+        try {
 
         InternetAddress[] toAddressFormatted = new InternetAddress[toAddresses.length];
         for (int i = 0; i < toAddressFormatted.length; i++) {
@@ -44,11 +60,6 @@ public class EmailUtil {
 
         Properties properties = System.getProperties();
 
-
-        //Getting the SystemConfigurations settings into a map
-        Map<String, String> systemConfigMap;
-        SystemConfigurationReaderDAO systemConfigurationReaderDAO = new SystemConfigurationReaderDAO();
-        systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
 
         String host = systemConfigMap.get("EMAIL.UTILITY.HOST");
         String port = systemConfigMap.get("EMAIL.UTILITY.PORT");
@@ -95,7 +106,6 @@ public class EmailUtil {
 
         // creating session object to get properties
 
-        try {
             // MimeMessage object.
             MimeMessage message = new MimeMessage(session);
             message.setRecipients(Message.RecipientType.TO, toAddressFormatted);

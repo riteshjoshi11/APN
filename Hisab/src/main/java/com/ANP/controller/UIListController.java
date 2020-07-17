@@ -2,7 +2,9 @@ package com.ANP.controller;
 
 
 import com.ANP.bean.*;
+import com.ANP.repository.SystemConfigurationReaderDAO;
 import com.ANP.repository.UIListDAO;
+import com.ANP.util.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class UIListController {
     @Autowired
     private UIListDAO UIListDAO;
 
+    @Autowired
+    EmailUtil emailUtil;
 
     @PostMapping(path = "/getCities", produces = "application/json")
     public List<City> getCity() {
@@ -55,6 +59,11 @@ public class UIListController {
     @PostMapping(path = "/getOrgDetailsUILists", produces = "application/json")
     public OrgDetailsUIBean getOrgDetailsUILists() {
         return UIListDAO.getOrgDetailsUILists();
+    }
+
+    @PostMapping(path = "/getTest", produces = "application/json")
+    public void getTest() {
+        emailUtil.sendEmail(null,null,null,null,null);
     }
 }
 
