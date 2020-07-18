@@ -226,10 +226,10 @@ public class AccountingController {
                 accountingHandler.deleteExpense(orgID,recordID,loggedInUserName);
                 break;
             case ANPConstants.TRANSACTION_NAME_INTERNAL_TRANSFER:
-                accountingHandler.deleteRetailSale(orgID,recordID,loggedInUserName);
+                accountingHandler.deleteInternalTransfer(orgID,recordID,loggedInUserName);
                 break;
             case ANPConstants.TRANSACTION_NAME_RETAIL_SALE:
-                accountingHandler.deleteInternalTransfer(orgID,recordID,loggedInUserName);
+                accountingHandler.deleteRetailSale(orgID,recordID,loggedInUserName);
                 break;
             default:
         }
