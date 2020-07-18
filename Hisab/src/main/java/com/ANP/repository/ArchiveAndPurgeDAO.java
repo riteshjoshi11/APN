@@ -3,6 +3,7 @@ package com.ANP.repository;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -30,14 +31,13 @@ public class ArchiveAndPurgeDAO {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @Scheduled(cron="${cron.expression}")
+    @Scheduled(cron="${cron.expressionForArchiveAndPurge}")
     @Transactional(rollbackFor = Exception.class)
     public void invokeArchiveAndPurgeProcess()
     {
         System.out.println("archive and purge procedure call");
         /*
         Map<String,String> systemConfigMap ;
-        int noOfDaysAfterDelete;
         systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
         String commaSeperatedArchiveList = systemConfigMap.get("ArchivePurge.archiveandpurgetablelist");
         String deleteDays = systemConfigMap.get("ArchivePurge.DeleteAfterNumberOfDays");
@@ -86,7 +86,130 @@ public class ArchiveAndPurgeDAO {
                 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
                 System.out.println("result = "+ simpleJdbcCallResult);
             }
+        }*/
+
+    }
+
+    @Scheduled(cron="${cron.expressionForOrgDataControl}")
+    @Transactional(rollbackFor = Exception.class)
+    public void controlOrgDataGrowth()
+    {
+        Map<String,String> systemConfigMap ;
+        systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
+        String commaSeperatedDataControlTableList = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.TABLENAME");
+        String controlOrgDataDeleteDays = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.AUTOMATICDELETEAFTERDAYS");
+        String PremiumControlOrgDataDeleteDays = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.PREMIUMDELETEDAYS");
+
+        String automaticDeleteOnNoOfTransactions = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.'CONTROL.ORG.DATA.GROWTH.AUTOMATICDELETEONNUMBEROFTRANSACTION'");
+        String premiumDeleteOnNoOfTransactions = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.PREMIUMCDELETEONNUMBEROFTRANSACTION");
+
+        if(ANPUtils.isNullOrEmpty(commaSeperatedDataControlTableList)) {
+            System.err.println("The configuration for ArchiveAndPurge table is not given. So stopping the process here");
+            throw new CustomAppException("ArchivePurge.archiveandpurgetablelist","SERVER.SYSTEM_CONFIG.INVALIDVALUE", HttpStatus.EXPECTATION_FAILED);
         }
-    */
+
+        if(ANPUtils.isNullOrEmpty(controlOrgDataDeleteDays)) {
+            System.out.println("Delete days are not configured so setting to default 200");
+            controlOrgDataDeleteDays =  "200";
+        }
+
+        if(ANPUtils.isNullOrEmpty(PremiumControlOrgDataDeleteDays)) {
+            System.out.println("Delete days are not configured so setting to default 365");
+            PremiumControlOrgDataDeleteDays =  "365";
+        }
+
+        if(ANPUtils.isNullOrEmpty(automaticDeleteOnNoOfTransactions)) {
+            System.out.println("Delete transactions for non premium accounts are not configured so setting to default 200");
+            automaticDeleteOnNoOfTransactions =  "200";
+        }
+
+        if(ANPUtils.isNullOrEmpty(premiumDeleteOnNoOfTransactions)) {
+            System.out.println("Delete transactions for non premium accounts are not configured so setting to default 1000");
+            premiumDeleteOnNoOfTransactions =  "1000";
+        }
+
+        int premiumNoDeleteDays;
+        int noDeleteDays;
+        try {
+            noDeleteDays = Integer.parseInt(controlOrgDataDeleteDays);
+            premiumNoDeleteDays = Integer.parseInt(premiumDeleteOnNoOfTransactions);
+        }
+        catch(Exception e)
+        {
+            throw new CustomAppException("Delete days invalid in control organization data","SERVER.CONTROLORGDATA_SYSTEM_CONFIG.INVALIDVALUE", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        int automaticDeleteTransactions;
+        int premiumDeleteTransactions;
+        try {
+            automaticDeleteTransactions = Integer.parseInt(automaticDeleteOnNoOfTransactions);
+            premiumDeleteTransactions = Integer.parseInt(PremiumControlOrgDataDeleteDays);
+        }
+        catch(Exception e)
+        {
+            throw new CustomAppException("delete on transactions invalid in control organization data","SERVER.CONTROLORGDATA_SYSTEM_CONFIG.INVALIDVALUE", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        List<String> resultDataControlTableList = Arrays.asList(commaSeperatedDataControlTableList.split("\\s*,\\s*"));
+
+        //Deleting data for NON PREMIUM users DATE WISE
+        controlOrgDataGrowthDateWise(noDeleteDays,false,resultDataControlTableList);
+        //Deleting data for NON PREMIUM users TRANSACTION WISE
+        controlOrgDataGrowthTransactionWise(automaticDeleteTransactions,false,resultDataControlTableList);
+        //Deleting data for PREMIUM users DATE WISE
+        controlOrgDataGrowthDateWise(premiumNoDeleteDays,true,resultDataControlTableList);
+        //Deleting data for PREMIUM users TRANSACTION WISE
+        controlOrgDataGrowthTransactionWise(premiumDeleteTransactions,true,resultDataControlTableList);
+    }
+
+
+    // This is a method for OrgDataControlDateWise
+    private void controlOrgDataGrowthDateWise(int DeleteAfterDays, boolean isPremiumAccount , List<String> resultDataControlTableList)
+    {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ControlOrgDataGrowthDateWise_Procedure");
+        Map<String, Object> inParamMap = new HashMap<>();
+
+
+        for(String tableName : resultDataControlTableList)
+        {
+            if(!ANPUtils.isNullOrEmpty(tableName)) {
+
+                System.out.println("Now we are going to call ControlOrgDataGrowthDateWise Procedure for table/object[" + tableName
+                        + "]DeleteAfterNumberOfDays[" + DeleteAfterDays + "]");
+
+                inParamMap.put("AutomaticDeleteAfterDays", DeleteAfterDays);
+                inParamMap.put("TableName", tableName);
+                inParamMap.put("IsPremiumAccount", isPremiumAccount);
+                SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+                Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+                System.out.println("result = "+ simpleJdbcCallResult);
+            }
+        }
+    }
+
+    // This is a method for OrgDataControlTransactionWise
+
+    private void controlOrgDataGrowthTransactionWise(int DeleteAfterTransactions, boolean isPremiumAccount , List<String> resultDataControlTableList)
+    {
+        SimpleJdbcCall simpleJdbcCall1 = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ControlOrgDataGrowthTransactionWise_Procedure");
+        Map<String, Object> inParamMap1 = new HashMap<>();
+
+
+        for(String tableName : resultDataControlTableList)
+        {
+            if(!ANPUtils.isNullOrEmpty(tableName)) {
+
+                System.out.println("Now we are going to call ControlOrgDataGrowthTransactionWise Procedure for table/object[" + tableName
+                        + "]DeleteAfterNumberOfTransactions[" + DeleteAfterTransactions + "]");
+
+                inParamMap1.put("AutomaticDeleteOnNoOfTransactions", DeleteAfterTransactions);
+                inParamMap1.put("TableName", tableName);
+                inParamMap1.put("IsPremiumAccount", true);
+                SqlParameterSource in = new MapSqlParameterSource(inParamMap1);
+                Map<String, Object> simpleJdbcCallResult = simpleJdbcCall1.execute(in);
+                System.out.println("result = "+ simpleJdbcCallResult);
+            }
+        }
     }
 }
+
