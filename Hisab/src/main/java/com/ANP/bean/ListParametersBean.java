@@ -1,6 +1,5 @@
 package com.ANP.bean;
 
-import org.hibernate.validator.constraints.ScriptAssert;
 
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
