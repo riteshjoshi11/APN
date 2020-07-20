@@ -13,6 +13,7 @@ CREATE TABLE `userphonebook` (
   `userdetailid` int(11) DEFAULT NULL,
   `type` varchar(15) DEFAULT NULL,
   `contact` varchar(255) DEFAULT NULL,
+    `savedname` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userphonebook_ibfk_1_idx` (`userdetailid`),
   CONSTRAINT `userphonebook_ibfk_1` FOREIGN KEY (`userdetailid`) REFERENCES `userdetail` (`id`)
