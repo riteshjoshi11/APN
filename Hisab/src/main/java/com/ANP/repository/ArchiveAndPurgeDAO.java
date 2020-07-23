@@ -153,18 +153,15 @@ public class ArchiveAndPurgeDAO {
         List<String> resultDataControlTableList = Arrays.asList(commaSeperatedDataControlTableList.split("\\s*,\\s*"));
 
         //Deleting data for NON PREMIUM users DATE WISE
-        controlOrgDataGrowthDateWise(noDeleteDays,false,resultDataControlTableList);
+        controlOrgDataGrowthDateWise(noDeleteDays,premiumNoDeleteDays,resultDataControlTableList);
         //Deleting data for NON PREMIUM users TRANSACTION WISE
-        controlOrgDataGrowthTransactionWise(automaticDeleteTransactions,false,resultDataControlTableList);
-        //Deleting data for PREMIUM users DATE WISE
-        controlOrgDataGrowthDateWise(premiumNoDeleteDays,true,resultDataControlTableList);
-        //Deleting data for PREMIUM users TRANSACTION WISE
-        controlOrgDataGrowthTransactionWise(premiumDeleteTransactions,true,resultDataControlTableList);
-    }
+        controlOrgDataGrowthTransactionWise(automaticDeleteTransactions,premiumDeleteTransactions,resultDataControlTableList);
+
+        }
 
 
     // This is a method for OrgDataControlDateWise
-    private void controlOrgDataGrowthDateWise(int DeleteAfterDays, boolean isPremiumAccount , List<String> resultDataControlTableList)
+    private void controlOrgDataGrowthDateWise(int regularDeleteAfterDays, int premiumDeleteAfterDays , List<String> resultDataControlTableList)
     {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ControlOrgDataGrowthDateWise_Procedure");
         Map<String, Object> inParamMap = new HashMap<>();
@@ -175,11 +172,11 @@ public class ArchiveAndPurgeDAO {
             if(!ANPUtils.isNullOrEmpty(tableName)) {
 
                 System.out.println("Now we are going to call ControlOrgDataGrowthDateWise Procedure for table/object[" + tableName
-                        + "]DeleteAfterNumberOfDays[" + DeleteAfterDays + "]");
+                        + "]DeleteAfterNumberOfDays[" + regularDeleteAfterDays + "]");
 
-                inParamMap.put("AutomaticDeleteAfterDays", DeleteAfterDays);
+                inParamMap.put("RegularDaysAfterDelete", regularDeleteAfterDays);
                 inParamMap.put("TableName", tableName);
-                inParamMap.put("IsPremiumAccount", isPremiumAccount);
+                inParamMap.put("PremiumDaysAfterDelete", premiumDeleteAfterDays);
                 SqlParameterSource in = new MapSqlParameterSource(inParamMap);
                 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
                 System.out.println("result = "+ simpleJdbcCallResult);
@@ -189,7 +186,7 @@ public class ArchiveAndPurgeDAO {
 
     // This is a method for OrgDataControlTransactionWise
 
-    private void controlOrgDataGrowthTransactionWise(int DeleteAfterTransactions, boolean isPremiumAccount , List<String> resultDataControlTableList)
+    private void controlOrgDataGrowthTransactionWise(int deleteAfterTransactions, int premiumDeleteAfterTransactions , List<String> resultDataControlTableList)
     {
         SimpleJdbcCall simpleJdbcCall1 = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ControlOrgDataGrowthTransactionWise_Procedure");
         Map<String, Object> inParamMap1 = new HashMap<>();
@@ -200,11 +197,11 @@ public class ArchiveAndPurgeDAO {
             if(!ANPUtils.isNullOrEmpty(tableName)) {
 
                 System.out.println("Now we are going to call ControlOrgDataGrowthTransactionWise Procedure for table/object[" + tableName
-                        + "]DeleteAfterNumberOfTransactions[" + DeleteAfterTransactions + "]");
+                        + "]DeleteAfterNumberOfTransactions[" + premiumDeleteAfterTransactions + "]");
 
-                inParamMap1.put("AutomaticDeleteOnNoOfTransactions", DeleteAfterTransactions);
+                inParamMap1.put("RegularTransactionsAfterDelete", deleteAfterTransactions);
                 inParamMap1.put("TableName", tableName);
-                inParamMap1.put("IsPremiumAccount", true);
+                inParamMap1.put("PremiumTransactionsAfterDelete", premiumDeleteAfterTransactions);
                 SqlParameterSource in = new MapSqlParameterSource(inParamMap1);
                 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall1.execute(in);
                 System.out.println("result = "+ simpleJdbcCallResult);
