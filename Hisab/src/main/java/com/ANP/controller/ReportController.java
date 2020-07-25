@@ -33,14 +33,14 @@ public class ReportController {
 
 
     @PostMapping(path = "/createGSTReport", produces = "application/json")
-    public ResponseEntity createGSTReport(@RequestBody ReportBean reportBean)
+    public ResponseEntity createGSTReport(@RequestBody GSTReportBean reportBean)
     {
         reportDao.createGSTReport(reportBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/listGSTReport", produces = "application/json")
-    public List<ReportBean> listGSTReport(@Valid @RequestBody ListParametersBean listParametersBean) {
+    public List<GSTReportBean> listGSTReport(@Valid @RequestBody ListParametersBean listParametersBean) {
 
         return reportDao.listGSTReport(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());

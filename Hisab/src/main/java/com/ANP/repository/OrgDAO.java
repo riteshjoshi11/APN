@@ -102,7 +102,8 @@ public class OrgDAO {
                 "email=:email, mobile2=:mobile2, gstnumber = :gstNumber, pannumber = :panNumber," +
                 "companytype = :companyTypeInt, businessnature= :businessNatureInt, numberofemployees = :numberOfEmployeesInt," +
                 "extradetails = :extraDetails, accountdetails=:accountDetails, billingaddress=:billingAddress," +
-                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile where orgid = :orgId and id=:orgDetailId", new BeanPropertySqlParameterSource(orgDetails));
+                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile, autoemailgstreport=:autoEmailGSTReport" +
+                " where orgid = :orgId and id=:orgDetailId", new BeanPropertySqlParameterSource(orgDetails));
     }
 
     public OrgDetails getOrgDetails(long orgId) {

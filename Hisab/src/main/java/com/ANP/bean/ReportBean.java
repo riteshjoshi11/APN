@@ -4,17 +4,14 @@ import java.util.Date;
 
 public class ReportBean {
     private long reportId;
-    private String toEmails;
     private Date generateDate;
+    private Date generateBy;
     private String pdfFilePath;
     private String excelFilePath;
-    private String fromEmail;
-    private String mode;
-    private String reportStatus;
-    private String forMonth;
+    private String reportStatus="REQUEST_RECEIVED"; //processing, finished, error
     private long orgId;
 
-
+    private String fromEmail;
 
     public long getReportId() {
         return reportId;
@@ -48,28 +45,12 @@ public class ReportBean {
         this.excelFilePath = excelFilePath;
     }
 
-    public String getToEmails() {
-        return toEmails;
-    }
-
-    public void setToEmails(String toEmails) {
-        this.toEmails = toEmails;
-    }
-
     public String getFromEmail() {
         return fromEmail;
     }
 
     public void setFromEmail(String fromEmail) {
         this.fromEmail = fromEmail;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
     }
 
     public String getReportStatus() {
@@ -80,13 +61,6 @@ public class ReportBean {
         this.reportStatus = reportStatus;
     }
 
-    public String getForMonth() {
-        return forMonth;
-    }
-
-    public void setForMonth(String forMonth) {
-        this.forMonth = forMonth;
-    }
 
     public long getOrgId() {
         return orgId;

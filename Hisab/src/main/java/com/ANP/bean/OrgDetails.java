@@ -17,10 +17,13 @@ public class OrgDetails {
     private String cAEmail;
     private String cAMobile;
     private long orgId;
+    private boolean autoEmailGSTReport=false;
 
     private int companyTypeInt;
     private int businessNatureInt;
     private int numberOfEmployeesInt;
+
+
 
     public long getOrgDetailId() {
         return orgDetailId;
@@ -172,5 +175,13 @@ public class OrgDetails {
 
     public void setOrgId(long orgId) {
         this.orgId = orgId;
+    }
+
+    public boolean isAutoEmailGSTReport() {
+        return autoEmailGSTReport;
+    }
+
+    public void setAutoEmailGSTReport(boolean autoEmailGSTReport) {
+        this.autoEmailGSTReport = autoEmailGSTReport;
     }
 }

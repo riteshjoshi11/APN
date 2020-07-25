@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerBean;
+import com.ANP.bean.GSTReportBean;
 import com.ANP.bean.ReportBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPUtils;
@@ -86,14 +87,13 @@ public class ReportDAO {
             }
     }
 
-    public int createGSTReport(ReportBean reportBean) {
-        return namedParameterJdbcTemplate.update("insert into p_gst_report(id,orgid,toemails,pdffilepath,excelfilepath," +
-                "fromemail,`mode`,reportstatus,formonth) values(:reportId, :orgId, :toEmails, :pdfFilePath, :excelFilePath, :fromEmail," +
-                " :mode, :reportStatus, :forMonth)", new BeanPropertySqlParameterSource(reportBean));
+    public int createGSTReport(GSTReportBean reportBean) {
+        return namedParameterJdbcTemplate.update("insert into p_gst_reports(orgid," +
+                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean));
     }
 
 
-    public List<ReportBean> listGSTReport(long orgID, Collection<SearchParam> searchParams,
+    public List<GSTReportBean> listGSTReport(long orgID, Collection<SearchParam> searchParams,
                                           String orderBy, int noOfRecordsToShow, int startIndex) {
 
         if (startIndex == 0) {
@@ -113,9 +113,9 @@ public class ReportDAO {
                 param, new ListGSTReportMapper());
     }
 
-    private static final class ListGSTReportMapper implements RowMapper<ReportBean> {
-        public ReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ReportBean reportBean = new ReportBean();
+    private static final class ListGSTReportMapper implements RowMapper<GSTReportBean> {
+        public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            GSTReportBean reportBean = new GSTReportBean();
             reportBean.setExcelFilePath(rs.getString("excelfilepath"));
             reportBean.setForMonth(rs.getString("formonth"));
             reportBean.setFromEmail(rs.getString("fromemail"));
@@ -124,9 +124,8 @@ public class ReportDAO {
             reportBean.setReportStatus(rs.getString("reportstatus"));
             reportBean.setOrgId(rs.getLong("orgid"));
             reportBean.setReportId(rs.getLong("id"));
-            reportBean.setToEmails(rs.getString("toemails"));
+            //           // reportBean.setToEmails(rs.getString("toemails"));
             reportBean.setPdfFilePath(rs.getString("pdffilepath"));
-
             return reportBean;
         }
     }
