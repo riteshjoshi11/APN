@@ -5,6 +5,7 @@ import com.ANP.repository.CustomerInvoiceDAO;
 import com.ANP.repository.ExpenseDAO;
 import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.repository.ReportDAO;
+import com.ANP.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,11 @@ public class ReportController {
     @Autowired
     ReportDAO reportDao;
 
+    @Autowired
+    ReportService reportService;
+
+
+
     @PostMapping(path = "/reportPdf", produces = "application/json")
     public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
         return reportDao.fetchPdf(filePath,orgId,loggedInEmployeeID);
@@ -33,9 +39,10 @@ public class ReportController {
 
 
     @PostMapping(path = "/createGSTReport", produces = "application/json")
-    public ResponseEntity createGSTReport(@RequestBody GSTReportBean reportBean)
+    public ResponseEntity createGSTReport(@Valid @RequestBody GSTReportBean reportBean)
     {
-        reportDao.createGSTReport(reportBean);
+        reportBean.setMode("Manual");
+        reportService.createGSTReportRecord(reportBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

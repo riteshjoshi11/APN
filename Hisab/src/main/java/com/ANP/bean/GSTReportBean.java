@@ -1,16 +1,23 @@
 package com.ANP.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GSTReportBean extends ReportBean {
     private String mode;
     private String forMonth;
-    private String toEmails;
+    private List<String> toEmailList;
 
-    public String getToEmails() {
-        return toEmails;
+    public GSTReportBean() {
+        this.toEmailList = new ArrayList<String>();
     }
 
-    public void setToEmails(String toEmails) {
-        this.toEmails = toEmails;
+    public List<String> getToEmailList() {
+        return toEmailList;
+    }
+
+    public void setToEmailList(List<String> toEmailList) {
+        this.toEmailList = toEmailList;
     }
 
     public String getMode() {

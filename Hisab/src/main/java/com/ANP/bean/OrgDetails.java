@@ -1,6 +1,9 @@
 package com.ANP.bean;
 
+import javax.validation.constraints.Min;
+
 public class OrgDetails {
+    @Min(value = 1, message = "orgDetailId is Mandatory")
     private long orgDetailId;
     private String mobile1;
     private String email;
@@ -16,14 +19,24 @@ public class OrgDetails {
     private String cAName;
     private String cAEmail;
     private String cAMobile;
+
+    @Min(value = 1, message = "orgID is Mandatory")
     private long orgId;
+
     private boolean autoEmailGSTReport=false;
 
     private int companyTypeInt;
     private int businessNatureInt;
     private int numberOfEmployeesInt;
+    private String website;
 
+    public String getWebsite() {
+        return website;
+    }
 
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
     public long getOrgDetailId() {
         return orgDetailId;

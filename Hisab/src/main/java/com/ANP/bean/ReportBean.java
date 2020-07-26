@@ -1,6 +1,8 @@
 package com.ANP.bean;
 
+import javax.validation.constraints.Min;
 import java.util.Date;
+
 
 public class ReportBean {
     private long reportId;
@@ -9,9 +11,19 @@ public class ReportBean {
     private String pdfFilePath;
     private String excelFilePath;
     private String reportStatus="REQUEST_RECEIVED"; //processing, finished, error
+
+    @Min(value = 1, message = "OrgID is Mandatory")
     private long orgId;
 
     private String fromEmail;
+
+    public Date getGenerateBy() {
+        return generateBy;
+    }
+
+    public void setGenerateBy(Date generateBy) {
+        this.generateBy = generateBy;
+    }
 
     public long getReportId() {
         return reportId;

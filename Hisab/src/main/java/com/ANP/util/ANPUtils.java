@@ -2,8 +2,11 @@ package com.ANP.util;
 
 import com.ANP.bean.SearchParam;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 /*
 * this class is util class where all general purpose common method will be there.
@@ -67,5 +70,22 @@ public class ANPUtils implements ANPConstants {
         searchParam1.setValue("30000");
         l.add(searchParam1);
         System.out.println(getWhereClause(l));
+
+        System.out.println("Month Part=" + getMonthPart(new Date()));
+        System.out.println("Month Part2=" + getMonthPart(getPreviousMonth()));
+
     }
+
+
+    public static String getMonthPart(Date date) {
+        String retStr = (new SimpleDateFormat("MMMM").format(date)).toString();
+        return retStr ;
+    }
+
+    public static Date getPreviousMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        return calendar.getTime();
+    }
+
 }

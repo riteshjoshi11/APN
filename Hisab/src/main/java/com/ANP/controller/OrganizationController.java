@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequestMapping(path = "/organization")
 public class OrganizationController {
     @Autowired
-    private OrgDAO orgdao;
+    private OrgDAO orgDAO;
     @Autowired
     private OrganizationHandler orghandler;
 
@@ -29,7 +29,12 @@ public class OrganizationController {
 
     @PostMapping(path = "/updateOrganizationDetails", produces = "application/json" )
     public ResponseEntity updateOrganizationDetails(@RequestBody OrgDetails orgDetails) {
-        orgdao.updateOrganizationDetails(orgDetails);
+        orgDAO.updateOrganizationDetails(orgDetails);
         return new ResponseEntity<>("Success",HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/getOrganizationDetails", produces = "application/json" )
+    public OrgDetails updateOrganizationDetails(@Valid @RequestParam long orgId) {
+       return orgDAO.getOrgDetails(orgId);
     }
 }

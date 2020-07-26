@@ -65,5 +65,6 @@ public interface ANPConstants {
       public static final String SYSTEM_AUDIT_CUSTOMER = "CUSTOMER";
       public static final String SYSTEM_AUDIT_EMPLOYEE = "EMPLOYEE";
 
-
+      public static final String GST_REPORT_CURRENT_MONTH="current";
+      public static final String GST_REPORT_PREVIOUS_MONTH="previous";
 }

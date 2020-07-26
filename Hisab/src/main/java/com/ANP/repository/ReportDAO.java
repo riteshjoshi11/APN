@@ -18,6 +18,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
@@ -87,9 +89,13 @@ public class ReportDAO {
             }
     }
 
-    public int createGSTReport(GSTReportBean reportBean) {
-        return namedParameterJdbcTemplate.update("insert into p_gst_reports(orgid," +
-                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean));
+    public long createGSTReport(GSTReportBean reportBean) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update("insert into p_gst_reports(orgid," +
+                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean),holder);
+        long generatedOrgKey = holder.getKey().longValue();
+        System.out.println("createGSTReport: Generated Key=" + generatedOrgKey);
+        return generatedOrgKey;
     }
 
 

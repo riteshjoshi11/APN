@@ -4,7 +4,6 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.OrgDetails;
 import com.ANP.bean.Organization;
-import com.ANP.service.OrganizationHandler;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,47 +96,55 @@ public class OrgDAO {
         return namedParameterJdbcTemplate.update("insert into orgdetails(orgid) values (" + orgId + ")", param);
     }
 
-    public int updateOrganizationDetails(OrgDetails orgDetails) {
-        return namedParameterJdbcTemplate.update("update orgdetails set mobile1 = :mobile1," +
+    public void updateOrganizationDetails(OrgDetails orgDetails) {
+        int numberOfRecordsUpdates =  namedParameterJdbcTemplate.update("update orgdetails set mobile1 = :mobile1," +
                 "email=:email, mobile2=:mobile2, gstnumber = :gstNumber, pannumber = :panNumber," +
                 "companytype = :companyTypeInt, businessnature= :businessNatureInt, numberofemployees = :numberOfEmployeesInt," +
                 "extradetails = :extraDetails, accountdetails=:accountDetails, billingaddress=:billingAddress," +
-                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile, autoemailgstreport=:autoEmailGSTReport" +
+                "caname = :cAName, caemail = :cAEmail, camobile = :cAMobile, autoemailgstreport=:autoEmailGSTReport, website=:website " +
                 " where orgid = :orgId and id=:orgDetailId", new BeanPropertySqlParameterSource(orgDetails));
+        if(numberOfRecordsUpdates!=1) {
+            throw new CustomAppException("Organization Details could not be updated for given ID","SERVER.ORGDETAILS.ORGDETAILS_NOT_UPDATED_WITHID", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     public OrgDetails getOrgDetails(long orgId) {
         Map<String, Object> param = new HashMap<>();
         param.put("orgId", orgId);
-        List<OrgDetails> orgDetailsList = namedParameterJdbcTemplate.query("select orgdet.*, " +
-                " (select bus.`name` from businessnature bus where orgdet.businessnature = bus.id) as busnature," +
-                " (select noemp.`range` from noofemployee noemp where orgdet.numberofemployees = noemp.id) as noemployee," +
-                " (select com.`name` from companytype com where orgdet.companytype = com.id) as comptype" +
+        List<OrgDetails> orgDetailsList = namedParameterJdbcTemplate.query("select orgdet.* " +
+             //   " (select bus.`name` from businessnature bus where orgdet.businessnature = bus.id) as busnature," +
+             //   " (select noemp.`name` from noofemployee noemp where orgdet.numberofemployees = noemp.id) as noemployee," +
+            //    " (select com.`name` from companytype com where orgdet.companytype = com.id) as comptype" +
                 " from orgdetails orgdet where orgid=:orgId ", param, new OrgDetailsMapper());
-        System.out.println(orgDetailsList.size());
-        return orgDetailsList.get(0);
-    }
+
+        if(orgDetailsList!=null && orgDetailsList.size()>0) {
+            System.out.println(orgDetailsList.size());
+            return orgDetailsList.get(0);
+        }
+        throw new CustomAppException("Organization Details could not be found for given ID","SERVER.ORGDETAILS.ORGDETAILS_NOT_FOUND_WITHID", HttpStatus.EXPECTATION_FAILED);
+     }
 
     private static final class OrgDetailsMapper implements RowMapper<OrgDetails> {
-        public OrgDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+         public OrgDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
             OrgDetails orgDetails = new OrgDetails();
             orgDetails.setOrgDetailId(rs.getLong("orgdet.id"));
             orgDetails.setMobile1(rs.getString("mobile1"));
             orgDetails.setEmail(rs.getString("email"));
             orgDetails.setAccountDetails(rs.getString("accountdetails"));
             orgDetails.setBillingAddress(rs.getString("billingaddress"));
-            orgDetails.setBusinessNature(rs.getString("busnature"));
             orgDetails.setcAEmail(rs.getString("caemail"));
             orgDetails.setcAMobile(rs.getString("camobile"));
             orgDetails.setcAName(rs.getString("caname"));
-            orgDetails.setCompanyType(rs.getString("comptype"));
             orgDetails.setExtraDetails(rs.getString("extradetails"));
             orgDetails.setGstNumber(rs.getString("gstnumber"));
-            orgDetails.setNumberOfEmployees(rs.getString("noemployee"));
             orgDetails.setMobile2(rs.getString("mobile2"));
             orgDetails.setOrgId(rs.getLong("orgid"));
             orgDetails.setPanNumber(rs.getString("pannumber"));
+            orgDetails.setWebsite(rs.getString("website"));
+            orgDetails.setCompanyTypeInt(rs.getInt("companytype"));
+            orgDetails.setBusinessNatureInt(rs.getInt("businessnature"));
+            orgDetails.setNumberOfEmployeesInt(rs.getInt("numberofemployees"));
             return orgDetails;
         }
     }
-}
+ }
