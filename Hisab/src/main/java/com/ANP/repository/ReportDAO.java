@@ -45,23 +45,22 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchPdf (String filePath, long orgId, String loggedInEmployeeID) throws Exception {
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws Exception {
         try {
             Path pdfPath = Paths.get(filePath);
             byte[] pdf = Files.readAllBytes(pdfPath);
             ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("Content-Disposition", "inline; filename= "+ pdfPath.getFileName().toString());
+            headers.add("Content-Disposition", "inline; filename= " + pdfPath.getFileName().toString());
 
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(new InputStreamResource(pdfToByte));
+        } catch (NoSuchFileException e) {
+            throw new CustomAppException("No PDF With that name", "SERVER.FETCH_PDF.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
         }
-        catch (NoSuchFileException e) {
-            throw new CustomAppException("No PDF With that name","SERVER.FETCH_PDF.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
-            }
     }
 
     /*
@@ -76,23 +75,22 @@ public class ReportDAO {
             ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.add("Content-Disposition", "inline; filename= "+ excelPath.getFileName().toString());
+            headers.add("Content-Disposition", "inline; filename= " + excelPath.getFileName().toString());
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(new InputStreamResource(excelToByte));
-            }
-                catch (NoSuchFileException e) {
-                throw new CustomAppException("No Excel File With that name","SERVER.FETCH_EXCEL.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
-            }
+        } catch (NoSuchFileException e) {
+            throw new CustomAppException("No Excel File With that name", "SERVER.FETCH_EXCEL.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     public long createGSTReport(GSTReportBean reportBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into p_gst_reports(orgid," +
-                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean),holder);
+                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createGSTReport: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
@@ -100,7 +98,7 @@ public class ReportDAO {
 
 
     public List<GSTReportBean> listGSTReport(long orgID, Collection<SearchParam> searchParams,
-                                          String orderBy, int noOfRecordsToShow, int startIndex) {
+                                             String orderBy, int noOfRecordsToShow, int startIndex) {
 
         if (startIndex == 0) {
             startIndex = 1;
@@ -118,6 +116,7 @@ public class ReportDAO {
                         + " offset :startIndex",
                 param, new ListGSTReportMapper());
     }
+
 
     private static final class ListGSTReportMapper implements RowMapper<GSTReportBean> {
         public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -145,7 +144,7 @@ public class ReportDAO {
 
                 String myPojo = (reportBean.getToEmailList()).get(i);
                 ps.setString(1, myPojo);
-                ps.setLong(2,reportBean.getReportId());
+                ps.setLong(2, reportBean.getReportId());
             }
 
             @Override
@@ -153,13 +152,13 @@ public class ReportDAO {
                 return (reportBean.getToEmailList()).size();
             }
         });
-     }
+    }
 
-      /*
-        * This method will perform the udpates for the file path
-        * Mandatory orgId, reportID, Status
-        *
-       */
+    /*
+     * This method will perform the udpates for the file path
+     * Mandatory orgId, reportID, Status
+     *
+     */
     public void updateGSTReport_status(GSTReportBean gstReportBean) {
         if (gstReportBean.getReportId() <= 0) {
             throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
@@ -169,12 +168,12 @@ public class ReportDAO {
             throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        if (ANPUtils.isNullOrEmpty(gstReportBean.getReportStatus()) ) {
+        if (ANPUtils.isNullOrEmpty(gstReportBean.getReportStatus())) {
             throw new CustomAppException("Report Status blank or empty", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
         namedParameterJdbcTemplate.update("update p_gst_report set reportstatus = :reportStatus" +
-                               " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
+                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
     }
 
     /*
@@ -191,18 +190,30 @@ public class ReportDAO {
             throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        String updateQueryStr="";
+        String updateQueryStr = "";
 
-        if (ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) &&  ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
+        if (ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
             throw new CustomAppException("Report File Path (Excel & PDF) blank or empty", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
-        } else if(!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && !ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath()) ) {
-                updateQueryStr = " pdffilepath= :pdfFilePath , excelfilepath= :excelFilePath ";
-        } else if(!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath())) {
-            updateQueryStr = " pdffilepath= :pdfFilePath " ;
+        } else if (!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && !ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
+            updateQueryStr = " pdffilepath= :pdfFilePath , excelfilepath= :excelFilePath ";
+        } else if (!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath())) {
+            updateQueryStr = " pdffilepath= :pdfFilePath ";
         } else {
             updateQueryStr = " excelfilepath= :excelFilePath ";
         }
         namedParameterJdbcTemplate.update("update p_gst_report set " + updateQueryStr +
                 " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
     }
+
+    public List<String> getFrequentlyUsedEmail(long orgId, String loggedInEmployeeId) {
+        return namedParameterJdbcTemplate.getJdbcTemplate().query("select email from (select email,count(email) " +
+                " from p_gst_reports rpt, p_gstrpt_send_email email where rpt.orgid=" + orgId +
+                " and rpt.id=email.p_gst_reports_id group by email order by count(email) desc ) t limit 2", new RowMapper<String>() {
+            public String mapRow(ResultSet rs, int rowNum)
+                    throws SQLException {
+                return rs.getString(1);
+            }
+        });
+    }
+
 }

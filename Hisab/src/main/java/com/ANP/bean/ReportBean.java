@@ -73,7 +73,6 @@ public class ReportBean {
         this.reportStatus = reportStatus;
     }
 
-
     public long getOrgId() {
         return orgId;
     }

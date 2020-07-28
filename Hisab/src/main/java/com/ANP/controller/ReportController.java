@@ -74,4 +74,9 @@ public class ReportController {
         reportDao.createEmailEntry(reportBean);
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
+
+    @PostMapping(path = "/getFrequentlyUsedEmail", produces = "application/json")
+    public List<String> getFrequentlyUsedEmail(@RequestParam  long orgId, @RequestParam  String loggedInEmployeeId) {
+        return reportDao.getFrequentlyUsedEmail(orgId, loggedInEmployeeId);
+    }
   }
