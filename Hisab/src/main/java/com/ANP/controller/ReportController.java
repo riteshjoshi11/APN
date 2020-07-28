@@ -6,6 +6,7 @@ import com.ANP.repository.ExpenseDAO;
 import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.repository.ReportDAO;
 import com.ANP.service.ReportService;
+import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,14 +27,12 @@ public class ReportController {
     @Autowired
     ReportService reportService;
 
-
-
-    @PostMapping(path = "/reportPdf", produces = "application/json")
+    @PostMapping(path = "/downloadPDF", produces = "application/json")
     public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
         return reportDao.fetchPdf(filePath,orgId,loggedInEmployeeID);
     }
 
-    @PostMapping(path = "/reportExcel", produces = "application/json")
+    @PostMapping(path = "/downloadExcel", produces = "application/json")
     public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
         return reportDao.fetchExcel(filePath,orgId,loggedInEmployeeID);
     }
@@ -42,16 +42,36 @@ public class ReportController {
     public ResponseEntity createGSTReport(@Valid @RequestBody GSTReportBean reportBean)
     {
         reportBean.setMode("Manual");
-        reportService.createGSTReportRecord(reportBean);
+        long reportID = reportService.createGSTReportRecord(reportBean);
+        reportBean.setGenerateDate(new Date());
+        /*
+         START - Temporary code to be removed
+         */
+        reportBean.setReportId(reportID);
+        reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
+        reportBean.setReportStatus("generated");
+        reportDao.updateGSTReport_filepath(reportBean);
+        reportDao.updateGSTReport_status(reportBean);
+        /* END */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping(path = "/listGSTReport", produces = "application/json")
     public List<GSTReportBean> listGSTReport(@Valid @RequestBody ListParametersBean listParametersBean) {
-
+        listParametersBean.setNoOfRecordsToShow(3);
         return reportDao.listGSTReport(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
-
     }
 
-}
+    /*
+        This method will be used for sending email. This will be a async method. It will just create entry into the email table
+        * toEmailList: Should have some value
+        * reportID
+        *
+     */
+    @PostMapping(path = "/emailGSTReport", produces = "application/json")
+    public ResponseEntity emailGSTReport(@Valid @RequestBody GSTReportBean reportBean) {
+        reportDao.createEmailEntry(reportBean);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
+    }
+  }

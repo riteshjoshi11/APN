@@ -14,7 +14,7 @@ public class ReportService {
     @Autowired
     ReportDAO reportDAO;
 
-    public void createGSTReportRecord(GSTReportBean reportBean) {
+    public long createGSTReportRecord(GSTReportBean reportBean) {
         //validate
         //create gstreport
         if(reportBean!=null && ANPConstants.GST_REPORT_CURRENT_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
@@ -22,7 +22,7 @@ public class ReportService {
         } else if(ANPConstants.GST_REPORT_PREVIOUS_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
             reportBean.setForMonth(ANPUtils.getMonthPart(ANPUtils.getPreviousMonth()));
         }
-        reportDAO.createGSTReport(reportBean);
+       return reportDAO.createGSTReport(reportBean);
     }
 
 }

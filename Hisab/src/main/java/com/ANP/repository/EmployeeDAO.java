@@ -266,7 +266,7 @@ public class EmployeeDAO {
         }
     }
 
-    public void isDuplicatePaySalarySuspect(EmployeeSalaryPayment employeeSalaryPayment) {
+    private void isDuplicatePaySalarySuspect(EmployeeSalaryPayment employeeSalaryPayment) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
         Map<String, Object> params = new HashMap<>();
         params.put("orgid", employeeSalaryPayment.getOrgId());
@@ -285,7 +285,7 @@ public class EmployeeDAO {
     }
 
 
-    public void isDuplicateSalaryDueSuspect(EmployeeSalary employeeSalary) {
+    private void isDuplicateSalaryDueSuspect(EmployeeSalary employeeSalary) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
         Map<String, Object> params = new HashMap<>();
         params.put("orgid", employeeSalary.getOrgId());

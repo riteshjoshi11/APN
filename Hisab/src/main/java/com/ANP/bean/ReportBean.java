@@ -10,7 +10,7 @@ public class ReportBean {
     private Date generateBy;
     private String pdfFilePath;
     private String excelFilePath;
-    private String reportStatus="REQUEST_RECEIVED"; //processing, finished, error
+    private String reportStatus="Waiting"; //processing, generated, error
 
     @Min(value = 1, message = "OrgID is Mandatory")
     private long orgId;

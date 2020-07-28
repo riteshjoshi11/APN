@@ -1,9 +1,6 @@
 package com.ANP.repository;
 
-import com.ANP.bean.CustomerBean;
-import com.ANP.bean.GSTReportBean;
-import com.ANP.bean.ReportBean;
-import com.ANP.bean.SearchParam;
+import com.ANP.bean.*;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
@@ -14,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -123,6 +123,7 @@ public class ReportDAO {
         public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             GSTReportBean reportBean = new GSTReportBean();
             reportBean.setExcelFilePath(rs.getString("excelfilepath"));
+            reportBean.setPdfFilePath(rs.getString("pdffilepath"));
             reportBean.setForMonth(rs.getString("formonth"));
             reportBean.setFromEmail(rs.getString("fromemail"));
             reportBean.setGenerateDate(rs.getTimestamp("generatedate"));
@@ -130,9 +131,78 @@ public class ReportDAO {
             reportBean.setReportStatus(rs.getString("reportstatus"));
             reportBean.setOrgId(rs.getLong("orgid"));
             reportBean.setReportId(rs.getLong("id"));
-            //           // reportBean.setToEmails(rs.getString("toemails"));
-            reportBean.setPdfFilePath(rs.getString("pdffilepath"));
             return reportBean;
         }
+    }
+
+    public void createEmailEntry(GSTReportBean reportBean) {
+        String sql = "insert into p_gstrpt_send_email(email,p_gst_reports_id) values(?,?) ";
+        namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps, int i)
+                    throws SQLException {
+
+                String myPojo = (reportBean.getToEmailList()).get(i);
+                ps.setString(1, myPojo);
+                ps.setLong(2,reportBean.getReportId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return (reportBean.getToEmailList()).size();
+            }
+        });
+     }
+
+      /*
+        * This method will perform the udpates for the file path
+        * Mandatory orgId, reportID, Status
+        *
+       */
+    public void updateGSTReport_status(GSTReportBean gstReportBean) {
+        if (gstReportBean.getReportId() <= 0) {
+            throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if (gstReportBean.getOrgId() <= 0) {
+            throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if (ANPUtils.isNullOrEmpty(gstReportBean.getReportStatus()) ) {
+            throw new CustomAppException("Report Status blank or empty", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        namedParameterJdbcTemplate.update("update p_gst_report set reportstatus = :reportStatus" +
+                               " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
+    }
+
+    /*
+    This method will perform the udpates for the file path
+    * Mandatory orgId, reportID, either pdfFilePath or ExcelFilePath
+    *
+    */
+    public void updateGSTReport_filepath(GSTReportBean gstReportBean) {
+        if (gstReportBean.getReportId() <= 0) {
+            throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if (gstReportBean.getOrgId() <= 0) {
+            throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        String updateQueryStr="";
+
+        if (ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) &&  ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
+            throw new CustomAppException("Report File Path (Excel & PDF) blank or empty", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        } else if(!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && !ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath()) ) {
+                updateQueryStr = " pdffilepath= :pdfFilePath , excelfilepath= :excelFilePath ";
+        } else if(!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath())) {
+            updateQueryStr = " pdffilepath= :pdfFilePath " ;
+        } else {
+            updateQueryStr = " excelfilepath= :excelFilePath ";
+        }
+        namedParameterJdbcTemplate.update("update p_gst_report set " + updateQueryStr +
+                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
     }
 }
