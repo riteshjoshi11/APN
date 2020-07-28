@@ -43,3 +43,6 @@ DROP INDEX `orgdetails_ibfk_4_idx` ,
 DROP INDEX `orgdetails_ibfk_3_idx` ,
 DROP INDEX `orgdetails_ibfk_2_idx` ;
 ;
+
+ALTER TABLE `antrackerdb`.`p_gstrpt_send_email` 
+DROP COLUMN `processType`;
