@@ -29,10 +29,7 @@ import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.List;
 
 
@@ -107,29 +104,37 @@ public class ReportDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        if (ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
-        }
-        return namedParameterJdbcTemplate.query("select p_gst_report.*" +
-                        " from p_gst_report where orgid=:orgID " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
-                        + " offset :startIndex",
-                param, new ListGSTReportMapper());
+        orderBy = "id desc";
+        //Please note that the email is getting concat'd here from other column
+        return namedParameterJdbcTemplate.query("select report.*, (select GROUP_CONCAT(email) from" +
+                " p_gstrpt_send_email where p_gstrpt_send_email.p_gst_reports_id=report.id) emails from p_gst_reports report where orgid=:orgID " +
+                ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + " limit  :noOfRecordsToShow"
+                + " offset :startIndex", param, new ListGSTReportMapper());
     }
 
 
     private static final class ListGSTReportMapper implements RowMapper<GSTReportBean> {
         public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             GSTReportBean reportBean = new GSTReportBean();
-            reportBean.setExcelFilePath(rs.getString("excelfilepath"));
-            reportBean.setPdfFilePath(rs.getString("pdffilepath"));
-            reportBean.setForMonth(rs.getString("formonth"));
-            reportBean.setFromEmail(rs.getString("fromemail"));
-            reportBean.setGenerateDate(rs.getTimestamp("generatedate"));
-            reportBean.setMode(rs.getString("mode"));
+            reportBean.setExcelFilePath(rs.getString("report.excelfilepath"));
+            reportBean.setPdfFilePath(rs.getString("report.pdffilepath"));
+            reportBean.setForMonth(rs.getString("report.formonth"));
+            reportBean.setFromEmail(rs.getString("report.fromemail"));
+            reportBean.setGenerateDate(rs.getTimestamp("report.generatedate"));
+            reportBean.setMode(rs.getString("report.mode"));
             reportBean.setReportStatus(rs.getString("reportstatus"));
-            reportBean.setOrgId(rs.getLong("orgid"));
-            reportBean.setReportId(rs.getLong("id"));
+            reportBean.setOrgId(rs.getLong("report.orgid"));
+            reportBean.setReportId(rs.getLong("report.id"));
+
+            String emailsInCSVFormat = rs.getString("emails");
+            List<String> emails = null;
+            if(!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
+                String elements[] = emailsInCSVFormat.split(",");
+                if(elements!=null && elements.length>0) {
+                    emails = Arrays.asList(elements);
+                }
+            }
+            reportBean.setToEmailList(emails);
             return reportBean;
         }
     }
@@ -172,7 +177,7 @@ public class ReportDAO {
             throw new CustomAppException("Report Status blank or empty", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        namedParameterJdbcTemplate.update("update p_gst_report set reportstatus = :reportStatus" +
+        namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus = :reportStatus" +
                 " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
     }
 
@@ -201,7 +206,7 @@ public class ReportDAO {
         } else {
             updateQueryStr = " excelfilepath= :excelFilePath ";
         }
-        namedParameterJdbcTemplate.update("update p_gst_report set " + updateQueryStr +
+        namedParameterJdbcTemplate.update("update p_gst_reports set " + updateQueryStr +
                 " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
     }
 

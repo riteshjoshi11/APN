@@ -49,7 +49,7 @@ public class ReportController {
          */
         reportBean.setReportId(reportID);
         reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
-        reportBean.setReportStatus("generated");
+        reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
         reportDao.updateGSTReport_filepath(reportBean);
         reportDao.updateGSTReport_status(reportBean);
         /* END */

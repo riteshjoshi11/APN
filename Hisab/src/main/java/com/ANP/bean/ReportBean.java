@@ -12,10 +12,18 @@ public class ReportBean {
     private String excelFilePath;
     private String reportStatus="Waiting"; //processing, generated, error
 
+
     @Min(value = 1, message = "OrgID is Mandatory")
     private long orgId;
 
     private String fromEmail;
+
+    public enum reportStatusEnum {
+        WAITING,
+        PROCESSING,
+        GENERATED,
+        ERROR
+    }
 
     public Date getGenerateBy() {
         return generateBy;
