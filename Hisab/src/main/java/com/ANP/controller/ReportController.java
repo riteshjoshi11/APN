@@ -98,4 +98,11 @@ public class ReportController {
         /* END */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
+    @PostMapping(path = "/listGSTReport", produces = "application/json")
+    public List<TransactionReportBean> listTransactionReport(@Valid @RequestBody ListParametersBean listParametersBean) {
+        listParametersBean.setNoOfRecordsToShow(2);
+        return reportDao.listTxnReport(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
   }

@@ -5,7 +5,6 @@ import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -113,6 +111,22 @@ public class ReportDAO {
                 + " offset :startIndex", param, new ListGSTReportMapper());
     }
 
+    public List<TransactionReportBean> listTxnReport(long orgID, List<SearchParam> searchParam, String orderBy, int noOfRecordsToShow, int startIndex) {
+        if (startIndex == 0) {
+            startIndex = 1;
+        }
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgID", orgID);
+        param.put("noOfRecordsToShow", noOfRecordsToShow);
+        param.put("startIndex", startIndex - 1);
+        orderBy = "id desc";
+        //Please note that the email is getting concat'd here from other column
+        return namedParameterJdbcTemplate.query("select report.*, (select GROUP_CONCAT(email) from" +
+                " p_txnrpt_send_email where p_txnrpt_send_email.p_txn_reports_id=report.id) emails from p_txn_reports report where orgid=:orgID " +
+                ANPUtils.getWhereClause(searchParam) + " order by  " + orderBy + " limit  :noOfRecordsToShow"
+                + " offset :startIndex", param, new ListTransactionReportMapper());
+    }
+
 
     private static final class ListGSTReportMapper implements RowMapper<GSTReportBean> {
         public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -139,6 +153,35 @@ public class ReportDAO {
             return reportBean;
         }
     }
+
+    private static final class ListTransactionReportMapper implements RowMapper<TransactionReportBean> {
+        public TransactionReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TransactionReportBean reportBean = new TransactionReportBean();
+            reportBean.setExcelFilePath(rs.getString("report.excelfilepath"));
+            reportBean.setPdfFilePath(rs.getString("report.pdffilepath"));
+            reportBean.setFromEmail(rs.getString("report.fromemail"));
+            reportBean.setGenerateDate(rs.getTimestamp("report.generatedate"));
+            reportBean.setReportStatus(rs.getString("reportstatus"));
+            reportBean.setOrgId(rs.getLong("report.orgid"));
+            reportBean.setReportId(rs.getLong("report.id"));
+            reportBean.setTimePeriod(rs.getString("report.period"));
+            reportBean.setFromDate(rs.getDate("report.fromdate"));
+            reportBean.setToDate(rs.getDate("report.todate"));
+            reportBean.setReportFormat(rs.getString("report.format"));
+            reportBean.setType(rs.getString("report.type"));
+            String emailsInCSVFormat = rs.getString("emails");
+            List<String> emails = null;
+            if(!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
+                String elements[] = emailsInCSVFormat.split(",");
+                if(elements!=null && elements.length>0) {
+                    emails = Arrays.asList(elements);
+                }
+            }
+            reportBean.setToEmailList(emails);
+            return reportBean;
+        }
+    }
+
 
     public void createEmailEntry(GSTReportBean reportBean) {
         String sql = "insert into p_gstrpt_send_email(email,p_gst_reports_id) values(?,?) ";
@@ -211,7 +254,7 @@ public class ReportDAO {
                 " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(reportBean));
     }
 
-    public List<String> getFrequentlyUsedEmail(long orgId, String loggedInEmployeeId) {
+    public List<String> getFrequentlyUsedGSTEmail(long orgId, String loggedInEmployeeId) {
         return namedParameterJdbcTemplate.getJdbcTemplate().query("select email from (select email,count(email) " +
                 " from p_gst_reports rpt, p_gstrpt_send_email email where rpt.orgid=" + orgId +
                 " and rpt.id=email.p_gst_reports_id group by email order by count(email) desc ) t limit 2", new RowMapper<String>() {
@@ -222,11 +265,10 @@ public class ReportDAO {
         });
     }
 
-
     public long createTxnReport(TransactionReportBean reportBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into " + ANPConstants.DB_TBL_TXN_REPORT + " (orgid," +
-                "reportstatus,period,fromdate,todate,format,type) values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate)",
+                "reportstatus,period,fromdate,todate,format,type) values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate, :reportFormat,:type)",
                 new BeanPropertySqlParameterSource(reportBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createTxnReport: Generated Key=" + generatedOrgKey);
