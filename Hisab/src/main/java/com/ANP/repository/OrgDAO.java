@@ -144,6 +144,7 @@ public class OrgDAO {
             orgDetails.setCompanyTypeInt(rs.getInt("companytype"));
             orgDetails.setBusinessNatureInt(rs.getInt("businessnature"));
             orgDetails.setNumberOfEmployeesInt(rs.getInt("numberofemployees"));
+            orgDetails.setAutoEmailGSTReport(rs.getBoolean("autoemailgstreport"));
             return orgDetails;
         }
     }

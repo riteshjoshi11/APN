@@ -29,12 +29,13 @@ public class OrganizationController {
 
     @PostMapping(path = "/updateOrganizationDetails", produces = "application/json" )
     public ResponseEntity updateOrganizationDetails(@RequestBody OrgDetails orgDetails) {
+        System.out.println("orgDetails=" + orgDetails);
         orgDAO.updateOrganizationDetails(orgDetails);
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
     @PostMapping(path = "/getOrganizationDetails", produces = "application/json" )
-    public OrgDetails updateOrganizationDetails(@Valid @RequestParam long orgId) {
+    public OrgDetails getOrganizationDetails(@Valid @RequestParam long orgId) {
        return orgDAO.getOrgDetails(orgId);
     }
 }

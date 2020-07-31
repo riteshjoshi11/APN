@@ -197,4 +197,31 @@ public class OrgDetails {
     public void setAutoEmailGSTReport(boolean autoEmailGSTReport) {
         this.autoEmailGSTReport = autoEmailGSTReport;
     }
+
+    @Override
+    public String toString() {
+        return "OrgDetails{" +
+                "orgDetailId=" + orgDetailId +
+                ", mobile1='" + mobile1 + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile2='" + mobile2 + '\'' +
+                ", gstNumber='" + gstNumber + '\'' +
+                ", panNumber='" + panNumber + '\'' +
+                ", companyType='" + companyType + '\'' +
+                ", businessNature='" + businessNature + '\'' +
+                ", numberOfEmployees='" + numberOfEmployees + '\'' +
+                ", extraDetails='" + extraDetails + '\'' +
+                ", accountDetails='" + accountDetails + '\'' +
+                ", billingAddress='" + billingAddress + '\'' +
+                ", cAName='" + cAName + '\'' +
+                ", cAEmail='" + cAEmail + '\'' +
+                ", cAMobile='" + cAMobile + '\'' +
+                ", orgId=" + orgId +
+                ", autoEmailGSTReport=" + autoEmailGSTReport +
+                ", companyTypeInt=" + companyTypeInt +
+                ", businessNatureInt=" + businessNatureInt +
+                ", numberOfEmployeesInt=" + numberOfEmployeesInt +
+                ", website='" + website + '\'' +
+                '}';
+    }
 }
