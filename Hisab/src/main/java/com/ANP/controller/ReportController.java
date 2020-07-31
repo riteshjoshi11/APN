@@ -76,9 +76,9 @@ public class ReportController {
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
-    @PostMapping(path = "/getFrequentlyUsedEmail", produces = "application/json")
-    public List<String> getFrequentlyUsedEmail(@RequestParam  long orgId, @RequestParam  String loggedInEmployeeId) {
-        return reportDao.getFrequentlyUsedEmail(orgId, loggedInEmployeeId);
+    @PostMapping(path = "/getFrequentlyUsedGSTEmail", produces = "application/json")
+    public List<String> getFrequentlyUsedGSTEmail(@RequestParam  long orgId, @RequestParam  String loggedInEmployeeId) {
+        return reportDao.getFrequentlyUsedGSTEmail(orgId, loggedInEmployeeId);
     }
 
     @PostMapping(path = "/createTransactionReport", produces = "application/json")
