@@ -1,7 +1,9 @@
 package com.ANP.bean;
 
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class ReportBean {
@@ -10,19 +12,60 @@ public class ReportBean {
     private Date generateBy;
     private String pdfFilePath;
     private String excelFilePath;
-    private String reportStatus="Waiting"; //processing, generated, error
-
+    private String reportStatus= reportStatusEnum.WAITING.toString();
+    private String reportFormat;
 
     @Min(value = 1, message = "OrgID is Mandatory")
     private long orgId;
-
     private String fromEmail;
+    private List<String> toEmailList;
+    private Date fromDate;
+    private Date toDate;
 
     public enum reportStatusEnum {
         WAITING,
         PROCESSING,
         GENERATED,
         ERROR
+    }
+
+
+    public ReportBean() {
+        this.toEmailList = new ArrayList<String>();
+    }
+
+
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    public String getReportFormat() {
+        return reportFormat;
+    }
+
+    public void setReportFormat(String reportFormat) {
+        this.reportFormat = reportFormat;
+    }
+
+    public List<String> getToEmailList() {
+        return toEmailList;
+    }
+
+    public void setToEmailList(List<String> toEmailList) {
+        this.toEmailList = toEmailList;
     }
 
     public Date getGenerateBy() {

@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.*;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
@@ -164,21 +165,21 @@ public class ReportDAO {
      * Mandatory orgId, reportID, Status
      *
      */
-    public void updateGSTReport_status(GSTReportBean gstReportBean) {
-        if (gstReportBean.getReportId() <= 0) {
+    public void updateGSTReport_status(ReportBean reportBean,String reportTableName ) {
+        if (reportBean.getReportId() <= 0) {
             throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        if (gstReportBean.getOrgId() <= 0) {
+        if (reportBean.getOrgId() <= 0) {
             throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        if (ANPUtils.isNullOrEmpty(gstReportBean.getReportStatus())) {
+        if (ANPUtils.isNullOrEmpty(reportBean.getReportStatus())) {
             throw new CustomAppException("Report Status blank or empty", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
 
-        namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus = :reportStatus" +
-                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
+        namedParameterJdbcTemplate.update("update " + reportTableName + " set reportstatus = :reportStatus" +
+                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(reportBean));
     }
 
     /*
@@ -186,28 +187,28 @@ public class ReportDAO {
     * Mandatory orgId, reportID, either pdfFilePath or ExcelFilePath
     *
     */
-    public void updateGSTReport_filepath(GSTReportBean gstReportBean) {
-        if (gstReportBean.getReportId() <= 0) {
-            throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+    public void updateGSTReport_filepath(ReportBean reportBean, String reportTableName) {
+        if (reportBean.getReportId() <= 0) {
+            throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.UPDATE_REPORT_FILEPATH.INVALID_REPORTID", HttpStatus.BAD_REQUEST);
         }
 
-        if (gstReportBean.getOrgId() <= 0) {
-            throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
+        if (reportBean.getOrgId() <= 0) {
+            throw new CustomAppException("OrgID cannot be 0 or blank", "SERVER.UPDATE_REPORT_FILEPATH.INVALID_ORGID", HttpStatus.BAD_REQUEST);
         }
 
         String updateQueryStr = "";
 
-        if (ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
+        if (ANPUtils.isNullOrEmpty(reportBean.getPdfFilePath()) && ANPUtils.isNullOrEmpty(reportBean.getExcelFilePath())) {
             throw new CustomAppException("Report File Path (Excel & PDF) blank or empty", "SERVER.updateGSTReport_filepath.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
-        } else if (!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath()) && !ANPUtils.isNullOrEmpty(gstReportBean.getExcelFilePath())) {
+        } else if (!ANPUtils.isNullOrEmpty(reportBean.getPdfFilePath()) && !ANPUtils.isNullOrEmpty(reportBean.getExcelFilePath())) {
             updateQueryStr = " pdffilepath= :pdfFilePath , excelfilepath= :excelFilePath ";
-        } else if (!ANPUtils.isNullOrEmpty(gstReportBean.getPdfFilePath())) {
+        } else if (!ANPUtils.isNullOrEmpty(reportBean.getPdfFilePath())) {
             updateQueryStr = " pdffilepath= :pdfFilePath ";
         } else {
             updateQueryStr = " excelfilepath= :excelFilePath ";
         }
-        namedParameterJdbcTemplate.update("update p_gst_reports set " + updateQueryStr +
-                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(gstReportBean));
+        namedParameterJdbcTemplate.update("update " + reportTableName + " set " + updateQueryStr +
+                " where orgid = :orgId and id = :reportId", new BeanPropertySqlParameterSource(reportBean));
     }
 
     public List<String> getFrequentlyUsedEmail(long orgId, String loggedInEmployeeId) {
@@ -219,6 +220,17 @@ public class ReportDAO {
                 return rs.getString(1);
             }
         });
+    }
+
+
+    public long createTxnReport(TransactionReportBean reportBean) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update("insert into " + ANPConstants.DB_TBL_TXN_REPORT + " (orgid," +
+                "reportstatus,period,fromdate,todate,format,type) values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate)",
+                new BeanPropertySqlParameterSource(reportBean), holder);
+        long generatedOrgKey = holder.getKey().longValue();
+        System.out.println("createTxnReport: Generated Key=" + generatedOrgKey);
+        return generatedOrgKey;
     }
 
 }

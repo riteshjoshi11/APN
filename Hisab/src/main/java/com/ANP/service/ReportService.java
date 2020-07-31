@@ -1,6 +1,7 @@
 package com.ANP.service;
 
 import com.ANP.bean.GSTReportBean;
+import com.ANP.bean.TransactionReportBean;
 import com.ANP.repository.ReportDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
@@ -25,4 +26,9 @@ public class ReportService {
        return reportDAO.createGSTReport(reportBean);
     }
 
+    public long createTxnReportRecord(TransactionReportBean reportBean) {
+        //calculate from date and to date in case user has selected from last backup date to now.
+        
+        return reportDAO.createTxnReport(reportBean);
+    }
 }

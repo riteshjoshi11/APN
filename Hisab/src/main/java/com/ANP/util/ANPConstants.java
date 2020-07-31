@@ -47,9 +47,12 @@ public interface ANPConstants {
       public static final String DB_TBL_paymentreceived = "paymentreceived";
       public static final String DB_TBL_paytovendor = "paytovendor";
       public static final String DB_TBL_retailsale = "retailsale";
+      public static final String DB_TBL_GST_REPORT = "p_gst_reports";
+      public static final String DB_TBL_TXN_REPORT = "p_gst_reports";
       public static final String DB_TBL_UI_OBJ_COMAPANYTYPE = "companytype" ;
       public static final String DB_TBL_UI_OBJ_BUSINESS_NATURE="businessnature" ;
       public static final String DB_TBL_UI_OBJ_NOOFEMPLOYEES="noofemployee";
+
 
       public static final String DB_TBL_UI_OBJ_EMPLOYEE_TYPE="employeetype";
 

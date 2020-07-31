@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,8 +51,8 @@ public class ReportController {
         reportBean.setReportId(reportID);
         reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
         reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
-        reportDao.updateGSTReport_filepath(reportBean);
-        reportDao.updateGSTReport_status(reportBean);
+        reportDao.updateGSTReport_filepath(reportBean, ANPConstants.DB_TBL_GST_REPORT);
+        reportDao.updateGSTReport_status(reportBean, ANPConstants.DB_TBL_GST_REPORT);
         /* END */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
@@ -78,5 +79,23 @@ public class ReportController {
     @PostMapping(path = "/getFrequentlyUsedEmail", produces = "application/json")
     public List<String> getFrequentlyUsedEmail(@RequestParam  long orgId, @RequestParam  String loggedInEmployeeId) {
         return reportDao.getFrequentlyUsedEmail(orgId, loggedInEmployeeId);
+    }
+
+    @PostMapping(path = "/createTransactionReport", produces = "application/json")
+    public ResponseEntity createTransactionReport(@Valid @RequestBody TransactionReportBean reportBean)
+    {
+
+        long reportID = reportService.createTxnReportRecord(reportBean);
+        reportBean.setGenerateDate(new Date());
+        /*
+         START - Temporary code to be removed
+         */
+        reportBean.setReportId(reportID);
+        reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
+        reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
+        reportDao.updateGSTReport_filepath(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
+        reportDao.updateGSTReport_status(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
+        /* END */
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
   }
