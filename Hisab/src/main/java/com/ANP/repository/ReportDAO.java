@@ -21,6 +21,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -41,21 +42,21 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws Exception {
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID)  {
         try {
             Path pdfPath = Paths.get(filePath);
             byte[] pdf = Files.readAllBytes(pdfPath);
             ByteArrayInputStream pdfToByte = new ByteArrayInputStream(pdf);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("Content-Disposition", "inline; filename= " + pdfPath.getFileName().toString());
+            headers.add("Content-Disposition", "attachment; filename=" + pdfPath.getFileName().toString());
 
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(new InputStreamResource(pdfToByte));
-        } catch (NoSuchFileException e) {
-            throw new CustomAppException("No PDF With that name", "SERVER.FETCH_PDF.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        } catch (IOException e) {
+            throw new CustomAppException("The requested PDF does not exist or not readable", "SERVER.FETCH_PDF.PDFIOISSUE", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -63,23 +64,22 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the excel
      * orgId and loggedInEmployeeId is used in future
      */
-
-    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID) throws Exception {
+    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID)  {
         try {
             Path excelPath = Paths.get(filePath);
             byte[] excel = Files.readAllBytes(excelPath);
             ByteArrayInputStream excelToByte = new ByteArrayInputStream(excel);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.add("Content-Disposition", "inline; filename= " + excelPath.getFileName().toString());
+            headers.add("Content-Disposition", "attachment; filename=" + excelPath.getFileName().toString());
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(new InputStreamResource(excelToByte));
-        } catch (NoSuchFileException e) {
-            throw new CustomAppException("No Excel File With that name", "SERVER.FETCH_EXCEL.DOESNOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        } catch (IOException e) {
+            throw new CustomAppException("Problem reading excel file on server", "SERVER.FETCH_EXCEL.IOISSUE", HttpStatus.EXPECTATION_FAILED);
         }
     }
 

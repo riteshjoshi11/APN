@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login/verifyOTP").permitAll()
                 .antMatchers(HttpMethod.POST, "/login/sendOTP").permitAll()
                 .antMatchers(HttpMethod.POST, "/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().
                 antMatchers("/v2/api-docs",
                         "/configuration/ui",

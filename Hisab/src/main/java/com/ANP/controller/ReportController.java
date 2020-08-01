@@ -10,6 +10,7 @@ import com.ANP.util.ANPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +29,15 @@ public class ReportController {
     @Autowired
     ReportService reportService;
 
-    @PostMapping(path = "/downloadPDF", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
+    @GetMapping(path = "/downloadPDF", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> fetchPdf(@RequestParam  String filePath, @RequestParam long orgId,
+                                                        @RequestParam  String loggedInEmployeeID) {
         return reportDao.fetchPdf(filePath,orgId,loggedInEmployeeID);
     }
 
-    @PostMapping(path = "/downloadExcel", produces = "application/json")
-    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgId, String loggedInEmployeeID) throws  Exception{
+    @GetMapping(path = "/downloadExcel", produces = "application/json")
+    public ResponseEntity<InputStreamResource> fetchExcel(@RequestParam  String filePath, @RequestParam long orgId,
+                                                          @RequestParam  String loggedInEmployeeID)  {
         return reportDao.fetchExcel(filePath,orgId,loggedInEmployeeID);
     }
 
@@ -50,6 +53,7 @@ public class ReportController {
          */
         reportBean.setReportId(reportID);
         reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
+        reportBean.setExcelFilePath("/home/ec2-user/gst_reports/PermissionGroup.csv");
         reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
         reportDao.updateGSTReport_filepath(reportBean, ANPConstants.DB_TBL_GST_REPORT);
         reportDao.updateGSTReport_status(reportBean, ANPConstants.DB_TBL_GST_REPORT);
@@ -99,7 +103,7 @@ public class ReportController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @PostMapping(path = "/listGSTReport", produces = "application/json")
+    @PostMapping(path = "/listTransactionReport", produces = "application/json")
     public List<TransactionReportBean> listTransactionReport(@Valid @RequestBody ListParametersBean listParametersBean) {
         listParametersBean.setNoOfRecordsToShow(2);
         return reportDao.listTxnReport(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),

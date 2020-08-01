@@ -90,7 +90,7 @@ public class CustomerDAO {
         param.put("noOfRecordsToShow",noOfRecordsToShow);
         param.put("startIndex",startIndex-1);
         if(ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = " account.currentbalance desc";
+            orderBy = " account.currentbalance asc ";
         }
 
         return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
