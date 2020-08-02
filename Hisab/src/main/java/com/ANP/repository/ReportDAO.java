@@ -127,6 +127,18 @@ public class ReportDAO {
                 + " offset :startIndex", param, new ListTransactionReportMapper());
     }
 
+    /*
+        Get the Generated Date of Last Successful Report for a orgId and EmployeeId
+     */
+    public java.util.Date getLastSuccessfulBackupDate(Long orgId, String employeeID) {
+        if(orgId==null || orgId.longValue()<1 || ANPUtils.isNullOrEmpty(employeeID) ) {
+            throw new CustomAppException("OrgID or EmployeeID is null", "SERVER.getLastSuccessfulBackupDate.INVALID_PARAM", HttpStatus.BAD_REQUEST);
+        }
+        String sql = "select todate from p_txn_reports where orgid=? and employeeid=? and reportstatus='"
+                + ReportBean.reportStatusEnum.GENERATED.toString()  + "' order by generatedate desc limit 1" ;
+        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[] {orgId,employeeID}, java.util.Date.class);
+    }
+
 
     private static final class ListGSTReportMapper implements RowMapper<GSTReportBean> {
         public GSTReportBean mapRow(ResultSet rs, int rowNum) throws SQLException {

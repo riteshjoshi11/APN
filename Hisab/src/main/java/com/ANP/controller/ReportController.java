@@ -90,13 +90,14 @@ public class ReportController {
     {
 
         long reportID = reportService.createTxnReportRecord(reportBean);
-        reportBean.setGenerateDate(new Date());
         /*
          START - Temporary code to be removed
          */
         reportBean.setReportId(reportID);
         reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
+        reportBean.setExcelFilePath("/home/ec2-user/gst_reports/PermissionGroup.csv");
         reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
+        reportBean.setGenerateDate(new Date());
         reportDao.updateGSTReport_filepath(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
         reportDao.updateGSTReport_status(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
         /* END */

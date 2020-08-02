@@ -6,6 +6,18 @@ public class TransactionReportBean extends ReportBean {
     private String timePeriod;
     private String type;
 
+    public enum PeriodOptionsEnum {
+        FROM_LAST_BACKUP,
+        BETWEEN_DATES
+    }
+
+
+    public enum ReportTypeEnum {
+        SIMPLE,
+        DETAILED
+    }
+
+
     public String getType() {
         return type;
     }

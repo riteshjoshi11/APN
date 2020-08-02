@@ -22,7 +22,16 @@ public class CommonDAO {
         mapSqlParameterSource.addValue("orgID", orgID);
         mapSqlParameterSource.addValue("tablePrimaryKey", tablePrimaryKey);
         mapSqlParameterSource.addValue("currentDate", new Date());
-        String updateQuery = "update " + tableName +  " set  isdeleted = 1, deletedate=:currentDate  where orgid=:orgID and id=:tablePrimaryKey" ;
-        namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource) ;
+        String updateQuery = "update " + tableName + " set  isdeleted = 1, deletedate=:currentDate  where orgid=:orgID and id=:tablePrimaryKey";
+        namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource);
+    }
+
+    /*
+        This method gives the company / business registration date
+        It will find out the first employee creation date for owner
+     */
+    public Date getOrgCreationDate(Long orgId) {
+        String sql = "select createdate from employee where orgid=? and type=1 limit 1";
+        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[]{orgId}, java.util.Date.class);
     }
 }

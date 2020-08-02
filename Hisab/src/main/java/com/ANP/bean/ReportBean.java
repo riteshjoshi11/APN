@@ -9,7 +9,8 @@ import java.util.List;
 public class ReportBean {
     private long reportId;
     private Date generateDate;
-    private Date generateBy;
+    private String generatedByName;
+    private String generatedByEmployeeId;
     private String pdfFilePath;
     private String excelFilePath;
     private String reportStatus= reportStatusEnum.WAITING.toString();
@@ -29,12 +30,31 @@ public class ReportBean {
         ERROR
     }
 
+    public enum ReportFormatEnum {
+        PDF,
+        EXCEL
+    }
+
 
     public ReportBean() {
         this.toEmailList = new ArrayList<String>();
     }
 
+    public String getGeneratedByName() {
+        return generatedByName;
+    }
 
+    public void setGeneratedByName(String generatedByName) {
+        this.generatedByName = generatedByName;
+    }
+
+    public String getGeneratedByEmployeeId() {
+        return generatedByEmployeeId;
+    }
+
+    public void setGeneratedByEmployeeId(String generatedByEmployeeId) {
+        this.generatedByEmployeeId = generatedByEmployeeId;
+    }
 
     public Date getFromDate() {
         return fromDate;
@@ -66,14 +86,6 @@ public class ReportBean {
 
     public void setToEmailList(List<String> toEmailList) {
         this.toEmailList = toEmailList;
-    }
-
-    public Date getGenerateBy() {
-        return generateBy;
-    }
-
-    public void setGenerateBy(Date generateBy) {
-        this.generateBy = generateBy;
     }
 
     public long getReportId() {

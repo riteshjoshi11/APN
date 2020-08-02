@@ -3,6 +3,7 @@ package com.ANP.util;
 import com.ANP.bean.SearchParam;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -70,12 +71,12 @@ public class ANPUtils implements ANPConstants {
         searchParam1.setValue("30000");
         l.add(searchParam1);
         System.out.println(getWhereClause(l));
-
         System.out.println("Month Part=" + getMonthPart(new Date()));
         System.out.println("Month Part2=" + getMonthPart(getPreviousMonth()));
 
-    }
+        System.out.println("Next Day" + addOneDay(new Date()));
 
+    }
 
     public static String getMonthPart(Date date) {
         String retStr = (new SimpleDateFormat("MMMM").format(date)).toString();
@@ -85,6 +86,13 @@ public class ANPUtils implements ANPConstants {
     public static Date getPreviousMonth() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
+        return calendar.getTime();
+    }
+
+    public static Date addOneDay(final Date pDate) {
+        Calendar calendar = Calendar.getInstance() ;
+        calendar.setTime(pDate);
+        calendar.add(Calendar.DAY_OF_MONTH,1);
         return calendar.getTime();
     }
 
