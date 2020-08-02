@@ -27,3 +27,8 @@ CREATE TABLE `p_txnrpt_send_email` (
   KEY `p_txnrpt_send_email_fk` (`p_txn_reports_id`),
   CONSTRAINT `p_txnrpt_send_email_fk` FOREIGN KEY (`p_txn_reports_id`) REFERENCES `p_txn_reports` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='This is a process table which will maintain a email sent of Transaction report.'
+
+
+ALTER TABLE `antrackerdb`.`employee` 
+CHANGE COLUMN `currentsalarybalance` `currentsalarybalance` FLOAT NULL DEFAULT 0 ,
+CHANGE COLUMN `lastsalarybalance` `lastsalarybalance` FLOAT NULL DEFAULT 0 ;
