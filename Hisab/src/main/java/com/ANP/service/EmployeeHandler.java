@@ -77,7 +77,6 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
     public boolean createSalary(EmployeeSalary employeeSalaryBean) {
-        //TODO Joshi: add additional code here
         boolean isSalaryCreated = false;
         employeeDAO.createEmployeeSalary(employeeSalaryBean);
         isSalaryCreated = employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeID(),employeeSalaryBean.getAmount(), "ADD" );
