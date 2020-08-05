@@ -220,7 +220,7 @@ public class ReportDAO {
      * Mandatory orgId, reportID, Status
      *
      */
-    public void updateGSTReport_status(ReportBean reportBean,String reportTableName ) {
+    public void updateReport_status(ReportBean reportBean, String reportTableName ) {
         if (reportBean.getReportId() <= 0) {
             throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
@@ -242,7 +242,7 @@ public class ReportDAO {
     * Mandatory orgId, reportID, either pdfFilePath or ExcelFilePath
     *
     */
-    public void updateGSTReport_filepath(ReportBean reportBean, String reportTableName) {
+    public void updateReport_filepath(ReportBean reportBean, String reportTableName) {
         if (reportBean.getReportId() <= 0) {
             throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.UPDATE_REPORT_FILEPATH.INVALID_REPORTID", HttpStatus.BAD_REQUEST);
         }
@@ -285,6 +285,26 @@ public class ReportDAO {
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createTxnReport: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
+    }
+
+    public void createEmailEntryForTxn(TransactionReportBean reportBean) {
+        String sql = "insert into p_txnrpt_send_email(email,p_txn_reports_id) values(?,?) ";
+        namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps, int i)
+                    throws SQLException {
+
+                String myPojo = (reportBean.getToEmailList()).get(i);
+                ps.setString(1, myPojo);
+                ps.setLong(2, reportBean.getReportId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return (reportBean.getToEmailList()).size();
+            }
+        });
     }
 
 }

@@ -1,9 +1,6 @@
 package com.ANP.controller;
 
 import com.ANP.bean.*;
-import com.ANP.repository.CustomerInvoiceDAO;
-import com.ANP.repository.ExpenseDAO;
-import com.ANP.repository.PurchaseFromVendorDAO;
 import com.ANP.repository.ReportDAO;
 import com.ANP.service.ReportService;
 import com.ANP.util.ANPConstants;
@@ -12,7 +9,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -55,8 +51,8 @@ public class ReportController {
         reportBean.setPdfFilePath("/home/ec2-user/gst_reports/Error Code Testing Plan.pdf");
         reportBean.setExcelFilePath("/home/ec2-user/gst_reports/PermissionGroup.csv");
         reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
-        reportDao.updateGSTReport_filepath(reportBean, ANPConstants.DB_TBL_GST_REPORT);
-        reportDao.updateGSTReport_status(reportBean, ANPConstants.DB_TBL_GST_REPORT);
+        reportDao.updateReport_filepath(reportBean, ANPConstants.DB_TBL_GST_REPORT);
+        reportDao.updateReport_status(reportBean, ANPConstants.DB_TBL_GST_REPORT);
         /* END */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
@@ -88,7 +84,6 @@ public class ReportController {
     @PostMapping(path = "/createTransactionReport", produces = "application/json")
     public ResponseEntity createTransactionReport(@Valid @RequestBody TransactionReportBean reportBean)
     {
-
         long reportID = reportService.createTxnReportRecord(reportBean);
         /*
          START - Temporary code to be removed
@@ -98,8 +93,8 @@ public class ReportController {
         reportBean.setExcelFilePath("/home/ec2-user/gst_reports/PermissionGroup.csv");
         reportBean.setReportStatus((ReportBean.reportStatusEnum.GENERATED).toString());
         reportBean.setGenerateDate(new Date());
-        reportDao.updateGSTReport_filepath(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
-        reportDao.updateGSTReport_status(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
+        reportDao.updateReport_filepath(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
+        reportDao.updateReport_status(reportBean,ANPConstants.DB_TBL_TXN_REPORT);
         /* END */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
@@ -109,5 +104,11 @@ public class ReportController {
         listParametersBean.setNoOfRecordsToShow(2);
         return reportDao.listTxnReport(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/emailTransactionReport", produces = "application/json")
+    public ResponseEntity emailTransactionReport(@Valid @RequestBody TransactionReportBean reportBean) {
+        reportDao.createEmailEntryForTxn(reportBean);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
   }
