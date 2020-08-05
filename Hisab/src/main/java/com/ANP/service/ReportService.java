@@ -42,6 +42,9 @@ public class ReportService {
                 //get the company registration date
                 lastBackupDate = commonDAO.getOrgCreationDate(reportBean.getOrgId());
             }
+            if(lastBackupDate==null) {
+                    throw new CustomAppException("Could not determine last backup date","SERVER.createTxnReportRecord.LASTBACKUPDATE", HttpStatus.EXPECTATION_FAILED);
+            }
             reportBean.setFromDate(ANPUtils.addOneDay(lastBackupDate));
             reportBean.setToDate(new Date());
         } else if(TransactionReportBean.PeriodOptionsEnum.BETWEEN_DATES.toString().equalsIgnoreCase(reportBean.getTimePeriod())) {
@@ -51,7 +54,6 @@ public class ReportService {
                 throw new CustomAppException("From Date is greater than ToDate","SERVER.createTxnReportRecord.INVALID_PARAM", HttpStatus.BAD_REQUEST);
             }
         }
-
         return reportDAO.createTxnReport(reportBean);
     }
 }

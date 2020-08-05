@@ -7,6 +7,7 @@ import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -134,9 +135,15 @@ public class ReportDAO {
         if(orgId==null || orgId.longValue()<1 || ANPUtils.isNullOrEmpty(employeeID) ) {
             throw new CustomAppException("OrgID or EmployeeID is null", "SERVER.getLastSuccessfulBackupDate.INVALID_PARAM", HttpStatus.BAD_REQUEST);
         }
+
         String sql = "select todate from p_txn_reports where orgid=? and employeeid=? and reportstatus='"
                 + ReportBean.reportStatusEnum.GENERATED.toString()  + "' order by generatedate desc limit 1" ;
-        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[] {orgId,employeeID}, java.util.Date.class);
+        try {
+            return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[] {orgId,employeeID}, java.util.Date.class);
+        } catch(IncorrectResultSizeDataAccessException e){
+            //no need to handle this exception - this means that there is no result.
+        }
+        return null;
     }
 
 
@@ -171,7 +178,7 @@ public class ReportDAO {
             TransactionReportBean reportBean = new TransactionReportBean();
             reportBean.setExcelFilePath(rs.getString("report.excelfilepath"));
             reportBean.setPdfFilePath(rs.getString("report.pdffilepath"));
-            reportBean.setFromEmail(rs.getString("report.fromemail"));
+//            reportBean.setFromEmail(rs.getString("report.fromemail"));
             reportBean.setGenerateDate(rs.getTimestamp("report.generatedate"));
             reportBean.setReportStatus(rs.getString("reportstatus"));
             reportBean.setOrgId(rs.getLong("report.orgid"));
