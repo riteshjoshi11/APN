@@ -43,7 +43,7 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID)  {
+    public ResponseEntity<InputStreamResource> fetchPdf(String filePath, long orgId, String loggedInEmployeeID) {
         try {
             Path pdfPath = Paths.get(filePath);
             byte[] pdf = Files.readAllBytes(pdfPath);
@@ -65,7 +65,7 @@ public class ReportDAO {
      * This method will take fullFilePath as parameter return the excel
      * orgId and loggedInEmployeeId is used in future
      */
-    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID)  {
+    public ResponseEntity<InputStreamResource> fetchExcel(String filePath, long orgid, String loggedInEmployeeID) {
         try {
             Path excelPath = Paths.get(filePath);
             byte[] excel = Files.readAllBytes(excelPath);
@@ -132,15 +132,15 @@ public class ReportDAO {
         Get the Generated Date of Last Successful Report for a orgId and EmployeeId
      */
     public java.util.Date getLastSuccessfulBackupDate(Long orgId, String employeeID) {
-        if(orgId==null || orgId.longValue()<1 || ANPUtils.isNullOrEmpty(employeeID) ) {
+        if (orgId == null || orgId.longValue() < 1 || ANPUtils.isNullOrEmpty(employeeID)) {
             throw new CustomAppException("OrgID or EmployeeID is null", "SERVER.getLastSuccessfulBackupDate.INVALID_PARAM", HttpStatus.BAD_REQUEST);
         }
 
         String sql = "select todate from p_txn_reports where orgid=? and employeeid=? and reportstatus='"
-                + ReportBean.reportStatusEnum.GENERATED.toString()  + "' order by generatedate desc limit 1" ;
+                + ReportBean.reportStatusEnum.GENERATED.toString() + "' order by generatedate desc limit 1";
         try {
-            return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[] {orgId,employeeID}, java.util.Date.class);
-        } catch(IncorrectResultSizeDataAccessException e){
+            return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(sql, new Object[]{orgId, employeeID}, java.util.Date.class);
+        } catch (IncorrectResultSizeDataAccessException e) {
             //no need to handle this exception - this means that there is no result.
         }
         return null;
@@ -162,9 +162,9 @@ public class ReportDAO {
 
             String emailsInCSVFormat = rs.getString("emails");
             List<String> emails = null;
-            if(!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
+            if (!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
                 String elements[] = emailsInCSVFormat.split(",");
-                if(elements!=null && elements.length>0) {
+                if (elements != null && elements.length > 0) {
                     emails = Arrays.asList(elements);
                 }
             }
@@ -190,9 +190,9 @@ public class ReportDAO {
             reportBean.setType(rs.getString("report.type"));
             String emailsInCSVFormat = rs.getString("emails");
             List<String> emails = null;
-            if(!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
+            if (!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
                 String elements[] = emailsInCSVFormat.split(",");
-                if(elements!=null && elements.length>0) {
+                if (elements != null && elements.length > 0) {
                     emails = Arrays.asList(elements);
                 }
             }
@@ -227,7 +227,7 @@ public class ReportDAO {
      * Mandatory orgId, reportID, Status
      *
      */
-    public void updateReport_status(ReportBean reportBean, String reportTableName ) {
+    public void updateReport_status(ReportBean reportBean, String reportTableName) {
         if (reportBean.getReportId() <= 0) {
             throw new CustomAppException("ReportID cannot be 0 or blank", "SERVER.updateGSTReport_status.INVALID_PARAM", HttpStatus.EXPECTATION_FAILED);
         }
@@ -283,30 +283,34 @@ public class ReportDAO {
             }
         });
     }
-
+    /*
+    * The create transaction report
+     */
     public long createTxnReport(TransactionReportBean reportBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into " + ANPConstants.DB_TBL_TXN_REPORT + " (orgid," +
-                "reportstatus,period,fromdate,todate,format,type) values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate, :reportFormat,:type)",
+                        " reportstatus,period,fromdate,todate,format,type) " +
+                        " values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate, :reportFormat,:type)",
                 new BeanPropertySqlParameterSource(reportBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createTxnReport: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
     }
 
+    /*
+     * This method is little different than other 'insert' method
+     * The reason is that it will make multiple entry into the table with same reference ID
+     */
     public void createEmailEntryForTxn(TransactionReportBean reportBean) {
         String sql = "insert into p_txnrpt_send_email(email,p_txn_reports_id) values(?,?) ";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
-
             @Override
             public void setValues(PreparedStatement ps, int i)
                     throws SQLException {
-
-                String myPojo = (reportBean.getToEmailList()).get(i);
-                ps.setString(1, myPojo);
+                String email = (reportBean.getToEmailList()).get(i);
+                ps.setString(1, email);
                 ps.setLong(2, reportBean.getReportId());
             }
-
             @Override
             public int getBatchSize() {
                 return (reportBean.getToEmailList()).size();
