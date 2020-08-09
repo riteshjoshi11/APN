@@ -55,6 +55,7 @@ public class PhonebookDAO {
                             String valueForProcessedContact = rs.getString("phonebook_contact.value");
 
                             RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
+                            rawPhonebookContact.setKey(contactName);
                             rawPhonebookContact.setKey(keyForProcessedContact);
                             rawPhonebookContact.setValue(valueForProcessedContact);
 
