@@ -46,4 +46,10 @@ public class PhonebookDAO {
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> rawPhonebookContacts) {
     }
 
+    /*
+     * Simply read the Phonebook_Contact (however you need to join with Phonebook) table and return a full list using RowMapper
+     */
+    private List<RawPhonebookContact> listRawContactsForUI(long orgId, String employeeId) {
+        return null;
+    }
 }
