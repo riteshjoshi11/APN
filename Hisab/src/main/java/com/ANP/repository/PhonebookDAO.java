@@ -55,7 +55,7 @@ public class PhonebookDAO {
                             String valueForProcessedContact = rs.getString("phonebook_contact.value");
 
                             RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
-                            rawPhonebookContact.setKey(contactName);
+                            rawPhonebookContact.setContactName(contactName);
                             rawPhonebookContact.setKey(keyForProcessedContact);
                             rawPhonebookContact.setValue(valueForProcessedContact);
 
@@ -88,8 +88,21 @@ public class PhonebookDAO {
      * See if an item from inputPhoneBookContactList exists in dbPhonebookContactList (Check using Contains method of List interface)
      * if contains YES - Check if the value
      */
-    public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> rawPhonebookContacts) {
+    public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
+            List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId,employeeId);
 
+
+            for(RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts)
+            {
+                if(dbPhonebookContactList.contains(rawPhonebookContact))
+                {
+                    //get object rawPhoneBookContact
+                }
+                else
+                {
+                    //send to create patch rawPhoneBookContact
+                }
+            }
     }
 
     /*
