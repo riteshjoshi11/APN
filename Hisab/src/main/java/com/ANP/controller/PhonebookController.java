@@ -1,5 +1,6 @@
 package com.ANP.controller;
 
+import com.ANP.bean.PhoneBookListingBean;
 import com.ANP.bean.PhonebookBean;
 import com.ANP.bean.RawPhonebookContact;
 import com.ANP.repository.PhonebookDAO;
@@ -22,8 +23,8 @@ public class PhonebookController {
     /*
      * Each RawPhonebookContact contains contactName, Key (EMAIL|WEBSITE|PHONENO), Value
     */
-    public ResponseEntity syncPhonebook(@RequestParam long orgId, @RequestParam String employeeId, List<RawPhonebookContact> rawPhonebookContacts) {
-        phonebookDAO.syncPhonebook(orgId, employeeId, rawPhonebookContacts);
+    public ResponseEntity syncPhonebook(@RequestBody PhoneBookListingBean phoneBookListingBean ) {
+        phonebookDAO.syncPhonebook(phoneBookListingBean.getOrgId(), phoneBookListingBean.getEmployeeId(), phoneBookListingBean.getRawPhonebookContacts());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
@@ -31,8 +32,8 @@ public class PhonebookController {
     UI has to simply do -  PhonebookBean.getProcessedContactList to get the list of Contact to be shown
      */
     @PostMapping(path = "/listPhonebookPaged", produces = "application/json")
-    public PhonebookBean listPhonebook(@RequestParam long orgId, @RequestParam String employeeId) {
-        return phonebookDAO.listProcessedContactsForUI(orgId,employeeId);
+    public PhonebookBean listPhonebook(@RequestBody PhoneBookListingBean phoneBookListingBean ) {
+        return phonebookDAO.listProcessedContactsForUI(phoneBookListingBean.getOrgId(),phoneBookListingBean.getEmployeeId());
     }
 
 }

@@ -199,9 +199,9 @@ public class ArchiveAndPurgeDAO {
                 System.out.println("Now we are going to call ControlOrgDataGrowthTransactionWise Procedure for table/object[" + tableName
                         + "]DeleteAfterNumberOfTransactions[" + premiumDeleteAfterTransactions + "]");
 
-                inParamMap1.put("RegularTransactionsAfterDelete", deleteAfterTransactions);
+                inParamMap1.put("RegularNoOfTxn", deleteAfterTransactions);
                 inParamMap1.put("TableName", tableName);
-                inParamMap1.put("PremiumTransactionsAfterDelete", premiumDeleteAfterTransactions);
+                inParamMap1.put("PremiumNoOFTxn", premiumDeleteAfterTransactions);
                 SqlParameterSource in = new MapSqlParameterSource(inParamMap1);
                 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall1.execute(in);
                 System.out.println("result = "+ simpleJdbcCallResult);
