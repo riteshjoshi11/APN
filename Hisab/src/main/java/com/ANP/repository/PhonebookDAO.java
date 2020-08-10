@@ -44,12 +44,12 @@ public class PhonebookDAO {
         PhonebookBean phonebookBean = new PhonebookBean();
 
         phonebookBean.setProcessedContactList(namedParameterJdbcTemplate.query("select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
-                " from phonebook_contact,phonebook where " +
-                "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId",param,
-                new ResultSetExtractor<List<ProcessedContact>>(){
-                    public List<ProcessedContact> extractData(ResultSet rs) throws SQLException{
-                        Map<String,ProcessedContact> contactMap = new HashMap<>();
-                        while(rs.next()) {
+                        " from phonebook_contact,phonebook where " +
+                        "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId", param,
+                new ResultSetExtractor<Collection<ProcessedContact>>() {
+                    public Collection<ProcessedContact> extractData(ResultSet rs) throws SQLException {
+                        Map<String, ProcessedContact> contactMap = new HashMap<>();
+                        while (rs.next()) {
                             String contactName = rs.getString("phonebook_contact.contact_name".toUpperCase());
                             String keyForProcessedContact = rs.getString("phonebook_contact.key");
                             String valueForProcessedContact = rs.getString("phonebook_contact.value");
@@ -62,21 +62,17 @@ public class PhonebookDAO {
                             if (contactMap.get(contactName) == null) {
                                 ProcessedContact processedContact = new ProcessedContact();
                                 processedContact.addARawPhonebookContact(rawPhonebookContact);
-                                contactMap.put(contactName,processedContact);
-                            }
-                            else{
+                                contactMap.put(contactName, processedContact);
+                            } else {
                                 contactMap.get(contactName).addARawPhonebookContact(rawPhonebookContact);
                             }
                         }
-                        List contactList = new ArrayList(contactMap.values());
-                        System.out.println(contactList);
-                        return contactList;
+                        return contactMap.values();
+
                     }
-        }));
+                }));
         return phonebookBean;
     }
-
-
 
 
     /*
@@ -89,20 +85,16 @@ public class PhonebookDAO {
      * if contains YES - Check if the value
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
-            List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId,employeeId);
+        List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
 
 
-            for(RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts)
-            {
-                if(dbPhonebookContactList.contains(rawPhonebookContact))
-                {
-                    //get object rawPhoneBookContact
-                }
-                else
-                {
-                    //send to create patch rawPhoneBookContact
-                }
+        for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
+            if (dbPhonebookContactList.contains(rawPhonebookContact)) {
+                //get object rawPhoneBookContact
+            } else {
+                //send to create patch rawPhoneBookContact
             }
+        }
     }
 
     /*
@@ -115,18 +107,18 @@ public class PhonebookDAO {
         param.put("employeeId", employeeId);
         return namedParameterJdbcTemplate.query("select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
                 " from phonebook_contact,phonebook where phonebook.id = phonebook_contact.phonebookid and" +
-                " phonebook.orgId = :orgId and phonebook.employeeid = :employeeId",param, new PhoneBookListingMapper());
+                " phonebook.orgId = :orgId and phonebook.employeeid = :employeeId", param, new PhoneBookListingMapper());
 
     }
 
     private final class PhoneBookListingMapper implements RowMapper<RawPhonebookContact> {
-    public RawPhonebookContact mapRow(ResultSet rs, int rowNum) throws SQLException{
-        RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
-        rawPhonebookContact.setContactName(rs.getString("phonebook_contact.contact_name"));
-        rawPhonebookContact.setKey(rs.getString("phonebook_contact.key"));
-        rawPhonebookContact.setValue(rs.getString("phonebook_contact.value"));
-        return rawPhonebookContact;
-    }
+        public RawPhonebookContact mapRow(ResultSet rs, int rowNum) throws SQLException {
+            RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
+            rawPhonebookContact.setContactName(rs.getString("phonebook_contact.contact_name"));
+            rawPhonebookContact.setKey(rs.getString("phonebook_contact.key"));
+            rawPhonebookContact.setValue(rs.getString("phonebook_contact.value"));
+            return rawPhonebookContact;
+        }
 
 
     }

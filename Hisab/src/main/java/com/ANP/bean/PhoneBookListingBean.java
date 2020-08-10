@@ -5,7 +5,7 @@ import java.util.List;
 public class PhoneBookListingBean {
     private long orgId;
     private String employeeId;
-    List<RawPhonebookContact> rawPhonebookContacts;
+    private List<RawPhonebookContact> rawPhonebookContacts;
 
     public long getOrgId() {
         return orgId;
