@@ -206,9 +206,9 @@ public class PhonebookDAO {
             @Override
             public void setValues(PreparedStatement ps, int i)
                     throws SQLException {
-                ps.setString(1, rawPhonebookContactList.get(i).getContactName());
-                ps.setString(2, rawPhonebookContactList.get(i).getKey());
-                ps.setString(3, rawPhonebookContactList.get(i).getValue());
+                ps.setString(1, rawPhonebookContactList.get(i).getContactName().trim().toUpperCase());
+                ps.setString(2, rawPhonebookContactList.get(i).getKey().trim().toUpperCase());
+                ps.setString(3, rawPhonebookContactList.get(i).getValue().trim().toUpperCase());
                 ps.setLong(4, phonebookId);
             }
             @Override

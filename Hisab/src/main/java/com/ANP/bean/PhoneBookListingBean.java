@@ -5,7 +5,25 @@ import java.util.List;
 public class PhoneBookListingBean {
     private long orgId;
     private String employeeId;
+    private int noOfRecordsToShow;
+    private int startIndex;
     private List<RawPhonebookContact> rawPhonebookContacts;
+
+    public int getNoOfRecordsToShow() {
+        return noOfRecordsToShow;
+    }
+
+    public void setNoOfRecordsToShow(int noOfRecordsToShow) {
+        this.noOfRecordsToShow = noOfRecordsToShow;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
 
     public long getOrgId() {
         return orgId;

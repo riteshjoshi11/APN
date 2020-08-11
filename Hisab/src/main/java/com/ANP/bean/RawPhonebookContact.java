@@ -6,6 +6,12 @@ public class RawPhonebookContact {
     protected String value="";
     private boolean isDeleted;
 
+    public enum PHONEBOOK_CONTACT_TYPE {
+        WEBSITE,
+        PHONE,
+        EMAIL
+    }
+
     public boolean isDeleted() {
         return isDeleted;
     }

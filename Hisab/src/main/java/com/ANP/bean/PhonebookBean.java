@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 /*
-* Main bean to be returned to UI
+ * Main bean to be returned to UI
  */
 public class PhonebookBean {
     protected String employeeId;
