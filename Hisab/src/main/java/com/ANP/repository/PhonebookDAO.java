@@ -1,5 +1,6 @@
 package com.ANP.repository;
 
+import com.ANP.bean.EmployeeSalaryPayment;
 import com.ANP.bean.PhonebookBean;
 import com.ANP.bean.ProcessedContact;
 import com.ANP.bean.RawPhonebookContact;
@@ -39,46 +40,65 @@ public class PhonebookDAO {
      * Set this collection object into the PhonebookBean
      */
     public PhonebookBean listProcessedContactsForUI(long orgId, String employeeId) {
-
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("orgId", orgId);
-        param.put("employeeId", employeeId);
         PhonebookBean phonebookBean = new PhonebookBean();
-
-        phonebookBean.setProcessedContactList(namedParameterJdbcTemplate.query("select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
-                        " from phonebook_contact,phonebook where " +
-                        "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId", param,
-                new ResultSetExtractor<Collection<ProcessedContact>>() {
-                    public Collection<ProcessedContact> extractData(ResultSet rs) throws SQLException {
-                        Map<String, ProcessedContact> contactMap = new HashMap<>();
-                        while (rs.next()) {
-                            String contactName = rs.getString("phonebook_contact.contact_name".toUpperCase());
-                            String keyForProcessedContact = rs.getString("phonebook_contact.key");
-                            String valueForProcessedContact = rs.getString("phonebook_contact.value");
-
-                            RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
-                            rawPhonebookContact.setContactName(contactName);
-                            rawPhonebookContact.setKey(keyForProcessedContact);
-                            rawPhonebookContact.setValue(valueForProcessedContact);
-
-                            if (contactMap.get(contactName) == null) {
-                                ProcessedContact processedContact = new ProcessedContact();
-                                processedContact.setContactName(contactName);
-                                processedContact.addARawPhonebookContact(rawPhonebookContact);
-                                contactMap.put(contactName, processedContact);
-                            } else {
-                                contactMap.get(contactName).addARawPhonebookContact(rawPhonebookContact);
-                                contactMap.get(contactName).setContactName(contactName);
-                            }
-                        }
-                        return contactMap.values();
-
-                    }
-                }));
+        Map<String, ProcessedContact> processedContactMap = getContactMap(orgId, employeeId, false);
+        phonebookBean.setProcessedContactList(processedContactMap.values());
         return phonebookBean;
     }
 
+    //ResultSet Extractor for processedContactMap : Map<ContactName,ProcessedContact>
+    private static final class ProcessedContactMapper implements ResultSetExtractor<Map<String,ProcessedContact>> {
+        public Map<String,ProcessedContact> extractData(ResultSet rs) throws SQLException{
+            Map<String, ProcessedContact> contactMap = new HashMap<>();
+            while (rs.next()) {
+                String contactName = rs.getString("phonebook_contact.contact_name".toUpperCase());
+                String keyForProcessedContact = rs.getString("phonebook_contact.key");
+                String valueForProcessedContact = rs.getString("phonebook_contact.value");
 
+                RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
+                rawPhonebookContact.setContactName(contactName);
+                rawPhonebookContact.setKey(keyForProcessedContact);
+                rawPhonebookContact.setValue(valueForProcessedContact);
+
+                if (contactMap.get(contactName) == null) {
+                    ProcessedContact processedContact = new ProcessedContact();
+                    processedContact.setContactName(contactName);
+                    processedContact.addARawPhonebookContact(rawPhonebookContact);
+                    contactMap.put(contactName, processedContact);
+                } else {
+                    contactMap.get(contactName).addARawPhonebookContact(rawPhonebookContact);
+                    contactMap.get(contactName).setContactName(contactName);
+                }
+            }
+            return contactMap;
+        }
+    }
+
+    //Mapper for ProcessedContacts
+    public Map<String,ProcessedContact> getContactMap(long orgId, String employeeId, Boolean filterIsDeleted) {
+
+        String sql;
+        if (filterIsDeleted = true){
+            sql = "select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
+                    " from phonebook_contact,phonebook where " +
+                    "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId and (isdeleted is null or isdeleted<> true)";
+        }else{
+            sql = "select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
+                    " from phonebook_contact,phonebook where " +
+                    "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId";
+
+        }
+
+
+                    Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgId", orgId);
+        param.put("employeeId", employeeId);
+
+        Map<String, ProcessedContact> processedContactMap =(namedParameterJdbcTemplate.query(sql, param,
+                new ProcessedContactMapper()));
+        return processedContactMap;
+
+    }
     /*
      * Get the List RawPhoneBookContacts from the DB for OrgId and EmployeeID Combination
      * Now you have two Lists - one coming from Input and other is from DB. Lets say: inputPhoneBookContactList and dbPhonebookContactList
@@ -92,31 +112,26 @@ public class PhonebookDAO {
         //@TODO do a null check for phonebookId
         long phonebookId = getId(orgId, employeeId);
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
-        List<RawPhonebookContact> listForUpdation = new ArrayList<>();
         List<RawPhonebookContact> listForDeletion = new ArrayList<>();
-
-        PhonebookBean phonebookbean = listProcessedContactsForUI(orgId,employeeId);
-        Collection<ProcessedContact> processedContactList = phonebookbean.getProcessedContactList();
-
         //@TODO Nitesh#1(This is an additional loop and should be removed) instead of this
         //Change: listProcessedContactsForUI and create a private method that return you ProcessContactMap and
         // THe private method will be invoked here and in listProcessedContactsForUI
-        Map<String, ProcessedContact> contactMap = new HashMap<>();
-        for(ProcessedContact processedContact : processedContactList) {
-            contactMap.put(processedContact.getContactName(),processedContact);
-            System.out.println(processedContact.getContactName());
-        }
+
+        //filtering the deleted data.
+        Map<String, ProcessedContact> contactMap = getContactMap(orgId, employeeId, true);
 
         //Identification of create and update scenario
+
+
         for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
-            System.out.println("rawPhoneBook contact name = " + rawPhonebookContact.getContactName());
+
             if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
                 ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
+                System.out.println("MAP is = " + contactMap.get(rawPhonebookContact.getContactName()));
                 //@TODO Nitesh#2: Write opposite condition to simply if else
-                if(processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){ //if condition ignored
-                } else {
-                    listForUpdation.add(rawPhonebookContact);
-                    //Update Batch
+                if(!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){
+                    listForCreation.add(rawPhonebookContact);
+                    //Creation Batch
                 }
             } else   {
                 listForCreation.add(rawPhonebookContact);
@@ -128,17 +143,16 @@ public class PhonebookDAO {
         List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
         for(RawPhonebookContact rawPhonebookContact : dbPhonebookContactList)
         {
-            System.out.println("delete List"+rawPhonebookContact.getContactName());
             if(!inputRawPhonebookContacts.contains(rawPhonebookContact)){
+                System.out.println("deleted List Object"+rawPhonebookContact);
+
                 listForDeletion.add(rawPhonebookContact);
                 //delete batch
             }
         }
 
-
-        createBatch(listForCreation,phonebookId);
-        updateBatch(listForUpdation,phonebookId);
         deleteBatch(listForDeletion,phonebookId);
+        createBatch(listForCreation,phonebookId);
     }
 
     /*
@@ -184,7 +198,7 @@ public class PhonebookDAO {
         });
     }
 
-    public void updateBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
+ /*   public void updateBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
         String sql = "update `phonebook_contact` set  `value` = ? where `contact_name` = ? and `phonebookid` = ?  and `key` = ?";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -201,7 +215,7 @@ public class PhonebookDAO {
             }
         });
     }
-
+*/
     public void deleteBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
         String sql = "update `phonebook_contact` set `isdeleted` = true where `contact_name` = ? and `phonebookid` = ? and `key` = ? and `value` = ?";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {

@@ -4,6 +4,15 @@ public class RawPhonebookContact {
     protected String contactName;
     protected String key="";
     protected String value="";
+    private boolean isDeleted;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public String getContactName() {
         return contactName;
