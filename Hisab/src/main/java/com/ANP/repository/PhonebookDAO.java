@@ -111,6 +111,14 @@ public class PhonebookDAO {
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
         //@TODO do a null check for phonebookId
+
+        if(inputRawPhonebookContacts == null)
+        {
+           throw new CustomAppException("INPUTPHONEBOOK NOT FOUND", "SERVER.SYNC_PHONEBOOK.NULL", HttpStatus.EXPECTATION_FAILED);
+        }
+
+
+
         Long phonebookId;
         try {
             phonebookId = getId(orgId, employeeId);
