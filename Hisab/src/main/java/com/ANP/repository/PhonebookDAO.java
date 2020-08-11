@@ -89,7 +89,7 @@ public class PhonebookDAO {
      * if contains YES - Check if the value
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
-
+        //@TODO do a null check for phonebookId
         long phonebookId = getId(orgId, employeeId);
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
         List<RawPhonebookContact> listForUpdation = new ArrayList<>();
@@ -98,16 +98,21 @@ public class PhonebookDAO {
         PhonebookBean phonebookbean = listProcessedContactsForUI(orgId,employeeId);
         Collection<ProcessedContact> processedContactList = phonebookbean.getProcessedContactList();
 
+        //@TODO Nitesh#1(This is an additional loop and should be removed) instead of this
+        //Change: listProcessedContactsForUI and create a private method that return you ProcessContactMap and
+        // THe private method will be invoked here and in listProcessedContactsForUI
         Map<String, ProcessedContact> contactMap = new HashMap<>();
         for(ProcessedContact processedContact : processedContactList) {
             contactMap.put(processedContact.getContactName(),processedContact);
             System.out.println(processedContact.getContactName());
         }
 
+        //Identification of create and update scenario
         for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
             System.out.println("rawPhoneBook contact name = " + rawPhonebookContact.getContactName());
             if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
                 ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
+                //@TODO Nitesh#2: Write opposite condition to simply if else
                 if(processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){ //if condition ignored
                 } else {
                     listForUpdation.add(rawPhonebookContact);
@@ -118,6 +123,8 @@ public class PhonebookDAO {
                 //Creation Batch
             }
         }
+
+        //Identification of delete scenario
         List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
         for(RawPhonebookContact rawPhonebookContact : dbPhonebookContactList)
         {
