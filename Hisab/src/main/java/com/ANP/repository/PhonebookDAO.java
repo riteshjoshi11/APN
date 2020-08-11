@@ -4,7 +4,9 @@ import com.ANP.bean.EmployeeSalaryPayment;
 import com.ANP.bean.PhonebookBean;
 import com.ANP.bean.ProcessedContact;
 import com.ANP.bean.RawPhonebookContact;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -94,9 +96,8 @@ public class PhonebookDAO {
         param.put("orgId", orgId);
         param.put("employeeId", employeeId);
 
-        Map<String, ProcessedContact> processedContactMap =(namedParameterJdbcTemplate.query(sql, param,
+        return(namedParameterJdbcTemplate.query(sql, param,
                 new ProcessedContactMapper()));
-        return processedContactMap;
 
     }
     /*
@@ -110,19 +111,23 @@ public class PhonebookDAO {
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
         //@TODO do a null check for phonebookId
-        long phonebookId = getId(orgId, employeeId);
+        Long phonebookId;
+        try {
+            phonebookId = getId(orgId, employeeId);
+        }
+        catch (NullPointerException e){
+            throw new CustomAppException("PHONEBOOK ID NOT FOUND", "SERVER.SYNC_PHONEBOOK.NULL", HttpStatus.EXPECTATION_FAILED);
+        }
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
         List<RawPhonebookContact> listForDeletion = new ArrayList<>();
         //@TODO Nitesh#1(This is an additional loop and should be removed) instead of this
         //Change: listProcessedContactsForUI and create a private method that return you ProcessContactMap and
         // THe private method will be invoked here and in listProcessedContactsForUI
 
-        //filtering the deleted data.
+        //getting processed contact after filtering the deleted contacts.
         Map<String, ProcessedContact> contactMap = getContactMap(orgId, employeeId, true);
 
         //Identification of create and update scenario
-
-
         for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
 
             if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
@@ -143,6 +148,7 @@ public class PhonebookDAO {
         List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
         for(RawPhonebookContact rawPhonebookContact : dbPhonebookContactList)
         {
+
             if(!inputRawPhonebookContacts.contains(rawPhonebookContact)){
                 System.out.println("deleted List Object"+rawPhonebookContact);
 
@@ -169,7 +175,7 @@ public class PhonebookDAO {
 
     }
 
-    private final class PhoneBookListingMapper implements RowMapper<RawPhonebookContact> {
+    private static final class PhoneBookListingMapper implements RowMapper<RawPhonebookContact> {
         public RawPhonebookContact mapRow(ResultSet rs, int rowNum) throws SQLException {
             RawPhonebookContact rawPhonebookContact = new RawPhonebookContact();
             rawPhonebookContact.setContactName(rs.getString("phonebook_contact.contact_name"));
@@ -239,7 +245,6 @@ public class PhonebookDAO {
         Map<String,Object> param = new HashMap<>();
         param.put("orgid", orgId);
         param.put("employeeid", employeeId);
-        Long id =  namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid and employeeId = :employeeid", param, Long.class);
-        return id;
+        return  namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid and employeeId = :employeeid", param, Long.class);
     }
 }

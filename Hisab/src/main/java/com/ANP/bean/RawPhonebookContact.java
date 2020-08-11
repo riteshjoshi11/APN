@@ -40,7 +40,7 @@ public class RawPhonebookContact {
 
     @Override
     public int hashCode() {
-        return (key.hashCode()) * (value.hashCode());
+        return ((contactName.hashCode()) * (key.hashCode()) * (value.hashCode()));
     }
 
     @Override
