@@ -49,7 +49,9 @@ public class RawPhonebookContact {
         if(! (obj instanceof RawPhonebookContact)) return false;
 
         RawPhonebookContact contact = (RawPhonebookContact) obj;
-        if(this.key.equalsIgnoreCase(contact.getKey()) && this.value.equalsIgnoreCase(contact.getValue())) {
+        if(this.contactName.equalsIgnoreCase(contact.getContactName()) &&
+                this.key.equalsIgnoreCase(contact.getKey()) &&
+                this.value.equalsIgnoreCase(contact.getValue()) ) {
             return true;
         }
         return false;
