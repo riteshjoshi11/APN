@@ -1,6 +1,5 @@
 package com.ANP.repository;
 
-import com.ANP.bean.EmployeeSalaryPayment;
 import com.ANP.bean.PhonebookBean;
 import com.ANP.bean.ProcessedContact;
 import com.ANP.bean.RawPhonebookContact;
@@ -110,27 +109,18 @@ public class PhonebookDAO {
      * if contains YES - Check if the value
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
-        //@TODO do a null check for phonebookId
-
-        if(inputRawPhonebookContacts == null)
+        if(inputRawPhonebookContacts == null || inputRawPhonebookContacts.size()==0)
         {
-           throw new CustomAppException("INPUTPHONEBOOK NOT FOUND", "SERVER.SYNC_PHONEBOOK.NULL", HttpStatus.EXPECTATION_FAILED);
+           throw new CustomAppException("INPUT CONTACT LIST IS EMPTY", "SERVER.SYNC_PHONEBOOK.NULLOREMPTY.CONTACT", HttpStatus.BAD_REQUEST);
         }
 
-
-
-        Long phonebookId;
-        try {
-            phonebookId = getId(orgId, employeeId);
+        Long phonebookId = getId(orgId, employeeId);
+        if(phonebookId==null || phonebookId<=0) {
+            throw new CustomAppException("PHONEBOOK ID NOT FOUND CORRESPONDING TO GIVEN INPUT PARAMETERS", "SERVER.SYNC_PHONEBOOK.INVALID_PHONEBOOK_ID", HttpStatus.BAD_REQUEST);
         }
-        catch (NullPointerException e){
-            throw new CustomAppException("PHONEBOOK ID NOT FOUND", "SERVER.SYNC_PHONEBOOK.NULL", HttpStatus.EXPECTATION_FAILED);
-        }
+
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
         List<RawPhonebookContact> listForDeletion = new ArrayList<>();
-        //@TODO Nitesh#1(This is an additional loop and should be removed) instead of this
-        //Change: listProcessedContactsForUI and create a private method that return you ProcessContactMap and
-        // THe private method will be invoked here and in listProcessedContactsForUI
 
         //getting processed contact after filtering the deleted contacts.
         Map<String, ProcessedContact> contactMap = getContactMap(orgId, employeeId, true);
@@ -138,33 +128,49 @@ public class PhonebookDAO {
         //Identification of create and update scenario
         for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
 
+            if (contactMap.get(rawPhonebookContact.getContactName()) == null) {
+                //no match found that means contact does not exist
+                listForCreation.add(rawPhonebookContact);
+                continue;
+            }
+
+            if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
+                //We are here that means contactName exists
+                ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
+
+                if(!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){
+                    //We are here means the KEY/VALUE DOES NOT EXISTS FOR THE CONTACT
+                    //SO NEED TO CREATE
+                    listForCreation.add(rawPhonebookContact);
+                    continue;
+                }
+            }
+            System.out.println("We are here that means Contact might need to be deleted that will be decided in next logic");
+            /*
             if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
                 ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
-                System.out.println("MAP is = " + contactMap.get(rawPhonebookContact.getContactName()));
-                //@TODO Nitesh#2: Write opposite condition to simply if else
+                //System.out.println("MAP is = " + contactMap.get(rawPhonebookContact.getContactName()));
                 if(!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){
+                    //Add for creation
                     listForCreation.add(rawPhonebookContact);
-                    //Creation Batch
                 }
             } else   {
                 listForCreation.add(rawPhonebookContact);
-                //Creation Batch
+
             }
+
+             */
         }
 
         //Identification of delete scenario
         List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
         for(RawPhonebookContact rawPhonebookContact : dbPhonebookContactList)
         {
-
             if(!inputRawPhonebookContacts.contains(rawPhonebookContact)){
-                System.out.println("deleted List Object"+rawPhonebookContact);
-
                 listForDeletion.add(rawPhonebookContact);
                 //delete batch
             }
         }
-
         deleteBatch(listForDeletion,phonebookId);
         createBatch(listForCreation,phonebookId);
     }
@@ -248,7 +254,7 @@ public class PhonebookDAO {
         });
     }
 
-    public long getId(long orgId, String employeeId)
+    public Long getId(long orgId, String employeeId)
     {
         Map<String,Object> param = new HashMap<>();
         param.put("orgid", orgId);
