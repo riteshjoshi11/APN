@@ -1,29 +1,16 @@
 package com.ANP.bean;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class PhoneBookListingBean {
+    @Min(value = 1, message = "OrgID is Mandatory")
     private long orgId;
+    @NotBlank(message = "employeeId name is mandatory")
     private String employeeId;
-    private int noOfRecordsToShow;
-    private int startIndex;
+
     private List<RawPhonebookContact> rawPhonebookContacts;
-
-    public int getNoOfRecordsToShow() {
-        return noOfRecordsToShow;
-    }
-
-    public void setNoOfRecordsToShow(int noOfRecordsToShow) {
-        this.noOfRecordsToShow = noOfRecordsToShow;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
-    }
 
     public long getOrgId() {
         return orgId;
