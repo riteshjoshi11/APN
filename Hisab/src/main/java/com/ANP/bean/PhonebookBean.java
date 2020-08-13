@@ -7,6 +7,7 @@ import java.util.Date;
  * Main bean to be returned to UI
  */
 public class PhonebookBean {
+    protected Long orgId;
     protected String employeeId;
     protected Date lastSyncDate;
     protected String syncStatus;
@@ -45,5 +46,13 @@ public class PhonebookBean {
 
     public void setProcessedContactList(Collection<ProcessedContact> processedContactList) {
         this.processedContactList = processedContactList;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
     }
 }

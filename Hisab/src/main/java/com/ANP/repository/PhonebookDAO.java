@@ -1,15 +1,16 @@
 package com.ANP.repository;
 
-import com.ANP.bean.PhonebookBean;
-import com.ANP.bean.ProcessedContact;
-import com.ANP.bean.RawPhonebookContact;
+import com.ANP.bean.*;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -48,8 +49,8 @@ public class PhonebookDAO {
     }
 
     //ResultSet Extractor for processedContactMap : Map<ContactName,ProcessedContact>
-    private static final class ProcessedContactMapper implements ResultSetExtractor<Map<String,ProcessedContact>> {
-        public Map<String,ProcessedContact> extractData(ResultSet rs) throws SQLException{
+    private static final class ProcessedContactMapper implements ResultSetExtractor<Map<String, ProcessedContact>> {
+        public Map<String, ProcessedContact> extractData(ResultSet rs) throws SQLException {
             Map<String, ProcessedContact> contactMap = new HashMap<>();
             while (rs.next()) {
                 String contactName = rs.getString("phonebook_contact.contact_name".toUpperCase());
@@ -76,14 +77,14 @@ public class PhonebookDAO {
     }
 
     //Mapper for ProcessedContacts
-    public Map<String,ProcessedContact> getContactMap(long orgId, String employeeId, Boolean filterIsDeleted) {
+    public Map<String, ProcessedContact> getContactMap(long orgId, String employeeId, Boolean filterIsDeleted) {
 
         String sql;
-        if (filterIsDeleted = true){
+        if (filterIsDeleted = true) {
             sql = "select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
                     " from phonebook_contact,phonebook where " +
                     "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId and (isdeleted is null or isdeleted<> true)";
-        }else{
+        } else {
             sql = "select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
                     " from phonebook_contact,phonebook where " +
                     "phonebook.id = phonebook_contact.phonebookid and phonebook.orgId = :orgId and phonebook.employeeid = :employeeId";
@@ -91,14 +92,15 @@ public class PhonebookDAO {
         }
 
 
-                    Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgId", orgId);
         param.put("employeeId", employeeId);
 
-        return(namedParameterJdbcTemplate.query(sql, param,
+        return (namedParameterJdbcTemplate.query(sql, param,
                 new ProcessedContactMapper()));
 
     }
+
     /*
      * Get the List RawPhoneBookContacts from the DB for OrgId and EmployeeID Combination
      * Now you have two Lists - one coming from Input and other is from DB. Lets say: inputPhoneBookContactList and dbPhonebookContactList
@@ -109,14 +111,19 @@ public class PhonebookDAO {
      * if contains YES - Check if the value
      */
     public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
-        if(inputRawPhonebookContacts == null || inputRawPhonebookContacts.size()==0)
-        {
-           throw new CustomAppException("INPUT CONTACT LIST IS EMPTY", "SERVER.SYNC_PHONEBOOK.NULLOREMPTY.CONTACT", HttpStatus.BAD_REQUEST);
+        if (inputRawPhonebookContacts == null || inputRawPhonebookContacts.size() == 0) {
+            throw new CustomAppException("INPUT CONTACT LIST IS EMPTY", "SERVER.SYNC_PHONEBOOK.NULLOREMPTY.CONTACT", HttpStatus.BAD_REQUEST);
         }
 
         Long phonebookId = getId(orgId, employeeId);
-        if(phonebookId==null || phonebookId<=0) {
-            throw new CustomAppException("PHONEBOOK ID NOT FOUND CORRESPONDING TO GIVEN INPUT PARAMETERS", "SERVER.SYNC_PHONEBOOK.INVALID_PHONEBOOK_ID", HttpStatus.BAD_REQUEST);
+        Boolean firstTimeCreated = false;
+        if (phonebookId == null || phonebookId <= 0) {
+            PhonebookBean phonebookBean = new PhonebookBean();
+
+            phonebookBean.setEmployeeId(employeeId);
+            phonebookBean.setOrgId(orgId);
+            phonebookId = this.createPhoneBookEntry(phonebookBean);
+            firstTimeCreated = true;
         }
 
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
@@ -124,55 +131,48 @@ public class PhonebookDAO {
 
         //getting processed contact after filtering the deleted contacts.
         Map<String, ProcessedContact> contactMap = getContactMap(orgId, employeeId, true);
+        if(!firstTimeCreated) {
+            //Identification of create and update scenario
+            for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
 
-        //Identification of create and update scenario
-        for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
-
-            if (contactMap.get(rawPhonebookContact.getContactName()) == null) {
-                //no match found that means contact does not exist
-                listForCreation.add(rawPhonebookContact);
-                continue;
-            }
-
-            if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
-                //We are here that means contactName exists
-                ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
-
-                if(!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){
-                    //We are here means the KEY/VALUE DOES NOT EXISTS FOR THE CONTACT
-                    //SO NEED TO CREATE
+                if (contactMap.get(rawPhonebookContact.getContactName()) == null) {
+                    //no match found that means contact does not exist
                     listForCreation.add(rawPhonebookContact);
                     continue;
                 }
-            }
-            System.out.println("We are here that means Contact might need to be deleted that will be decided in next logic");
-            /*
-            if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
-                ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
-                //System.out.println("MAP is = " + contactMap.get(rawPhonebookContact.getContactName()));
-                if(!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)){
-                    //Add for creation
-                    listForCreation.add(rawPhonebookContact);
+
+                if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
+                    //We are here that means contactName exists
+                    ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
+
+                    if (!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)) {
+                        //We are here means the KEY/VALUE DOES NOT EXISTS FOR THE CONTACT
+                        //SO NEED TO CREATE
+                        listForCreation.add(rawPhonebookContact);
+                        continue;
+                    }
                 }
-            } else   {
-                listForCreation.add(rawPhonebookContact);
+
+                System.out.println("We are here that means Contact might need to be deleted that will be decided in next logic");
 
             }
 
-             */
+            //Identification of delete scenario
+            List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
+            for (RawPhonebookContact rawPhonebookContact : dbPhonebookContactList) {
+                if (!inputRawPhonebookContacts.contains(rawPhonebookContact)) {
+                    listForDeletion.add(rawPhonebookContact);
+                    //delete batch
+                }
+            }
+
+            deleteBatch(listForDeletion, phonebookId);
+            createBatch(listForCreation, phonebookId);
+        } else  {
+            createBatch(inputRawPhonebookContacts, phonebookId);
         }
 
-        //Identification of delete scenario
-        List<RawPhonebookContact> dbPhonebookContactList = listRawContactsForUI(orgId, employeeId);
-        for(RawPhonebookContact rawPhonebookContact : dbPhonebookContactList)
-        {
-            if(!inputRawPhonebookContacts.contains(rawPhonebookContact)){
-                listForDeletion.add(rawPhonebookContact);
-                //delete batch
-            }
-        }
-        deleteBatch(listForDeletion,phonebookId);
-        createBatch(listForCreation,phonebookId);
+
     }
 
     /*
@@ -211,6 +211,7 @@ public class PhonebookDAO {
                 ps.setString(3, rawPhonebookContactList.get(i).getValue().trim().toUpperCase());
                 ps.setLong(4, phonebookId);
             }
+
             @Override
             public int getBatchSize() {
                 return (rawPhonebookContactList.size());
@@ -218,24 +219,24 @@ public class PhonebookDAO {
         });
     }
 
- /*   public void updateBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
-        String sql = "update `phonebook_contact` set  `value` = ? where `contact_name` = ? and `phonebookid` = ?  and `key` = ?";
-        namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i)
-                    throws SQLException {
-                ps.setString(1, rawPhonebookContactList.get(i).getValue());
-                ps.setString(2, rawPhonebookContactList.get(i).getContactName());
-                ps.setLong(3, phonebookId);
-                ps.setString(4, rawPhonebookContactList.get(i).getKey());
-            }
-            @Override
-            public int getBatchSize() {
-                return (rawPhonebookContactList.size());
-            }
-        });
-    }
-*/
+    /*   public void updateBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
+           String sql = "update `phonebook_contact` set  `value` = ? where `contact_name` = ? and `phonebookid` = ?  and `key` = ?";
+           namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+               @Override
+               public void setValues(PreparedStatement ps, int i)
+                       throws SQLException {
+                   ps.setString(1, rawPhonebookContactList.get(i).getValue());
+                   ps.setString(2, rawPhonebookContactList.get(i).getContactName());
+                   ps.setLong(3, phonebookId);
+                   ps.setString(4, rawPhonebookContactList.get(i).getKey());
+               }
+               @Override
+               public int getBatchSize() {
+                   return (rawPhonebookContactList.size());
+               }
+           });
+       }
+   */
     public void deleteBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
         String sql = "update `phonebook_contact` set `isdeleted` = true where `contact_name` = ? and `phonebookid` = ? and `key` = ? and `value` = ?";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -247,6 +248,7 @@ public class PhonebookDAO {
                 ps.setString(3, rawPhonebookContactList.get(i).getKey());
                 ps.setString(4, rawPhonebookContactList.get(i).getValue());
             }
+
             @Override
             public int getBatchSize() {
                 return (rawPhonebookContactList.size());
@@ -254,11 +256,27 @@ public class PhonebookDAO {
         });
     }
 
-    public Long getId(long orgId, String employeeId)
-    {
-        Map<String,Object> param = new HashMap<>();
+    public Long getId(long orgId, String employeeId) {
+        Map<String, Object> param = new HashMap<>();
         param.put("orgid", orgId);
         param.put("employeeid", employeeId);
-        return  namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid and employeeId = :employeeid", param, Long.class);
+        try {
+            return namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid and employeeId = :employeeid", param, Long.class);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            //ignore exception
+        }
+        return null;
+    }
+
+    /*
+     * create records into the master table for Phonebook
+     */
+    public Long createPhoneBookEntry(PhonebookBean phonebookBean) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update("insert into phonebook (orgid,employeeid) " +
+                "values (:orgId,:employeeId)", new BeanPropertySqlParameterSource(phonebookBean), holder);
+        long generatedOrgKey = holder.getKey().longValue();
+        System.out.println("createPhoneBookEntry: Generated Key=" + generatedOrgKey);
+        return generatedOrgKey;
     }
 }

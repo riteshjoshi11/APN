@@ -1,10 +1,9 @@
 use antrackerdb;
-drop table if exists `phonebook`;
-drop table if exists `phonebook_contact`;
+drop table if exists `phonebook_contact`, `phonebook`;
 
 CREATE TABLE `phonebook` (
-  `id` int(11) NOT NULL,
-  `orgid` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `orgid` int DEFAULT NULL,
   `employeeid` varchar(25) DEFAULT NULL,
   `sync_status` varchar(15) DEFAULT NULL,
   `lastsyncdate` date,
@@ -14,13 +13,12 @@ CREATE TABLE `phonebook` (
 );
 
 CREATE TABLE `phonebook_contact` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `contact_name`      varchar(15) DEFAULT NULL,
   `key`       varchar(15) DEFAULT NULL,
   `value`     varchar(255) DEFAULT NULL,
-  `isGlobal`  tinyint(1),
-  `phonebookid`  int(11),
-  PRIMARY KEY (`id`),
+  `isGlobal`  tinyint,
+  `phonebookid`  int,
+  `isdeleted` TINYINT,
   CONSTRAINT `phonebook_contact_ibfk_1` FOREIGN KEY (`phonebookid`) REFERENCES `phonebook` (`id`)
 );
 
