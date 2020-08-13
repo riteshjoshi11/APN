@@ -11,6 +11,12 @@ public class PhonebookBean {
     protected String employeeId;
     protected Date lastSyncDate;
     protected String syncStatus;
+
+    public enum SYNC_STATUS_ENUM {
+        Syncing,
+        Fully_Synced
+    }
+
     /*
       This list is basically a processed contactList.
      */
