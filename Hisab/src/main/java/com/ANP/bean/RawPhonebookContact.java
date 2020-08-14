@@ -62,4 +62,14 @@ public class RawPhonebookContact {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "RawPhonebookContact{" +
+                "contactName='" + contactName + '\'' +
+                ", key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }

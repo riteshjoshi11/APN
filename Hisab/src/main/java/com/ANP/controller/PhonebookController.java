@@ -6,6 +6,7 @@ import com.ANP.repository.PhonebookDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,13 +17,16 @@ public class PhonebookController {
     @Autowired
     PhonebookDAO phonebookDAO;
     @PostMapping(path = "/syncPhonebook", produces = "application/json")
+
     /*
      * Each RawPhonebookContact contains contactName, Key (EMAIL|WEBSITE|PHONENO), Value
      */
+    @Async
     public ResponseEntity syncPhonebook(@Valid @RequestBody PhoneBookListingBean phoneBookListingBean) {
         phonebookDAO.syncPhonebook(phoneBookListingBean.getOrgId(),
                 phoneBookListingBean.getEmployeeId(),
                 phoneBookListingBean.getRawPhonebookContacts());
+        System.out.println("input data=" + phoneBookListingBean.getRawPhonebookContacts());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
