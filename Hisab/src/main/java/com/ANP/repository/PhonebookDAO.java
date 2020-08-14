@@ -45,6 +45,24 @@ public class PhonebookDAO {
         PhonebookBean phonebookBean = new PhonebookBean();
         Map<String, ProcessedContact> processedContactMap = getContactMap(orgId, employeeId, false);
         phonebookBean.setProcessedContactList(processedContactMap.values());
+        phonebookBean.setEmployeeId(employeeId);
+        phonebookBean.setOrgId(orgId);
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgId", orgId);
+        param.put("employeeId", employeeId);
+        Map<String,Object> syncMap = namedParameterJdbcTemplate.query ("select sync_status, lastsyncdate from phonebook where orgid = :orgId " +
+                "and employeeid = :employeeId", param, new ResultSetExtractor<Map<String, Object>>(){
+            @Override
+            public Map<String, Object> extractData(ResultSet rs) throws SQLException {
+                Map<String,Object> mapForPhoneBookBean = new HashMap<>();
+                while (rs.next()) {
+                    mapForPhoneBookBean.put("sync_status", rs.getString("sync_status"));
+                    mapForPhoneBookBean.put("lastsyncdate", rs.getDate("lastsyncdate"));
+                }return mapForPhoneBookBean;
+        }});
+        phonebookBean.setSyncStatus((String)syncMap.get("sync_status"));
+        phonebookBean.setLastSyncDate((Date)syncMap.get("lastsyncdate"));
+
         return phonebookBean;
     }
 
@@ -78,7 +96,6 @@ public class PhonebookDAO {
 
     //Mapper for ProcessedContacts
     public Map<String, ProcessedContact> getContactMap(long orgId, String employeeId, Boolean filterIsDeleted) {
-
         String sql;
         if (filterIsDeleted = true) {
             sql = "select phonebook_contact.key, phonebook_contact.value, phonebook_contact.contact_name" +
@@ -115,6 +132,8 @@ public class PhonebookDAO {
             throw new CustomAppException("INPUT CONTACT LIST IS EMPTY", "SERVER.SYNC_PHONEBOOK.NULLOREMPTY.CONTACT", HttpStatus.BAD_REQUEST);
         }
 
+
+
         Long phonebookId = getId(orgId, employeeId);
         Boolean firstTimeCreated = false;
         if (phonebookId == null || phonebookId <= 0) {
@@ -125,6 +144,9 @@ public class PhonebookDAO {
             phonebookId = this.createPhoneBookEntry(phonebookBean);
             firstTimeCreated = true;
         }
+        Map<String, Object> paramSync = new HashMap<>();
+        namedParameterJdbcTemplate.update("update phonebook set sync_status = '" + PhonebookBean.SYNC_STATUS_ENUM.Syncing.toString() +"' " +
+                "where employeeid = '"+ employeeId +"' and orgid = "+ orgId +" ", paramSync );
 
         List<RawPhonebookContact> listForCreation = new ArrayList<>();
         List<RawPhonebookContact> listForDeletion = new ArrayList<>();
@@ -135,18 +157,18 @@ public class PhonebookDAO {
             //Identification of create and update scenario
             for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
 
-                if (contactMap.get(rawPhonebookContact.getContactName()) == null) {
+                if (contactMap.get(rawPhonebookContact.getContactName().toUpperCase()) == null) {
                     //no match found that means contact does not exist
                     listForCreation.add(rawPhonebookContact);
                     continue;
                 }
 
-                if (contactMap.get(rawPhonebookContact.getContactName()) != null) {
+                if (contactMap.get(rawPhonebookContact.getContactName().toUpperCase()) != null) {
                     //We are here that means contactName exists
-                    ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName());
-
+                    ProcessedContact processedContact = contactMap.get(rawPhonebookContact.getContactName().toUpperCase());
                     if (!processedContact.getRawPhonebookContacts().contains(rawPhonebookContact)) {
                         //We are here means the KEY/VALUE DOES NOT EXISTS FOR THE CONTACT
+
                         //SO NEED TO CREATE
                         listForCreation.add(rawPhonebookContact);
                         continue;
@@ -171,6 +193,15 @@ public class PhonebookDAO {
         } else  {
             createBatch(inputRawPhonebookContacts, phonebookId);
         }
+
+        //updating sync method
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("orgId", orgId);
+        param.put("employeeId", employeeId);
+        param.put("syncStatus",PhonebookBean.SYNC_STATUS_ENUM.Fully_Synced.toString());
+        namedParameterJdbcTemplate.update("update phonebook set lastsyncdate = now(), sync_status = :syncStatus" +
+                " where orgId = :orgId and employeeId = :employeeId",param );
 
 
     }
