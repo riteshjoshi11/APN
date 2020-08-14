@@ -4,7 +4,11 @@ import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
-import com.itextpdf.text.*;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -13,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,10 +26,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
@@ -318,4 +321,177 @@ public class ReportDAO {
         });
     }
 
+    public void coreLogicReportGenerationForPurchase(long orgId) throws FileNotFoundException, IOException, InvalidFormatException {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet( "sheet1");
+        Row row = sheet.createRow(0);
+        row.createCell(0).setCellValue("Bill Date");
+        row.createCell(1).setCellValue("Party Name");
+        row.createCell(2).setCellValue("Party State");
+        row.createCell(3).setCellValue("Bill No");
+        row.createCell(4).setCellValue("Party GST NO");
+        row.createCell(5).setCellValue("NET");
+        row.createCell(6).setCellValue("CGST");
+        row.createCell(7).setCellValue("SGST");
+        row.createCell(8).setCellValue("IGST");
+        row.createCell(9).setCellValue("OTHER");
+        row.createCell(10).setCellValue("Total");
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgId",orgId);
+        namedParameterJdbcTemplate.query("select pur.date, pur.billno, pur.orderamount, pur.cgst," +
+                " pur.igst, pur.sgst, pur.extra, pur.totalamount, customer.name," +
+                "  customer.state, customer.gstin from customer, purchasefromvendor pur " +
+                " where customer.id = pur.fromcustomerid and pur.orgid = :orgId and pur.includeinreport " +
+                "= true and (pur.isdeleted is null or pur.isdeleted <> true)", param, new  ResultSetExtractor<String>(){
+            public String extractData(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    int rowNum = sheet.getLastRowNum();
+                    System.out.println("rownumber is" + rowNum);
+                    rowNum++;
+                    Row row = sheet.createRow(rowNum);
+                    row.createCell(0).setCellValue(rs.getString("pur.date"));
+                    row.createCell(1).setCellValue(rs.getString("customer.name"));
+                    row.createCell(2).setCellValue(rs.getString("customer.state"));
+                    row.createCell(3).setCellValue(rs.getString("pur.billno"));
+                    row.createCell(4).setCellValue(rs.getString("customer.gstin"));
+                    row.createCell(5).setCellValue(rs.getDouble("pur.orderamount"));
+                    row.createCell(6).setCellValue(rs.getDouble("pur.cgst"));
+                    row.createCell(7).setCellValue(rs.getDouble("pur.igst"));
+                    row.createCell(8).setCellValue(rs.getDouble("pur.sgst"));
+                    row.createCell(9).setCellValue(rs.getDouble("pur.extra"));
+                    row.createCell(10).setCellValue(rs.getDouble("pur.totalamount"));
+                }
+
+
+                // This return is useless, using it because method wont allow us to return void
+                return "hello";
+            }
+        });
+
+        try (FileOutputStream out = new FileOutputStream("F:/Purchase.xlsx")) {
+            workbook.write(out);
+        }
+        catch (Exception e)
+        {
+            System.out.println("oh no");
+        }
+
+    }
+
+    public void coreLogicReportGenerationForSale(long orgId) throws FileNotFoundException, IOException, InvalidFormatException {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet( "sheet1");
+        Row row = sheet.createRow(0);
+        row.createCell(0).setCellValue("Bill Date");
+        row.createCell(1).setCellValue("Party Name");
+        row.createCell(2).setCellValue("Party State");
+        row.createCell(3).setCellValue("Bill No");
+        row.createCell(4).setCellValue("Party GST NO");
+        row.createCell(5).setCellValue("NET");
+        row.createCell(6).setCellValue("CGST");
+        row.createCell(7).setCellValue("SGST");
+        row.createCell(8).setCellValue("IGST");
+        row.createCell(9).setCellValue("OTHER");
+        row.createCell(10).setCellValue("Total");
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgId",orgId);
+        namedParameterJdbcTemplate.query("select cus.date, cus.invoiceno, cus.orderamount, cus.cgst," +
+                " cus.igst, cus.sgst, cus.extra, cus.totalamount, customer.name," +
+                "  customer.state, customer.gstin from customer, customerinvoice cus " +
+                " where customer.id = cus.tocustomerid and cus.orgid = :orgId and cus.includeinreport " +
+                "= true and (cus.isdeleted is null or cus.isdeleted <> true)", param, new  ResultSetExtractor<String>(){
+            public String extractData(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    int rowNum = sheet.getLastRowNum();
+                    System.out.println("rownumber is" + rowNum);
+                    rowNum++;
+                    Row row = sheet.createRow(rowNum);
+                    row.createCell(0).setCellValue(rs.getString("cus.date"));
+                    row.createCell(1).setCellValue(rs.getString("customer.name"));
+                    row.createCell(2).setCellValue(rs.getString("customer.state"));
+                    row.createCell(3).setCellValue(rs.getString("cus.invoiceno"));
+                    row.createCell(4).setCellValue(rs.getString("customer.gstin"));
+                    row.createCell(5).setCellValue(rs.getDouble("cus.orderamount"));
+                    row.createCell(6).setCellValue(rs.getDouble("cus.cgst"));
+                    row.createCell(7).setCellValue(rs.getDouble("cus.igst"));
+                    row.createCell(8).setCellValue(rs.getDouble("cus.sgst"));
+                    row.createCell(9).setCellValue(rs.getDouble("cus.extra"));
+                    row.createCell(10).setCellValue(rs.getDouble("cus.totalamount"));
+                }
+
+
+                // This return is useless, using it because method wont allow us to return void
+                return "hello";
+            }
+        });
+
+        try (FileOutputStream out = new FileOutputStream("F:/Sales.xlsx")) {
+            workbook.write(out);
+        }
+        catch (Exception e)
+        {
+            System.out.println("oh no");
+        }
+    }
+
+    public void coreLogicReportGenerationForExpense(long orgId) throws FileNotFoundException, IOException, InvalidFormatException {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet( "sheet1");
+        Row row = sheet.createRow(0);
+        row.createCell(0).setCellValue("Bill Date");
+        row.createCell(1).setCellValue("Party Name");
+        row.createCell(2).setCellValue("Bill No");
+        row.createCell(3).setCellValue("Party GST NO");
+        row.createCell(4).setCellValue("NET");
+        row.createCell(5).setCellValue("CGST");
+        row.createCell(6).setCellValue("SGST");
+        row.createCell(7).setCellValue("IGST");
+        row.createCell(8).setCellValue("OTHER");
+        row.createCell(9).setCellValue("Total");
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("orgId",orgId);
+        namedParameterJdbcTemplate.query("select exp.date, exp.description, exp.orderamount, exp.cgst," +
+                " exp.igst, exp.sgst, exp.extra, exp.totalamount, exp.topartyname," +
+                "   exp.topartygstno from generalexpense exp " +
+                " where exp.orgid = :orgId and exp.includeinreport " +
+                "= true and (exp.isdeleted is null or exp.isdeleted <> true)", param, new  ResultSetExtractor<String>(){
+            public String extractData(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    int rowNum = sheet.getLastRowNum();
+                    System.out.println("rownumber is" + rowNum);
+                    rowNum++;
+                    Row row = sheet.createRow(rowNum);
+                    row.createCell(0).setCellValue(rs.getString("exp.date"));
+                    row.createCell(1).setCellValue(rs.getString("exp.topartyname"));
+                    row.createCell(2).setCellValue(rs.getString("exp.description"));
+                    row.createCell(3).setCellValue(rs.getString("exp.topartygstno"));
+                    row.createCell(4).setCellValue(rs.getDouble("exp.orderamount"));
+                    row.createCell(5).setCellValue(rs.getDouble("exp.cgst"));
+                    row.createCell(6).setCellValue(rs.getDouble("exp.igst"));
+                    row.createCell(7).setCellValue(rs.getDouble("exp.sgst"));
+                    row.createCell(8).setCellValue(rs.getDouble("exp.extra"));
+                    row.createCell(9).setCellValue(rs.getDouble("exp.totalamount"));
+                }
+
+
+                // This return is useless, using it because method wont allow us to return void
+                return "hello";
+            }
+        });
+
+        try (FileOutputStream out = new FileOutputStream("F:/Expense.xlsx")) {
+            workbook.write(out);
+        }
+        catch (Exception e)
+        {
+            System.out.println("oh no");
+        }
+    }
+
 }
+
