@@ -117,4 +117,10 @@ public class EmployeeController {
         return employeeDAO.listEmpPaidSalariesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
+
+    @PostMapping(path = "/getEmployeeById", produces = "application/json")
+    public EmployeeBean getEmployeeById(@RequestParam Long orgId, @RequestParam String employeeId) {
+        return null;
+    }
+
 }

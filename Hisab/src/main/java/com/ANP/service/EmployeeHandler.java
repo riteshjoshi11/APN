@@ -22,10 +22,6 @@ public class EmployeeHandler {
 
         System.out.println("Start CreateEmployee");
 
-/*       if(ANPUtils.isNullOrEmpty(employeeBean.getType())) {
-            employeeBean.setType(employeeBean.getType());
-       }
- */
        if(employeeBean.getTypeInt()==0)
        {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);

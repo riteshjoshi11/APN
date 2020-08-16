@@ -3,6 +3,7 @@ package com.ANP.controller;
 import java.util.List;
 
 import com.ANP.bean.CustomerBean;
+import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.ListParametersBean;
 import com.ANP.service.CustomerHandler;
 import com.ANP.repository.CustomerDAO;
@@ -40,6 +41,7 @@ public class CustomerController {
         customerDao.updateCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
     /*
      * This is one of the important method for the UI to list customer and vendor with their account balance
      */
@@ -47,5 +49,10 @@ public class CustomerController {
     public List<CustomerBean> listCustomerANDVendorWithBalancePaged(@Valid @RequestBody ListParametersBean listParametersBean) {
         return customerDao.listCustomerANDVendorWithBalancePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
+    @PostMapping(path = "/getCustomerById", produces = "application/json")
+    public CustomerBean getCustomerById(@RequestParam Long orgId, @RequestParam String customerId) {
+        return null;
     }
 }
