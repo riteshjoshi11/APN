@@ -11,6 +11,15 @@ public class AccountBean extends CommonAttribute {
     private double lastbalance;
     private String createdate;
     private long accountId;
+    private float initialBalance;
+
+    public float getInitialBalance() {
+        return initialBalance;
+    }
+
+    public void setInitialBalance(float initialBalance) {
+        this.initialBalance = initialBalance;
+    }
 
     public long getAccountId(){return  accountId;}
 

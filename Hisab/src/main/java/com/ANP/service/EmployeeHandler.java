@@ -31,7 +31,7 @@ public class EmployeeHandler {
         //Now Create an associated account
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountnickname(employeeBean.getFirst() + " " +  employeeBean.getLast());
-        accountBean.setCurrentbalance(employeeBean.getCurrentAccountBalance());
+        accountBean.setCurrentbalance(employeeBean.getInitialBalance());
         accountBean.setCreatedbyid(employeeBean.getCreatedbyId());
         accountBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
         accountBean.setOwnerid(employeeBean.getEmployeeId());
@@ -39,6 +39,12 @@ public class EmployeeHandler {
         accountDAO.createAccount(accountBean);
         System.out.println("End CreateEmployee");
     }
+
+    public String generateAccountNickName(EmployeeBean employeeBean){
+        return employeeBean.getFirst() + " " +  employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
+    }
+
+
     /*
     @Transactional(rollbackFor = Exception.class)
     public boolean updateLoginRequired(String employeeId, boolean loginRequired) {
@@ -102,5 +108,26 @@ public class EmployeeHandler {
         employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateEmployee(EmployeeBean employeeBean){
+        List<EmployeeBean> employeeBeanList = employeeDAO.searchEmployees(employeeBean);
+        EmployeeBean employeeBeanFetched = employeeBeanList.get(0);
+        if(!(employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) &&
+                employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast()))) {
+            accountDAO.updateAccountNickNameForEmployee(employeeBean,generateAccountNickName(employeeBean));
+        }
+
+
+        if(employeeBean.getInitialBalance()<=0){
+
+            //process in accounDao from line 62-85
+
+        }
+
+        employeeDAO.updateEmployee(employeeBean);
+
+    }
+
 
 }

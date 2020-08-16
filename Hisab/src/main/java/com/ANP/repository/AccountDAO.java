@@ -347,4 +347,14 @@ public class AccountDAO {
         System.out.println("Status " + result);
         return true;
     }
+
+    public void updateAccountNickNameForEmployee(EmployeeBean employeeBean, String nickname)
+    {
+        Map<String,Object> param = new HashMap<>();
+        param.put("employeeId",employeeBean.getEmployeeId());
+        param.put("orgId",employeeBean.getOrgId());
+        param.put("nickname", nickname);
+        namedParameterJdbcTemplate.update("update account set accountnickname = :nickname " +
+                "where orgid = :orgId and ownerid = :employeeId",param);
+    }
 }

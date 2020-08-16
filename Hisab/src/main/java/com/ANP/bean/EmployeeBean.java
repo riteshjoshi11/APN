@@ -24,6 +24,7 @@ public class EmployeeBean extends CommonAttribute {
     private double lastsalarybalance;
     private float initialSalaryBalance;
     private float currentAccountBalance;
+    private float initialBalance;
     private boolean loginrequired;
     private long accountId;
 
@@ -128,5 +129,11 @@ public class EmployeeBean extends CommonAttribute {
         this.loginrequired = loginrequired;
     }
 
+    public float getInitialBalance() {
+        return initialBalance;
+    }
 
+    public void setInitialBalance(float initialBalance) {
+        this.initialBalance = initialBalance;
+    }
 }
