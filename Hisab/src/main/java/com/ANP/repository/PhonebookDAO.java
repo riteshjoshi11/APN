@@ -60,7 +60,7 @@ public class PhonebookDAO {
                 Map<String,Object> mapForPhoneBookBean = new HashMap<>();
                 while (rs.next()) {
                     mapForPhoneBookBean.put("sync_status", rs.getString("sync_status"));
-                    mapForPhoneBookBean.put("lastsyncdate", rs.getDate("lastsyncdate"));
+                    mapForPhoneBookBean.put("lastsyncdate", rs.getTimestamp("lastsyncdate"));
                 }
                 return mapForPhoneBookBean;
             }});
