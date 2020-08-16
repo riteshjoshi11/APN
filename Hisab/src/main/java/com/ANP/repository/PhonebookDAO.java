@@ -51,7 +51,8 @@ public class PhonebookDAO {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgId", orgId);
         param.put("employeeId", employeeId);
-        Map<String,Object> syncMap = namedParameterJdbcTemplate.query ("select sync_status, lastsyncdate from phonebook where orgid = :orgId " +
+        Map<String,Object> syncMap = namedParameterJdbcTemplate.query ("select sync_status, lastsyncdate from" +
+                " phonebook where orgid = :orgId " +
                 "and employeeid = :employeeId", param, new ResultSetExtractor<Map<String, Object>>(){
             @Override
             public Map<String, Object> extractData(ResultSet rs) throws SQLException {
@@ -288,7 +289,8 @@ public class PhonebookDAO {
         param.put("orgid", orgId);
         param.put("employeeid", employeeId);
         try {
-            return namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid and employeeId = :employeeid", param, Long.class);
+            return namedParameterJdbcTemplate.queryForObject("select id from phonebook where orgid = :orgid " +
+                    " and employeeId = :employeeid", param, Long.class);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             //ignore exception
         }
