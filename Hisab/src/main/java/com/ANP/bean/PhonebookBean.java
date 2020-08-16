@@ -1,5 +1,6 @@
 package com.ANP.bean;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 public class PhonebookBean {
     protected Long orgId;
     protected String employeeId;
-    protected Date lastSyncDate;
+    protected Timestamp lastSyncDate;
     protected String syncStatus;
 
     public enum SYNC_STATUS_ENUM {
@@ -30,11 +31,11 @@ public class PhonebookBean {
         this.employeeId = employeeId;
     }
 
-    public Date getLastSyncDate() {
+    public Timestamp getLastSyncDate() {
         return lastSyncDate;
     }
 
-    public void setLastSyncDate(Date lastSyncDate) {
+    public void setLastSyncDate(Timestamp lastSyncDate) {
         this.lastSyncDate = lastSyncDate;
     }
 

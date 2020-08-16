@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 
 
@@ -62,9 +63,9 @@ public class PhonebookDAO {
                     mapForPhoneBookBean.put("lastsyncdate", rs.getDate("lastsyncdate"));
                 }
                 return mapForPhoneBookBean;
-        }});
+            }});
         phonebookBean.setSyncStatus((String)syncMap.get("sync_status"));
-        phonebookBean.setLastSyncDate((Date)syncMap.get("lastsyncdate"));
+        phonebookBean.setLastSyncDate((Timestamp)syncMap.get("lastsyncdate"));
 
         return phonebookBean;
     }
@@ -302,8 +303,8 @@ public class PhonebookDAO {
      */
     public Long createPhoneBookEntry(PhonebookBean phonebookBean) {
         KeyHolder holder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update("insert into phonebook (orgid,employeeid) " +
-                "values (:orgId,:employeeId)", new BeanPropertySqlParameterSource(phonebookBean), holder);
+        namedParameterJdbcTemplate.update("insert into phonebook (orgid,employeeid,sync_status) " +
+                "values (:orgId,:employeeId,'"+ PhonebookBean.SYNC_STATUS_ENUM.Syncing.toString() +"')", new BeanPropertySqlParameterSource(phonebookBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createPhoneBookEntry: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
