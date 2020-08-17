@@ -34,7 +34,7 @@ public class EmployeeController {
 
     @PostMapping(path = "/updateEmployee", produces = "application/json")
     public ResponseEntity updateEmployee(@Valid @RequestBody EmployeeBean employeeBean) {
-        employeeDAO.updateEmployee(employeeBean);
+        employeeHandler.updateEmployee(employeeBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

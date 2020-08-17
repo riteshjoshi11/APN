@@ -89,7 +89,7 @@ public class AccountDAO {
  */
     }
 
-    private void updateInitialBalance(AccountBean accountBean) {
+    public void updateInitialBalance(AccountBean accountBean) {
         if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
             customerAuditBean.setOrgId(accountBean.getOrgId());

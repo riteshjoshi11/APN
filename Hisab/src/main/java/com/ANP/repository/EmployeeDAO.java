@@ -1,6 +1,7 @@
 package com.ANP.repository;
 
 import com.ANP.bean.*;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.ANP.util.ANPConstants.SEARCH_FIELDTYPE_STRING;
 
 
 @Repository
@@ -151,7 +154,7 @@ public class EmployeeDAO {
         if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "e.first,e.last desc";
         }
-        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, " +
+        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, acc.id, " +
                         " (select empt.`name` from employeetype empt where e.type = empt.id) as emptype " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
@@ -170,6 +173,7 @@ public class EmployeeDAO {
             empbean.setType(rs.getString("emptype"));
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
+            empbean.setAccountId(rs.getLong("acc.id"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             return empbean;
         }
@@ -341,8 +345,14 @@ public class EmployeeDAO {
 
 
     public  EmployeeBean getEmployeeById(Long orgId, String employeeId) {
-        SearchParam param = new SearchParam();
         List<SearchParam> searchParams = new ArrayList<>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("e.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue(employeeId);
+        searchParams.add(param);
         List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams,"",1,1);
         if (employeeList!=null && !employeeList.isEmpty()) {
             return employeeList.get(0);
