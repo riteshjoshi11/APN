@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.ANP.util.ANPConstants.LOGIN_TYPE_EMPLOYEE;
+
 @Service
 public class EmployeeHandler {
     @Autowired
@@ -30,10 +32,11 @@ public class EmployeeHandler {
 
         //Now Create an associated account
         AccountBean accountBean = new AccountBean();
-        accountBean.setAccountnickname(employeeBean.getFirst() + " " +  employeeBean.getLast());
+        accountBean.setAccountnickname(generateAccountNickName(employeeBean));
         accountBean.setCurrentbalance(employeeBean.getInitialBalance());
+        accountBean.setInitialBalance(employeeBean.getInitialBalance());
         accountBean.setCreatedbyid(employeeBean.getCreatedbyId());
-        accountBean.setType(ANPConstants.LOGIN_TYPE_EMPLOYEE);
+        accountBean.setType(LOGIN_TYPE_EMPLOYEE);
         accountBean.setOwnerid(employeeBean.getEmployeeId());
         accountBean.setOrgId(employeeBean.getOrgId());
         accountDAO.createAccount(accountBean);
@@ -41,7 +44,18 @@ public class EmployeeHandler {
     }
 
     public String generateAccountNickName(EmployeeBean employeeBean){
-        return employeeBean.getFirst() + " " +  employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
+        String accountNickName = null;
+        if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()) || ANPUtils.isNullOrEmpty(employeeBean.getLast())) {
+            if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
+                accountNickName = employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
+
+            if(ANPUtils.isNullOrEmpty(employeeBean.getLast()))
+                accountNickName =  employeeBean.getFirst() + " [" + employeeBean.getMobile() + "]";
+        } else {
+            accountNickName = employeeBean.getFirst() + " " + employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
+        }
+        System.out.println(accountNickName);
+        return accountNickName;
     }
 
 
@@ -111,16 +125,27 @@ public class EmployeeHandler {
 
     @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean){
-        List<EmployeeBean> employeeBeanList = employeeDAO.searchEmployees(employeeBean);
-        EmployeeBean employeeBeanFetched = employeeBeanList.get(0);
-        if(!(employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) &&
-                employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast()))) {
+        EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(),employeeBean.getEmployeeId());
+        System.out.println("first " + employeeBeanFetched.getFirst());
+        System.out.println("first input " + employeeBean.getFirst());
+        if(!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
+                !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
+            if(ANPUtils.isNullOrEmpty(employeeBean.getLast()))
+                employeeBean.setLast("");
+            else if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
+                employeeBean.setFirst("");
             accountDAO.updateAccountNickNameForEmployee(employeeBean,generateAccountNickName(employeeBean));
         }
 
-
-        if(employeeBean.getInitialBalance()<=0){
-
+        if(employeeBean.getInitialBalance()!=employeeBeanFetched.getInitialBalance()){
+            AccountBean accountBean = new AccountBean();
+            accountBean.setOrgId(employeeBean.getOrgId());
+            accountBean.setOwnerid(employeeBean.getEmployeeId());
+            System.out.println("AccountId = " + employeeBeanFetched.getAccountId());
+            accountBean.setAccountId(employeeBeanFetched.getAccountId());
+            accountBean.setInitialBalance(employeeBean.getInitialBalance());
+            accountBean.setType(LOGIN_TYPE_EMPLOYEE);
+            accountDAO.updateInitialBalance(accountBean);
             //process in accounDao from line 62-85
 
         }
