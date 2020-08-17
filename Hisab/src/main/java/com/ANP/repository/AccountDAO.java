@@ -53,12 +53,13 @@ public class AccountDAO {
 
         long generatedAccKey = holder.getKey().longValue();
         System.out.println("createAccount: Generated Key=" + generatedAccKey);
-
+        accountBean.setAccountId(generatedAccKey);
         if( ( (accountBean.getCurrentbalance()==0 || accountBean.getCurrentbalance()==0.0)) ) {
             System.out.println("Current Balance is 0 So not updating the value into DB");
             return;
         }
-
+        updateAccountBalance(accountBean);
+/*
         if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
             customerAuditBean.setOrgId(accountBean.getOrgId());
@@ -86,8 +87,39 @@ public class AccountDAO {
         } else {
             throw new CustomAppException("Account Creation Login type is invalid","SERVER.ACCOUNT_CREATE.LOGIN_TYPE_INVALID", HttpStatus.EXPECTATION_FAILED);
         }
+
+ */
     }
 
+    private void updateAccountBalance(AccountBean accountBean) {
+        if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
+            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
+            customerAuditBean.setOrgId(accountBean.getOrgId());
+            customerAuditBean.setCustomerid(accountBean.getOwnerid());
+            customerAuditBean.setAccountid(accountBean.getAccountId());
+            customerAuditBean.setAmount(accountBean.getCurrentbalance());
+            customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setTransactionDate(new Date());
+            this.updateCustomerAccountBalance(customerAuditBean);
+
+        } else if(ANPConstants.LOGIN_TYPE_EMPLOYEE.equalsIgnoreCase(accountBean.getType())) {
+            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+            employeeAuditBean.setOrgId(accountBean.getOrgId());
+            employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
+            employeeAuditBean.setAccountid(accountBean.getAccountId());
+            employeeAuditBean.setAmount(accountBean.getCurrentbalance());
+            employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+            employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setTransactionDate(new Date());
+            this.updateEmployeeAccountBalance(employeeAuditBean);
+        } else {
+            throw new CustomAppException("Account Creation Login type is invalid","SERVER.ACCOUNT_CREATE.LOGIN_TYPE_INVALID", HttpStatus.EXPECTATION_FAILED);
+        }
+    }
 
     public DataSource getDataSource() {
         return dataSource;
