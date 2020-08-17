@@ -2,13 +2,11 @@ package com.ANP.repository;
 
 import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
-import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -58,7 +56,7 @@ public class AccountDAO {
             System.out.println("Current Balance is 0 So not updating the value into DB");
             return;
         }
-        updateAccountBalance(accountBean);
+        updateInitialBalance(accountBean);
 /*
         if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
@@ -91,13 +89,13 @@ public class AccountDAO {
  */
     }
 
-    private void updateAccountBalance(AccountBean accountBean) {
+    private void updateInitialBalance(AccountBean accountBean) {
         if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
             customerAuditBean.setOrgId(accountBean.getOrgId());
             customerAuditBean.setCustomerid(accountBean.getOwnerid());
             customerAuditBean.setAccountid(accountBean.getAccountId());
-            customerAuditBean.setAmount(accountBean.getCurrentbalance());
+            customerAuditBean.setAmount(accountBean.getInitialBalance());
             customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             customerAuditBean.setOtherPartyName("-"); //This will be opposite party
@@ -109,7 +107,7 @@ public class AccountDAO {
             employeeAuditBean.setOrgId(accountBean.getOrgId());
             employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
             employeeAuditBean.setAccountid(accountBean.getAccountId());
-            employeeAuditBean.setAmount(accountBean.getCurrentbalance());
+            employeeAuditBean.setAmount(accountBean.getInitialBalance());
             employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
