@@ -119,19 +119,11 @@ public class EmployeeDAO {
         if (employeeBean.getOrgId() <= 0) {
             throw new CustomAppException("orgId is mandatory", "SERVER.SEARCH_EMPLOYEE.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
         }
-        String sql;
 
-        if(ANPUtils.isNullOrEmpty(employeeBean.getEmployeeId())){
-            sql = "select first,last,id from employee " +
-                    " where orgid = :orgid";
-        } else{
-            sql = "select first,last,id from employee " +
-                    " where orgid = :orgid and employeeid = :employeeId";
-        }
         Map<String, Object> params = new HashMap<>();
         params.put("orgid", employeeBean.getOrgId());
-        params.put("employeeId",employeeBean.getEmployeeId());
-        List<EmployeeBean> employeeBeanList = namedParameterJdbcTemplate.query(sql, params, new EmployeeDAO.EmployeeMapper());
+        List<EmployeeBean> employeeBeanList = namedParameterJdbcTemplate.query("select first,last,id from employee " +
+                " where orgid = :orgid", params, new EmployeeDAO.EmployeeMapper());
         return employeeBeanList;
     }
 
