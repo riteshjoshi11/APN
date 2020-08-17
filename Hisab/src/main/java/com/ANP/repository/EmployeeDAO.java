@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -344,5 +345,16 @@ public class EmployeeDAO {
         namedParameterJdbcTemplate.update("update employee set first = :first," +
                 "last=:last, loginrequired = :loginrequired, type = :typeInt " +
                 " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
+    }
+
+
+    public  EmployeeBean getEmployeeById(Long orgId, String employeeId) {
+        SearchParam param = new SearchParam();
+        List<SearchParam> searchParams = new ArrayList<>();
+        List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams,"",1,1);
+        if (employeeList!=null && !employeeList.isEmpty()) {
+            return employeeList.get(0);
+        }
+        return null;
     }
 }

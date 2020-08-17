@@ -120,7 +120,7 @@ public class EmployeeController {
 
     @PostMapping(path = "/getEmployeeById", produces = "application/json")
     public EmployeeBean getEmployeeById(@RequestParam Long orgId, @RequestParam String employeeId) {
-        return null;
+        return employeeDAO.getEmployeeById(orgId,employeeId);
     }
 
 }
