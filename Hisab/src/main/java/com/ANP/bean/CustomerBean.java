@@ -18,12 +18,20 @@ public class CustomerBean extends CommonAttribute {
     private String firmname;
     private String billingadress;
     private String customerID;
-    private double initialBalance = 0;
+    private float initialBalance = 0;
     private boolean sendPaymentReminders;
     private String state;
     //This is account attribute
     private double accountBalance;
+    private long accountId;
 
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
 
     public String getState() {
         return state;
@@ -57,11 +65,11 @@ public class CustomerBean extends CommonAttribute {
         this.customerID = customerID;
     }
 
-    public double getInitialBalance() {
+    public float getInitialBalance() {
         return initialBalance;
     }
 
-    public void setInitialBalance(double initialBalance) {
+    public void setInitialBalance(float initialBalance) {
         this.initialBalance = initialBalance;
     }
 

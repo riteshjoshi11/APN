@@ -1,7 +1,9 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerBean;
+import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +95,7 @@ public class CustomerDAO {
             orderBy = " account.currentbalance asc ";
         }
 
-        return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance " +
+        return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance, account.id " +
                          " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
                            ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -119,6 +121,7 @@ public class CustomerDAO {
             cus.setAccountBalance(rs.getFloat("account.currentbalance"));
             cus.setCreateDate(rs.getTimestamp("customer.createdate"));
             cus.setCreatedbyId(rs.getString("customer.createdbyid"));
+            cus.setAccountId(rs.getLong("account.id"));
             return cus;
         }
     }
@@ -127,5 +130,21 @@ public class CustomerDAO {
                 "city=:city, gstin=:gstin , transporter = :transporter , mobile2 = :mobile2 " +
                 ", firmname = :firmname , billingadress = :billingadress , createdbyid = :createdbyId , sendPaymentReminders = :sendPaymentReminders," +
                 " state = :state where orgid = :orgId and id = :customerID",new BeanPropertySqlParameterSource(customerBean));
+    }
+
+    public CustomerBean getCustomerById(Long orgId, String customerId) {
+        List<SearchParam> searchParams = new ArrayList<>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("customer.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue(customerId);
+        searchParams.add(param);
+        List<CustomerBean> customerBeanList = listCustomerANDVendorWithBalancePaged(orgId, searchParams,"",1,1);
+        if (customerBeanList!=null && !customerBeanList.isEmpty()) {
+            return customerBeanList.get(0);
+        }
+        return null;
     }
 }

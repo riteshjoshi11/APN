@@ -45,8 +45,8 @@ public class AccountDAO {
     public void createAccount(AccountBean accountBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
-                "insert into account (ownerid,accountnickname,type,details,orgid,createdbyid)" +
-                        " values(:ownerid,:accountnickname,:type,:details,:orgId,:createdbyId)",
+                "insert into account (ownerid,accountnickname,type,details,orgid,createdbyid,initialbalance)" +
+                        " values(:ownerid,:accountnickname,:type,:details,:orgId,:createdbyId,:initialBalance)",
                 new BeanPropertySqlParameterSource(accountBean),holder);
 
         long generatedAccKey = holder.getKey().longValue();
@@ -378,13 +378,23 @@ public class AccountDAO {
         return true;
     }
 
-    public void updateAccountNickNameForEmployee(EmployeeBean employeeBean, String nickname)
+    public void updateAccountNickName(String ownerId, long orgId, String nickname)
     {
         Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",employeeBean.getEmployeeId());
-        param.put("orgId",employeeBean.getOrgId());
+        param.put("ownerId",ownerId);
+        param.put("orgId",orgId);
         param.put("nickname", nickname);
         namedParameterJdbcTemplate.update("update account set accountnickname = :nickname " +
-                "where orgid = :orgId and ownerid = :employeeId",param);
+                "where orgid = :orgId and ownerid = :ownerId",param);
     }
+    public void updateInitialBalanceField(String ownerId, long orgId, float initialBalance)
+    {
+        Map<String,Object> param = new HashMap<>();
+        param.put("ownerId",ownerId);
+        param.put("orgId",orgId);
+        param.put("initialBalance", initialBalance);
+        namedParameterJdbcTemplate.update("update account set initialbalance = :initialBalance " +
+                "where orgid = :orgId and ownerid = :ownerId",param);
+    }
+
 }

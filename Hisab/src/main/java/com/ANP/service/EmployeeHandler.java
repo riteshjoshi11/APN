@@ -134,11 +134,16 @@ public class EmployeeHandler {
                 employeeBean.setLast("");
             else if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
                 employeeBean.setFirst("");
-            accountDAO.updateAccountNickNameForEmployee(employeeBean,generateAccountNickName(employeeBean));
+            accountDAO.updateAccountNickName(employeeBean.getEmployeeId(),employeeBean.getOrgId(),generateAccountNickName(employeeBean));
         }
 
         if(employeeBean.getInitialBalance()!=employeeBeanFetched.getInitialBalance()){
+
+            //This is to update initial balance in the backend.
+            accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(),employeeBean.getOrgId(),employeeBean.getInitialBalance());
             AccountBean accountBean = new AccountBean();
+
+
             accountBean.setOrgId(employeeBean.getOrgId());
             accountBean.setOwnerid(employeeBean.getEmployeeId());
             System.out.println("AccountId = " + employeeBeanFetched.getAccountId());

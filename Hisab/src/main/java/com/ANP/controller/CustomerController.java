@@ -38,7 +38,7 @@ public class CustomerController {
 
     @PostMapping(path = "/updateCustomer", produces = "application/json")
     public ResponseEntity updateCustomer(@Valid @RequestBody CustomerBean customerBean) {
-        customerDao.updateCustomer(customerBean);
+        customerHandler.updateCustomer(customerBean);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
@@ -53,6 +53,8 @@ public class CustomerController {
 
     @PostMapping(path = "/getCustomerById", produces = "application/json")
     public CustomerBean getCustomerById(@RequestParam Long orgId, @RequestParam String customerId) {
+        customerDao.getCustomerById(orgId,customerId);
+
         return null;
     }
 }
