@@ -1,7 +1,6 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerBean;
-import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
