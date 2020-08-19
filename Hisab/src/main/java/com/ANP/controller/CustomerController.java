@@ -51,10 +51,8 @@ public class CustomerController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
-    @PostMapping(path = "/getCustomerById", produces = "application/json")
+    @GetMapping(path = "/getCustomerById", produces = "application/json")
     public CustomerBean getCustomerById(@RequestParam Long orgId, @RequestParam String customerId) {
-        customerDao.getCustomerById(orgId,customerId);
-
-        return null;
+       return customerDao.getCustomerById(orgId,customerId);
     }
 }

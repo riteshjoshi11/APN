@@ -118,7 +118,7 @@ public class EmployeeController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
-    @PostMapping(path = "/getEmployeeById", produces = "application/json")
+    @GetMapping(path = "/getEmployeeById", produces = "application/json")
     public EmployeeBean getEmployeeById(@RequestParam Long orgId, @RequestParam String employeeId) {
         return employeeDAO.getEmployeeById(orgId,employeeId);
     }
