@@ -15,7 +15,6 @@ public class Expense extends CommonAttribute {
     private String toPartyName;
     private long fromAccountID;
     private String fromEmployeeID;
-    private boolean includeInCalc = true;
     private boolean includeInReport;
     private double orderAmount;
     private double CGST;
@@ -135,13 +134,6 @@ public class Expense extends CommonAttribute {
         this.fromEmployeeID = fromEmployeeID;
     }
 
-    public boolean isIncludeInCalc() {
-        return includeInCalc;
-    }
-
-    public void setIncludeInCalc(boolean includeInCalc) {
-        this.includeInCalc = includeInCalc;
-    }
 
     public boolean isIncludeInReport() {
         return includeInReport;

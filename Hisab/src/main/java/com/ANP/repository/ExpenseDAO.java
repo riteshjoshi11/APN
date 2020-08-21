@@ -1,8 +1,10 @@
 package com.ANP.repository;
 
+import com.ANP.bean.EmployeeBean;
 import com.ANP.bean.Expense;
 import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.itextpdf.text.*;
@@ -14,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
@@ -33,8 +36,8 @@ public class ExpenseDAO {
             isDuplicateSuspect(expense);
         }
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,IncludeInCalc,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno,paid)" +
-                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:IncludeInCalc,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO,:paid);",
+                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno,paid)" +
+                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO,:paid);",
                 new BeanPropertySqlParameterSource(expense));
     }
 
@@ -66,7 +69,6 @@ public class ExpenseDAO {
             obj.setCategory(rs.getString("exp.category"));
             obj.setTotalAmount(rs.getFloat("exp.totalamount"));
             obj.setOrgId(rs.getLong("exp.orgid"));
-            obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
             obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
             obj.setCreatedbyId(rs.getString("exp.createdbyid"));
             obj.setOrderAmount(rs.getDouble("exp.orderamount"));
@@ -123,19 +125,6 @@ public class ExpenseDAO {
         }
     }
 
-    /*
-          you need to update Expense Table:includeInCalc field with the passed value
-    */
-    public boolean updateIncludeInCalc(long expenseID, boolean includeInCalcSwtich) {
-        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        parameterSource.addValue("id", expenseID);
-        parameterSource.addValue("includeInCalcSwtich", includeInCalcSwtich);
-        if (namedParameterJdbcTemplate.update("update generalexpense set includeincalc = :includeInCalcSwtich where id = :id", parameterSource) != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /*
         you need to update Expense Table:includeInCalc field with the passed value
@@ -147,9 +136,7 @@ public class ExpenseDAO {
         if (namedParameterJdbcTemplate.update("update generalexpense set paid = :paidStatus where id = :id", parameterSource) != 0) {
             return true; //operation success
         }
-
         return false;
-
     }
 
     private void isDuplicateSuspect(Expense expense) {
@@ -230,7 +217,6 @@ public class ExpenseDAO {
             obj.setCategory(rs.getString("exp.category"));
             obj.setTotalAmount(rs.getFloat("exp.totalamount"));
             obj.setOrgId(rs.getLong("exp.orgid"));
-            obj.setIncludeInCalc(rs.getBoolean("exp.includeincalc"));
             obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
             obj.setCreatedbyId(rs.getString("exp.createdbyid"));
             obj.setOrderAmount(rs.getDouble("exp.orderamount"));
@@ -249,12 +235,31 @@ public class ExpenseDAO {
     }
 
     /*
-        * @TODO: Paras please include notes/details field as well.
-        * also there is big mistake here the current logic will update all the expense for an organization.
-        * Always include primary key for the update.
+     * also there is big mistake here the current logic will update all the expense for an organization.
+     * Always include primary key for the update.
      */
-    public int updateExpense(Expense expense) {
-        return namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
-                "sgst=:SGST, igst=:IGST, description = :description where orgid = :orgId and id = :expenseId", new BeanPropertySqlParameterSource(expense));
+
+    public void updateExpense(Expense expense) {
+        namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
+                        "sgst=:SGST, igst=:IGST, description = :description, date=:date,category=:category, " +
+                        "orderamount=:orderAmount, includeinreport=:includeInReport,extra=:extra,topartygstno=:toPartyGSTNO," +
+                        "topartymobileno=:toPartyMobileNO where orgid = :orgId and id = :expenseId",
+                new BeanPropertySqlParameterSource(expense));
+    }
+
+    public Expense getExpenseById(Long orgId, Long expenseId) {
+        List<SearchParam> searchParams = new ArrayList<>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("exp.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + expenseId);
+        searchParams.add(param);
+        List<Expense> expenseList = listExpensesPaged(orgId, searchParams, "", 1, 1);
+        if (expenseList != null && !expenseList.isEmpty()) {
+            return expenseList.get(0);
+        }
+        return null;
     }
 }

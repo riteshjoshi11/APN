@@ -250,8 +250,17 @@ public class AccountingController {
 
     @PostMapping(path = "/updateExpense", produces = "application/json")
     public ResponseEntity updateExpense(@RequestBody Expense expense) {
-        expenseDao.updateExpense(expense);
+        accountingHandler.updateExpense(expense);
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    /*
+     Will be invoked by UI Before Update
+     */
+
+    @GetMapping(path = "/getExpenseById", produces = "application/json")
+    public Expense getExpenseById(@RequestParam Long orgId, @RequestParam Long expenseId) {
+        return expenseDao.getExpenseById(orgId,expenseId);
     }
 
 }
