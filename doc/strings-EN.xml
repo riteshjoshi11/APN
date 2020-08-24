@@ -1,0 +1,464 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<string name="app_name">Business Setu</string>
+<string name="TxtWelcome">Bienvenido a la nueva tecnología</string>
+<!-- Menu -->
+<!-- Home -->
+<string name="menu_navHome">Home</string>
+<!-- Sales -->
+<string name="menu_navSales">Sales</string>
+<string name="menu_navCreateDelivery">Delivery Entry</string>
+<string name="menu_navSaleEntryCreateInvoice">Sale / Invoice Entry</string>
+<string name="menu_navListDelivery">Delivery</string>
+<string name="menu_navListSales">Sale (Material Out) </string>
+<!-- Purchase -->
+<string name="menu_navPurchase">Purchase</string>
+<string name="menu_navPurchaseEntryReceivedBillEntry">Purchase / Material In</string>
+<string name="menu_navListPurchases">Purchase (Material In) </string>
+<!-- Incoming Payment -->
+<string name="menu_navIncomingPayment">Incoming Payment</string>
+<string name="menu_navPaymentReceivedEntry">Payment Received Entry</string>
+<string name="menu_navRetailEntryFragment">Cash/Retail Sale Entry</string>
+<string name="menu_navListPaymentReceived">Payment Received</string>
+<string name="menu_navListRetail">Cash Sale</string>
+<!-- Outgoing Payment -->
+<string name="menu_navOutgoingPayment">Outgoing Payment</string>
+<string name="menu_navVendorPaymentEntry">Vendor Payment Entry</string>
+<string name="menu_navGeneralExpenseEntry">Expense Entry</string>
+<string name="menu_navInternalTransferEntry">Internal Transfer Entry</string>
+<string name="menu_navPaySalary">Pay Salary</string>
+<string name="menu_navListVendorPayment">Payment Made</string>
+<string name="menu_navListExpense">Expense</string>
+<string name="menu_navListInternalTransfer">Transfer Between Staff</string>
+<string name="menu_navListSalaryPaid">Salary Paid</string>
+<!-- People / Firm -->
+<string name="menu_navPeopleFirm">Staff Salary</string>
+<string name="menu_navCustomerVendorEntry">Customer / Vendor Entry</string>
+<string name="menu_navEmployeeEntry">Staff / Employee Entry</string>
+<string name="menu_navSalaryEntry">Salary Due Entry</string>
+<string name="menu_navListCustomerVendor">Customer / Vendor</string>
+<string name="menu_navListEmployee">Staff (Employee)</string>
+<string name="menu_navListSalary">Salary Due</string>
+<!-- Settings -->
+<string name="menu_navSettings">Settings</string>
+<string name="menu_navBackupData">Backup Data</string>
+<string name="menu_navResetCleanData">Reset / Clean Data</string>
+<string name="menu_navMyAppLanguage">My App Language</string>
+<string name="menu_navMyCompanyDetails">My Company / Business Details</string>
+<string name="menu_navSyncContacts">Sync Contacts</string>
+<!-- Reports -->
+<string name="menu_navReports">Reports</string>
+<string name="menu_navMonthlyGSTReportToCA">Monthly GST Report to CA</string>
+<!-- LogOut -->
+<string name="menu_navLogout">Logout</string>
+<!-- Action Menu -->
+<string name="menu_AddNew">Add New</string>
+<string name="menu_ShowList">Show List</string>
+    
+<string name="MENU.CUSTOMER.CUSTOMER">Customer</string>
+<string name="MENU.CUSTOMER.COLLECT">Collect</string>
+<string name="MENU.CUSTOMER.PAY">Pay</string>
+
+<string name="MENU.EMPLOYEE.EMPLOYEE">Employee</string>
+
+<string name="MENU.EXPENSE.DATE">Date</string>
+<string name="MENU.EXPENSE.PAID">Paid</string>
+<string name="MENU.EXPENSE.UNPAID">UnPaid</string>
+<string name="MENU.EXPENSE.TO_PARTY">To Party</string>
+<string name="MENU.EXPENSE.ONLY_GST">Only GST</string>
+
+<string name="MENU.FILTER.DATE">Date</string>
+<string name="MENU.FILTER.CUSTOMER">Customer</string>
+
+<string name="MENU.INTERNAL_TRANSFER.DATE">Date</string>
+<string name="MENU.INTERNAL_TRANSFER.FROM_PERSON_ACCOUNT">From Person / Account</string>
+<string name="MENU.INTERNAL_TRANSFER.TO_PERSON_ACCOUNT">To Person / Account</string>
+    
+<string name="MENU.PAY_SALARY.DATE">Date</string>
+<string name="MENU.PAY_SALARY.TO_EMPLOYEE">To Employee</string>
+<string name="MENU.PAY_SALARY.FROM_EMPLOYEE">From Employee</string>
+
+<string name="MENU.PURCHASE.DATE">Date</string>
+<string name="MENU.PURCHASE.CUSTOMER">Customer</string>
+<string name="MENU.PURCHASE.ONLY_GST">Only GST</string>
+
+<string name="MENU.SALE.DATE">Date</string>
+<string name="MENU.SALE.CUSTOMER">Customer</string>
+<string name="MENU.SALE.ONLY_GST">Only GST</string>
+
+<string name="MENU.SALARY_DUE.DATE">Date</string>
+<string name="MENU.SALARY_DUE.TO_EMPLOYEE">To Employee</string>
+
+<!-- TextView -->
+<string name="lbl_workInProgress">Work In Progress</string>
+<string name="lbl_loading">Loading Please Wait...</string>
+<string name="lbl_date">Date *</string>
+<string name="lbl_receivedDate">Received Date *</string>
+<string name="lbl_paymentDate">Payment Date *</string>
+<string name="lbl_transferDate">Transfer Date *</string>
+<string name="lbl_customer">Customer *</string>
+<string name="lbl_toPartyName">To Party Name *</string>
+<string name="lbl_toPersonAcc">To Person / Account *</string>
+<string name="lbl_customerVendor">Vendor / Supplier *</string>
+<string name="lbl_supplierVendor">Customer *</string>
+<string name="lbl_name">Contact Person Name</string>
+<string name="lbl_firstName">First Name *</string>
+<string name="lbl_lastName">Last Name</string>
+<string name="lbl_employeeName">Employee Name *</string>
+<string name="lbl_amount1">Amount</string>
+<string name="lbl_description">Details</string>
+<string name="lbl_billingAddress">Billing Address</string>
+<string name="lbl_firm">Business / Company Name</string>
+<string name="lbl_transporter">Transporter</string>
+<string name="lbl_cityVillage">City / Village *</string>
+<string name="lbl_mobileNumber">Mobile Number (10 Digits) *</string>
+<string name="lbl_mobileNumber2">Alternate Mobile Number (10 Digits)</string>
+<string name="lbl_toPartyMoNo">To Party (10 Digits Mobile Number)</string>
+<string name="lbl_gstNumber">GST Number</string>
+<string name="lbl_toPartyGstNo">To Party (GST Number)</string>
+<string name="lbl_aiNumber">Actual Invoice Number</string>
+<string name="lbl_abNumber">Actual Bill Number</string>
+<string name="lbl_cgst">CGST</string>
+<string name="lbl_sgst">SGST</string>
+<string name="lbl_igst">IGST</string>
+<string name="lbl_amount">Amount *</string>
+<string name="lbl_totalAmount">Total Amount (Gross) *</string>
+<string name="lbl_extraAmount">Extra Amount</string>
+<string name="lbl_orderAmount">Order Amount (Net)</string>
+<string name="lbl_initialBalance">Initial Balance</string>
+<string name="lbl_inCalculation">Include In Calculation</string>
+<string name="lbl_inCAReport">Include In CA Report</string>
+<string name="lbl_loginRequired">Login Required?</string>
+<string name="lbl_paid">Paid?</string>
+<string name="lbl_category">Category</string>
+<string name="lbl_notes">Notes</string>
+<string name="lbl_Details">Details</string>
+<string name="lbl_createEmployeeSalaryNote">Note : This is not a salary payment, just an entry of monthly/weekly salary. To pay salary go to \"Pay Salary\" link \"Outgoing Payments\".</string>
+<string name="lbl_CityVillageName">City / Village Name</string>
+<string name="lbl_AddCityVillage">Add New City / Village</string>
+<string name="text_Cancel">Cancel</string>
+<string name="text_Submit">Save</string>
+<string name="text_Success">Success</string>
+<string name="text_DuplicateWarning">Duplicate Warning</string>
+<string name="text_ContinueAnyway">Continue Anyway</string>
+<string name="text_Swap">Swap</string>
+<string name="text_BalancedWithUs">Balanced With Us : </string>
+<string name="text_SendPaymentReminders">Send Payment Reminders : </string>
+<string name="text_BillingAddress">Billing Address : </string>
+<string name="text_Transports">Transports : </string>
+<string name="text_Details">Details : </string>
+<string name="text_Type">Type : </string>
+<string name="text_Amount">Amount : </string>
+<string name="text_ForWhat">For What</string>
+<string name="text_OtherParty">Other Party</string>
+<string name="text_Date">Date</string>
+<string name="text_CurrentBalance">Current Balance</string>
+<string name="text_PreviousBalance">Previous Balance</string>
+<string name="text_Operation">Operation</string>
+<string name="text_CompanyBalance">Company Balance : </string>
+<string name="text_SalaryToBePaid">Salary To Be Paid : </string>
+<string name="text_LogInEnabled">LogIn Enabled : </string>
+<string name="text_Description">Details : </string>
+<string name="text_IncludeInCAReport">Include In CA Report : </string>
+<string name="text_IncludeInCalculation">Include In Calculation : </string>
+<string name="text_ToPartyMobile">To Party Mobile : </string>
+<string name="text_Cashwithyou">Cash with you</string>
+<string name="text_TotalCash">Total Cash</string>
+<string name="text_TotalExpense">Total Expense</string>
+<string name="text_UnpaidExpense">Unpaid Expense</string>
+<string name="text_PaidExpense">Paid Expense</string>
+<string name="text_Assets">Assets</string>
+<string name="text_NeedToCollect">Need To Collect</string>
+<string name="text_TotalcashInHand">Total Company Cash</string>
+<string name="text_Liabilities">Liabilities</string>
+<string name="text_TotalSalaryDue">Total Salary Due</string>
+<string name="text_NeedToPay">Need To Pay</string>
+<string name="text_YourBusinesshealth">Your Business Health (Asset - Liabilities)</string>
+<string name="text_From">From : </string>
+<string name="text_To">To : </string>
+<string name="text_LOGINHERE">LOG IN HERE</string>
+<string name="text_NotRegistered">Not Registered your bussiness yet? click here</string>
+<string name="text_RegisteredMobileNumber">Registered Mobile Number (10 Digits)</string>
+<string name="text_OTPwillbesent">OTP will be sent to this number and you will not be change this later</string>
+<string name="text_Login">Login</string>
+<string name="text_OTP">OTP</string>
+<string name="text_Resend">Re-send OTP</string>
+<string name="text_Enter6digitOTP">Enter 6 digit OTP received on the given mobile number</string>
+<string name="text_VerifyOTP">Verify OTP</string>
+<string name="text_MultipleBusinessAlert">Multiple Business / Firm / Company Alert!</string>
+<string name="text_MoNoExists">The entered mobile number is already registered with following business : </string>
+<string name="text_RegisterNewBusiness">Register a new company</string>
+<string name="text_TermsandConditions">Note : By registering here, you agree to the Terms and Conditions!</string>
+<string name="text_ReceivedInAccount">Received In Account</string>
+<string name="text_ReceivedBy">Received By : </string>
+<string name="text_PaidByAccount">Paid By Account</string>
+<string name="text_Notes">Notes : </string>
+<string name="text_BillNo">Bill No : </string>
+<string name="text_RegisterYourBusiness">Register Your Business / Firm / Company</string>
+<string name="text_PleaseEnterFullBusiness">Full Business / Firm / Company Name</string>
+<string name="text_State">State</string>
+<string name="text_Register">Register</string>
+<string name="text_Salary">Salary : </string>
+<string name="text_PaidDate">Paid Date : </string>
+<string name="text_PaidBy">Paid By : </string>
+<string name="text_InvoiceNo">Invoice No : </string>
+<string name="text_AccountUsedForPayment">Account Used For Payment</string>
+<string name="text_DoneBy">Done By : </string>
+<string name="text_CustomerName">Customer Name : </string>
+<string name="text_EmployeeName">Employee Name : </string>
+<string name="text_Balance"> (Balance: </string>
+<string name="text_AlreadyRegistered">Already Registered? Log In</string>
+<string name="text_10DigitMobileNumber">10 Digits Mobile Number (without Country Code)</string>
+<string name="text_GetOTP">Get OTP</string>
+<string name="SettingsLayout.TextView.SystemReset">System Reset</string>
+<string name="SettingsLayout.TextView.ChooseLanguage">Choose Language</string>
+<string name="SettingsLayout.ChooseLanguageLayout.Button.Continue">Continue</string>
+<string name="SettingsLayout.ChooseLanguageLayout.Title.MyLanguage">My Language</string>
+<string name="SettingsLayout.SystemResetLayout.Title.DeleteReset">Delete / Reset My Company Data</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEverything">Delete Everything</string>
+<string name="SettingsLayout.SystemResetLayout.Text.Iwanttochoose...">I want to choose...</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteSalePurchaseExpenseTransfer">Delete Sale / Purchase / Expense / Transfer etc. Data</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEmployeeSalaryData">Delete Employee Salary Data</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteCustomerBalance">Delete Customer Balance</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteEmployeeCompanyBalance">Delete Employee Company Balance</string>
+<string name="SettingsLayout.SystemResetLayout.Text.DeleteSalaryBalance">Delete Salary Balance</string>
+<string name="SettingsLayout.SystemResetLayout.Validation.SelectAnyOne">You have to select atleast 1 option.</string>
+<string name="SettingsLayout.SystemResetLayout.Button.Confirm">Confirm</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.GoBack">Go Back</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.ConfirmDelete">Confirm Delete</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.CheckBox.Agree">I agree that once data is deleted, i can never recover that.</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.CheckBox.AgreeMessage">You have to agreed all conditions.</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Title.YouHaveSelected">You Have Selected</string>
+<string name="SettingsLayout.ReadOnlySystemResetLayout.Button.ConfirmationMessage">This will start delete process and you will not be able to recover data.</string>
+
+<string name="EmployeeEntryLayout.TextView.InitialBalance">Initial Company Balance</string>
+
+<string name="SignInActivity.TextView.Alert">Alert</string>
+<string name="SignInActivity.TextView.You_are_not_currently_registered_in_any_company">You are not currently registered in any company. If you are working for a company then ask your owner to register you.\n\nif you are owner of a company or a business then register here</string>
+<!-- Validation Message -->
+<string name="message_Logout">You will redirected to Login Page</string>
+<string name="message_Continue">Continue Anyway</string>
+<string name="message_MoNo10digits">Mobile number should have 10 digits.</string>
+<string name="message_OTP6digits">OTP should have 6 digits.</string>
+<string name="message_EnterCityName">Please Enter City Name First"</string>
+<string name="message_EnterBusinessName">Please Business / Company Name First</string>
+<string name="message_EnterFirstName">Please Enter First Name First</string>
+<string name="message_EnterLastName">Please Enter Last Name First</string>
+<string name="message_EnterStateName">Please Select State Name First</string>
+<string name="message_SelectCityName">Please Select City Name First</string>
+<string name="message_SelectDate">Please Select Date First</string>
+<string name="message_SelectCustomerName">Please Select Customer Name First</string>
+<string name="message_EnterAmount">Please Enter Amount First</string>
+<string name="message_EnterReceivedInAccount">Please Enter Received In Account First</string>
+<string name="message_SelectValidRecord">Please Select Valid Record First</string>
+<string name="message_EnterTotalAmount">Please Enter Total Amount First</string>
+<string name="message_EnterToPartyName">Please Enter ToParty Name First</string>
+<string name="message_ToPartyName3digit">To Party Name atleast 3 characters.</string>
+<string name="message_EnterPaidByAccount">Please Enter Paid By Account First</string>
+<string name="message_Mobilenumber10digit">Mobile number should have 10 digits.</string>
+<string name="message_GSTNO15digit">To Party GST NO should have 15 characters.</string>
+<string name="message_SelectEmployeeAcc">Please Select Employee / Account Name First</string>
+<string name="message_SelectPersonAcc">Please Select Person / Account Name First</string>
+<string name="message_SelectCustomerVendor">Please Select Customer / Vendor Name First</string>
+<string name="message_EnterAccountUsed">Please Enter Account Used For Payment First</string>
+<string name="message_SelectSupplierName">Please Select Supplier Name First</string>
+<string name="message_EnterNameorFirm">Please Enter Name or Firm Name First</string>
+<string name="message_Name2Digit">Name atleast 2 characters.</string>
+<string name="message_FirmName2Digit">Firm Name atleast 2 characters.</string>
+<string name="message_InvalidContactNumber">Invalid Contact Number</string>
+<string name="message_SelectEmployeeName">Please Select Employee Name First</string>
+<string name="message_TokengettingBlank">Token getting Blank</string>
+<!-- Title -->
+<string name="title_AccountView">Account View</string>
+<string name="title_SelectContact">Select Contact</string>
+<string name="title_SelectBusiness">Select Business / Firm / Company For Login</string>
+<!-- Sign -->
+<string name="sign_Addition">+</string>
+<string name="sign_Substraction">-</string>
+<string name="sign_Division">/</string>
+<string name="sign_Multiplication">*</string>
+<string name="sign_EqualTo">=</string>
+<string name="sign_Colon">:</string>
+<!-- HintText -->
+<string name="hint_typeHere">Type Here</string>
+<!-- Button -->
+<string name="btn_save">Save</string>
+<string name="btn_advanced">Show More</string>
+<string name="btn_less">Less</string>
+    <string name="BUTTON.TEXT.APPLY">Apply</string>
+<!-- Response Messages -->
+<string name="ResponseCode200">Success</string>
+<string name="ResponseCode500">Error: There is problem with this function on the server. Please try after some time.</string>
+<string name="ResponseCode400">Error: Bad Request</string>
+<string name="ResponseCode409">Conflict while creating this entry, do you want to continue?</string>
+<string name="ServerFailureResponseCode">The server looks to be currently off. It may be due to some maintenance activity at the server-side. Please try after some time.</string>
+<string name="NoInternetConnection">Error: No Internet. Please check if your phone is connected to internet</string>
+<!-- Duplicate Error Messages -->
+<string name="SERVER.CREATE_CUSTOMER.DUPLICATE">Error: The customer already exists. Please check if you already entered customer with same [Mobile] or Name/Firm Name </string>
+<string name="SERVER.CREATE_EMPLOYEE.DUPLICATE">Error: The employee already exists. Please check if you already entered employee with same [Mobile] or (First Name and Last Name)</string>
+<string name="SERVER.ORGANIZATION.DUPLICATE_ORGANIZATION">Error: You have already registered this business/company. You can directly go to login screen to login</string>
+<string name="SERVER.VALIDATEOTP.OTP_INVALID">Error: You have entered incorrect OTP. Please check carefully and re-enter.</string>
+<string name="SERVER.VALIDATEOTP.OTP_EXPIRED">Error: The OTP you entered is correct but already expired. Please retry.</string>
+<string name="SERVER.CREATE_CITY.DUPLICATE">Error:The city already exist. Please directly use search instead of create</string>
+<!--  Suspect Duplicate Warning Messages -->
+<string name="SERVER.CREATE_SALE.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Sale] looks like already entered by you or someone else in your company</string>
+<string name="SERVER.CREATE_SALARY_DUE.DUPLICATE_SUSPECT">Duplicate Suspect Warning : The [salary due] looks like already entered by you or someone else in your company </string>
+<string name="SERVER.CREATE_SALARY_PAYMENT.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [salary Payment] looks like already entered by you or someone else in your company</string>
+<string name="SERVER.CREATE_GENERAL_EXPENSE.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Expense] looks like already entered by you</string>
+<string name="SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Internal Transfer] looks like already entered by you</string>
+<string name="SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Payment Received] looks like already entered by you or someone else in your company</string>
+<string name="SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Payment to Vendor] looks like already entered by you or someone else in your company</string>
+<string name="SERVER.CREATE_PURCHASE_ENTRY.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Purchase] looks like already entered by you or someone else in your company from the same vendor</string>
+<string name="SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT">Duplicate Suspect Warning: The [Retail Sale] looks like already entered by you or someone else in your company</string>
+
+<string name="LISTVIEW.VALIDATION_MESSAGE.DATA_NOT_AVAILABLE">Data Not Available</string>
+<string name="LISTVIEW.VALIDATION_MESSAGE.SELECT_ATLEAST_ONE_RECORD">Select atleast one record</string>
+<string name="LISTVIEW.CONFIRMATION_MESSAGE.DELETE_TITLE">Delete Record</string>
+<string name="LISTVIEW.CONFIRMATION_MESSAGE.DELETE_MESSAGE">Do you want to confirm delete?</string>
+<string name="Fragment.VALIDATION_MESSAGE.InvalidContactNumber">Invalid Contact Number</string>
+<string name="CustomerAccountViewActivity.CONFIRMATION_MESSAGE.DELETE_MESSAGE">Do you want to delete all customer data?</string>
+<string name="EmployeeAccountViewActivity.CONFIRMATION_MESSAGE.DELETE_MESSAGE">Do you want to delete all Employee data?</string>
+<string name="Activity.VALIDATION_MESSAGE.DELETE_MESSAGE">There is no record for delete.</string>
+
+<string name="ReadOnlySystemResetActivity.SYSTEM_RESET.SUCCESS_MESSAGE">Your request to delete the data is accepted, please do not use the system for few hours</string>
+
+<string name="DateFilterLayout.TEXT_VIEW.TEXT.DATE_FILTER">Date Filter</string>
+<string name="DateFilterLayout.RADIO_BUTTON.TEXT.TODAY">Today</string>
+<string name="DateFilterLayout.RADIO_BUTTON.TEXT.YESTERDAY">Yesterday</string>
+<string name="DateFilterLayout.RADIO_BUTTON.TEXT.ONE_WEEK">1 Week</string>
+<string name="DateFilterLayout.RADIO_BUTTON.TEXT.ONE_MONTH">1 Month</string>
+<string name="DateFilterLayout.RADIO_BUTTON.TEXT.DATE_RANGE">Date Range</string>
+<string name="DateFilterLayout.TEXT_VIEW.TEXT.SELECT_START_DATE">Select Start Date</string>
+<string name="DateFilterLayout.TEXT_VIEW.TEXT.SELECT_END_DATE">Select End Date</string>
+
+<string name="CustomerFilterLayout.TEXT_VIEW.TEXT.CUSTOMER_FILTER">Customer Filter</string>
+<string name="CustomerFilterLayout.TEXT_VIEW.TEXT.CUSTOMER">Customer</string>
+    
+<string name="EmployeeFilterLayout.TEXT_VIEW.TEXT.FROM_EMPLOYEE_FILTER">From Employee Filter</string>
+<string name="EmployeeFilterLayout.TEXT_VIEW.TEXT.FROM_EMPLOYEE">From Employee</string>
+
+<string name="ListCustomerVendorFragment.TEXT_VIEW.TEXT.CUSTOMER_VENDOR_FILTER">Customer / Vendor Filter</string>
+<string name="ListCustomerVendorFragment.TEXT_VIEW.TEXT.CUSTOMER_VENDOR">Customer / Vendor</string>
+
+<string name="ListEmployeeFragment.TEXT_VIEW.TEXT.EMPLOYEE_FILTER">Employee Filter</string>
+<string name="ListEmployeeFragment.TEXT_VIEW.TEXT.EMPLOYEE">Employee</string>
+
+<string name="ListExpenseFragment.TEXT_VIEW.TEXT.TO_PARTY_FILTER">To Party Filter</string>
+<string name="ListExpenseFragment.TEXT_VIEW.TEXT.TO_PARTY">To Party</string>
+    
+<string name="ListPaymentReceivedFragment.TEXT_VIEW.TEXT.CUSTOMER_FILTER">Customer Filter</string>
+<string name="ListPaymentReceivedFragment.TEXT_VIEW.TEXT.CUSTOMER">Customer</string>
+        
+<string name="ListPurchasesFragment.TEXT_VIEW.TEXT.TO_PARTY_FILTER">To Party Filter</string>
+<string name="ListPurchasesFragment.TEXT_VIEW.TEXT.TO_PARTY">To Party</string>
+            
+<string name="ListSalaryFragment.TEXT_VIEW.TEXT.TO_EMPLOYEE_FILTER">To Employee Filter</string>
+<string name="ListSalaryFragment.TEXT_VIEW.TEXT.TO_EMPLOYEE">To Employee</string>
+
+<string name="ListSalesFragment.TEXT_VIEW.TEXT.CUSTOMER_FILTER">Customer Filter</string>
+<string name="ListSalesFragment.TEXT_VIEW.TEXT.CUSTOMER">Customer</string>
+
+<string name="ListVendorPaymentFragment.TEXT_VIEW.TEXT.CUSTOMER_FILTER">Customer Filter</string>
+<string name="ListVendorPaymentFragment.TEXT_VIEW.TEXT.CUSTOMER">Customer</string>
+
+<string name="ListInternalTransferFragment.TEXT_VIEW.TEXT.TO_PERSON_ACCOUNT_FILTER">To Person Account Filter</string>
+<string name="ListInternalTransferFragment.TEXT_VIEW.TEXT.TO_PERSON_ACCOUNT">To Person Account</string>
+    
+<string name="ListInternalTransferFragment.TEXT_VIEW.TEXT.FROM_PERSON_ACCOUNT_FILTER">Form Person Account Filter</string>
+<string name="ListInternalTransferFragment.TEXT_VIEW.TEXT.FROM_PERSON_ACCOUNT">Form Person Account Filter</string>
+
+<string name="ListSalaryPaidFragment.TEXT_VIEW.TEXT.TO_EMPLOYEE_FILTER">To Employee Filter</string>
+<string name="ListSalaryPaidFragment.TEXT_VIEW.TEXT.TO_EMPLOYEE">To Employee</string>
+                
+<string name="ListSalaryPaidFragment.TEXT_VIEW.TEXT.FROM_EMPLOYEE_FILTER">From Employee Filter</string>
+<string name="ListSalaryPaidFragment.TEXT_VIEW.TEXT.FROM_EMPLOYEE">From Employee</string>
+
+    
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.HEADER.CHARTED_ACCOUNT_DETAILS">Chartered Account (CA) Details</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.HEADER.FREQUENTLY_USED_DETAILS">Frequently Used Details</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.HEADER.BUSINESS_DETAILS">Business Details</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.HEADER.CONTACT_DETAILS">Contact Details</string>
+
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.CA_NAME">CA Name</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.CA_EMAIL">CA Email</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.CA_MOBILE_NUMBER">CA Mobile Number (10 Digits)</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.YOUR_BANK_ACCOUNT_DETAILS">Your Bank Account Details</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.YOUR_BILLING_ADDRESS">Your Billing Address</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.GST_NUMBER">GST Number (If GST Registered)</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.PAN_NUMBER">Pan Number (If Available)</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.COMPANY_TYPE">Company Type</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.BUSINESS_NATURE">Business Nature</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.NUMBER_OF_EMPLOYEES">Number Of Employees</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.TELL_US_MORE_ABOUT_YOUR_BUSINESS">Tell Us More About Your Business</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.MOBILE_NUMBER">Mobile Number (10 Digits)</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.EMAIL">Email</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.ALTERNATE_MOBILE_NUMBER">Alternate Mobile Number (10 Digits)</string>
+<string name="MyCompanyBusinessDetailsLayout.TEXT_VIEW.TEXT.WEBSITE">Website</string>
+
+<string name="MonthlyGSTReportToCALayout.TEXT_VIEW.TEXT.GENERATE_AUTOMATICALLY">Automatically Email GST Report Every Month To CA</string>
+<string name="MonthlyGSTReportToCALayout.TEXT_VIEW.TEXT.GENERATE_MANUALLY">Generate Manually</string>
+<string name="MonthlyGSTReportToCALayout.BUTTON.TEXT.GENERATE_NOW">Generate Now</string>
+<string name="MonthlyGSTReportToCALayout.TEXT_VIEW.TEXT.SELECT_MONTH">Select Month</string>
+<string name="MonthlyGSTReportToCAFragment.VALIDATION_MESSAGE.EMAIL">Enter Valid Mail Id</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.LAST_REPORTS_GENERATED_NUMBER">Last {0} Report Details</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.GENERATED_ON">Generated On</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.MODE">Mode</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.STATUS">Status</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.SEND_TO">Send To</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.SEND_FROM_EMAIL">Send From</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.DOWNLOAD">Download</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.EMAIL_REPORT">Email Report</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.EMAIL_REPORTS">Email Reports</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.ENTER_EMAILS">Enter Emails</string>
+<string name="GSTReportListItems.TEXT_VIEW.TEXT.CONFIRM_EMAIL_REPORT">Confirm Email Report</string>
+<string name="GSTReportListItems.TEXT_VIEW.TOAST.DOWNLOAD_MESSAGE">File downloaded and saved</string>
+<string name="GSTReportListItems.CONFIRMATION_MESSAGE.CONFIRM_EMAIL_REPORT_MESSAGE">Do you want to  Confirm Email Report?</string>
+
+<string-array name="MonthlyGSTReportToCAFragment.STRING_ARRAY.SELECT_MONTH">
+    <item>Previous</item>
+    <item>Current</item>
+</string-array>
+
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.TITLE">Download Your Business Data</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.PERIOD">Period</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.TYPE">Type</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.FILE_FORMAT">File Format</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.FROM_DATE">From Date</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.TO_DATE">To Date</string>
+<string name="BackUpDataFragment.TEXT_VIEW.TEXT.GENERATED_BY">Generated By</string>
+
+<string-array name="BackUpDataFragment.STRING_ARRAY.SELECT_PERIOD">
+    <item>Last Backup to Till Now</item>
+    <item>Choose Dates</item>
+</string-array>
+
+<string-array name="BackUpDataFragment.STRING_ARRAY.SELECT_TYPE">
+    <item>Simple</item>
+    <item>Detailed</item>
+</string-array>
+
+<string-array name="BackUpDataFragment.STRING_ARRAY.SELECT_FILE_FORMAT">
+    <item>PDF</item>
+    <item>EXCEL</item>
+</string-array>
+
+<string name="EmployeeEntryLayout.TEXT_VIEW.TEXT.SELECT_EMPLOYEE_TYPE">Select Employee Type</string>
+
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_RECEIVED">Payments Received</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_MADE">Payments Made</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.CUSTOMER_VENDOR">Customer / Vendor</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALES">Sales</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PURCHASE">Purchase</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EXPENSE">Expense</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EMPLOYEE">Employee</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.INTERNAL_TRANSFER">Internal Transfer</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.RETAIL_SALE">Retail Sale</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_DUE">Salary Due</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_PAID">Salary Paid</string>
+
+<string name="SyncContactsMenu.TEXT.SYNC_CONTACTS">Sync Contacts</string>
+<string name="SyncContactsFragment.TEXT_VIEW.TEXT.LAST_SYNC">Last Sync : </string>
+<string name="SyncContactsFragment.TEXT_VIEW.TEXT.STATUS">Status : </string>
+
+<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.TITLE">Sync Alert</string>
+<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.MESSAGE">Do you want to synchronize your contact to avoid losing?</string>
+</resources>

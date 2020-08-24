@@ -6,8 +6,10 @@ import com.ANP.repository.CustomerDAO;
 import com.ANP.repository.OrgDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import com.ANP.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +83,13 @@ public class LoginHandler {
     }
 
     public SuccessLoginBean getLoggedInUserDetails(String mobileNumber,long orgId) {
-        return accountDAO.getUserDetails(mobileNumber,orgId);
+
+        SuccessLoginBean loginBean = accountDAO.getUserDetails(mobileNumber,orgId);
+        if(!loginBean.getEmployeeBean().getLoginrequired()) {
+            throw new CustomAppException("The user with given mobile number on the given business is disabled.",
+                    "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.EXPECTATION_FAILED);
+        }
+        return loginBean;
     }
 
 }

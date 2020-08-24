@@ -194,15 +194,12 @@ public class AccountDAO {
                         "employee.orgid = :orgId",
                 in, new userDetailMapper());
 
-        if (userDetailBeanList == null || userDetailBeanList.size() == 0) {
-            throw new RuntimeException("Cannot fetch details with the given parameters.");
+        if (userDetailBeanList == null || userDetailBeanList.isEmpty()) {
+            throw new CustomAppException("Cannot fetch employee details with the given parameters.",
+                    "SERVER.getUserDetails.NO_EMPLOYEE_WITH_GIVEN_PARAM", HttpStatus.BAD_REQUEST);
         }
 
         UserDetailBean userDetailBean = userDetailBeanList.get(0);
-
-        if(userDetailBean.getLoginrequired()==false) {
-            throw new CustomAppException("User Disabled", "SERVER.LOGIN.USER_LOGIN_DISABLED", HttpStatus.EXPECTATION_FAILED);
-        }
 
         EmployeeBean employeeBean = new EmployeeBean();
         SuccessLoginBean successLoginBean = new SuccessLoginBean();
