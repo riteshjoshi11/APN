@@ -9,66 +9,66 @@
     <string name="menu_navSales">बिक्री</string>
     <string name="menu_navCreateDelivery">वितरण एंट्री</string>
     <string name="menu_navSaleEntryCreateInvoice">बेचने ( सेल ) एंट्री</string>
-    <string name="menu_navListDelivery">वितरण देंखे</string>
-    <string name="menu_navListSales">बिक्री देंखे</string>
+    <string name="menu_navListDelivery">वितरण</string>
+    <string name="menu_navListSales">बिक्री</string>
     <!--Purchase-->
     <string name="menu_navPurchase">खरीदी</string>
     <string name="menu_navPurchaseEntryReceivedBillEntry">परचेस(खरीदी) एंट्री</string>
-    <string name="menu_navListPurchases">खरीदारी देंखे</string>
+    <string name="menu_navListPurchases">खरीदारी </string>
     <!--Incoming Payment-->
     <string name="menu_navIncomingPayment">पैसे आने पर</string>
     <string name="menu_navPaymentReceivedEntry">ग्राहक से पैसे आने की एंट्री </string>
     <string name="menu_navListPaymentReceived">ग्राहक से आये पैसे देंखे</string>
 	<string name="menu_navRetailEntryFragment">रिटेल (फुटकर) सेल की एंट्री</string>
-    <string name="menu_navListRetail">रिटेल सेल देंखे</string>
+    <string name="menu_navListRetail">रिटेल सेल </string>
     <!--Outgoing Payment-->
     <string name="menu_navOutgoingPayment">पैसे जाने पर </string>
     <string name="menu_navVendorPaymentEntry">वेंडर या सप्लायर को पैसे देने की एंट्री</string>
     <string name="menu_navGeneralExpenseEntry">खर्चे की एंट्री</string>
     <string name="menu_navInternalTransferEntry">अपने साथ वाले को पैसे देने की एंट्री</string>
     <string name="menu_navPaySalary">वेतन  भुगतान  करने की एंट्री</string>
-    <string name="menu_navListVendorPayment">वेंडर या सप्लायर को दिया गए पैसे देंखे </string>
-    <string name="menu_navListExpense">खर्चा देंखे</string>
-	<string name="menu_navListInternalTransfer">साथ वाले को दिए गए पैसे देखें </string>
-    <string name="menu_navListSalaryPaid">वेतन भुगतान देंखे</string>
+    <string name="menu_navListVendorPayment">वेंडर या सप्लायर को दिया गए पैसे </string>
+    <string name="menu_navListExpense">खर्चा</string>
+	<string name="menu_navListInternalTransfer">साथ वाले को दिए गए पैसे </string>
+    <string name="menu_navListSalaryPaid">वेतन भुगतान </string>
     <!--People / Firm-->
     <string name="menu_navPeopleFirm">ग्राहक / कर्मचारी / सप्लायर</string>
     <string name="menu_navCustomerVendorEntry">ग्राहक / सप्लायर की एंट्री</string>
     <string name="menu_navEmployeeEntry">कर्मचारी की एंट्री</string>
     <string name="menu_navSalaryEntry">कितना वेतन बना उसकी एंट्री</string>
     <string name="menu_navListCustomerVendor">ग्राहक / सप्लायर की सूची</string>
-    <string name="menu_navListEmployee">कर्मचारी की सूची</string>
-    <string name="menu_navListSalary">बने वेतन की सूची</string>
+    <string name="menu_navListEmployee">कर्मचारी </string>
+    <string name="menu_navListSalary">बना हुआ वेतन </string>
     <!--Settings-->
 <string name="menu_navSettings">एप सेटिंग्स</string>
-<string name="menu_navBackupData">Backup Data</string>
-<string name="menu_navResetCleanData">Reset / Clean Data</string>
-<string name="menu_navMyAppLanguage">My App Language</string>
-<string name="menu_navMyCompanyDetails">My Company / Business Details</string>
-<string name="menu_navSyncContacts">Sync Contacts</string>
+<string name="menu_navBackupData">डाउनलोड ट्रांसेक्शन</string>
+<string name="menu_navResetCleanData">पुरे ट्रांसक्शन हटाए </string>
+<string name="menu_navMyAppLanguage">मेरी भाषा </string>
+<string name="menu_navMyCompanyDetails">मेरे बिज़नेस की जानकारी </string>
+<string name="menu_navSyncContacts">कांटेक्ट सेव </string>
 <!-- Reports -->
-<string name="menu_navReports">Reports</string>
-<string name="menu_navMonthlyGSTReportToCA">Monthly GST Report to CA</string>
+<string name="menu_navReports">रिपोर्ट</string>
+<string name="menu_navMonthlyGSTReportToCA">CA को मासिक GST रिपोर्ट </string>
 <!-- LogOut -->
     <string name="menu_navLogout">लॉग आउट करें</string>
 	<!-- Action Menu -->
     <string name="menu_AddNew">नया ऐड करें </string>
     <string name="menu_ShowList">सूची देखें</string>
     
-<string name="MENU.CUSTOMER.CUSTOMER">Customer</string>
-<string name="MENU.CUSTOMER.COLLECT">Collect</string>
-<string name="MENU.CUSTOMER.PAY">Pay</string>
+<string name="MENU.CUSTOMER.CUSTOMER">कस्टमर</string>
+<string name="MENU.CUSTOMER.COLLECT">लेना हे </string>
+<string name="MENU.CUSTOMER.PAY">देना हे </string>
 
-<string name="MENU.EMPLOYEE.EMPLOYEE">Employee</string>
+<string name="MENU.EMPLOYEE.EMPLOYEE">कर्मचारी </string>
 
-<string name="MENU.EXPENSE.DATE">Date</string>
-<string name="MENU.EXPENSE.PAID">Paid</string>
-<string name="MENU.EXPENSE.UNPAID">UnPaid</string>
-<string name="MENU.EXPENSE.TO_PARTY">To Party</string>
-<string name="MENU.EXPENSE.ONLY_GST">Only GST</string>
+<string name="MENU.EXPENSE.DATE">तारीख </string>
+<string name="MENU.EXPENSE.PAID">पेड </string>
+<string name="MENU.EXPENSE.UNPAID">अनपेड </string>
+<string name="MENU.EXPENSE.TO_PARTY">दूसरी पार्टी </string>
+<string name="MENU.EXPENSE.ONLY_GST">सिर्फ  GST</string>
 
-<string name="MENU.FILTER.DATE">Date</string>
-<string name="MENU.FILTER.CUSTOMER">Customer</string>
+<string name="MENU.FILTER.DATE">तारीख</string>
+<string name="MENU.FILTER.CUSTOMER">कस्टमर</string>
 
 <string name="MENU.INTERNAL_TRANSFER.DATE">Date</string>
 <string name="MENU.INTERNAL_TRANSFER.FROM_PERSON_ACCOUNT">From Person / Account</string>
@@ -448,24 +448,24 @@
     <item>EXCEL</item>
 </string-array>
 
-<string name="EmployeeEntryLayout.TEXT_VIEW.TEXT.SELECT_EMPLOYEE_TYPE">Select Employee Type</string>
+<string name="EmployeeEntryLayout.TEXT_VIEW.TEXT.SELECT_EMPLOYEE_TYPE">कर्मचारी टाइप </string>
 
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_RECEIVED">Payments Received</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_MADE">Payments Made</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.CUSTOMER_VENDOR">Customer / Vendor</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALES">Sales</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PURCHASE">Purchase</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EXPENSE">Expense</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EMPLOYEE">Employee</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.INTERNAL_TRANSFER">Internal Transfer</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.RETAIL_SALE">Retail Sale</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_DUE">Salary Due</string>
-<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_PAID">Salary Paid</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_RECEIVED">आया हुआ पैसा </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PAYMENTS_MADE">दिया गया पैसा</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.CUSTOMER_VENDOR">कस्टमर या सप्लायर </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALES">बिक्री </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.PURCHASE">परचेस </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EXPENSE">खर्चा </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.EMPLOYEE">कर्मचारी</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.INTERNAL_TRANSFER">आतंरिक भुगतान </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.RETAIL_SALE">रिटेल</string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_DUE">सैलरी देय </string>
+<string name="HomeFragments.NAVIGATION_MENU.TEXT_VIEW.TEXT.SALARY_PAID">दी गयी सैलरी</string>
 
-<string name="SyncContactsMenu.TEXT.SYNC_CONTACTS">Sync Contacts</string>
-<string name="SyncContactsFragment.TEXT_VIEW.TEXT.LAST_SYNC">Last Sync : </string>
-<string name="SyncContactsFragment.TEXT_VIEW.TEXT.STATUS">Status : </string>
+<string name="SyncContactsMenu.TEXT.SYNC_CONTACTS">कांटेक्ट सेव</string>
+<string name="SyncContactsFragment.TEXT_VIEW.TEXT.LAST_SYNC">आखरी बार सेव : </string>
+<string name="SyncContactsFragment.TEXT_VIEW.TEXT.STATUS">स्टेटस : </string>
 
-<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.TITLE">Sync Alert</string>
-<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.MESSAGE">Do you want to sync data.</string>
+<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.TITLE">सेव अलर्ट </string>
+<string name="SyncContactsFragment.CONFIRMATION_ALERT.TEXT.MESSAGE">क्या अपने कांटेक्ट सेव करना चाहते हे?</string>
 </resources>
