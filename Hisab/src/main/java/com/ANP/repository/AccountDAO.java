@@ -212,7 +212,7 @@ public class AccountDAO {
         employeeBean.setMobile(userDetailBean.getMobile());
         employeeBean.setOrgId(userDetailBean.getOrgId());
 
-        //employeeBean.setLoginrequired(userDetailBean.getLoginrequired());
+        employeeBean.setLoginrequired(userDetailBean.getLoginrequired());
 
         employeeBean.setCurrentsalarybalance(userDetailBean.getCurrentsalarybalance());
         employeeBean.setLastsalarybalance(userDetailBean.getLastsalarybalance());
