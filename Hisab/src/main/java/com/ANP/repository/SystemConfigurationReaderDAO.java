@@ -1,5 +1,6 @@
 package com.ANP.repository;
 
+import com.ANP.bean.PermissionBean;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SystemConfigurationBean;
 import com.ANP.util.ANPUtils;
@@ -41,5 +42,14 @@ public class SystemConfigurationReaderDAO {
                         return returnMap;
                     }
                 });
+    }
+
+    /*
+       @TODO Ritesh : Please write a method to query your permission related data
+       Build PermissionBean for each role type
+       Finally - create/build a map with key as RoleType and Value as PermissionBean.
+     */
+    public Map<Integer, PermissionBean> getPermissionBeanMap() {
+        return null;
     }
 }//end class
