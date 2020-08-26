@@ -27,6 +27,8 @@ public class LoginHandler {
     @Autowired
     OTPHandler otpHandler;
     @Autowired
+    RoleTypeBeanSingleton roleTypeBeanSingleton;
+    @Autowired
     private JwtUserDetailsService userDetailsService;
 
     @Autowired
@@ -89,6 +91,9 @@ public class LoginHandler {
             throw new CustomAppException("The user with given mobile number on the given business is disabled.",
                     "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.EXPECTATION_FAILED);
         }
+        //set the user permissions
+        PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());
+        loginBean.setPermissionBean(permissionBean);
         return loginBean;
     }
 
