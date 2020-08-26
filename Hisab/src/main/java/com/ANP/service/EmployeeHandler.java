@@ -92,17 +92,29 @@ public class EmployeeHandler {
 
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
-    public boolean createSalary(EmployeeSalary employeeSalaryBean) {
-        boolean isSalaryCreated = false;
+    public void createSalary(EmployeeSalary employeeSalaryBean) {
         employeeDAO.createEmployeeSalary(employeeSalaryBean);
-        isSalaryCreated = employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeID(),employeeSalaryBean.getAmount(), "ADD" );
-        return isSalaryCreated;
+        employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeID(),employeeSalaryBean.getAmount(), "ADD" );
     }
 
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
     //SUBTRACT PAYING PARTY BALANCE
     public void createSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
+        //Lets check if a Salary due to be created as part of the Salary Payment
+        if(employeeSalaryPaymentBean.isCreateSalaryDueAlso()) {
+            EmployeeSalary employeeSalary = new EmployeeSalary();
+            employeeSalary.setCreateDate(new Date());
+            employeeSalary.setIncludeInCalc(true);
+            employeeSalary.setDetails(employeeSalaryPaymentBean.getDetails());
+            employeeSalary.setAmount(employeeSalaryPaymentBean.getAmount());
+            employeeSalary.setToEmployeeID(employeeSalaryPaymentBean.getToEmployeeId());
+            employeeSalary.setCreatedbyId(employeeSalaryPaymentBean.getCreatedbyId());
+            employeeSalary.setForceCreate(employeeSalaryPaymentBean.isForceCreate());
+            employeeSalary.setOrgId(employeeSalaryPaymentBean.getOrgId());
+            this.createSalary(employeeSalary);
+        }
+
         //create an Employee Salary Entry
         employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean);
 

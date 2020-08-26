@@ -77,18 +77,13 @@ public class EmployeeDAO {
 
     }
 
-    public boolean createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
+    public void createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
         if (!employeeSalaryBean.isForceCreate()) {
             this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
         }
-
-        if (namedParameterJdbcTemplate.update(
-                "insert into employeesalary(toemployeeid,amount,details,orgid,createdbyid,includeincalc) " +
+        namedParameterJdbcTemplate.update("insert into employeesalary(toemployeeid,amount,details,orgid,createdbyid,includeincalc) " +
                         "values(:toEmployeeID,:amount,:details,:orgId,:createdbyId,:includeInCalc)",
-                new BeanPropertySqlParameterSource(employeeSalaryBean)) != 0)
-            return true;
-        else
-            return false;
+                new BeanPropertySqlParameterSource(employeeSalaryBean));
     }
 
     public boolean createEmployeeSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {

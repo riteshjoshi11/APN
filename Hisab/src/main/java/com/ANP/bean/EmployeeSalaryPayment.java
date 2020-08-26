@@ -13,6 +13,7 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     private String toEmployeeName;
     private EmployeeBean toEmployeeBean;
     private EmployeeBean fromEmployeeBean;
+    private boolean createSalaryDueAlso=false;
 
     public EmployeeSalaryPayment() {
         this.toEmployeeBean=new EmployeeBean();
@@ -107,5 +108,13 @@ public class EmployeeSalaryPayment extends CommonAttribute {
 
     public void setIncludeInCalc(boolean includeInCalc) {
         this.includeInCalc = includeInCalc;
+    }
+
+    public boolean isCreateSalaryDueAlso() {
+        return createSalaryDueAlso;
+    }
+
+    public void setCreateSalaryDueAlso(boolean createSalaryDueAlso) {
+        this.createSalaryDueAlso = createSalaryDueAlso;
     }
 }
