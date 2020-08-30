@@ -22,7 +22,8 @@ public class RoleTypeBeanSingleton {
     }
 
     private void initiazeMap() {
-        roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
+        // @Joshi - please remove comments when your method is done
+        // roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
     }
 
     public PermissionBean getPermissionBean(Integer employeeType) {

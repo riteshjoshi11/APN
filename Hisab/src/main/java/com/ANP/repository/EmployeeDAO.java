@@ -5,40 +5,35 @@ import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.object.GenericStoredProcedure;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
 
+
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.*;
-
-import static com.ANP.util.ANPConstants.SEARCH_FIELDTYPE_STRING;
 
 
 @Repository
 /*
     handles Employee, EmployeeSalary, EmployeePayment
-
  */
 public class EmployeeDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private DataSource dataSource;
 
 
     public int createEmployee(EmployeeBean employeeBean) {
@@ -57,6 +52,7 @@ public class EmployeeDAO {
     }
 
        //operation values(ADD,SUBTRACT)
+    /*
     public boolean UpdateEmpSalaryBalance(String toEmployeeID, double balance, String operation) {
         int updateSuccess;
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -76,7 +72,7 @@ public class EmployeeDAO {
         //Please note there is a mysql trigger running which is copying old value of Employee:CurrentSalaryBalance to Employee:LastSalaryBalance for audit purpose
 
     }
-
+*/
     public void createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
         if (!employeeSalaryBean.isForceCreate()) {
             this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
@@ -310,7 +306,7 @@ public class EmployeeDAO {
         System.out.println(accountBean.getOrgId());
         String orgId = Long.toString(accountBean.getOrgId());
         String nickname = accountBean.getAccountnickname();
-        return jdbcTemplate.query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
+        return namedParameterJdbcTemplate.getJdbcTemplate().query("select accountnickname,ownerid,id from account where type = 'Employee' and orgid = ? and (accountnickname" +
                         " like ?)  ", new String[]{orgId, "%" + nickname + "%"}
                 , new EmployeeDAO.AccByNickMapper());
 
@@ -353,5 +349,40 @@ public class EmployeeDAO {
             return employeeList.get(0);
         }
         return null;
+    }
+
+    public void updateEmployeeSalaryBalance(EmployeeAuditBean employeeAuditBean) {
+        StoredProcedure procedure = new GenericStoredProcedure();
+        procedure.setDataSource(dataSource);
+        procedure.setSql("UpdateEmployeeSalaryBalanceWithAudit_Procedure");
+        procedure.setFunction(false);
+        SqlParameter[] declareparameters = {
+                new SqlParameter("employeeid", Types.VARCHAR),
+                new SqlParameter("orgid",Types.BIGINT),
+                new SqlParameter("amount",Types.FLOAT),
+                new SqlParameter("otherparty", Types.VARCHAR),
+                new SqlParameter("operation",Types.VARCHAR),
+                new SqlParameter("txntype",Types.VARCHAR),
+                new SqlParameter("txndate",Types.DATE),
+                new SqlParameter("operation",Types.VARCHAR),
+
+        };
+
+        procedure.setParameters(declareparameters);
+        procedure.compile();
+        System.out.println(employeeAuditBean.getEmployeeid() + "," +  employeeAuditBean.getAccountid() + "," +
+                employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherPartyName() + ","
+                +  employeeAuditBean.getOperation());
+
+        Map<String, Object> result = procedure.execute(
+                employeeAuditBean.getEmployeeid(),
+                employeeAuditBean.getOrgId(),
+                employeeAuditBean.getAmount(),
+                employeeAuditBean.getOtherPartyName(),
+                employeeAuditBean.getOperation(),
+                employeeAuditBean.getType(),
+                employeeAuditBean.getTransactionDate()
+        );
+        System.out.println("Status " + result);
     }
 }

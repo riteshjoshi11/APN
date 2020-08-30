@@ -64,12 +64,14 @@ public class EmployeeController {
         employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-*/
+
     @PostMapping(path = "/updateSalaryBalance", produces = "application/json")
     public ResponseEntity updateSalaryBalance(@RequestParam String EmployeeId, @RequestParam double balance, @RequestParam String operation) {
         employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+    */
+
 
     /*
        This method will mainly used by UI fill Employee List in the Employee Module

@@ -70,4 +70,8 @@ public interface ANPConstants {
 
       public static final String GST_REPORT_CURRENT_MONTH="current";
       public static final String GST_REPORT_PREVIOUS_MONTH="previous";
+
+      public  static final String EMPLOYEE_SALARY_AUDIT_TYPE_PAY="Salary_Pay";
+      public  static final String EMPLOYEE_SALARY_AUDIT_TYPE_DUE="Salary_Due";
+
 }
