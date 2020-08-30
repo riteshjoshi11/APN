@@ -3,6 +3,10 @@ use antrackerdb;
 ALTER TABLE `antrackerdb`.`employee` 
 ADD COLUMN `mobile2` VARCHAR(20) NULL AFTER `createdate`;
 
+ALTER TABLE `antrackerdb`.`organization` 
+ADD COLUMN `clientid` VARCHAR(45) NULL AFTER `city`;
+
+
 CREATE TABLE `employee_salary_audit` (
   `id` int NOT NULL AUTO_INCREMENT,
   `employeeid` varchar(45) DEFAULT NULL,
