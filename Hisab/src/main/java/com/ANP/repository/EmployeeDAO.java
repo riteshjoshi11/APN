@@ -42,9 +42,9 @@ public class EmployeeDAO {
             String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
             return namedParameterJdbcTemplate.update(
-                    "insert into employee (id,first,last,mobile,loginrequired,orgid,type) " +
+                    "insert into employee (id,first,last,mobile,loginrequired,orgid,type,mobile2) " +
                             " values(:employeeId,:first,:last,:mobile,:loginrequired" +
-                            ",:orgId, :typeInt)", new BeanPropertySqlParameterSource(employeeBean));
+                            ",:orgId, :typeInt,:mobile2)", new BeanPropertySqlParameterSource(employeeBean));
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
@@ -144,6 +144,7 @@ public class EmployeeDAO {
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
             empbean.setAccountId(rs.getLong("acc.id"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
+            empbean.setMobile2(rs.getString("e.mobile2"));
             return empbean;
         }
     }//end FullEmployeeMapper
@@ -308,7 +309,7 @@ public class EmployeeDAO {
             throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
         namedParameterJdbcTemplate.update("update employee set first = :first," +
-                "last=:last, loginrequired = :loginrequired, type = :typeInt " +
+                "last=:last, loginrequired = :loginrequired, type = :typeInt, mobile2 =:mobile2 " +
                 " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
     }
 

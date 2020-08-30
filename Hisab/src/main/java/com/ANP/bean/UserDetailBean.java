@@ -27,6 +27,7 @@ public class UserDetailBean {
     private String city;
     private String state;
 
+    private String mobile2;
 
     public long getAccountId(){return  accountId;}
 
@@ -185,5 +186,13 @@ public class UserDetailBean {
 
     public void setType(String type){
         this.type=type;
+    }
+
+    public String getMobile2() {
+        return mobile2;
+    }
+
+    public void setMobile2(String mobile2) {
+        this.mobile2 = mobile2;
     }
 }
