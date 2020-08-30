@@ -188,7 +188,7 @@ public class AccountDAO {
                         ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
                         ", employee.last, employee.mobile, employee.currentsalarybalance" +
                         ",employee.lastsalarybalance, organization.id, organization.orgname" +
-                        ", organization.state, organization.city from organization,employee,account where " +
+                        ", organization.state, organization.city,employee.type from organization,employee,account where " +
                         "employee.id = account.ownerid" +
                         " and employee.orgid = organization.id and employee.mobile = :mobileNumber and " +
                         "employee.orgid = :orgId",
@@ -216,6 +216,7 @@ public class AccountDAO {
 
         employeeBean.setCurrentsalarybalance(userDetailBean.getCurrentsalarybalance());
         employeeBean.setLastsalarybalance(userDetailBean.getLastsalarybalance());
+        employeeBean.setTypeInt(Integer.parseInt(userDetailBean.getType()));
         successLoginBean.setEmployeeBean(employeeBean);
 
         //  Further Process the  Result and set the respective values into the AccountBean
@@ -259,7 +260,7 @@ public class AccountDAO {
             userDetailBean.setLast(rs.getString("employee.last"));
             userDetailBean.setMobile(rs.getString("employee.mobile"));
             userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
-            //   userDetailBean.setType(rs.getString("employee.type"));
+            userDetailBean.setType(rs.getString("employee.type"));
             userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
             userDetailBean.setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
 
