@@ -66,47 +66,23 @@ public class EmployeeHandler {
         return false;
         }
     }
-
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateMobile(String employeeID, String mobile) {
-        if(employeeDAO.updateMobile(employeeID,mobile)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-     @Transactional(rollbackFor = Exception.class)
-    public boolean UpdateEmpSalaryBalance(String employeeID, double balance, String operation) {
-        if(employeeDAO.UpdateEmpSalaryBalance(employeeID,balance,operation)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
  */
 
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
     public void createSalary(EmployeeSalary employeeSalaryBean) {
+        //create entry into the salary table
         employeeDAO.createEmployeeSalary(employeeSalaryBean);
-       // employeeDAO.UpdateEmpSalaryBalance(employeeSalaryBean.getToEmployeeID(),employeeSalaryBean.getAmount(), "ADD" );
+
+        //Employee Salary Audit
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
         employeeAuditBean.setOrgId(employeeSalaryBean.getOrgId());
         employeeAuditBean.setEmployeeid(employeeSalaryBean.getToEmployeeID());
         employeeAuditBean.setAmount(employeeSalaryBean.getAmount());
-        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-   //     employeeAuditBean.setOtherPartyName(employeeSalaryBean.getToEmployeeName()); //This will be opposite party
- //       employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
-
-        //Audit Employee Salary Balance
-
-        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_PAY);
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_DUE);
         employeeAuditBean.setTransactionDate(new Date());
         employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -130,10 +106,7 @@ public class EmployeeHandler {
         //create an Employee Salary Entry
         employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean);
 
-        //Update Employee Salary Balance
-       // employeeDAO.UpdateEmpSalaryBalance(employeeSalaryPaymentBean.getToEmployeeId(),employeeSalaryPaymentBean.getAmount(), "SUBTRACT" );
-
-        //Update/SUBTRACT From Employee Balance
+         //Update/SUBTRACT From Employee Balance
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
         employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
         employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());

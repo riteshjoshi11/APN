@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.GenericStoredProcedure;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -51,28 +50,7 @@ public class EmployeeDAO {
         }
     }
 
-       //operation values(ADD,SUBTRACT)
-    /*
-    public boolean UpdateEmpSalaryBalance(String toEmployeeID, double balance, String operation) {
-        int updateSuccess;
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("toemployeeid", toEmployeeID);
-        mapSqlParameterSource.addValue("balance", balance);
-        if (operation.equals("ADD"))
-            updateSuccess = namedParameterJdbcTemplate.update("update employee set lastsalarybalance = currentsalarybalance, " +
-                    "currentsalarybalance = currentsalarybalance + :balance where id = :toemployeeid", mapSqlParameterSource);
-        else
-            updateSuccess = namedParameterJdbcTemplate.update("update employee set lastsalarybalance = currentsalarybalance, " +
-                    "currentsalarybalance = currentsalarybalance - :balance where id = :toemployeeid", mapSqlParameterSource);
-        if (updateSuccess != 0)
-            return true;
-        else
-            return false;
-        //Overall Effect: Employee:CurrentSalaryBalance = Employee:CurrentSalaryBalance 'operation(ADD/SUBTRACT)' balance
-        //Please note there is a mysql trigger running which is copying old value of Employee:CurrentSalaryBalance to Employee:LastSalaryBalance for audit purpose
 
-    }
-*/
     public void createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
         if (!employeeSalaryBean.isForceCreate()) {
             this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
@@ -361,17 +339,16 @@ public class EmployeeDAO {
                 new SqlParameter("orgid",Types.BIGINT),
                 new SqlParameter("amount",Types.FLOAT),
                 new SqlParameter("otherparty", Types.VARCHAR),
-                new SqlParameter("operation",Types.VARCHAR),
                 new SqlParameter("txntype",Types.VARCHAR),
-                new SqlParameter("txndate",Types.DATE),
                 new SqlParameter("operation",Types.VARCHAR),
-
+                new SqlParameter("txndate",Types.DATE)
         };
 
         procedure.setParameters(declareparameters);
         procedure.compile();
-        System.out.println(employeeAuditBean.getEmployeeid() + "," +  employeeAuditBean.getAccountid() + "," +
-                employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherPartyName() + ","
+        System.out.println(employeeAuditBean.getEmployeeid() + ","
+                +  employeeAuditBean.getAmount() + ","
+                +  employeeAuditBean.getType() + ","
                 +  employeeAuditBean.getOperation());
 
         Map<String, Object> result = procedure.execute(
@@ -379,8 +356,8 @@ public class EmployeeDAO {
                 employeeAuditBean.getOrgId(),
                 employeeAuditBean.getAmount(),
                 employeeAuditBean.getOtherPartyName(),
-                employeeAuditBean.getOperation(),
                 employeeAuditBean.getType(),
+                employeeAuditBean.getOperation(),
                 employeeAuditBean.getTransactionDate()
         );
         System.out.println("Status " + result);
