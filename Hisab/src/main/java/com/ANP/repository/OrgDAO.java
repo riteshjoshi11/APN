@@ -33,8 +33,8 @@ public class OrgDAO {
         System.out.println("createOrganization: Organization Bean:" + organization);
         isDuplicate(organization, employeeBean);
         KeyHolder holder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update("insert into organization (orgname,state,city) " +
-                "values (:orgName,:state,:city)", new BeanPropertySqlParameterSource(organization), holder);
+        namedParameterJdbcTemplate.update("insert into organization (orgname,state,city,clientid) " +
+                "values (:orgName,:state,:city,:clientId)", new BeanPropertySqlParameterSource(organization), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("CreateOrganization: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
@@ -55,6 +55,7 @@ public class OrgDAO {
             org.setOrgName(rs.getString("orgname"));
             org.setState(rs.getString("state"));
             org.setState(rs.getString("city"));
+            org.setClientId(rs.getString("clientid"));
             return org;
         }
     }

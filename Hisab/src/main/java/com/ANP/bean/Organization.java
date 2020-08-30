@@ -8,6 +8,7 @@ public class Organization {
     private String orgName;
     private String city;
     private String state;
+    private String clientId;
 
     public long getOrgId() {
         return orgId;
@@ -42,6 +43,14 @@ public class Organization {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String toString() {

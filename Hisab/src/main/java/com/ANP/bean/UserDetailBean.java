@@ -26,6 +26,7 @@ public class UserDetailBean {
     private String orgName;
     private String city;
     private String state;
+    private String clientId;
 
     private String mobile2;
 
@@ -194,5 +195,13 @@ public class UserDetailBean {
 
     public void setMobile2(String mobile2) {
         this.mobile2 = mobile2;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

@@ -89,7 +89,11 @@ public class LoginHandler {
         SuccessLoginBean loginBean = accountDAO.getUserDetails(mobileNumber,orgId);
         if(!loginBean.getEmployeeBean().getLoginrequired()) {
             throw new CustomAppException("The user with given mobile number on the given business is disabled.",
-                    "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.EXPECTATION_FAILED);
+                    "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.LOCKED);
+        }
+        if(loginBean.getEmployeeBean().getTypeInt()==6) {
+            throw new CustomAppException("The user with given type cannot login.",
+                    "SERVER.getLoggedInUserDetails.LOGIN.NOT_ALLOWED", HttpStatus.LOCKED);
         }
         //set the user permissions
         PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());

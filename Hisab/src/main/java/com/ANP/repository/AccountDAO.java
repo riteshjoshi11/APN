@@ -188,7 +188,7 @@ public class AccountDAO {
                         ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
                         ", employee.last, employee.mobile, employee.currentsalarybalance" +
                         ",employee.lastsalarybalance, organization.id, organization.orgname" +
-                        ", organization.state, organization.city,employee.type,employee.mobile2 from organization,employee,account where " +
+                        ", organization.state, organization.city,employee.type,employee.mobile2,organization.clientid from organization,employee,account where " +
                         "employee.id = account.ownerid" +
                         " and employee.orgid = organization.id and employee.mobile = :mobileNumber and " +
                         "employee.orgid = :orgId",
@@ -242,7 +242,7 @@ public class AccountDAO {
         organizationBean.setOrgName(userDetailBean.getOrgName());
         organizationBean.setCity(userDetailBean.getCity());
         organizationBean.setState(userDetailBean.getState());
-
+        organizationBean.setClientId(userDetailBean.getClientId());
 
         successLoginBean.setOrganization(organizationBean);
         return successLoginBean;
@@ -283,6 +283,7 @@ public class AccountDAO {
             userDetailBean.setCurrentbalance(rs.getDouble("account.currentbalance"));
             userDetailBean.setLastbalance(rs.getDouble("account.lastbalance"));
             userDetailBean.setMobile2(rs.getString("employee.mobile2"));
+            userDetailBean.setClientId(rs.getString("organization.clientid"));
             return userDetailBean;
         }
     }
