@@ -24,7 +24,12 @@ public class SystemConfigurationReaderDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    SystemConfigurationReaderDAO() {
+        System.out.println("Calling system configuration dao");
+    }
+
     public Map<String, String> getSystemConfigurationMap() {
+
         return namedParameterJdbcTemplate.query("select `key`, `value` from systemconfigurations ",
                 new ResultSetExtractor<Map<String, String>>() {
                     @Override
@@ -51,28 +56,40 @@ public class SystemConfigurationReaderDAO {
      */
     public Map<Integer, PermissionBean> getPermissionBeanMap() {
         //@TODO RITESH : write a query here
-        return namedParameterJdbcTemplate.query(" ",
+        return namedParameterJdbcTemplate.query("select empTypeId,  permissionId, pe.name  from role_permission rp,permission pe,employeetype et where rp.empTypeId=et.id and rp.permissionId =pe.id ",
+
                 new ResultSetExtractor<Map<Integer, PermissionBean>>() {
                     @Override
                     public Map<Integer, PermissionBean> extractData(ResultSet rs) throws SQLException,
                             DataAccessException {
                         Map<Integer, PermissionBean> returnMap = new HashMap<Integer, PermissionBean>();
-                        while (rs.next()) {
-                            String key = rs.getString("<Role ID COLUMN NAME>");
-                           // String value = rs.getString("<>");
-                            PermissionBean permissionBean = returnMap.get(key);
-                            if(permissionBean==null) {
-                                permissionBean = new PermissionBean();
-                            }
-                            String permissionName = rs.getString("<Permission Name>");
-                            Boolean permissionTrueFalse = rs.getBoolean("<Permission True/False>");
+                        try {
+                            System.out.println("in extrect methord ..." + rs.getFetchSize());
+                            while (rs.next()) {
+                                System.out.println("1111 ...");
+                                Integer key = rs.getInt(1);
+                                System.out.println("2222 ...");
 
+                                // String value = rs.getString("<>");
+                                PermissionBean permissionBean = returnMap.get(key);
+                                if (permissionBean == null) {
+                                    permissionBean = new PermissionBean();
+                                    returnMap.put(key, permissionBean);
+                                }
+                                String permissionName = rs.getString(3);
+                                Boolean permissionTrueFalse = new Boolean(true); //if entry present in table it means have permission
 
-                            if (!ANPUtils.isNullOrEmpty(permissionName) && permissionTrueFalse!=null) {
-                                permissionBean.addEntryIntoMap(permissionName,permissionTrueFalse);
+                                System.out.println("Permission bean .." + permissionBean + " name " + permissionName + " true flase  " + permissionTrueFalse);
+                                if (!ANPUtils.isNullOrEmpty(permissionName)) {
+                                    permissionBean.addEntryIntoMap(permissionName, Boolean.TRUE);
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+
                         }
                         return returnMap;
+
                     }
                 });
 

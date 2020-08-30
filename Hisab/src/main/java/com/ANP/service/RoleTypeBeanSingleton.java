@@ -17,16 +17,23 @@ public class RoleTypeBeanSingleton {
     private Map<Integer, PermissionBean> roleTypeBeanMap = null;
 
     public RoleTypeBeanSingleton() {
-        roleTypeBeanMap = new HashMap<>();
-        initiazeMap();
+        try {
+            //   roleTypeBeanMap = new HashMap<>();
+            //        initiazeMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void initiazeMap() {
-        // @Joshi - please remove comments when your method is done
-        // roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
-    }
+//    private void initiazeMap() {
+//        System.out.println(" initializing permition bean"+systemConfigurationReaderDAO);
+//        roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
+//    }
 
     public PermissionBean getPermissionBean(Integer employeeType) {
+        if (roleTypeBeanMap == null) {
+            roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
+        }
         return this.roleTypeBeanMap.get(employeeType);
     }
 
