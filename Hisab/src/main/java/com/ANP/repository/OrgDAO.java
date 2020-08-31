@@ -68,7 +68,7 @@ public class OrgDAO {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("mobileNumber", mobileNumber);
         List<Organization> organizations = namedParameterJdbcTemplate.query("select * from organization where id IN" +
-                " (select orgid from employee where mobile=:mobileNumber)", param, new OrgMapper());
+                " (select orgid from employee where mobile=:mobileNumber or mobile2=:mobileNumber)", param, new OrgMapper());
         return organizations;
     }
 

@@ -190,7 +190,7 @@ public class AccountDAO {
                         ",employee.lastsalarybalance, organization.id, organization.orgname" +
                         ", organization.state, organization.city,employee.type,employee.mobile2,organization.clientid from organization,employee,account where " +
                         "employee.id = account.ownerid" +
-                        " and employee.orgid = organization.id and employee.mobile = :mobileNumber and " +
+                        " and employee.orgid = organization.id and (employee.mobile = :mobileNumber or employee.mobile2=:mobileNumber)  and " +
                         "employee.orgid = :orgId",
                 in, new userDetailMapper());
 

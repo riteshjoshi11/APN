@@ -73,13 +73,14 @@ public class LoginHandler {
             intermediateLoginBean.setOrganizationList(organizationList);
             loginVerified = true;
 
-        } else {
+        }
+        /*else {
             CustomerBean customerBean = customerDao.getCustomerUsingMobile1(mobileNumber);
             if (customerBean != null && !(ANPUtils.isNullOrEmpty(customerBean.getCustomerID()))) {
                 loginVerified = true;
                 intermediateLoginBean.setLoginType(ANPConstants.LOGIN_TYPE_CUSTOMER);
             }
-        }
+        }*/
         intermediateLoginBean.setLoginVerified(loginVerified);
         return intermediateLoginBean;
     }

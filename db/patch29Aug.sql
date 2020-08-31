@@ -1,3 +1,5 @@
+use antrackerdb;
+
 CREATE TABLE `permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,

@@ -17,34 +17,29 @@ public class OTPHandler {
     @Autowired
     OTPDAO otpdao;
 
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
     public boolean sendOTP(String mobile) {
-        String otp=generateNumberOTP(6);
+        String otp = generateNumberOTP(6);
         String testModeOTP = System.getProperty("TestModeOTP");
-        if(!ANPUtils.isNullOrEmpty(testModeOTP)){
-            System.out.println("Test Mode is enabled to setting OTP to [" + testModeOTP + "]" );
-            otp=testModeOTP;
+        if (!ANPUtils.isNullOrEmpty(testModeOTP)) {
+            System.out.println("Test Mode is enabled to setting OTP to [" + testModeOTP + "]");
+            otp = testModeOTP;
         }
         OTPBean otpBean = new OTPBean();
         otpBean.setMobileNumber(mobile);
         otpBean.setOtp(otp);
         int dbCreateStatus = otpdao.createOTP(otpBean);
-        if(dbCreateStatus>1) {
+        if (dbCreateStatus > 1) {
             //SEND SMS
-            //IF SEND SMS IS SUCCESSFUL THEN SEND SUCCESS
+            //IF DB CREATE IS SUCCESSFUL THEN SEND SUCCESS
         }
         return true;
     }
 
-
     public void verifyOTP(OTPBean otpBean) {
-          otpdao.validateOTP(otpBean);
+        otpdao.validateOTP(otpBean);
     }
 
-    public static String generateNumberOTP(int len)
-    {
+    public static String generateNumberOTP(int len) {
         System.out.println("Generating OTP using random() : ");
         System.out.print("You OTP is: ");
         // Using numeric values
@@ -52,8 +47,7 @@ public class OTPHandler {
         // Using random method
         Random rndm_method = new Random();
         char[] otp = new char[len];
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             // Use of charAt() method : to get character value
             // Use of nextInt() as it is scanning the value as int
             otp[i] = numbers.charAt(rndm_method.nextInt(numbers.length()));
@@ -62,9 +56,4 @@ public class OTPHandler {
 
     }//
 
-    public static void main(String[] args)
-    {
-        int length = 6;
-        System.out.println(generateNumberOTP(length));
-    }
 }
