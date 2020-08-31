@@ -4,8 +4,10 @@ import com.ANP.bean.PermissionBean;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SystemConfigurationBean;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,33 +52,27 @@ public class SystemConfigurationReaderDAO {
     }
 
     /*
-       @TODO Ritesh : Please write a method to query your permission related data
+       Please write a method to query your permission related data
        Build PermissionBean for each role type
        Finally - create/build a map with key as RoleType and Value as PermissionBean.
      */
     public Map<Integer, PermissionBean> getPermissionBeanMap() {
         //@TODO RITESH : write a query here
         return namedParameterJdbcTemplate.query("select empTypeId,  permissionId, pe.name  from role_permission rp,permission pe,employeetype et where rp.empTypeId=et.id and rp.permissionId =pe.id ",
-
                 new ResultSetExtractor<Map<Integer, PermissionBean>>() {
                     @Override
                     public Map<Integer, PermissionBean> extractData(ResultSet rs) throws SQLException,
                             DataAccessException {
                         Map<Integer, PermissionBean> returnMap = new HashMap<Integer, PermissionBean>();
                         try {
-                            System.out.println("in extrect methord ..." + rs.getFetchSize());
                             while (rs.next()) {
-                                System.out.println("1111 ...");
-                                Integer key = rs.getInt(1);
-                                System.out.println("2222 ...");
-
-                                // String value = rs.getString("<>");
+                                Integer key = rs.getInt("empTypeId");
                                 PermissionBean permissionBean = returnMap.get(key);
                                 if (permissionBean == null) {
                                     permissionBean = new PermissionBean();
                                     returnMap.put(key, permissionBean);
                                 }
-                                String permissionName = rs.getString(3);
+                                String permissionName = rs.getString("pe.name");
                                 Boolean permissionTrueFalse = new Boolean(true); //if entry present in table it means have permission
 
                                 System.out.println("Permission bean .." + permissionBean + " name " + permissionName + " true flase  " + permissionTrueFalse);
@@ -85,13 +81,10 @@ public class SystemConfigurationReaderDAO {
                                 }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
-
+                            throw new CustomAppException("Error: System configuration issue", "SERVER.SECURITY.PERMISSION.BADCONFIGURATION", HttpStatus.EXPECTATION_FAILED);
                         }
                         return returnMap;
-
                     }
                 });
-
     }
 }//end class

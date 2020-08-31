@@ -5,7 +5,6 @@ import com.ANP.repository.SystemConfigurationReaderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -15,20 +14,6 @@ public class RoleTypeBeanSingleton {
     SystemConfigurationReaderDAO systemConfigurationReaderDAO;
 
     private Map<Integer, PermissionBean> roleTypeBeanMap = null;
-
-    public RoleTypeBeanSingleton() {
-        try {
-            //   roleTypeBeanMap = new HashMap<>();
-            //        initiazeMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-//    private void initiazeMap() {
-//        System.out.println(" initializing permition bean"+systemConfigurationReaderDAO);
-//        roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
-//    }
 
     public PermissionBean getPermissionBean(Integer employeeType) {
         if (roleTypeBeanMap == null) {
