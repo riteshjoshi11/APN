@@ -15,6 +15,8 @@ public class PaymentReceivedBean extends CommonAttribute {
     private double amount;
     private boolean includeInCalc=true;
     private String details;
+    private boolean createSaleEntryAlso=false;
+
 
     private CustomerBean customerBean;
     private EmployeeBean employeeBean;
@@ -138,5 +140,13 @@ public class PaymentReceivedBean extends CommonAttribute {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean isCreateSaleEntryAlso() {
+        return createSaleEntryAlso;
+    }
+
+    public void setCreateSaleEntryAlso(boolean createSaleEntryAlso) {
+        this.createSaleEntryAlso = createSaleEntryAlso;
     }
 }

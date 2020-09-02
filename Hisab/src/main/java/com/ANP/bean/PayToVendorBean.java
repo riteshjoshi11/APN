@@ -18,6 +18,8 @@ public class PayToVendorBean extends CommonAttribute {
     //For Audit Entry
     private String fromPartyName;
     private String toPartyName;
+    private boolean createPurchaseEntryAlso=false;
+
 
     public PayToVendorBean() {
         this.customerBean =  new CustomerBean();
@@ -128,5 +130,13 @@ public class PayToVendorBean extends CommonAttribute {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public boolean isCreatePurchaseEntryAlso() {
+        return createPurchaseEntryAlso;
+    }
+
+    public void setCreatePurchaseEntryAlso(boolean createPurchaseEntryAlso) {
+        this.createPurchaseEntryAlso = createPurchaseEntryAlso;
     }
 }

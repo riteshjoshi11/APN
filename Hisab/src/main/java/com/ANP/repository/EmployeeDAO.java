@@ -145,6 +145,7 @@ public class EmployeeDAO {
             empbean.setAccountId(rs.getLong("acc.id"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             empbean.setMobile2(rs.getString("e.mobile2"));
+
             return empbean;
         }
     }//end FullEmployeeMapper
