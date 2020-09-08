@@ -74,6 +74,16 @@ public class AccountingController {
     @PostMapping(path = "/createPayToVendor", produces = "application/json")
     public ResponseEntity createPayToVendor(@Valid @RequestBody PayToVendorBean payToVendorBean) {
         accountingHandler.createPayToVendor(payToVendorBean);
+        if(payToVendorBean.isCreatePurchaseEntryAlso())
+        {
+            PurchaseFromVendorBean purchaseFromVendorBean = new PurchaseFromVendorBean();
+            purchaseFromVendorBean.setFromAccountId(payToVendorBean.getToAccountID());
+            purchaseFromVendorBean.setFromCustomerId(payToVendorBean.getToCustomerID());
+            purchaseFromVendorBean.setOrgId(payToVendorBean.getOrgId());
+            purchaseFromVendorBean.setDate(payToVendorBean.getPaymentDate());
+            purchaseFromVendorBean.setCreatedbyId(payToVendorBean.getCreatedbyId());
+            accountingHandler.createVendorPurchase(purchaseFromVendorBean);
+        }
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
@@ -81,6 +91,17 @@ public class AccountingController {
     @PostMapping(path = "/createPaymentReceived", produces = "application/json")
     public ResponseEntity createPaymentReceived(@Valid @RequestBody PaymentReceivedBean paymentReceivedBean) {
         accountingHandler.createPaymentReceived(paymentReceivedBean);
+        if(paymentReceivedBean.isCreateSaleEntryAlso())
+        {
+            System.out.println("we are here in if");
+            CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
+            customerInvoiceBean.setCreatedbyId(paymentReceivedBean.getCreatedbyId());
+            customerInvoiceBean.setDate(paymentReceivedBean.getReceivedDate());
+            customerInvoiceBean.setToCustomerId(paymentReceivedBean.getFromCustomerID());
+            customerInvoiceBean.setToAccountId(paymentReceivedBean.getFromAccountID());
+            customerInvoiceBean.setOrgId(paymentReceivedBean.getOrgId());
+            accountingHandler.createCustomerInvoice(customerInvoiceBean);
+        }
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
