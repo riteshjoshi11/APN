@@ -183,7 +183,7 @@ public class AccountDAO {
         in.addValue("mobileNumber", mobileNumber);
         in.addValue("orgId", orgId);
 
-        List<UserDetailBean> userDetailBeanList = namedParameterJdbcTemplate.query(
+        List<SuccessLoginBean> successLoginBeanList = namedParameterJdbcTemplate.query(
                 "select employee.loginrequired, account.id,account.ownerid,account.accountnickname,account.createdbyid" +
                         ", account.currentbalance, account.lastbalance, employee.id, employee.first" +
                         ", employee.last, employee.mobile, employee.currentsalarybalance" +
@@ -192,69 +192,35 @@ public class AccountDAO {
                         "employee.id = account.ownerid" +
                         " and employee.orgid = organization.id and (employee.mobile = :mobileNumber or employee.mobile2=:mobileNumber)  and " +
                         "employee.orgid = :orgId",
-                in, new userDetailMapper());
+                in, new SuccessLoginBeanMapper());
 
-        if (userDetailBeanList == null || userDetailBeanList.isEmpty()) {
+        if (successLoginBeanList == null || successLoginBeanList.isEmpty()) {
             throw new CustomAppException("Cannot fetch employee details with the given parameters.",
                     "SERVER.getUserDetails.NO_EMPLOYEE_WITH_GIVEN_PARAM", HttpStatus.BAD_REQUEST);
         }
 
-        UserDetailBean userDetailBean = userDetailBeanList.get(0);
-
-        EmployeeBean employeeBean = new EmployeeBean();
-        SuccessLoginBean successLoginBean = new SuccessLoginBean();
-
-        //  Further Process the  Result and set the respective values into the EmployeeBean
-
-        employeeBean.setEmployeeId(userDetailBean.getEmployeeId());
-        employeeBean.setFirst(userDetailBean.getFirst());
-        employeeBean.setLast(userDetailBean.getLast());
-        employeeBean.setMobile(userDetailBean.getMobile());
-        employeeBean.setOrgId(userDetailBean.getOrgId());
-
-        employeeBean.setLoginrequired(userDetailBean.getLoginrequired());
-
-        employeeBean.setCurrentsalarybalance(userDetailBean.getCurrentsalarybalance());
-        employeeBean.setLastsalarybalance(userDetailBean.getLastsalarybalance());
-        employeeBean.setTypeInt(Integer.parseInt(userDetailBean.getType()));
-        successLoginBean.setEmployeeBean(employeeBean);
-
-        //  Further Process the  Result and set the respective values into the AccountBean
-
-        AccountBean accountBean = new AccountBean();
-
-        accountBean.setAccountId(userDetailBean.getAccountId());
-        accountBean.setOwnerid(userDetailBean.getOwnerid());
-        accountBean.setAccountnickname(userDetailBean.getAccountnickname());
-        accountBean.setCreatedbyid(userDetailBean.getCreatedbyid());
-        accountBean.setCurrentbalance(userDetailBean.getCurrentbalance());
-        accountBean.setLastbalance(userDetailBean.getLastbalance());
-        accountBean.setOrgId(userDetailBean.getOrgId());
-        successLoginBean.setAccountBean(accountBean);
-
-        /*
-            Further Process the  Result and set the respective values into the OrganizationBean
-        */
-
-        Organization organizationBean = new Organization();
-
-        organizationBean.setOrgId(userDetailBean.getOrgId());
-        organizationBean.setOrgName(userDetailBean.getOrgName());
-        organizationBean.setCity(userDetailBean.getCity());
-        organizationBean.setState(userDetailBean.getState());
-        organizationBean.setClientId(userDetailBean.getClientId());
-
-        successLoginBean.setOrganization(organizationBean);
+        SuccessLoginBean successLoginBean = successLoginBeanList.get(0);
         return successLoginBean;
     }
 
-    private static final class userDetailMapper implements RowMapper<UserDetailBean> {
+    private static final class SuccessLoginBeanMapper implements RowMapper<SuccessLoginBean> {
 
-        public UserDetailBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public SuccessLoginBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-            UserDetailBean userDetailBean = new UserDetailBean();
+//            UserDetailBean userDetailBean = new UserDetailBean();
+            SuccessLoginBean successLoginBean = new SuccessLoginBean();
 
+            successLoginBean.getEmployeeBean().setEmployeeId(rs.getString("employee.id"));
+            successLoginBean.getEmployeeBean().setFirst(rs.getString("employee.first"));
+            successLoginBean.getEmployeeBean().setLast(rs.getString("employee.last"));
+            successLoginBean.getEmployeeBean().setMobile(rs.getString("employee.mobile"));
+            successLoginBean.getEmployeeBean().setLoginrequired(rs.getBoolean("employee.loginrequired"));
+            successLoginBean.getEmployeeBean().setTypeInt(rs.getInt("employee.type"));
+            successLoginBean.getEmployeeBean().setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
+            successLoginBean.getEmployeeBean().setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
+            successLoginBean.getEmployeeBean().setMobile2(rs.getString("employee.mobile2"));
 
+            /*
             userDetailBean.setEmployeeId(rs.getString("employee.id"));
             userDetailBean.setFirst(rs.getString("employee.first"));
             userDetailBean.setLast(rs.getString("employee.last"));
@@ -263,17 +229,31 @@ public class AccountDAO {
             userDetailBean.setType(rs.getString("employee.type"));
             userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
             userDetailBean.setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
-
+             */
 
             //organizationbean
+            successLoginBean.getOrganization().setOrgName(rs.getString("organization.orgname"));
+            successLoginBean.getOrganization().setCity(rs.getString("organization.city"));
+            successLoginBean.getOrganization().setState(rs.getString("organization.state"));
+            successLoginBean.getOrganization().setOrgId(rs.getLong("organization.id"));
+            successLoginBean.getOrganization().setClientId(rs.getString("organization.clientid"));
+/*
             userDetailBean.setOrgName(rs.getString("organization.orgname"));
             userDetailBean.setCity(rs.getString("organization.city"));
             userDetailBean.setState(rs.getString("organization.state"));
             userDetailBean.setOrgId(rs.getLong("organization.id"));
 
+ */
+
 
             //accountbean
-            userDetailBean.setAccountId(rs.getLong("account.id"));
+            successLoginBean.getAccountBean().setAccountId(rs.getLong("account.id"));
+            successLoginBean.getAccountBean().setOwnerid(rs.getString("account.ownerid"));
+            successLoginBean.getAccountBean().setAccountnickname(rs.getString("account.accountnickname"));
+            successLoginBean.getAccountBean().setCreatedbyid(rs.getString("account.createdbyid"));
+            successLoginBean.getAccountBean().setCurrentbalance(rs.getDouble("account.currentbalance"));
+            successLoginBean.getAccountBean().setLastbalance(rs.getDouble("account.lastbalance"));
+ /*         userDetailBean.setAccountId(rs.getLong("account.id"));
             userDetailBean.setOwnerid(rs.getString("account.ownerid"));
             userDetailBean.setAccountnickname(rs.getString("account.accountnickname"));
 //          userDetailBean.setType(rs.getString("account.type"));
@@ -284,7 +264,8 @@ public class AccountDAO {
             userDetailBean.setLastbalance(rs.getDouble("account.lastbalance"));
             userDetailBean.setMobile2(rs.getString("employee.mobile2"));
             userDetailBean.setClientId(rs.getString("organization.clientid"));
-            return userDetailBean;
+  */
+            return successLoginBean;
         }
     }
 
@@ -387,6 +368,7 @@ public class AccountDAO {
         namedParameterJdbcTemplate.update("update account set accountnickname = :nickname " +
                 "where orgid = :orgId and ownerid = :ownerId",param);
     }
+
     public void updateInitialBalanceField(String ownerId, long orgId, float initialBalance)
     {
         Map<String,Object> param = new HashMap<>();

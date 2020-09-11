@@ -7,6 +7,13 @@ public class SuccessLoginBean {
     private EmployeeBean employeeBean;
     private PermissionBean permissionBean;
 
+    public SuccessLoginBean(){
+        this.organization = new Organization();
+        this.accountBean = new AccountBean();
+        this.employeeBean = new EmployeeBean();
+        this.permissionBean = new PermissionBean();
+    }
+
     public Organization getOrganization() {
         return organization;
     }
