@@ -21,6 +21,7 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
     public void createEmployee(EmployeeBean employeeBean) {
+       employeeDAO.isMobileDuplicate(employeeBean);
        System.out.println("Start CreateEmployee");
        if(employeeBean.getTypeInt()==0) {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);

@@ -364,4 +364,15 @@ public class EmployeeDAO {
         );
         System.out.println("Status " + result);
     }
+
+    public void isMobileDuplicate(EmployeeBean employeeBean){
+            Map<String, Object> params = new HashMap<>();
+            params.put("mobile2",employeeBean.getMobile2());
+            Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where mobile = :mobile2 " +
+                    "or mobile2 = :mobile2",params,Integer.class);
+
+            if(count>0){
+                throw new CustomAppException("This mobile no. is already registered", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
+            }
+    }
 }
