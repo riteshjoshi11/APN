@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+
 @Service
 public class OrganizationHandler {
 
@@ -53,7 +58,17 @@ public class OrganizationHandler {
         return true;
     }
 
-    private String generateClientId() {
-        return "ABC-XXXXX-YYYY-21";
+    public String generateClientId() {
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmssS");
+        LocalDateTime dateTime = LocalDateTime.now();
+        String formattedDateTime = dateTime.format(formatter);
+
+
+        Random rand = new Random();
+        int randomNumber = (rand.nextInt(99999) + 10000);
+        String randomNumberString = Integer.toString(randomNumber);
+        return (formattedDateTime + "-" + randomNumberString);
     }
 }
