@@ -284,4 +284,10 @@ public class AccountingController {
         return expenseDao.getExpenseById(orgId,expenseId);
     }
 
+    @PostMapping(path = "/listEmployeeSalaryAuditPaged", produces = "application/json")
+    public List<EmployeeAuditBean> listEmployeeSalaryAuditPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
+        return employeeAuditDao.listEmployeeSalaryAudit(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
+                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
+    }
+
 }
