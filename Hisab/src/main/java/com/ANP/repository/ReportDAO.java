@@ -375,7 +375,7 @@ public class ReportDAO {
         }
         catch (Exception e)
         {
-            System.out.println("oh no");
+            System.out.println("Some exception has ocurred");
         }
 
     }
@@ -434,7 +434,7 @@ public class ReportDAO {
         }
         catch (Exception e)
         {
-            System.out.println("oh no");
+            System.out.println("Some exception has ocurred");
         }
     }
 
@@ -489,7 +489,7 @@ public class ReportDAO {
         }
         catch (Exception e)
         {
-            System.out.println("oh no");
+            System.out.println("Some exception has ocurred");
         }
     }
 
