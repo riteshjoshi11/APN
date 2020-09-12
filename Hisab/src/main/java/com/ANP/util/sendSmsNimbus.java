@@ -38,7 +38,7 @@ public class sendSmsNimbus implements SendOtp {
 
         final String uri = "http://nimbusit.co.in/api/swsendSingle.asp?username=t1t2ritesh&password=55499174&sender=SMSOTP&sendto=" + mobileno + "&message=" + message;
 
-        System.out.println("URL " + uri);
+        System.out.println("URL for sending sms" + uri);
         System.out.println("RestTemplate " + restTemplate);
         String result = restTemplate.getForObject(uri, String.class);
         System.out.println(result);
