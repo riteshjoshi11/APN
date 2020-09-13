@@ -12,6 +12,9 @@ public class OTPHandler {
     @Autowired
     OTPDAO otpdao;
 
+    @Autowired
+    UserCommunicationHandler userCommunicationHandler;
+
     public boolean sendOTP(String mobile) {
         String otp = generateNumberOTP(6);
         String testModeOTP = System.getProperty("TestModeOTP");
@@ -23,9 +26,11 @@ public class OTPHandler {
         otpBean.setMobileNumber(mobile);
         otpBean.setOtp(otp);
         int dbCreateStatus = otpdao.createOTP(otpBean);
-        if (dbCreateStatus > 1) {
+        //SEND OTP ONLY WHEN PROD ENV (MENAING TESTMODE OTP IS NOT GIVEN
+        if (dbCreateStatus > 1 && ANPUtils.isNullOrEmpty(testModeOTP) ) {
             //SEND SMS
             //IF DB CREATE IS SUCCESSFUL THEN SEND SUCCESS
+            userCommunicationHandler.sendOTP(mobile, "", otp);
         }
         return true;
     }
