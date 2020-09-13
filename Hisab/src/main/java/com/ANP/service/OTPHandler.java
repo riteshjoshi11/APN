@@ -27,8 +27,12 @@ public class OTPHandler {
         otpBean.setOtp(otp);
         int dbCreateStatus = otpdao.createOTP(otpBean);
         //SEND OTP ONLY WHEN PROD ENV (MENAING TESTMODE OTP IS NOT GIVEN
-        if (dbCreateStatus > 1 && ANPUtils.isNullOrEmpty(testModeOTP) ) {
+        if (dbCreateStatus > 0 && ANPUtils.isNullOrEmpty(testModeOTP)) {
             //SEND SMS
+
+            System.out.println("will send SMS");
+            // sendSms.sendSMS(mobile,"Pin for verification"+otp);
+
             //IF DB CREATE IS SUCCESSFUL THEN SEND SUCCESS
             userCommunicationHandler.sendOTP(mobile, "", otp);
         }
