@@ -56,4 +56,21 @@ public class ReportService {
         }
         return reportDAO.createTxnReport(reportBean);
     }
+
+    /*
+     *  Paras complete this code
+     *  in the GSTReportBean consider that you only have - 1. OrgID, 2. For Month
+     *  You need to generate GST report for OrgID and forMonth (In format of "August 2020")
+     *  "August 2020" means 1 Aug 2020 to 31 Aug 2020 (this you need to calculate)
+     *  Generate PDF Files Name using Random Logic (using Date), Update in DB the names of the files for that record (Write a private method here)
+     *  Call you Report DAO methods that you prepared for Report data writing
+     *  In One Excel - provide data of Sale/Purchase and Expense on different sheets (sheet named accordingly)
+     *  While in PDF format - you can do one table after another
+     * Once generated updated the status to generated (ReportBean.reportStatusEnum.GENERATED)
+     * Please update - ReportBean.reportStatusEnum.Error in case of error (do not ignore the errors in the catch blocks - just update the status)
+     *
+     */
+    public void processGSTReport(GSTReportBean gstReportBean) {
+
+    }
 }

@@ -79,7 +79,7 @@ public class ANPUtils implements ANPConstants {
     }
 
     public static String getMonthPart(Date date) {
-        String retStr = (new SimpleDateFormat("MMMM").format(date)).toString();
+        String retStr = (new SimpleDateFormat("MMMM").format(date)).toString() + " " + (new SimpleDateFormat("YYYY").format(date)).toString();
         return retStr ;
     }
 
@@ -95,5 +95,7 @@ public class ANPUtils implements ANPConstants {
         calendar.add(Calendar.DAY_OF_MONTH,1);
         return calendar.getTime();
     }
+
+
 
 }
