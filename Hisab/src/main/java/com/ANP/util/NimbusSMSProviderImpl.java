@@ -29,8 +29,7 @@ public class NimbusSMSProviderImpl implements SMSProvider {
 
     @Override
     public void sendSMS(String mobileno, String message) {
-
-        final String uri = "http://nimbusit.co.in/api/swsendSingle.asp?username=t1t2ritesh&password=55499174&sender=SMSOTP&sendto=" + mobileno + "&message=" + message;
+        final String uri = "http://nimbusit.co.in/api/swsendSingle.asp?username=t1niteshindore&password=43138673&sender=ATZSMS&sendto=" + mobileno + "&message=" + message;
 
         System.out.println("URL for sending sms" + uri);
         System.out.println("RestTemplate " + restTemplate);
