@@ -1,7 +1,6 @@
 package com.ANP.service;
 
 import com.ANP.bean.GSTReportBean;
-import com.ANP.bean.Organization;
 import com.ANP.bean.ReportBean;
 import com.ANP.bean.TransactionReportBean;
 import com.ANP.repository.CommonDAO;
@@ -10,7 +9,6 @@ import com.ANP.repository.SystemConfigurationReaderDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,7 +31,7 @@ public class ReportService {
 
 
     @Autowired
-    CommonDAO commonDAO ;
+    CommonDAO commonDAO;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -41,34 +39,34 @@ public class ReportService {
     public long createGSTReportRecord(GSTReportBean reportBean) {
         //validate
         //create gstreport
-        if(reportBean!=null && ANPConstants.GST_REPORT_CURRENT_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
+        if (reportBean != null && ANPConstants.GST_REPORT_CURRENT_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
             reportBean.setForMonth(ANPUtils.getMonthPart(new Date()));
-        } else if(ANPConstants.GST_REPORT_PREVIOUS_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
+        } else if (ANPConstants.GST_REPORT_PREVIOUS_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
             reportBean.setForMonth(ANPUtils.getMonthPart(ANPUtils.getPreviousMonth()));
         }
-       return reportDAO.createGSTReport(reportBean);
+        return reportDAO.createGSTReport(reportBean);
     }
 
     public long createTxnReportRecord(TransactionReportBean reportBean) {
         //calculate from date and to date in case user has selected from last backup date to now.
         reportBean.setReportStatus(ReportBean.reportStatusEnum.WAITING.toString());
         Date lastBackupDate = null;
-        if( (TransactionReportBean.PeriodOptionsEnum.FROM_LAST_BACKUP.toString()).equalsIgnoreCase(reportBean.getTimePeriod())) {
+        if ((TransactionReportBean.PeriodOptionsEnum.FROM_LAST_BACKUP.toString()).equalsIgnoreCase(reportBean.getTimePeriod())) {
             lastBackupDate = reportDAO.getLastSuccessfulBackupDate(reportBean.getOrgId(), reportBean.getGeneratedByEmployeeId());
-            if(lastBackupDate==null) {
+            if (lastBackupDate == null) {
                 //get the company registration date
                 lastBackupDate = commonDAO.getOrgCreationDate(reportBean.getOrgId());
             }
-            if(lastBackupDate==null) {
-                    throw new CustomAppException("Could not determine last backup date","SERVER.createTxnReportRecord.LASTBACKUPDATE", HttpStatus.EXPECTATION_FAILED);
+            if (lastBackupDate == null) {
+                throw new CustomAppException("Could not determine last backup date", "SERVER.createTxnReportRecord.LASTBACKUPDATE", HttpStatus.EXPECTATION_FAILED);
             }
             reportBean.setFromDate(ANPUtils.addOneDay(lastBackupDate));
             reportBean.setToDate(new Date());
-        } else if(TransactionReportBean.PeriodOptionsEnum.BETWEEN_DATES.toString().equalsIgnoreCase(reportBean.getTimePeriod())) {
-            if(reportBean.getFromDate()==null || reportBean.getToDate()==null) {
-                throw new CustomAppException("From Date or To Date is not set","SERVER.createTxnReportRecord.INVALID_PARAM", HttpStatus.BAD_REQUEST);
-            } else if( (reportBean.getFromDate().compareTo(reportBean.getToDate()) ) > 0 ) {
-                throw new CustomAppException("From Date is greater than ToDate","SERVER.createTxnReportRecord.INVALID_PARAM", HttpStatus.BAD_REQUEST);
+        } else if (TransactionReportBean.PeriodOptionsEnum.BETWEEN_DATES.toString().equalsIgnoreCase(reportBean.getTimePeriod())) {
+            if (reportBean.getFromDate() == null || reportBean.getToDate() == null) {
+                throw new CustomAppException("From Date or To Date is not set", "SERVER.createTxnReportRecord.INVALID_PARAM", HttpStatus.BAD_REQUEST);
+            } else if ((reportBean.getFromDate().compareTo(reportBean.getToDate())) > 0) {
+                throw new CustomAppException("From Date is greater than ToDate", "SERVER.createTxnReportRecord.INVALID_PARAM", HttpStatus.BAD_REQUEST);
             }
         }
         return reportDAO.createTxnReport(reportBean);
@@ -89,100 +87,137 @@ public class ReportService {
      */
     public void processGSTReport(GSTReportBean gstReportBean) {
 
-        if(ANPUtils.isNullOrEmpty(gstReportBean.getForMonth()))
-        {
-            throw new CustomAppException("Date cannot be null", "SERVER.REPORT_HANDLER.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+        try {
+            if (ANPUtils.isNullOrEmpty(gstReportBean.getForMonth())) {
+                throw new CustomAppException("Report could not be generated", "SERVER.REPORT_SERVICE.FORMONTH_NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+            }
+            if (gstReportBean.getReportId() <= 0) {
+                throw new CustomAppException("Report could not be generated", "SERVER.REPORT_SERVICE.REPORTID_INVALID", HttpStatus.EXPECTATION_FAILED);
+            }
+            String monthYearMix = gstReportBean.getForMonth().trim();
+
+            //Fetching year
+            String year = monthYearMix.substring(monthYearMix.length() - 4);
+            //Fetching Month
+            String month = monthYearMix.substring(0, monthYearMix.length() - 5);
+
+
+            //Using map to get start date and last date
+            Map<String, String> dateMap;
+            dateMap = monthNum(month.toUpperCase(), year);
+
+            String startDate = dateMap.get("startDate");
+            String lastDate = dateMap.get("lastDate");
+
+            //Generating excelFileName using date logic.
+            String excelName = generateFileName() + ".xlsx";
+            //Appending excelFileName
+            String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
+
+            try {
+                ANPUtils.createFile(excelPath);
+            } catch (Exception e) {
+                throw new CustomAppException("Report could not be generated", "SERVER.processGSTReport.FilePathIssue", HttpStatus.EXPECTATION_FAILED);
+            }
+
+            gstReportBean.setExcelFilePath(excelPath);
+
+            //Call method to generate the GST Report
+            reportDAO.generateGSTReport(gstReportBean, startDate, lastDate);
+            gstReportBean.setReportStatus(ReportBean.reportStatusEnum.GENERATED.toString());
+            //Updating status in p_gst_table
+            reportDAO.updateP_ReportGST(gstReportBean);
+        } catch(Exception e) {
+            gstReportBean.setReportStatus(ReportBean.reportStatusEnum.ERROR.toString());
+            //not throwing error as it is not being used by UI
+            //Updating status in p_gst_table
+            reportDAO.updateP_ReportGST(gstReportBean);
         }
-        if(gstReportBean.getReportId()<=0)
-        {
-            throw new CustomAppException("Report Id cannot be 0", "SERVER.REPORT_HANDLER.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
-        }
-        String monthYearMix = gstReportBean.getForMonth().trim();
 
-        //Fetching year
-        String year = monthYearMix.substring(monthYearMix.length()-4);
-        //Fetching Month
-        String month = monthYearMix.substring(0,monthYearMix.length()-5);
-
-
-        //Using map to get start date and last date
-        Map<String,String> dateMap;
-        dateMap = monthNum(month.toUpperCase(),year);
-
-        String startDate = dateMap.get("startDate");
-        String lastDate = dateMap.get("lastDate");
-
-        //Generating excelFileName using date logic.
-        String excelName = generateEXCELName();
-        Map<String,String> systemConfigMap ;
-        systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
-        //Appending excelFileName
-        String excelPath = systemConfigMap.get("REPORT.PATH") + excelName;
-        gstReportBean.setExcelFilePath(excelPath);
-
-        //Updating status in p_gst_table
-        updateP_ReportGST(gstReportBean);
-        System.out.println("WE are here1");
-        reportDAO.coreLogicReportGeneration(gstReportBean,startDate,lastDate);
     }
 
-    public  void updateP_ReportGST(GSTReportBean gstReportBean) {
 
-        reportDAO.updateP_ReportGST(gstReportBean);
-
-    }
-
-
-    public Map<String, String> monthNum(String month, String year){
-        Map<String,String> dateMap= new HashMap<>();
+    private Map<String, String> monthNum(String month, String year) {
+        Map<String, String> dateMap = new HashMap<>();
         String startDate = null;
         String lastDate = null;
-        switch(month)
-        {
-           case "JANUARY": startDate = year+"-01-01"; lastDate = year+"-01-31"; break;
-           case "FEBRUARY": startDate = year+"-02-01"; lastDate = year+"-02-28"; break;
-           case "MARCH": startDate = year+"-03-01"; lastDate = year+"-03-31"; break;
-           case "APRIL": startDate = year+"-04-01"; lastDate = year+"-04-30"; break;
-           case "MAY": startDate = year+"-05-01"; lastDate = year+"-05-31"; break;
-           case "JUNE": startDate = year+"-06-01"; lastDate = year+"-06-30"; break;
-           case "JULY": startDate = year+"-07-01"; lastDate = year+"-07-31"; break;
-           case "AUGUST": startDate = year+"-08-01"; lastDate = year+"-08-31"; break;
-           case "SEPTEMBER": startDate = year+"-09-01"; lastDate = year+"-09-30"; break;
-           case "OCTOBER": startDate = year+"-10-01"; lastDate = year+"-10-31"; break;
-           case "NOVEMBER": startDate = year+"-11-01"; lastDate = year+"-11-30"; break;
-           case "DECEMBER": startDate = year+"-12-01"; lastDate = year+"-12-31"; break;
+        switch (month) {
+            case "JANUARY":
+                startDate = year + "-01-01";
+                lastDate = year + "-01-31";
+                break;
+            case "FEBRUARY":
+                startDate = year + "-02-01";
+                lastDate = year + "-02-28";
+                break;
+            case "MARCH":
+                startDate = year + "-03-01";
+                lastDate = year + "-03-31";
+                break;
+            case "APRIL":
+                startDate = year + "-04-01";
+                lastDate = year + "-04-30";
+                break;
+            case "MAY":
+                startDate = year + "-05-01";
+                lastDate = year + "-05-31";
+                break;
+            case "JUNE":
+                startDate = year + "-06-01";
+                lastDate = year + "-06-30";
+                break;
+            case "JULY":
+                startDate = year + "-07-01";
+                lastDate = year + "-07-31";
+                break;
+            case "AUGUST":
+                startDate = year + "-08-01";
+                lastDate = year + "-08-31";
+                break;
+            case "SEPTEMBER":
+                startDate = year + "-09-01";
+                lastDate = year + "-09-30";
+                break;
+            case "OCTOBER":
+                startDate = year + "-10-01";
+                lastDate = year + "-10-31";
+                break;
+            case "NOVEMBER":
+                startDate = year + "-11-01";
+                lastDate = year + "-11-30";
+                break;
+            case "DECEMBER":
+                startDate = year + "-12-01";
+                lastDate = year + "-12-31";
+                break;
         }
 
         //FOR LEAP YEAR
         int year1 = Integer.parseInt(year);
-        if(month.equalsIgnoreCase("FEBRUARY")) {
+        if (month.equalsIgnoreCase("FEBRUARY")) {
             if (year1 % 4 == 0) {
                 lastDate = year + "-02-29";
             }
         }
 
-        if(ANPUtils.isNullOrEmpty(startDate)||ANPUtils.isNullOrEmpty(lastDate))
-        {
+        if (ANPUtils.isNullOrEmpty(startDate) || ANPUtils.isNullOrEmpty(lastDate)) {
             throw new CustomAppException("Date is not in correct format", "SERVER.REPORT_HANDLER.WRONGFORMAT", HttpStatus.EXPECTATION_FAILED);
         }
 
-        dateMap.put("startDate",startDate);
-        dateMap.put("lastDate",lastDate);
+        dateMap.put("startDate", startDate);
+        dateMap.put("lastDate", lastDate);
         return dateMap;
-        }
+    }
 
-    public String generateEXCELName() {
+    private String generateFileName() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmssS");
         LocalDateTime dateTime = LocalDateTime.now();
         String formattedDateTime = dateTime.format(formatter);
 
-
         Random rand = new Random();
         int randomNumber = (rand.nextInt(89999) + 10000);
         String randomNumberString = Integer.toString(randomNumber);
-        return (formattedDateTime + "-" + randomNumberString+".xlsx");
-
-
+        return (formattedDateTime + "-" + randomNumberString );
     }
 
 }

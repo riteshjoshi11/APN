@@ -286,8 +286,9 @@ public class ReportDAO {
             }
         });
     }
+
     /*
-    * The create transaction report
+     * The create transaction report
      */
     public long createTxnReport(TransactionReportBean reportBean) {
         KeyHolder holder = new GeneratedKeyHolder();
@@ -314,6 +315,7 @@ public class ReportDAO {
                 ps.setString(1, email);
                 ps.setLong(2, reportBean.getReportId());
             }
+
             @Override
             public int getBatchSize() {
                 return (reportBean.getToEmailList()).size();
@@ -321,7 +323,7 @@ public class ReportDAO {
         });
     }
 
-    public void coreLogicReportGeneration(GSTReportBean gstReportBean, String dateFrom, String dateTo) {
+    public void generateGSTReport(GSTReportBean gstReportBean, String dateFrom, String dateTo) {
 
         List<SearchParam> searchParamList = new ArrayList<>();
         SearchParam searchParam = new SearchParam();
@@ -343,7 +345,8 @@ public class ReportDAO {
         searchParamList.add(searchParam1);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-        try{
+        FileOutputStream out = null;
+        try {
             XSSFSheet sheet = workbook.createSheet("Expense");
             Row row = sheet.createRow(0);
             row.createCell(0).setCellValue("Bill Date");
@@ -362,7 +365,8 @@ public class ReportDAO {
                     " exp.igst, exp.sgst, exp.extra, exp.totalamount, exp.topartyname," +
                     "   exp.topartygstno from generalexpense exp " +
                     " where exp.orgid = :orgId and exp.includeinreport " +
-                    "= true and (exp.isdeleted is null or exp.isdeleted <> true) " + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
+                    "= true and (exp.isdeleted is null or exp.isdeleted <> true) "
+                    + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
                 public String extractData(ResultSet rs) throws SQLException {
                     while (rs.next()) {
                         int rowNum = sheet.getLastRowNum();
@@ -383,7 +387,7 @@ public class ReportDAO {
 
 
                     // This return is useless, using it because method wont allow us to return void
-                    return "hello";
+                    return "";
                 }
             });
 
@@ -427,7 +431,7 @@ public class ReportDAO {
 
 
                     // This return is useless, using it because method wont allow us to return void
-                    return "hello";
+                    return "";
                 }
             });
 
@@ -471,33 +475,49 @@ public class ReportDAO {
 
 
                     // This return is useless, using it because method wont allow us to return void
-                    return "hello";
+                    return "";
                 }
             });
-        }catch(Exception e){
-            throw new CustomAppException("SomeException has occured", "SERVER.Report_Logic.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
-        }
-        finally {
-            try (FileOutputStream out = new FileOutputStream(gstReportBean.getExcelFilePath())) {
-                workbook.write(out);
-                workbook.close();
-            } catch (FileNotFoundException fileNotFoundException) {
-                throw new CustomAppException("File was not found", "SERVER.Report_Logic.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+
+            out = new FileOutputStream(gstReportBean.getExcelFilePath());
+            workbook.write(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomAppException("Report cannot be generated", "SERVER.GENERATE_GST_REPORT.REPORT_GEN_ISSUE", HttpStatus.EXPECTATION_FAILED);
+        } finally {
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                }
             }
-            catch (IOException ioException) {
-                throw new CustomAppException("could'nt write into file", "SERVER.Report_Logic.NOTAVAILABLE", HttpStatus.EXPECTATION_FAILED);
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (Exception e) {
+                }
             }
         }
     }
 
-    public void updateP_ReportGST(GSTReportBean gstReportBean){
-        Map<String,Object> param = new HashMap<>();
-        param.put("orgId", gstReportBean.getOrgId());
+
+    /*
+     * This method updates the Report Status and Excel File Path
+     *
+     */
+    public void updateP_ReportGST(GSTReportBean gstReportBean) {
+        Map<String, Object> param = new HashMap<>();
+
         param.put("excelFilePath", gstReportBean.getExcelFilePath());
-        param.put("forMonth",gstReportBean.getForMonth());
+        param.put("reportstatus", gstReportBean.getReportStatus());
         param.put("reportid", gstReportBean.getReportId());
-        namedParameterJdbcTemplate.update("update p_gst_reports set orgid = :orgId, excelfilepath = :excelFilePath" +
-                " , formonth =:forMonth where id = :reportid",param);
+        param.put("orgId", gstReportBean.getOrgId());
+
+        //Updating ReportStatus and Excel File Path
+        namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus=:reportStatus,excelfilepath = :excelFilePath" +
+                " where id = :reportid and  orgid = :orgId,", param);
+
     }
 }
 

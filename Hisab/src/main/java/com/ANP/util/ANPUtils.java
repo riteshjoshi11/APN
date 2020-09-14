@@ -2,6 +2,7 @@ package com.ANP.util;
 
 import com.ANP.bean.SearchParam;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -96,6 +97,9 @@ public class ANPUtils implements ANPConstants {
         return calendar.getTime();
     }
 
+    public static void createFile(String absoluteFilePath) throws Exception {
+        new File(absoluteFilePath).createNewFile();
+    }
 
 
 }
