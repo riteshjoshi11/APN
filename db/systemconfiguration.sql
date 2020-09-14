@@ -13,3 +13,4 @@ insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROW
 insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.AUTOMATICDELETEONNUMBEROFTRANSACTION','200');
 insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.PREMIUMDELETEDAYS','500');
 insert into `systemconfigurations`(`key`,`value`) values ('CONTROL.ORG.DATA.GROWTH.PREMIUMCDELETEONNUMBEROFTRANSACTION','800');
+insert into `systemconfigurations`(`key`,`value`) values('REPORT.PATH','F:/');
