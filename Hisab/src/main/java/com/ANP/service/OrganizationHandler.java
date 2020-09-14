@@ -67,7 +67,7 @@ public class OrganizationHandler {
 
 
         Random rand = new Random();
-        int randomNumber = (rand.nextInt(99999) + 10000);
+        int randomNumber = (rand.nextInt(89999) + 10000);
         String randomNumberString = Integer.toString(randomNumber);
         return (formattedDateTime + "-" + randomNumberString);
     }
