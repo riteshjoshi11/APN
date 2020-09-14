@@ -21,7 +21,7 @@ public class UserCommunicationHandler {
 
     public void sendOTP(String mobile, String email, String otp) {
         //toto write a methord to get Message based on user preference
-        String message = "one time verification code " + otp;
+        String message = "OTP for accessing Business Setu is:" + otp + " Please do not disclose it to anyone else";
         smsProvider.sendSMS(mobile, message);
     }
 }
