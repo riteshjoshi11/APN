@@ -123,6 +123,7 @@ public class ReportService {
             gstReportBean.setExcelFilePath(excelPath);
 
             //Call method to generate the GST Report
+            gstReportBean.setReportStatus(ReportBean.reportStatusEnum.PROCESSING.toString());
             reportDAO.generateGSTReport(gstReportBean, startDate, lastDate);
             gstReportBean.setReportStatus(ReportBean.reportStatusEnum.GENERATED.toString());
             //Updating status in p_gst_table
@@ -221,5 +222,4 @@ public class ReportService {
     }
 
 }
-
 

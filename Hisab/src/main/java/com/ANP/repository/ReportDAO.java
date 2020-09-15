@@ -515,8 +515,8 @@ public class ReportDAO {
         param.put("orgId", gstReportBean.getOrgId());
 
         //Updating ReportStatus and Excel File Path
-        namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus=:reportStatus,excelfilepath = :excelFilePath" +
-                " where id = :reportid and  orgid = :orgId,", param);
+        namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus = :reportstatus , excelfilepath = :excelFilePath" +
+                " where id = :reportid and  orgid = :orgId", param);
 
     }
 }
