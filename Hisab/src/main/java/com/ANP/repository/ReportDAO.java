@@ -42,6 +42,9 @@ public class ReportDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Autowired
+    SystemConfigurationReaderDAO systemConfigurationReaderDAO;
+
     /*
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
@@ -518,6 +521,53 @@ public class ReportDAO {
         namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus = :reportstatus , excelfilepath = :excelFilePath" +
                 " where id = :reportid and  orgid = :orgId", param);
 
+    }
+
+
+    public void canCreateMoreGSTReports(GSTReportBean gstReportBean){
+        Map<String, Object> param = new HashMap<>();
+        param.put("orgid", gstReportBean.getOrgId());
+        param.put("formonth",gstReportBean.getForMonth());
+        Integer countProcessing = namedParameterJdbcTemplate.queryForObject("select count(*) from p_gst_reports " +
+                " where orgid = :orgid and (reportstatus = '"+ReportBean.reportStatusEnum.PROCESSING.toString()+
+                "' or reportstatus =   '"+ReportBean.reportStatusEnum.WAITING.toString()+"')",param, Integer.class);
+
+
+
+        if(countProcessing > 0)
+        {
+           throw new CustomAppException("Error: You cannot generate more reports, either cancel previous requests" +
+                   " or wait for the them to be generated"
+                   ,"SERVER.Can_Create_More_GST_Reports.ALREADYGENERATING", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        Integer countGenerated = namedParameterJdbcTemplate.queryForObject("select count(*) from p_gst_reports "+
+                "where orgid = :orgid and reportstatus = '"+ReportBean.reportStatusEnum.GENERATED.toString()+
+                "' and forMonth = :formonth",param,
+                Integer.class);
+        System.out.println(countGenerated);
+        System.out.println(countProcessing);
+        Map<String,String> systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
+        String maxNoOfReportsInAMonthInString = systemConfigMap.get("REPORT.MAX.REPORTS.FOR.ONE.MONTH");
+        int maxNoOfReportsInAMonth;
+        try {
+            maxNoOfReportsInAMonth = Integer.parseInt(maxNoOfReportsInAMonthInString);
+        }
+        catch(Exception e)
+        {
+            throw new CustomAppException("Max Number Of Reports in a month are invalid","SERVER.CONTROLORGDATA_SYSTEM_CONFIG.INVALIDVALUE", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if (maxNoOfReportsInAMonth <= 0)
+        {
+            maxNoOfReportsInAMonth = 3;
+        }
+
+        if(countGenerated >= maxNoOfReportsInAMonth)
+        {
+            throw new CustomAppException("Error: You have reached the reports generation limit for the given month"
+                    ,"SERVER.Can_Create_More_GST_Reports.LIMITREACHED", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 }
 

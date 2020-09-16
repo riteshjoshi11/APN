@@ -38,6 +38,7 @@ public class ReportService {
 
     public long createGSTReportRecord(GSTReportBean reportBean) {
         //validate
+        reportDAO.canCreateMoreGSTReports(reportBean);
         //create gstreport
         if (reportBean != null && ANPConstants.GST_REPORT_CURRENT_MONTH.equalsIgnoreCase(reportBean.getForMonth())) {
             reportBean.setForMonth(ANPUtils.getMonthPart(new Date()));
