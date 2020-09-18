@@ -831,8 +831,9 @@ public class ReportDAO {
                         row7.createCell(0).setCellValue(rs.getString("emp.first"));
                         row7.createCell(1).setCellValue(rs.getString("emp.last"));
                         row7.createCell(2).setCellValue(rs.getString("emp.mobile"));
-                        row7.createCell(3).setCellValue(debit);
-                        row7.createCell(4).setCellValue(credit);
+                        row7.createCell(3).setCellValue(rs.getString("emp.currentsalarybalance"));
+                        row7.createCell(4).setCellValue(debit);
+                        row7.createCell(5).setCellValue(credit);
                     }
                     System.out.println("WE are here 1");
                     // This return is useless, using it because method wont allow us to return void
