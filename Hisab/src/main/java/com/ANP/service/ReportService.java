@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -222,5 +223,13 @@ public class ReportService {
         return (formattedDateTime + "-" + randomNumberString );
     }
 
+    public void backupReportGeneration(long orgId, String format, String dateFrom , String dateTo) {
+        String excelName = generateFileName() + ".xlsx";
+        String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
+
+        reportDAO.backupReportGeneration(orgId,dateFrom,dateTo,excelPath);
+
+
+    }
 }
 

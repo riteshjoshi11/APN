@@ -27,6 +27,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
+import java.lang.reflect.Parameter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +46,29 @@ public class ReportDAO {
     @Autowired
     SystemConfigurationReaderDAO systemConfigurationReaderDAO;
 
+    @Autowired
+    CustomerInvoiceDAO customerInvoiceDAO;
+
+    @Autowired
+    ExpenseDAO expenseDAO;
+
+    @Autowired
+    PurchaseFromVendorDAO purchaseFromVendorDAO;
+
+    @Autowired
+    PayToVendorDAO payToVendorDAO;
+
+    @Autowired
+    InternalTransferDAO internalTransferDAO;
+
+    @Autowired
+    RetailSaleDAO retailSaleDAO;
+
+    @Autowired
+    PaymentReceivedDAO paymentReceivedDAO;
+
+    @Autowired
+    EmployeeDAO employeeDAO;
     /*
      * This method will take fullFilePath as parameter return the pdf
      * orgId and loggedInEmployeeId is used in future
@@ -569,5 +593,323 @@ public class ReportDAO {
                     ,"SERVER.Can_Create_More_GST_Reports.LIMITREACHED", HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    public void backupReportGeneration(long orgID, String dateFrom , String dateTo ,String filePath) {
+
+        List<SearchParam> searchParamList = new ArrayList<>();
+        SearchParam searchParam = new SearchParam();
+        searchParam.setCondition("and");
+        searchParam.setFieldName("date");
+        searchParam.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam.setSoperator(">");
+        searchParam.setValue(dateFrom);
+
+        SearchParam searchParam1 = new SearchParam();
+        searchParam1.setCondition("and");
+        searchParam1.setFieldName("date");
+        searchParam1.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParam1.setSoperator("<");
+        searchParam1.setValue(dateTo);
+
+        List<SearchParam> searchParamListRcvDate = new ArrayList<>();
+        SearchParam searchParamRcvDate = new SearchParam();
+        searchParamRcvDate.setCondition("and");
+        searchParamRcvDate.setFieldName("rcvddate");
+        searchParamRcvDate.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParamRcvDate.setSoperator(">");
+        searchParamRcvDate.setValue(dateFrom);
+
+        SearchParam searchParamRcvDate1 = new SearchParam();
+        searchParamRcvDate1.setCondition("and");
+        searchParamRcvDate1.setFieldName("rcvddate");
+        searchParamRcvDate1.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        searchParamRcvDate1.setSoperator("<");
+        searchParamRcvDate1.setValue(dateTo);
+
+        searchParamListRcvDate.add(searchParamRcvDate);
+        searchParamListRcvDate.add(searchParamRcvDate1);
+
+        searchParamList.add(searchParam);
+        searchParamList.add(searchParam1);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        FileOutputStream out = null;
+
+        String orderBy = "date desc";
+        List<CustomerInvoiceBean> listSales =  customerInvoiceDAO.listSalesPaged(orgID,searchParamList,orderBy,500,1);
+        List<PurchaseFromVendorBean> purchaseFromVendorBeanList = purchaseFromVendorDAO.listPurchasesPaged(orgID,searchParamList,orderBy,500,1);
+        List<Expense> expenseList = expenseDAO.listExpensesPaged(orgID,searchParamList,orderBy,500,1);
+        List<InternalTransferBean> internalTransferBeanList = internalTransferDAO.listInternalTransfer(orgID,searchParamListRcvDate,"rcvddate desc",500,1);
+        List<RetailSale> retailSaleList = retailSaleDAO.listRetailEntryPaged(orgID,searchParamList,orderBy,500,1);
+        List<PayToVendorBean> payToVendorBeanList = payToVendorDAO.listPayToVendorPaged(orgID,searchParamList,orderBy,500,1);
+        List<PaymentReceivedBean> paymentReceivedBeanList = paymentReceivedDAO.listPaymentReceivedPaged(orgID,searchParamListRcvDate,"rcvddate desc",500,1);
+        try {
+            XSSFSheet sheet = workbook.createSheet("Sales");
+            Row row = sheet.createRow(0);
+            row.createCell(0).setCellValue("Transaction Date");
+            row.createCell(1).setCellValue("Order Amount");
+            row.createCell(2).setCellValue("Total Amount");
+            row.createCell(3).setCellValue("Invoice No.");
+            row.createCell(4).setCellValue("CGST");
+            row.createCell(5).setCellValue("SGST");
+            row.createCell(6).setCellValue("IGST");
+
+            for(CustomerInvoiceBean customerInvoiceBean : listSales)
+            {
+                int rowNum = sheet.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row = sheet.createRow(rowNum);
+                row.createCell(0).setCellValue(customerInvoiceBean.getDate());
+                row.createCell(1).setCellValue(customerInvoiceBean.getOrderAmount());
+                row.createCell(2).setCellValue(customerInvoiceBean.getTotalAmount());
+                row.createCell(3).setCellValue(customerInvoiceBean.getInvoiceNo());
+                row.createCell(4).setCellValue(customerInvoiceBean.getCGST());
+                row.createCell(5).setCellValue(customerInvoiceBean.getSGST());
+                row.createCell(6).setCellValue(customerInvoiceBean.getIGST());
+            }
+            XSSFSheet sheet1 = workbook.createSheet("Purchase");
+            Row row1 = sheet1.createRow(0);
+            row1.createCell(0).setCellValue("Transaction Date");
+            row1.createCell(1).setCellValue("Order Amount");
+            row1.createCell(2).setCellValue("CGST");
+            row1.createCell(3).setCellValue("SGST");
+            row1.createCell(4).setCellValue("IGST");
+            row1.createCell(5).setCellValue("Total Amount");
+            row1.createCell(6).setCellValue("Bill no.");
+
+            for(PurchaseFromVendorBean purchaseFromVendorBean : purchaseFromVendorBeanList)
+            {
+                int rowNum = sheet1.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row1 = sheet1.createRow(rowNum);
+                row1.createCell(0).setCellValue(purchaseFromVendorBean.getDate());
+                row1.createCell(1).setCellValue(purchaseFromVendorBean.getOrderAmount());
+                row1.createCell(2).setCellValue(purchaseFromVendorBean.getCGST());
+                row1.createCell(3).setCellValue(purchaseFromVendorBean.getSGST());
+                row1.createCell(4).setCellValue(purchaseFromVendorBean.getIGST());
+                row1.createCell(5).setCellValue(purchaseFromVendorBean.getTotalAmount());
+                row1.createCell(6).setCellValue(purchaseFromVendorBean.getBillNo());
+            }
+
+            XSSFSheet sheet2 = workbook.createSheet("Expense");
+            Row row2 = sheet2.createRow(0);
+            row2.createCell(0).setCellValue("Transaction Date");
+            row2.createCell(1).setCellValue("To Party Name");
+            row2.createCell(2).setCellValue("Order Amount");
+            row2.createCell(3).setCellValue("CGST");
+            row2.createCell(4).setCellValue("SGST");
+            row2.createCell(5).setCellValue("IGST");
+            row2.createCell(6).setCellValue("To Party GST No.");
+            row2.createCell(7).setCellValue("To Party Mobile No.");
+            row2.createCell(8).setCellValue("Total Amount");
+
+            for(Expense expense : expenseList)
+            {
+                int rowNum = sheet2.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row2 = sheet2.createRow(rowNum);
+                row2.createCell(0).setCellValue(expense.getDate());
+                row2.createCell(1).setCellValue(expense.getToPartyName());
+                row2.createCell(2).setCellValue(expense.getOrderAmount());
+                row2.createCell(3).setCellValue(expense.getCGST());
+                row2.createCell(4).setCellValue(expense.getSGST());
+                row2.createCell(5).setCellValue(expense.getIGST());
+                row2.createCell(6).setCellValue(expense.getToPartyGSTNO());
+                row2.createCell(7).setCellValue(expense.getToPartyMobileNO());
+                row2.createCell(8).setCellValue(expense.getTotalAmount());
+            }
+
+            XSSFSheet sheet3 = workbook.createSheet("Internal Transfer");
+            Row row3 = sheet3.createRow(0);
+            row3.createCell(0).setCellValue("Received Date");
+            row3.createCell(1).setCellValue("Amount");
+            row3.createCell(2).setCellValue("Details");
+
+            for(InternalTransferBean internalTransferBean : internalTransferBeanList)
+            {
+                int rowNum = sheet3.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row3 = sheet3.createRow(rowNum);
+                row3.createCell(0).setCellValue(internalTransferBean.getReceivedDate());
+                row3.createCell(1).setCellValue(internalTransferBean.getAmount());
+                row3.createCell(2).setCellValue(internalTransferBean.getDetails());
+            }
+
+            XSSFSheet sheet4 = workbook.createSheet("Retail Sale");
+            Row row4 = sheet4.createRow(0);
+            row4.createCell(0).setCellValue("Transaction Date");
+            row4.createCell(1).setCellValue("Amount");
+            row4.createCell(2).setCellValue("Notes");
+
+            for(RetailSale retailSale : retailSaleList)
+            {
+                int rowNum = sheet4.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row4 = sheet4.createRow(rowNum);
+                row4.createCell(0).setCellValue(retailSale.getDate());
+                row4.createCell(1).setCellValue(retailSale.getAmount());
+                row4.createCell(2).setCellValue(retailSale.getNotes());
+            }
+
+            XSSFSheet sheet5 = workbook.createSheet("Pay To Vendor");
+            Row row5 = sheet5.createRow(0);
+            row5.createCell(0).setCellValue("Transaction Date");
+            row5.createCell(1).setCellValue("Amount");
+            row5.createCell(2).setCellValue("Details");
+
+            for(PayToVendorBean payToVendorBean : payToVendorBeanList)
+            {
+                int rowNum = sheet5.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row5 = sheet5.createRow(rowNum);
+                row5.createCell(0).setCellValue(payToVendorBean.getPaymentDate());
+                row5.createCell(1).setCellValue(payToVendorBean.getAmount());
+                row5.createCell(2).setCellValue(payToVendorBean.getDetails());
+            }
+
+            XSSFSheet sheet6 = workbook.createSheet("Payment Received");
+            Row row6 = sheet6.createRow(0);
+            row6.createCell(0).setCellValue("Transaction Date");
+            row6.createCell(1).setCellValue("Amount");
+            row6.createCell(2).setCellValue("Details");
+            row6.createCell(3).setCellValue("Payment Type");
+
+            for(PaymentReceivedBean paymentReceivedBean : paymentReceivedBeanList)
+            {
+                int rowNum = sheet6.getLastRowNum();
+                System.out.println("rownumber is" + rowNum);
+                rowNum++;
+                row6 = sheet6.createRow(rowNum);
+                row6.createCell(0).setCellValue(paymentReceivedBean.getReceivedDate());
+                row6.createCell(1).setCellValue(paymentReceivedBean.getAmount());
+                row6.createCell(2).setCellValue(paymentReceivedBean.getDetails());
+                row6.createCell(3).setCellValue(paymentReceivedBean.getPaymentType());
+            }
+            Map<String,Object> param = new HashMap<>();
+            param.put("orgid",orgID);
+
+            XSSFSheet sheet7 = workbook.createSheet("Employee With Their Balances");
+            Row row7 = sheet7.createRow(0);
+
+
+
+            System.out.println("WE are here 1");
+            row7.createCell(0).setCellValue("First Name");
+            row7.createCell(1).setCellValue("Last Name");
+            row7.createCell(2).setCellValue("Mobile");
+            row7.createCell(3).setCellValue("Salary Balance");
+            row7.createCell(4).setCellValue("Current Balance Debit");
+            row7.createCell(5).setCellValue("Current Balance Credit");
+
+            namedParameterJdbcTemplate.query("select emp.first, emp.last, emp.mobile, emp.currentsalarybalance" +
+                    ", acc.currentbalance from employee emp, account acc where emp.id = acc.ownerid and emp.orgid = :orgid and " +
+                    "acc.type = 'EMPLOYEE' " , param, new ResultSetExtractor<String>() {
+                public String extractData(ResultSet rs) throws SQLException {
+                    while (rs.next()) {
+                        int rowNum = sheet7.getLastRowNum();
+                        System.out.println("rownumber is" + rowNum);
+                        rowNum++;
+                        Row row7 = sheet7.createRow(rowNum);
+
+                        double credit = 0;
+                        double debit = 0;
+                        double currentBalance = rs.getDouble("acc.currentbalance");
+                        if(currentBalance<0) {
+                            debit = (currentBalance * (-1));
+                            credit = 0;
+                        } else {
+                            debit = 0;
+                            credit = currentBalance;
+                        }
+                        System.out.println("WE are here 1");
+                        row7.createCell(0).setCellValue(rs.getString("emp.first"));
+                        row7.createCell(1).setCellValue(rs.getString("emp.last"));
+                        row7.createCell(2).setCellValue(rs.getString("emp.mobile"));
+                        row7.createCell(3).setCellValue(debit);
+                        row7.createCell(4).setCellValue(credit);
+                    }
+                    System.out.println("WE are here 1");
+                    // This return is useless, using it because method wont allow us to return void
+                    return "";
+                }
+            });
+
+            XSSFSheet sheet8 = workbook.createSheet("Customers With Their Balances");
+            Row row8 = sheet8.createRow(0);
+            System.out.println("WE are here 2");
+            row8.createCell(0).setCellValue("Name/Firmname");
+            row8.createCell(1).setCellValue("Mobile1");
+            row8.createCell(2).setCellValue("Mobile2");
+            row8.createCell(3).setCellValue("Current Balance Debit");
+            row8.createCell(4).setCellValue("Current Balance Credit");
+
+            namedParameterJdbcTemplate.query("select cus.name, cus.firmname, cus.mobile1, cus.mobile2" +
+                    ", acc.currentbalance from customer cus, account acc where cus.id = acc.ownerid and cus.orgid = :orgid and " +
+                    "acc.type = 'CUSTOMER' ", param, new ResultSetExtractor<String>() {
+                public String extractData(ResultSet rs) throws SQLException {
+                    while (rs.next()) {
+                        int rowNum = sheet8.getLastRowNum();
+
+                        rowNum++;
+                        Row row = sheet8.createRow(rowNum);
+
+                        String nameOrFirmName = rs.getString("cus.name");
+                        if(ANPUtils.isNullOrEmpty(nameOrFirmName)) {
+                            nameOrFirmName = rs.getString("cus.firmname");
+                        }
+                        System.out.println("WE are here 2");
+                        double credit = 0;
+                        double debit = 0;
+                        double currentBalance = rs.getDouble("acc.currentbalance");
+                        if(currentBalance<0) {
+                            debit = (currentBalance * (-1));
+                            credit = 0;
+                        } else {
+                            debit = 0;
+                            credit = currentBalance;
+                        }
+                        System.out.println("WE are here 2");
+                        row.createCell(0).setCellValue(nameOrFirmName);
+                        row.createCell(1).setCellValue(rs.getString("cus.mobile1"));
+                        row.createCell(2).setCellValue(rs.getString("cus.mobile2"));
+                        row.createCell(3).setCellValue(debit);
+                        row.createCell(4).setCellValue(credit);
+                    }
+                    // This return is useless, using it because method wont allow us to return void
+                    System.out.println("WE are here 2");
+                    return "";
+                }
+            });
+
+
+            out = new FileOutputStream(filePath);
+            workbook.write(out);
+    } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomAppException("Report cannot be generated", "SERVER.GENERATE_GST_REPORT.REPORT_GEN_ISSUE", HttpStatus.EXPECTATION_FAILED);
+        }   finally {
+
+        if (out != null) {
+            try {
+                out.close();
+            } catch (Exception e) {
+            }
+        }
+        if (workbook != null) {
+            try {
+                workbook.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+    }
+
+
 }
 
