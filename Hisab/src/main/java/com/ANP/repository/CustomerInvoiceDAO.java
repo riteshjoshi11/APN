@@ -195,6 +195,7 @@ public class CustomerInvoiceDAO {
      */
     public int updateSales(CustomerInvoiceBean customerInvoiceBean){
         return namedParameterJdbcTemplate.update("update customerinvoice set cgst = :CGST," +
-                                "sgst=:SGST, igst=:IGST, note = :note where orgid = :orgId and id = :invoiceID",new BeanPropertySqlParameterSource(customerInvoiceBean));
+                 " sgst=:SGST, igst=:IGST, note = :note,date=:date,invoiceno=invoiceNo, orderamount=:orderAmount " +
+                "where orgid = :orgId and id = :invoiceID",new BeanPropertySqlParameterSource(customerInvoiceBean));
     }
 }
