@@ -11,6 +11,7 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     private String fromEmployeeId;
     private long salaryPaymentID;
     private String toEmployeeName;
+    private String fromEmployeeName;
     private EmployeeBean toEmployeeBean;
     private EmployeeBean fromEmployeeBean;
     private boolean createSalaryDueAlso=false;
@@ -18,6 +19,15 @@ public class EmployeeSalaryPayment extends CommonAttribute {
     public EmployeeSalaryPayment() {
         this.toEmployeeBean=new EmployeeBean();
         this.fromEmployeeBean=new EmployeeBean();
+    }
+
+
+    public String getFromEmployeeName() {
+        return fromEmployeeName;
+    }
+
+    public void setFromEmployeeName(String fromEmployeeName) {
+        this.fromEmployeeName = fromEmployeeName;
     }
 
     public String getToEmployeeName() {

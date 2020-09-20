@@ -57,36 +57,6 @@ public class AccountDAO {
             return;
         }
         updateInitialBalance(accountBean);
-/*
-        if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
-            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
-            customerAuditBean.setOrgId(accountBean.getOrgId());
-            customerAuditBean.setCustomerid(accountBean.getOwnerid());
-            customerAuditBean.setAccountid(generatedAccKey);
-            customerAuditBean.setAmount(accountBean.getCurrentbalance());
-            customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
-            customerAuditBean.setTransactionDate(new Date());
-            this.updateCustomerAccountBalance(customerAuditBean);
-
-        } else if(ANPConstants.LOGIN_TYPE_EMPLOYEE.equalsIgnoreCase(accountBean.getType())) {
-            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
-            employeeAuditBean.setOrgId(accountBean.getOrgId());
-            employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
-            employeeAuditBean.setAccountid(generatedAccKey);
-            employeeAuditBean.setAmount(accountBean.getCurrentbalance());
-            employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOtherPartyName("-");
-            employeeAuditBean.setTransactionDate(new Date());
-            this.updateEmployeeAccountBalance(employeeAuditBean);
-        } else {
-            throw new CustomAppException("Account Creation Login type is invalid","SERVER.ACCOUNT_CREATE.LOGIN_TYPE_INVALID", HttpStatus.EXPECTATION_FAILED);
-        }
-
- */
     }
 
     public void updateInitialBalance(AccountBean accountBean) {
@@ -98,7 +68,7 @@ public class AccountDAO {
             customerAuditBean.setAmount(accountBean.getInitialBalance());
             customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setOtherPartyName(""); //This will be opposite party
             customerAuditBean.setTransactionDate(new Date());
             this.updateCustomerAccountBalance(customerAuditBean);
 
@@ -111,7 +81,7 @@ public class AccountDAO {
             employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(new Date());
             this.updateEmployeeAccountBalance(employeeAuditBean);
         } else {
@@ -207,7 +177,6 @@ public class AccountDAO {
 
         public SuccessLoginBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-//            UserDetailBean userDetailBean = new UserDetailBean();
             SuccessLoginBean successLoginBean = new SuccessLoginBean();
 
             successLoginBean.getEmployeeBean().setEmployeeId(rs.getString("employee.id"));
@@ -220,16 +189,6 @@ public class AccountDAO {
             successLoginBean.getEmployeeBean().setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
             successLoginBean.getEmployeeBean().setMobile2(rs.getString("employee.mobile2"));
 
-            /*
-            userDetailBean.setEmployeeId(rs.getString("employee.id"));
-            userDetailBean.setFirst(rs.getString("employee.first"));
-            userDetailBean.setLast(rs.getString("employee.last"));
-            userDetailBean.setMobile(rs.getString("employee.mobile"));
-            userDetailBean.setLoginrequired(rs.getBoolean("employee.loginrequired"));
-            userDetailBean.setType(rs.getString("employee.type"));
-            userDetailBean.setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
-            userDetailBean.setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
-             */
 
             //organizationbean
             successLoginBean.getOrganization().setOrgName(rs.getString("organization.orgname"));
@@ -237,13 +196,6 @@ public class AccountDAO {
             successLoginBean.getOrganization().setState(rs.getString("organization.state"));
             successLoginBean.getOrganization().setOrgId(rs.getLong("organization.id"));
             successLoginBean.getOrganization().setClientId(rs.getString("organization.clientid"));
-/*
-            userDetailBean.setOrgName(rs.getString("organization.orgname"));
-            userDetailBean.setCity(rs.getString("organization.city"));
-            userDetailBean.setState(rs.getString("organization.state"));
-            userDetailBean.setOrgId(rs.getLong("organization.id"));
-
- */
 
 
             //accountbean
@@ -253,18 +205,6 @@ public class AccountDAO {
             successLoginBean.getAccountBean().setCreatedbyid(rs.getString("account.createdbyid"));
             successLoginBean.getAccountBean().setCurrentbalance(rs.getDouble("account.currentbalance"));
             successLoginBean.getAccountBean().setLastbalance(rs.getDouble("account.lastbalance"));
- /*         userDetailBean.setAccountId(rs.getLong("account.id"));
-            userDetailBean.setOwnerid(rs.getString("account.ownerid"));
-            userDetailBean.setAccountnickname(rs.getString("account.accountnickname"));
-//          userDetailBean.setType(rs.getString("account.type"));
-//          userDetailBean.setDetails(rs.getString("account.details"));
-//          userDetailBean.setOrgId(rs.getLong("account.orgid"));
-            userDetailBean.setCreatedbyid(rs.getString("account.createdbyid"));
-            userDetailBean.setCurrentbalance(rs.getDouble("account.currentbalance"));
-            userDetailBean.setLastbalance(rs.getDouble("account.lastbalance"));
-            userDetailBean.setMobile2(rs.getString("employee.mobile2"));
-            userDetailBean.setClientId(rs.getString("organization.clientid"));
-  */
             return successLoginBean;
         }
     }
