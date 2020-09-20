@@ -21,11 +21,14 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
     public void createEmployee(EmployeeBean employeeBean) {
-       employeeDAO.isMobileDuplicate(employeeBean);
-       System.out.println("Start CreateEmployee");
-       if(employeeBean.getTypeInt()==0) {
+
+        System.out.println("Start CreateEmployee");
+        employeeDAO.isMobileDuplicate(employeeBean);
+
+        if(employeeBean.getTypeInt()==0) {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
-       }
+        }
+
         employeeDAO.createEmployee(employeeBean);
 
         //Now Create an associated account
@@ -91,6 +94,10 @@ public class EmployeeHandler {
     //SUBTRACT PAYING PARTY BALANCE
     public void createSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
         //Lets check if a Salary due to be created as part of the Salary Payment
+
+        System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
+        System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
+
         if(employeeSalaryPaymentBean.isCreateSalaryDueAlso()) {
             EmployeeSalary employeeSalary = new EmployeeSalary();
             employeeSalary.setCreateDate(new Date());
@@ -116,7 +123,7 @@ public class EmployeeHandler {
         employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
         employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
-        employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getToEmployeeName()); //This will be opposite party
+        employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
         employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
 
@@ -145,7 +152,6 @@ public class EmployeeHandler {
             //This is to update initial balance in the backend.
             accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(),employeeBean.getOrgId(),employeeBean.getInitialBalance());
             AccountBean accountBean = new AccountBean();
-
 
             accountBean.setOrgId(employeeBean.getOrgId());
             accountBean.setOwnerid(employeeBean.getEmployeeId());
