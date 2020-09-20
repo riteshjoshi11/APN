@@ -35,19 +35,21 @@ public class EmployeeDAO {
     private DataSource dataSource;
 
 
-    public int createEmployee(EmployeeBean employeeBean) {
+    public String createEmployee(EmployeeBean employeeBean) {
+        String id = "";
         try {
             String idSql = "SELECT getEmployeeId() ";
             Map param = new HashMap<String, Object>();
-            String id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
+            id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
-            return namedParameterJdbcTemplate.update(
+            namedParameterJdbcTemplate.update(
                     "insert into employee (id,first,last,mobile,loginrequired,orgid,type,mobile2) " +
                             " values(:employeeId,:first,:last,:mobile,:loginrequired" +
                             ",:orgId, :typeInt,:mobile2)", new BeanPropertySqlParameterSource(employeeBean));
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
+        return id;
     }
 
 
@@ -303,7 +305,7 @@ public class EmployeeDAO {
     }
 
     /*
-    * This method is single update method to handle all the updates
+     * This method is single update method to handle all the updates
      */
     public void updateEmployee(EmployeeBean employeeBean) {
         if (employeeBean.getTypeInt() <= 0) {
@@ -315,7 +317,7 @@ public class EmployeeDAO {
     }
 
 
-    public  EmployeeBean getEmployeeById(Long orgId, String employeeId) {
+    public EmployeeBean getEmployeeById(Long orgId, String employeeId) {
         List<SearchParam> searchParams = new ArrayList<>();
         SearchParam param = new SearchParam();
         param.setCondition("and");
@@ -324,8 +326,8 @@ public class EmployeeDAO {
         param.setSoperator("=");
         param.setValue(employeeId);
         searchParams.add(param);
-        List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams,"",1,1);
-        if (employeeList!=null && !employeeList.isEmpty()) {
+        List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams, "", 1, 1);
+        if (employeeList != null && !employeeList.isEmpty()) {
             return employeeList.get(0);
         }
         return null;
@@ -338,20 +340,20 @@ public class EmployeeDAO {
         procedure.setFunction(false);
         SqlParameter[] declareparameters = {
                 new SqlParameter("employeeid", Types.VARCHAR),
-                new SqlParameter("orgid",Types.BIGINT),
-                new SqlParameter("amount",Types.FLOAT),
+                new SqlParameter("orgid", Types.BIGINT),
+                new SqlParameter("amount", Types.FLOAT),
                 new SqlParameter("otherparty", Types.VARCHAR),
-                new SqlParameter("txntype",Types.VARCHAR),
-                new SqlParameter("operation",Types.VARCHAR),
-                new SqlParameter("txndate",Types.DATE)
+                new SqlParameter("txntype", Types.VARCHAR),
+                new SqlParameter("operation", Types.VARCHAR),
+                new SqlParameter("txndate", Types.DATE)
         };
 
         procedure.setParameters(declareparameters);
         procedure.compile();
         System.out.println(employeeAuditBean.getEmployeeid() + ","
-                +  employeeAuditBean.getAmount() + ","
-                +  employeeAuditBean.getType() + ","
-                +  employeeAuditBean.getOperation());
+                + employeeAuditBean.getAmount() + ","
+                + employeeAuditBean.getType() + ","
+                + employeeAuditBean.getOperation());
 
         Map<String, Object> result = procedure.execute(
                 employeeAuditBean.getEmployeeid(),
@@ -365,20 +367,20 @@ public class EmployeeDAO {
         System.out.println("Status " + result);
     }
 
-    public void isMobileDuplicate(EmployeeBean employeeBean){
-            Map<String, Object> params = new HashMap<>();
-            params.put("mobile2",employeeBean.getMobile2());
-            params.put("orgId",employeeBean.getOrgId());
-            String queryPart = "";
-            if(!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())) {
-                queryPart = " and (mobile = :mobile2 or mobile2 = :mobile2) " ;
-            }
+    public void isMobileDuplicate(EmployeeBean employeeBean) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("mobile2", employeeBean.getMobile2());
+        params.put("orgId", employeeBean.getOrgId());
+        String queryPart = "";
+        if (!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())) {
+            queryPart = " and (mobile = :mobile2 or mobile2 = :mobile2) ";
+        }
 
-            Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where orgid=:orgId " +
-                    queryPart,params,Integer.class);
+        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where orgid=:orgId " +
+                queryPart, params, Integer.class);
 
-            if(count>0){
-                throw new CustomAppException("This mobile no. is already registered for your business", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
-            }
+        if (count > 0) {
+            throw new CustomAppException("This mobile no. is already registered for your business", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 }

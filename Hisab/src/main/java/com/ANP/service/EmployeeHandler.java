@@ -29,7 +29,9 @@ public class EmployeeHandler {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
         }
 
-        employeeDAO.createEmployee(employeeBean);
+        String createdEmployeeID = employeeDAO.createEmployee(employeeBean);
+        //set the generated ID on the input bean
+        employeeBean.setEmployeeId(createdEmployeeID);
 
         //Now Create an associated account
         AccountBean accountBean = new AccountBean();
@@ -41,7 +43,20 @@ public class EmployeeHandler {
         accountBean.setOwnerid(employeeBean.getEmployeeId());
         accountBean.setOrgId(employeeBean.getOrgId());
         accountDAO.createAccount(accountBean);
+
+
+        //@TODO Paras: Please add a check here if (should not be 0 or 0.0) then call below method
+        //createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+
         System.out.println("End CreateEmployee");
+    }
+
+    /*
+    @TODO Paras : Please complete this method
+    Call createSalary method from this method
+         */
+    private void createSalaryDueBasedOnInitialSalaryBalance(EmployeeBean employeeBean) {
+
     }
 
     public String generateAccountNickName(EmployeeBean employeeBean){
@@ -162,7 +177,11 @@ public class EmployeeHandler {
             accountDAO.updateInitialBalance(accountBean);
             //process in accounDao from line 62-85
 
-        }
+            }
+
+        //@TODO paras : if there is change in the employeeInitialSalary balance field
+        //createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+
 
         employeeDAO.updateEmployee(employeeBean);
 
