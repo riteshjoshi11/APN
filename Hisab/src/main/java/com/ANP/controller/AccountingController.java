@@ -82,6 +82,7 @@ public class AccountingController {
             purchaseFromVendorBean.setOrgId(payToVendorBean.getOrgId());
             purchaseFromVendorBean.setDate(payToVendorBean.getPaymentDate());
             purchaseFromVendorBean.setCreatedbyId(payToVendorBean.getCreatedbyId());
+            purchaseFromVendorBean.setTotalAmount(payToVendorBean.getAmount());
             accountingHandler.createVendorPurchase(purchaseFromVendorBean);
         }
         return new ResponseEntity<>("Success", HttpStatus.OK);
@@ -100,6 +101,7 @@ public class AccountingController {
             customerInvoiceBean.setToCustomerId(paymentReceivedBean.getFromCustomerID());
             customerInvoiceBean.setToAccountId(paymentReceivedBean.getFromAccountID());
             customerInvoiceBean.setOrgId(paymentReceivedBean.getOrgId());
+            customerInvoiceBean.setTotalAmount(paymentReceivedBean.getAmount());
             accountingHandler.createCustomerInvoice(customerInvoiceBean);
         }
         return new ResponseEntity<>("Success", HttpStatus.OK);
