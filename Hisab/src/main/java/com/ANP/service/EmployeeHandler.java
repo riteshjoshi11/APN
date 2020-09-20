@@ -23,7 +23,7 @@ public class EmployeeHandler {
     public void createEmployee(EmployeeBean employeeBean) {
 
         System.out.println("Start CreateEmployee");
-        employeeDAO.isMobileDuplicate(employeeBean);
+//        employeeDAO.isMobileDuplicate(employeeBean);
 
         if(employeeBean.getTypeInt()==0) {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);

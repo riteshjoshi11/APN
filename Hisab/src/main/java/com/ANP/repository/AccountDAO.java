@@ -57,36 +57,6 @@ public class AccountDAO {
             return;
         }
         updateInitialBalance(accountBean);
-/*
-        if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
-            CustomerAuditBean customerAuditBean = new CustomerAuditBean();
-            customerAuditBean.setOrgId(accountBean.getOrgId());
-            customerAuditBean.setCustomerid(accountBean.getOwnerid());
-            customerAuditBean.setAccountid(generatedAccKey);
-            customerAuditBean.setAmount(accountBean.getCurrentbalance());
-            customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
-            customerAuditBean.setTransactionDate(new Date());
-            this.updateCustomerAccountBalance(customerAuditBean);
-
-        } else if(ANPConstants.LOGIN_TYPE_EMPLOYEE.equalsIgnoreCase(accountBean.getType())) {
-            EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
-            employeeAuditBean.setOrgId(accountBean.getOrgId());
-            employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
-            employeeAuditBean.setAccountid(generatedAccKey);
-            employeeAuditBean.setAmount(accountBean.getCurrentbalance());
-            employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOtherPartyName("-");
-            employeeAuditBean.setTransactionDate(new Date());
-            this.updateEmployeeAccountBalance(employeeAuditBean);
-        } else {
-            throw new CustomAppException("Account Creation Login type is invalid","SERVER.ACCOUNT_CREATE.LOGIN_TYPE_INVALID", HttpStatus.EXPECTATION_FAILED);
-        }
-
- */
     }
 
     public void updateInitialBalance(AccountBean accountBean) {
@@ -98,7 +68,7 @@ public class AccountDAO {
             customerAuditBean.setAmount(accountBean.getInitialBalance());
             customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            customerAuditBean.setOtherPartyName("-"); //This will be opposite party
+            customerAuditBean.setOtherPartyName(""); //This will be opposite party
             customerAuditBean.setTransactionDate(new Date());
             this.updateCustomerAccountBalance(customerAuditBean);
 
@@ -111,7 +81,7 @@ public class AccountDAO {
             employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
-            employeeAuditBean.setOtherPartyName("-");
+            employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(new Date());
             this.updateEmployeeAccountBalance(employeeAuditBean);
         } else {

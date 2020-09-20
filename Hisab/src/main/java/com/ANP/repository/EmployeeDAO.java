@@ -369,8 +369,13 @@ public class EmployeeDAO {
             Map<String, Object> params = new HashMap<>();
             params.put("mobile2",employeeBean.getMobile2());
             params.put("orgId",employeeBean.getOrgId());
-            Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where (mobile = :mobile2 " +
-                    "or mobile2 = :mobile2) and orgid=:orgId",params,Integer.class);
+            String queryPart = "";
+            if(!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())) {
+                queryPart = " and (mobile = :mobile2 or mobile2 = :mobile2) " ;
+            }
+
+            Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where orgid=:orgId " +
+                    queryPart,params,Integer.class);
 
             if(count>0){
                 throw new CustomAppException("This mobile no. is already registered for your business", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
