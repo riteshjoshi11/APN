@@ -55,4 +55,9 @@ public class CustomerController {
     public CustomerBean getCustomerById(@RequestParam Long orgId, @RequestParam String customerId) {
        return customerDao.getCustomerById(orgId,customerId);
     }
+    @PostMapping(path = "/updateSendPaymentReminders", produces = "application/json")
+    public ResponseEntity updateSendPaymentReminders(@RequestBody CustomerBean customerBean) {
+        customerDao.updateSendPaymentReminders(customerBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }

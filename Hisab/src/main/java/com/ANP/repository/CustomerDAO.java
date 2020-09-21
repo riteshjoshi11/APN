@@ -146,4 +146,18 @@ public class CustomerDAO {
         }
         return null;
     }
+
+    public int updateSendPaymentReminders(CustomerBean customerBean) {
+
+        Map<String,Object> param = new HashMap<>();
+        param.put("orgid",customerBean.getOrgId());
+        param.put("customerid",customerBean.getCustomerID());
+        param.put("sendpaymentreminders",customerBean.isSendPaymentReminders());
+
+
+        return namedParameterJdbcTemplate.update("update customer set " +
+                "sendpaymentreminders = :sendpaymentreminders where orgid = :orgid and id = :customerid",param);
+
+    }
+
 }
