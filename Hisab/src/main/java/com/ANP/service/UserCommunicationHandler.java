@@ -17,18 +17,13 @@ public class UserCommunicationHandler {
       * THis will be interacting with SMS or EMAIL PROVIDERS
       * Currently this method will only interact with SMS Provider
      */
-
+    @Autowired
+    @Qualifier("datagenitSMSProvider")
     SMSProvider smsProvider;
-
-
-    @Autowired // inject FirstServiceImpl
-    public UserCommunicationHandler(@Qualifier("datagenitSMSProvider") SMSProvider smsProvider) {
-        this.smsProvider = smsProvider;
-    }
 
     public void sendOTP(String mobile, String email, String otp) {
         //toto write a methord to get Message based on user preference
-        String message = "OTP for accessing Business Setu is:" + otp + " Please do not disclose it to anyone else";
+        String message = "OTP for accessing Business Setu is:[" + otp + "] Please do not disclose it to anyone else";
         smsProvider.sendSMS(mobile, message);
     }
 }
