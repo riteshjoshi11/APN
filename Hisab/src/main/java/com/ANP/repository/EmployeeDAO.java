@@ -145,6 +145,7 @@ public class EmployeeDAO {
             empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
             empbean.setAccountId(rs.getLong("acc.id"));
+            empbean.setInitialSalaryBalance(rs.getFloat("e.initialsalarybalance"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             empbean.setMobile2(rs.getString("e.mobile2"));
 

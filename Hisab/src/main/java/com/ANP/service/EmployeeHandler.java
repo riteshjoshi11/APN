@@ -46,8 +46,9 @@ public class EmployeeHandler {
 
 
         //@TODO Paras: Please add a check here if (should not be 0 or 0.0) then call below method
-        //createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
-
+        if(employeeBean.getInitialSalaryBalance()>0) {
+            createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+        }
         System.out.println("End CreateEmployee");
     }
 
@@ -56,6 +57,13 @@ public class EmployeeHandler {
     Call createSalary method from this method
          */
     private void createSalaryDueBasedOnInitialSalaryBalance(EmployeeBean employeeBean) {
+
+        EmployeeSalary employeeSalary = new EmployeeSalary();
+        employeeSalary.setOrgId(employeeBean.getOrgId());
+        employeeSalary.setToEmployeeID(employeeBean.getEmployeeId());
+        employeeSalary.setAmount(employeeBean.getInitialSalaryBalance());
+        employeeSalary.setCreatedbyId(employeeBean.getCreatedbyId());
+        createSalary(employeeSalary);
 
     }
 
@@ -129,7 +137,7 @@ public class EmployeeHandler {
         //create an Employee Salary Entry
         employeeDAO.createEmployeeSalaryPayment(employeeSalaryPaymentBean);
 
-         //Update/SUBTRACT From Employee Balance
+        //Update/SUBTRACT From Employee Balance
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
         employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
         employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
@@ -177,11 +185,12 @@ public class EmployeeHandler {
             accountDAO.updateInitialBalance(accountBean);
             //process in accounDao from line 62-85
 
-            }
+        }
 
         //@TODO paras : if there is change in the employeeInitialSalary balance field
-        //createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
-
+        if(employeeBean.getInitialSalaryBalance()>0) {
+            createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+        }
 
         employeeDAO.updateEmployee(employeeBean);
 
