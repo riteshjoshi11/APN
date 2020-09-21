@@ -2,6 +2,7 @@ package com.ANP.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,6 +49,10 @@ public class DatagenitSMSProviderImpl implements SMSProvider {
         System.out.println("RestTemplate " + restTemplate);
         String result = restTemplate.getForObject(uri, String.class);
         System.out.println("sendSMS: DatagenitSMSProviderImpl OTP Successful...");
+
+        if(!ANPUtils.isNullOrEmpty(result) && (result.contains("failure"))) {
+            throw new CustomAppException("SERVER.SEND_SMS_OTP.ERROR", "The status of SMS sending could not be determined", HttpStatus.EXPECTATION_FAILED);
+        }
         System.out.println(result);
     }
 }
