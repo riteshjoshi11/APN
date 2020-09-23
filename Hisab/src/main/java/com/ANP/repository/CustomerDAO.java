@@ -149,6 +149,10 @@ public class CustomerDAO {
 
     public int updateSendPaymentReminders(CustomerBean customerBean) {
 
+        if(customerBean==null || ANPUtils.isNullOrEmpty(customerBean.getCustomerID()) || customerBean.getOrgId()<=0) {
+            throw new CustomAppException("SERVER.CUSTOMER.UPDATE_SEND_PAYMENT_REMINDERS", "", HttpStatus.BAD_REQUEST);
+        }
+
         Map<String,Object> param = new HashMap<>();
         param.put("orgid",customerBean.getOrgId());
         param.put("customerid",customerBean.getCustomerID());

@@ -4,6 +4,7 @@ import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.PaymentReceivedBean;
 import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class InternalTransferDAO {
 
 
     public int createInternalTransfer(InternalTransferBean internalTransferBean) {
-        if(!internalTransferBean.isForceCreate()) {
+        if (!internalTransferBean.isForceCreate()) {
             isDuplicateSuspect(internalTransferBean);
         }
         return namedParameterJdbcTemplate.update(
@@ -44,20 +46,20 @@ public class InternalTransferDAO {
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
         param.put("startIndex", startIndex - 1);
-        if(ANPUtils.isNullOrEmpty(orderBy)) {
+        if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "internal.id desc";
         }
 
 
         return namedParameterJdbcTemplate.query("select internal.id,internal.orgid, internal.fromemployeeid, internal.fromaccountid, " +
-                   "internal.toemployeeid,internal.toaccountid, internal.includeincalc, e.mobile,e.first,e.last, internal.details," +
-                   "internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
-                   " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
-                   " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
-                   " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
-                   "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
-                   " and (internal.isdeleted is null or  internal.isdeleted <> true) " +
-                    ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow" + " offset :startIndex",
+                        "internal.toemployeeid,internal.toaccountid, internal.includeincalc, e.mobile,e.first,e.last, internal.details," +
+                        "internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
+                        " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
+                        " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
+                        " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
+                        "from employee e, internaltransfer internal where e.id=internal.toemployeeid and internal.orgid=:orgID " +
+                        " and (internal.isdeleted is null or  internal.isdeleted <> true) " +
+                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow" + " offset :startIndex",
                 param, new InternalTransferMapper());
     }
 
@@ -87,24 +89,44 @@ public class InternalTransferDAO {
             return internalTransferBean;
         }
     }
-    public void isDuplicateSuspect(InternalTransferBean internalTransferBean){
+
+    public void isDuplicateSuspect(InternalTransferBean internalTransferBean) {
         //Do a count(*) query and if you found count>0 then throw this error else nothing
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("orgid", internalTransferBean.getOrgId());
         params.put("fromemployeeid", internalTransferBean.getFromEmployeeID());
         params.put("toemployeeid", internalTransferBean.getToEmployeeID());
 
-        long actualamount = (long)(internalTransferBean.getAmount());
+        long actualamount = (long) (internalTransferBean.getAmount());
         params.put("amount", actualamount);
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) " +
                 " as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid " +
                 " and (isdeleted is null or isdeleted<> true)  and toemployeeid = :toemployeeid order by id desc limit 1) " +
-                " internaltransfer where amount = :amount",params, Integer.class);
+                " internaltransfer where amount = :amount", params, Integer.class);
 
 
-        if(count>0) {
+        if (count > 0) {
             throw new CustomAppException("The Internal Transfer looks like duplicate", "SERVER.CREATE_INTERNAL_TRANSFER.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
+    }
+
+    /*
+     * API invoked by UI before UpdateSales
+     */
+    public InternalTransferBean getInternalTransferId(Long orgId, Long purchaseId) {
+        java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("internal.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + purchaseId);
+        searchParams.add(param);
+        List<InternalTransferBean> internalTransferBeans = listInternalTransfer(orgId, searchParams, "", 1, 1);
+        if (internalTransferBeans != null && !internalTransferBeans.isEmpty()) {
+            return internalTransferBeans.get(0);
+        }
+        return null;
     }
 }

@@ -149,29 +149,7 @@ public class AccountingController {
 
     }
 
-    @PostMapping(path = "/pdfListPurchasesPaged", produces = "application/json")
-    public List<PurchaseFromVendorBean> pdfPurchasesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
 
-        return purchaseFromVendorDAO.pdfListPurchasesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
-                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
-
-    }
-
-    @PostMapping(path = "/pdfListExpensePaged", produces = "application/json")
-    public List<Expense> pdfListExpensePaged(@Valid @RequestBody ListParametersBean listParametersBean) {
-
-        return expenseDao.pdfListExpensePaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
-                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
-
-    }
-
-    @PostMapping(path = "/pdfListSalesPaged", produces = "application/json")
-    public List<CustomerInvoiceBean> pdfListSalesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
-
-        return customerInvoiceDAO.pdfListSalesPaged(listParametersBean.getOrgID(), listParametersBean.getSearchParam(), listParametersBean.getOrderBy(),
-                listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
-
-    }
 
     @PostMapping(path = "/listExpensesPaged", produces = "application/json")
     public List<Expense> listExpensesPaged(@Valid @RequestBody ListParametersBean listParametersBean) {
@@ -292,4 +270,18 @@ public class AccountingController {
                 listParametersBean.getNoOfRecordsToShow(), listParametersBean.getStartIndex());
     }
 
+    @GetMapping(path = "/getSalesById", produces = "application/json")
+    public CustomerInvoiceBean getSalesById(@RequestParam Long orgId, @RequestParam Long salesId) {
+        return customerInvoiceDAO.getSalesById(orgId,salesId);
+    }
+
+    @GetMapping(path = "/getPurchaseById", produces = "application/json")
+    public PurchaseFromVendorBean getPurchaseById(@RequestParam Long orgId, @RequestParam Long purchaseId) {
+        return purchaseFromVendorDAO.getPurchaseById(orgId,purchaseId);
+    }
+
+    @GetMapping(path = "/getInternalTransferId", produces = "application/json")
+    public InternalTransferBean getInternalTransferId(@RequestParam Long orgId, @RequestParam Long internalId) {
+        return internalTransferDAO.getInternalTransferId(orgId,internalId);
+    }
 }

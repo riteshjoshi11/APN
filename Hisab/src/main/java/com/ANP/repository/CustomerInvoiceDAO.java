@@ -1,11 +1,12 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerInvoiceBean;
+import com.ANP.bean.Expense;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,13 +14,11 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileOutputStream;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class CustomerInvoiceDAO {
@@ -41,7 +40,7 @@ public class CustomerInvoiceDAO {
                 new BeanPropertySqlParameterSource(invoiceBean));
     }
 
-    public List<CustomerInvoiceBean> listSalesPaged(long orgID, List<SearchParam> searchParams,
+    public java.util.List<CustomerInvoiceBean> listSalesPaged(long orgID, java.util.List<com.ANP.bean.SearchParam> searchParams,
                                                     String orderBy, int noOfRecordsToShow, int startIndex) {
         if (startIndex == 0) {
             startIndex = 1;
@@ -115,78 +114,6 @@ public class CustomerInvoiceDAO {
         }
     }
 
-    public List<CustomerInvoiceBean> pdfListSalesPaged(long orgID, List<SearchParam> searchParams,
-                                                    String orderBy, int noOfRecordsToShow, int startIndex) {
-        if (startIndex == 0) {
-            startIndex = 1;
-        }
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("orgID", orgID);
-        param.put("noOfRecordsToShow", noOfRecordsToShow);
-        param.put("startIndex", startIndex - 1);
-        if (ANPUtils.isNullOrEmpty(orderBy)) {
-            orderBy = "id desc";
-        }
-
-        List <CustomerInvoiceBean> customerInvoiceBeanList =  namedParameterJdbcTemplate.query(
-                "select cusinv.* from " +
-                        " customerinvoice cusinv where cusinv.orgid=:orgID and cusinv.includeinreport = true and (cusinv.isdeleted is null or cusinv.isdeleted <> true) " +
-                        ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
-                        + " offset :startIndex",
-                param, new PDFSalesPagedMapper());
-        com.itextpdf.text.List list ;
-        try {
-
-            String file1 = "f:/";
-            Document document = new Document( PageSize.A4, 20, 20, 20, 20 );
-            Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-            PdfWriter.getInstance(document, new FileOutputStream(file1+ "sales"+(new Date().getTime()/1000)+".pdf"));
-            // PdfWriter.getInstance(document, new FileOutputStream(file1 +  "purchase" + dateFormat.format(new Date()) + ".pdf" ));
-            int index = 0;
-            document.open();
-            for(Object listIterator : customerInvoiceBeanList) {
-                list = new com.itextpdf.text.List(false );
-                list.setListSymbol("");
-                list.add(new ListItem("Name :  "));
-                list.add(new ListItem("Date:  " + customerInvoiceBeanList.get(index).getDate().toString()));
-                list.add(new ListItem("Total Amount:  "+customerInvoiceBeanList.get(index).getTotalAmount()));
-                list.add(new ListItem("Extra:  "+customerInvoiceBeanList.get(index).getExtra()));
-                list.add(new ListItem("IGST:  "+customerInvoiceBeanList.get(index).getIGST()));
-                list.add(new ListItem("CGST:  "+customerInvoiceBeanList.get(index).getCGST()));
-                list.add(new ListItem("SGST:  "+customerInvoiceBeanList.get(index).getSGST()));
-                document.add(list);
-                document.add(new Paragraph("\n"));
-                index++;
-            }
-            document.close();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return customerInvoiceBeanList;
-    }
-
-    private static final class PDFSalesPagedMapper implements RowMapper<CustomerInvoiceBean> {
-        public CustomerInvoiceBean mapRow(ResultSet rs, int rowNum) throws SQLException {
-            CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
-
-            customerInvoiceBean.setOrderAmount(rs.getDouble("cusinv.orderamount"));
-            customerInvoiceBean.setCGST(rs.getBigDecimal("cusinv.cgst"));
-            customerInvoiceBean.setIGST(rs.getFloat("cusinv.igst"));
-            customerInvoiceBean.setSGST(rs.getFloat("cusinv.sgst"));
-            customerInvoiceBean.setTotalAmount(rs.getFloat("cusinv.totalamount"));
-            customerInvoiceBean.setInvoiceNo(rs.getString("cusinv.invoiceno"));
-            customerInvoiceBean.setOrgId(rs.getLong("cusinv.orgid"));
-            customerInvoiceBean.setToAccountId(rs.getLong("cusinv.toaccountid"));
-            customerInvoiceBean.setIncludeInCalc(rs.getBoolean("cusinv.includeincalc"));
-            customerInvoiceBean.setIncludeInReport(rs.getBoolean("cusinv.includeinreport"));
-            customerInvoiceBean.setDate(rs.getTimestamp("cusinv.date"));
-            customerInvoiceBean.setCreateDate(rs.getTimestamp("cusinv.createdate"));
-            customerInvoiceBean.setCreatedbyId(rs.getString("cusinv.createdbyid"));
-            return customerInvoiceBean;
-        }
-    }
 
     /*
      * @TODO: Paras please include notes/details field as well.
@@ -197,5 +124,24 @@ public class CustomerInvoiceDAO {
         return namedParameterJdbcTemplate.update("update customerinvoice set cgst = :CGST," +
                  " sgst=:SGST, igst=:IGST, note = :note,date=:date,invoiceno=invoiceNo, orderamount=:orderAmount " +
                 "where orgid = :orgId and id = :invoiceID",new BeanPropertySqlParameterSource(customerInvoiceBean));
+    }
+
+    /*
+    API invoked by UI before UpdateSales
+     */
+    public CustomerInvoiceBean getSalesById(Long orgId, Long salesID) {
+        java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("cusinv.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + salesID);
+        searchParams.add(param);
+        List<CustomerInvoiceBean> expenseList = listSalesPaged(orgId, searchParams, "", 1, 1);
+        if (expenseList != null && !expenseList.isEmpty()) {
+            return expenseList.get(0);
+        }
+        return null;
     }
 }
