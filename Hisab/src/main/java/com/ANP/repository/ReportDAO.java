@@ -664,7 +664,7 @@ public class ReportDAO {
                 row.createCell(1).setCellValue(customerInvoiceBean.getOrderAmount());
                 row.createCell(2).setCellValue(customerInvoiceBean.getTotalAmount());
                 row.createCell(3).setCellValue(customerInvoiceBean.getInvoiceNo());
-                row.createCell(4).setCellValue(customerInvoiceBean.getCGST());
+                row.createCell(4).setCellValue(customerInvoiceBean.getCGST().toString());
                 row.createCell(5).setCellValue(customerInvoiceBean.getSGST());
                 row.createCell(6).setCellValue(customerInvoiceBean.getIGST());
             }

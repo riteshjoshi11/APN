@@ -1,5 +1,6 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CustomerInvoiceBean extends CommonAttribute {
@@ -8,7 +9,7 @@ public class CustomerInvoiceBean extends CommonAttribute {
     private String toCustomerId;
     private java.util.Date date;
     private double orderAmount;
-    private double CGST;
+    private BigDecimal CGST;
     private double SGST;
     private double IGST;
     private double extra;
@@ -76,11 +77,11 @@ public class CustomerInvoiceBean extends CommonAttribute {
         this.orderAmount = orderAmount;
     }
 
-    public double getCGST() {
+    public BigDecimal getCGST() {
         return CGST;
     }
 
-    public void setCGST(double CGST) {
+    public void setCGST(BigDecimal CGST) {
         this.CGST = CGST;
     }
 

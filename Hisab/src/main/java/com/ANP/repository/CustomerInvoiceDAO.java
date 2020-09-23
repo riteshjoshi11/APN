@@ -78,7 +78,7 @@ public class CustomerInvoiceDAO {
 //          customerInvoiceBean.getCustomerBean().setMobile2(rs.getString("c.mobile2"));
             customerInvoiceBean.setInvoiceID(rs.getLong("cusinv.id"));
             customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
-            customerInvoiceBean.setCGST(rs.getDouble("cusinv.cgst"));
+            customerInvoiceBean.setCGST(rs.getBigDecimal("cusinv.cgst"));
             customerInvoiceBean.setIGST(rs.getFloat("cusinv.igst"));
             customerInvoiceBean.setSGST(rs.getFloat("cusinv.sgst"));
             customerInvoiceBean.setTotalAmount(rs.getFloat("cusinv.totalamount"));
@@ -172,7 +172,7 @@ public class CustomerInvoiceDAO {
             CustomerInvoiceBean customerInvoiceBean = new CustomerInvoiceBean();
 
             customerInvoiceBean.setOrderAmount(rs.getDouble("cusinv.orderamount"));
-            customerInvoiceBean.setCGST(rs.getDouble("cusinv.cgst"));
+            customerInvoiceBean.setCGST(rs.getBigDecimal("cusinv.cgst"));
             customerInvoiceBean.setIGST(rs.getFloat("cusinv.igst"));
             customerInvoiceBean.setSGST(rs.getFloat("cusinv.sgst"));
             customerInvoiceBean.setTotalAmount(rs.getFloat("cusinv.totalamount"));
