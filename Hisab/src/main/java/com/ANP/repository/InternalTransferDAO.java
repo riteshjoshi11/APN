@@ -127,7 +127,7 @@ public class InternalTransferDAO {
         if (internalTransferBeans != null && !internalTransferBeans.isEmpty()) {
             return internalTransferBeans.get(0);
         }
-        return null;
+        throw new CustomAppException("Internal Transfer Looks to be empty", "SERVER.INTERNAL_TRANSFER.NOT_EXISTING", HttpStatus.CONFLICT);
     }
 
     public int updateInternalTransfer(InternalTransferBean internalTransferBean){

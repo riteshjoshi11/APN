@@ -117,7 +117,7 @@ public class PayToVendorDAO {
         java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
         SearchParam param = new SearchParam();
         param.setCondition("and");
-        param.setFieldName("paytovendor.id");
+        param.setFieldName("paytov.id");
         param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
         param.setSoperator("=");
         param.setValue("" + payToVendorId);
@@ -126,6 +126,7 @@ public class PayToVendorDAO {
         if (payToVendorBeanList != null && !payToVendorBeanList.isEmpty()) {
             return payToVendorBeanList.get(0);
         }
-        return null;
+        throw new CustomAppException("Vendor Payment Looks to be empty", "SERVER.VENDOR.PAYMENT_EXISTING", HttpStatus.CONFLICT);
+
     }
 }

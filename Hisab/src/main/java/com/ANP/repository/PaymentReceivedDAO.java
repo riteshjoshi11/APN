@@ -119,7 +119,7 @@ public class PaymentReceivedDAO {
         java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
         SearchParam param = new SearchParam();
         param.setCondition("and");
-        param.setFieldName("paymentreceived.id");
+        param.setFieldName("prcvd.id");
         param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
         param.setSoperator("=");
         param.setValue("" + paymentReceivedID);
@@ -128,6 +128,7 @@ public class PaymentReceivedDAO {
         if (paymentReceivedBeans != null && !paymentReceivedBeans.isEmpty()) {
             return paymentReceivedBeans.get(0);
         }
-        return null;
+        throw new CustomAppException("Payment Received to be empty", "SERVER.PAYMENT_RECEIVED.NOT_EXISTING", HttpStatus.CONFLICT);
+
     }
 }

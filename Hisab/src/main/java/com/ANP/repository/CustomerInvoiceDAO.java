@@ -142,6 +142,7 @@ public class CustomerInvoiceDAO {
         if (expenseList != null && !expenseList.isEmpty()) {
             return expenseList.get(0);
         }
-        return null;
+        throw new CustomAppException("Sale Looks to be empty", "SERVER.SALE.NOT_EXISTING", HttpStatus.CONFLICT);
+
     }
 }

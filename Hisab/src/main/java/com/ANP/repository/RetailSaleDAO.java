@@ -116,7 +116,7 @@ public class RetailSaleDAO {
         java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
         SearchParam param = new SearchParam();
         param.setCondition("and");
-        param.setFieldName("retailsale.id");
+        param.setFieldName("retail.id");
         param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
         param.setSoperator("=");
         param.setValue("" + retailSaleId);
@@ -125,6 +125,6 @@ public class RetailSaleDAO {
         if (retailSaleList != null && !retailSaleList.isEmpty()) {
             return retailSaleList.get(0);
         }
-        return null;
+        throw new CustomAppException("Retail Looks to be empty", "SERVER.RETAIL.NOT_EXISTING", HttpStatus.CONFLICT);
     }
 }
