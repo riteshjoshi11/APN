@@ -52,6 +52,7 @@ public class PayToVendorDAO {
         }
         return namedParameterJdbcTemplate.query(
                 "select paytov.id, paytov.fromaccountid, paytov.toaccountid, paytov.date, paytov.amount," +
+                     "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = paytov.createdbyid) as createdByEmployeeName, " +
                      " paytov.details, paytov.fromemployeeid, paytov.tocustomerid, paytov.orgid, paytov.includeincalc," +
                      " paytov.createdate,paytov.createdbyid,c.name,c.firmname,c.city,c.mobile1,c.gstin,c.state, e.first,e.last,e.mobile from customer c, employee e," +
                      " paytovendor paytov where c.id=paytov.tocustomerid and e.id = paytov.fromemployeeid and paytov.orgid=:orgID " +
@@ -82,6 +83,7 @@ public class PayToVendorDAO {
             payToVendorBean.setIncludeInCalc(rs.getBoolean("paytov.includeincalc"));
             payToVendorBean.setCreateDate(rs.getTimestamp("paytov.createdate"));
             payToVendorBean.setCreatedbyId(rs.getString("paytov.createdbyid"));
+            payToVendorBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
 
             payToVendorBean.getEmployeeBean().setFirst(rs.getString("e.first"));
             payToVendorBean.getEmployeeBean().setLast(rs.getString("e.last"));

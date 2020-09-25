@@ -60,6 +60,7 @@ public class PurchaseFromVendorDAO {
 
         return namedParameterJdbcTemplate.query("select customer.id,customer.name, customer.city," +
                         "customer.gstin,customer.mobile1,customer.firmname, customer.orgid, customer.state, " +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = p.createdbyid) as createdByEmployeeName, " +
                         "p.id, p.fromaccountid, p.date,p.CGST,p.orderamount,p.SGST," +
                         "p.IGST,p.extra,p.totalamount,p.note,p.includeInReport," +
                         "p.includeincalc,p.billno,p.createdate,p.createdbyid " +
@@ -99,6 +100,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
             purchaseFromVendorBean.setFromAccountId(rs.getLong("p.fromaccountid"));
             purchaseFromVendorBean.setFromCustomerId(rs.getString("customer.id"));
+            purchaseFromVendorBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return purchaseFromVendorBean;
         }
     }

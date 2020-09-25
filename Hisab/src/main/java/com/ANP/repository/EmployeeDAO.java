@@ -170,7 +170,8 @@ public class EmployeeDAO {
         }
 
         return namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsal.amount," +
-                        " empsal.details, empsal.includeincalc,empsal.createdate,empsal.createdbyid " +
+                        " empsal.details, empsal.includeincalc,empsal.createdate,empsal.createdbyid," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from `employee` where id = empsal.createdbyid) as createdByEmployeeName " +
                         " from employee e,employeesalary empsal where e.id=empsal.toemployeeid and e.orgid=:orgid " +
                         " and (empsal.isdeleted is null or  empsal.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
@@ -192,6 +193,8 @@ public class EmployeeDAO {
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
             employeeSalary.setCreateDate(rs.getTimestamp("empsal.createdate"));
             employeeSalary.setCreatedbyId(rs.getString("empsal.createdbyid"));
+            employeeSalary.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
+
             return employeeSalary;
         }
     }//end
@@ -216,7 +219,8 @@ public class EmployeeDAO {
         List<EmployeeSalaryPayment> EmployeeSalaryPaymentlist = namedParameterJdbcTemplate.query("select e.id, e.first, e.last, e.mobile, e.type, empsalpay.amount, " +
                         "empsalpay.details,empsalpay.includeincalc,empsalpay.transferdate,empsalpay.createdate,empsalpay.createdbyid,empsalpay.fromemployeeid," +
                         "(select first from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpFirstName," +
-                        "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName" +
+                        "(select last from employee emp where emp.id=empsalpay.fromemployeeid and emp.orgid=:orgid) as fromEmpLastName," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from `employee` where id = empsalpay.createdbyid) as createdByEmployeeName " +
                         " from employee e, employeesalarypayment empsalpay " +
                         "where e.id=empsalpay.toemployeeid and e.orgid=:orgid and (empsalpay.isdeleted is null or empsalpay.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
@@ -241,6 +245,7 @@ public class EmployeeDAO {
             employeeSalaryPayment.setTransferDate(rs.getTimestamp("empsalpay.transferdate"));
             employeeSalaryPayment.setCreateDate(rs.getTimestamp("empsalpay.createdate"));
             employeeSalaryPayment.setCreatedbyId(rs.getString("empsalpay.createdbyid"));
+            employeeSalaryPayment.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return employeeSalaryPayment;
         }
     }

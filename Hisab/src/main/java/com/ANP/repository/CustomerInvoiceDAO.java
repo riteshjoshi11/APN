@@ -56,6 +56,7 @@ public class CustomerInvoiceDAO {
 
         return namedParameterJdbcTemplate.query(
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee e where e.id = cusinv.createdbyid) as createdByEmployeeName, " +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
                         "cusinv.includeincalc,cusinv.createdate,cusinv.createdbyid,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and (cusinv.isdeleted is null or cusinv.isdeleted <> true) " +
@@ -90,6 +91,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setDate(rs.getTimestamp("cusinv.date"));
             customerInvoiceBean.setCreateDate(rs.getTimestamp("cusinv.createdate"));
             customerInvoiceBean.setCreatedbyId(rs.getString("cusinv.createdbyid"));
+            customerInvoiceBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return customerInvoiceBean;
         }
     }

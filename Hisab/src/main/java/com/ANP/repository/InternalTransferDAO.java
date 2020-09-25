@@ -54,6 +54,7 @@ public class InternalTransferDAO {
         return namedParameterJdbcTemplate.query("select internal.id,internal.orgid, internal.fromemployeeid, internal.fromaccountid, " +
                         "internal.toemployeeid,internal.toaccountid, internal.includeincalc, e.mobile,e.first,e.last, internal.details," +
                         "internal.createdate,internal.createdbyid, internal.rcvddate,internal.amount," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = internal.createdbyid) as createdByEmployeeName, " +
                         " (select emp.first from employee emp where emp.id = internal.fromemployeeid) as fromfirst," +
                         " (select emp.last from employee emp where emp.id = internal.fromemployeeid) as fromlast, " +
                         " (select emp.mobile from employee emp where emp.id = internal.fromemployeeid) as frommobile " +
@@ -85,6 +86,7 @@ public class InternalTransferDAO {
             internalTransferBean.setToEmployeeID(rs.getString("internal.toemployeeid"));
             internalTransferBean.setToAccountID(rs.getLong("internal.toaccountid"));
             internalTransferBean.setIncludeInCalc(rs.getBoolean("internal.includeincalc"));
+            internalTransferBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
 
             return internalTransferBean;
         }

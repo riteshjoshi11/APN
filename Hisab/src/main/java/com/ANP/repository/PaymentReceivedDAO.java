@@ -50,6 +50,7 @@ public class PaymentReceivedDAO {
 
         return namedParameterJdbcTemplate.query(
                 "select c.name, c.city, c.firmname, c.gstin, c.mobile1, c.state, prcvd.id, prcvd.fromaccountid,prcvd.fromcustomerid,prcvd.toaccountid," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = prcvd.createdbyid) as createdByEmployeeName, " +
                         "prcvd.toemployeeid,prcvd.rcvddate,prcvd.createdbyid,prcvd.amount,prcvd.details,prcvd.includeincalc,prcvd.createdate,prcvd.orgid," +
                         "(select emp.first from employee emp where emp.id = prcvd.toemployeeid) as firstName," +
                         "(select emp.last from employee emp where emp.id = prcvd.toemployeeid) as lastName from customer c, paymentreceived " +
@@ -85,6 +86,7 @@ public class PaymentReceivedDAO {
 
             paymentReceivedBean.setCreateDate(rs.getTimestamp("prcvd.createdate"));
             paymentReceivedBean.setCreatedbyId(rs.getString("prcvd.createdbyid"));
+            paymentReceivedBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return paymentReceivedBean;
         }
     }

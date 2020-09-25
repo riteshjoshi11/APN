@@ -55,7 +55,9 @@ public class ExpenseDAO {
             orderBy = "id desc";
         }
         return namedParameterJdbcTemplate.query(
-                "select exp.*, e.first,e.last from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
+                "select exp.*, e.first,e.last, " +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee e where e.id = exp.createdbyid) as createdByEmployeeName " +
+                        " from generalexpense exp, employee e where exp.fromemployeeid=e.id and exp.orgid=:orgID " +
                         "and (exp.isdeleted is null or exp.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -86,6 +88,8 @@ public class ExpenseDAO {
             obj.setCreateDate(rs.getTimestamp("exp.createdate"));
             obj.setFromAccountID(rs.getLong("exp.fromaccountid"));
             obj.setFromEmployeeID(rs.getString("exp.fromemployeeid"));
+            obj.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
+
             return obj;
         }
     }

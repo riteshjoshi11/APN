@@ -52,6 +52,7 @@ public class RetailSaleDAO {
 
         return namedParameterJdbcTemplate.query(
                 "select e.mobile,e.first,e.last, retail.id, retail.amount, retail.orgid," +
+                        "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = retail.createdbyid) as createdByEmployeeName, " +
                         "retail.fromaccountid, retail.fromemployeeid,retail.date,retail.notes, retail.includeincalc,retail.createdate, retail.createdbyid " +
                        " from employee e, retailsale retail where e.id=retail.fromemployeeid and retail.orgid=:orgID " +
                         " and (retail.isdeleted is null or retail.isdeleted <> true) " +
@@ -79,6 +80,7 @@ public class RetailSaleDAO {
             ret.getFromEmployee().setMobile(rs.getString("e.mobile"));
             ret.setCreateDate(rs.getTimestamp("retail.createdate"));
             ret.setCreatedbyId(rs.getString("retail.createdbyid"));
+            ret.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return ret;
         }
     }
