@@ -10,6 +10,7 @@ import java.util.Date;
 public class CommonAttribute {
 
     protected String createdbyId;
+    protected String createdByEmpoyeeName;
 
     @ApiModelProperty(hidden = true)
     protected java.util.Date createDate;
@@ -51,5 +52,7 @@ public class CommonAttribute {
         this.orgId = orgId;
     }
 
+    public String getCreatedByEmpoyeeName() { return createdByEmpoyeeName; }
 
+    public void setCreatedByEmpoyeeName(String createdByEmpoyeeName) { this.createdByEmpoyeeName = createdByEmpoyeeName; }
 }
