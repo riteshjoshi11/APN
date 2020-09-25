@@ -1,9 +1,8 @@
 package com.ANP.repository;
 
-import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.PaymentReceivedBean;
-import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,5 +108,26 @@ public class PaymentReceivedDAO {
         if(count>0) {
             throw new CustomAppException("The Payment Received looks like duplicate", "SERVER.CREATE_PAYMENT_RECEIVED.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
+    }
+
+    public int updatePaymentReceived(PaymentReceivedBean paymentReceivedBean){
+        return namedParameterJdbcTemplate.update("update paymentreceived set details = :details where orgid = :orgId and paymentreceived.id = :paymentReceivedID", new BeanPropertySqlParameterSource(paymentReceivedBean));
+
+    }
+
+    public PaymentReceivedBean getPaymentReceivedById(Long orgId, Long paymentReceivedID) {
+        java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("paymentreceived.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + paymentReceivedID);
+        searchParams.add(param);
+        List<PaymentReceivedBean> paymentReceivedBeans = listPaymentReceivedPaged(orgId, searchParams, "", 1, 1);
+        if (paymentReceivedBeans != null && !paymentReceivedBeans.isEmpty()) {
+            return paymentReceivedBeans.get(0);
+        }
+        return null;
     }
 }

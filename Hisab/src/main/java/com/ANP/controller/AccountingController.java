@@ -255,6 +255,28 @@ public class AccountingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
+    @PostMapping(path = "/updatePayToVendor", produces = "application/json")
+    public ResponseEntity updatePayToVendor(@RequestBody PayToVendorBean payToVendorBean) {
+        payToVendorDAO.updatePayToVendor(payToVendorBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/updatePaymentReceived", produces = "application/json")
+    public ResponseEntity updatePaymentReceived(@RequestBody PaymentReceivedBean paymentReceivedBean) {
+        paymentReceivedDAO.updatePaymentReceived(paymentReceivedBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @PostMapping(path = "/updateInternalTransfer", produces = "application/json")
+    public ResponseEntity updateInternalTransfer(@RequestBody InternalTransferBean internalTransferBean) {
+        internalTransferDAO.updateInternalTransfer(internalTransferBean);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @PostMapping(path = "/updateRetailSale", produces = "application/json")
+    public ResponseEntity updateRetailSale(@RequestBody RetailSale retailSale) {
+        retailSaleDAO.updateRetailSale(retailSale);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     /*
      Will be invoked by UI Before Update
      */
@@ -283,5 +305,20 @@ public class AccountingController {
     @GetMapping(path = "/getInternalTransferId", produces = "application/json")
     public InternalTransferBean getInternalTransferId(@RequestParam Long orgId, @RequestParam Long internalId) {
         return internalTransferDAO.getInternalTransferId(orgId,internalId);
+    }
+
+    @GetMapping(path = "/getPaymentReceivedById", produces = "application/json")
+    public PaymentReceivedBean getPaymentReceivedById(@RequestParam Long orgId, @RequestParam Long paymentReceivedID) {
+        return paymentReceivedDAO.getPaymentReceivedById(orgId,paymentReceivedID);
+    }
+
+    @GetMapping(path = "/getPayToVendorById", produces = "application/json")
+    public PayToVendorBean getPayToVendorById(@RequestParam Long orgId, @RequestParam Long payToVendorId) {
+        return payToVendorDAO.getPayToVendorById(orgId,payToVendorId);
+    }
+
+    @GetMapping(path = "/getRetailSaleById", produces = "application/json")
+    public RetailSale getRetailSaleById(@RequestParam Long orgId, @RequestParam Long retailSaleId) {
+        return retailSaleDAO.getRetailSaleById(orgId,retailSaleId);
     }
 }

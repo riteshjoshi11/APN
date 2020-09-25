@@ -1,8 +1,10 @@
 package com.ANP.repository;
 
+import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.PayToVendorBean;
 import com.ANP.bean.PurchaseFromVendorBean;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,5 +106,26 @@ public class PayToVendorDAO {
         if(count>0) {
             throw new CustomAppException("The pay to vendor looks like duplicate", "SERVER.CREATE_PAY_TO_VENDOR.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
+    }
+
+    public int updatePayToVendor(PayToVendorBean payToVendorBean) {
+        return namedParameterJdbcTemplate.update("update paytovendor set details = :details where orgid = :orgId and paytovendor.id = :payToVendorID"
+                ,new BeanPropertySqlParameterSource(payToVendorBean));
+    }
+
+    public PayToVendorBean getPayToVendorById(Long orgId, Long payToVendorId) {
+        java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("paytovendor.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + payToVendorId);
+        searchParams.add(param);
+        List<PayToVendorBean> payToVendorBeanList = listPayToVendorPaged(orgId, searchParams, "", 1, 1);
+        if (payToVendorBeanList != null && !payToVendorBeanList.isEmpty()) {
+            return payToVendorBeanList.get(0);
+        }
+        return null;
     }
 }

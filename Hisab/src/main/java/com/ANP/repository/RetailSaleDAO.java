@@ -2,8 +2,10 @@ package com.ANP.repository;
 
 
 import com.ANP.bean.CustomerInvoiceBean;
+import com.ANP.bean.InternalTransferBean;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SearchParam;
+import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class RetailSaleDAO {
@@ -108,5 +107,24 @@ public class RetailSaleDAO {
             throw new CustomAppException("The Retail Sale looks like duplicate",
                     "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECTSERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
+    }
+    public int updateRetailSale(RetailSale retailSale){
+        return namedParameterJdbcTemplate.update("update retailsale set notes = :notes where orgid = :orgId and " +
+                "retailsale.id = :retailSaleId", new BeanPropertySqlParameterSource(retailSale));
+    }
+    public RetailSale getRetailSaleById(Long orgId, Long retailSaleId) {
+        java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
+        SearchParam param = new SearchParam();
+        param.setCondition("and");
+        param.setFieldName("retailsale.id");
+        param.setFieldType(ANPConstants.SEARCH_FIELDTYPE_STRING);
+        param.setSoperator("=");
+        param.setValue("" + retailSaleId);
+        searchParams.add(param);
+        List<RetailSale> retailSaleList = listRetailEntryPaged(orgId, searchParams, "", 1, 1);
+        if (retailSaleList != null && !retailSaleList.isEmpty()) {
+            return retailSaleList.get(0);
+        }
+        return null;
     }
 }

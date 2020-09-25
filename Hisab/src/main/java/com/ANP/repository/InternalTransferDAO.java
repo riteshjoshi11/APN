@@ -129,4 +129,9 @@ public class InternalTransferDAO {
         }
         return null;
     }
+
+    public int updateInternalTransfer(InternalTransferBean internalTransferBean){
+        return namedParameterJdbcTemplate.update("update internaltransfer set details = :details where orgid = :orgId " +
+                "and internaltransfer.id = :internalTransferID", new BeanPropertySqlParameterSource(internalTransferBean));
+    }
 }
