@@ -136,7 +136,9 @@ public class ReportDAO {
         param.put("startIndex", startIndex - 1);
         orderBy = "id desc";
         //Please note that the email is getting concat'd here from other column
-        return namedParameterJdbcTemplate.query("select report.*, (select GROUP_CONCAT(email) from" +
+        return namedParameterJdbcTemplate.query("select report.*," +
+                "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = report.generatedby) as createdByEmployeeName, " +
+                " (select GROUP_CONCAT(email) from" +
                 " p_gstrpt_send_email where p_gstrpt_send_email.p_gst_reports_id=report.id) emails from p_gst_reports report where orgid=:orgID " +
                 ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + " limit  :noOfRecordsToShow"
                 + " offset :startIndex", param, new ListGSTReportMapper());
@@ -152,7 +154,9 @@ public class ReportDAO {
         param.put("startIndex", startIndex - 1);
         orderBy = "id desc";
         //Please note that the email is getting concat'd here from other column
-        return namedParameterJdbcTemplate.query("select report.*, (select GROUP_CONCAT(email) from" +
+        return namedParameterJdbcTemplate.query("select report.*," +
+                "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = report.generatedby) as createdByEmployeeName, " +
+                " (select GROUP_CONCAT(email) from" +
                 " p_txnrpt_send_email where p_txnrpt_send_email.p_txn_reports_id=report.id) emails from p_txn_reports report where orgid=:orgID " +
                 ANPUtils.getWhereClause(searchParam) + " order by  " + orderBy + " limit  :noOfRecordsToShow"
                 + " offset :startIndex", param, new ListTransactionReportMapper());
@@ -189,6 +193,7 @@ public class ReportDAO {
             reportBean.setReportStatus(rs.getString("reportstatus"));
             reportBean.setOrgId(rs.getLong("report.orgid"));
             reportBean.setReportId(rs.getLong("report.id"));
+            reportBean.setGeneratedByName(rs.getString("createdByEmployeeName"));
 
             String emailsInCSVFormat = rs.getString("emails");
             List<String> emails = null;
@@ -218,6 +223,7 @@ public class ReportDAO {
             reportBean.setToDate(rs.getDate("report.todate"));
             reportBean.setReportFormat(rs.getString("report.format"));
             reportBean.setType(rs.getString("report.type"));
+            reportBean.setGeneratedByName(rs.getString("createdByEmployeeName"));
             String emailsInCSVFormat = rs.getString("emails");
             List<String> emails = null;
             if (!ANPUtils.isNullOrEmpty(emailsInCSVFormat)) {
