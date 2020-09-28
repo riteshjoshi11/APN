@@ -121,7 +121,20 @@ public class EmployeeController {
 
     @GetMapping(path = "/getEmployeeById", produces = "application/json")
     public EmployeeBean getEmployeeById(@RequestParam Long orgId, @RequestParam String employeeId) {
-        return employeeDAO.getEmployeeById(orgId,employeeId);
+        return employeeDAO.getEmployeeById(orgId, employeeId);
     }
 
+    @PostMapping(path = "/deleteEmpSalaryDue", produces = "application/json")
+    public ResponseEntity deleteEmpSalaryDue(@RequestBody EmployeeSalary employeeSalary) {
+        employeeHandler.deleteEmpSalaryDue(employeeSalary);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+
+    }
+
+    @PostMapping(path = "/deleteEmpSalaryPayment", produces = "application/json")
+    public ResponseEntity deleteEmpSalaryPayment(@RequestBody EmployeeSalaryPayment employeeSalaryPayment) {
+        employeeHandler.deleteEmpSalaryPayment(employeeSalaryPayment);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+
+    }
 }

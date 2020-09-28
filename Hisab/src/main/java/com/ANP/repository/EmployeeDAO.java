@@ -389,4 +389,24 @@ public class EmployeeDAO {
             throw new CustomAppException("This mobile no. is already registered for your business", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    public int deleteEmployeeSalary(EmployeeSalary employeeSalary)
+    {
+        Map<String,Object> param = new HashMap<>();
+        param.put("id",employeeSalary.getSalaryID());
+        param.put("orgid",employeeSalary.getOrgId());
+
+        return namedParameterJdbcTemplate.update("update employeesalary set isdeleted = true, deletedate = CURDATE() " +
+                "where id = :id and orgid = :orgid",param);
+    }
+
+    public int deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPayment)
+    {
+        Map<String,Object> param = new HashMap<>();
+        param.put("id",employeeSalaryPayment.getSalaryPaymentID());
+        param.put("orgid",employeeSalaryPayment.getOrgId());
+        return namedParameterJdbcTemplate.update("update employeesalarypayment set isdeleted = true, deletedate = CURDATE() " +
+                "where id = :id and orgid = :orgid",param);
+
+    }
 }

@@ -112,6 +112,26 @@ public class EmployeeHandler {
         employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    //Create Salary and Update Employee:LastSalaryBalance
+    public void deleteEmpSalaryDue(EmployeeSalary employeeSalaryBean) {
+        //create entry into the salary table
+        employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
+
+
+        //Employee Salary Audit
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(employeeSalaryBean.getOrgId());
+        employeeAuditBean.setEmployeeid(employeeSalaryBean.getToEmployeeID());
+        employeeAuditBean.setAmount(employeeSalaryBean.getAmount());
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_DUE);
+        employeeAuditBean.setTransactionDate(new Date());
+        employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
+
+    }
+
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
     //SUBTRACT PAYING PARTY BALANCE
@@ -157,6 +177,35 @@ public class EmployeeHandler {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    //Create Salary and Update Employee:LastSalaryBalance
+    //SUBTRACT PAYING PARTY BALANCE
+    public void deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
+
+        System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
+        System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
+        employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
+        //Update/SUBTRACT From Employee Balance
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
+        employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
+        employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
+        employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+        employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
+        employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
+        accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+
+        //Audit Employee Salary Balance
+        employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getToEmployeeId());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_PAY);
+        employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
+
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean){
         EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(),employeeBean.getEmployeeId());
         System.out.println("first " + employeeBeanFetched.getFirst());
@@ -195,6 +244,7 @@ public class EmployeeHandler {
         employeeDAO.updateEmployee(employeeBean);
 
     }
+
 
 
 }
