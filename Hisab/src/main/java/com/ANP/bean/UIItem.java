@@ -4,7 +4,14 @@ public class UIItem {
     String uiItemCode;
     String uiItemName;
 
+    public UIItem() {
 
+    }
+
+    public UIItem(String code, String name) {
+        this.uiItemCode = code ;
+        this.uiItemName = name ;
+    }
     public String getUiItemName() {
         return uiItemName;
     }

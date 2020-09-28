@@ -1,18 +1,39 @@
 package com.ANP.bean;
 
 import javax.validation.constraints.Min;
+import java.util.Collection;
 
 public class SystemBean {
 
     @Min(value=1, message = "OrgID is mandatory")
     private long orgID;
+    private Collection<UIItem> selectedDeleteOptions;
+
+    public long getOrgID() {
+        return orgID;
+    }
+
+    public void setOrgID(long orgID) {
+        this.orgID = orgID;
+    }
+
+    public Collection<UIItem> getSelectedDeleteOptions() {
+        return selectedDeleteOptions;
+    }
+
+    public void setSelectedDeleteOptions(Collection<UIItem> selectedDeleteOptions) {
+        this.selectedDeleteOptions = selectedDeleteOptions;
+    }
+
+/*
     private boolean deleteCompanyData = false;
     private boolean deleteSalaryData = false;;
     private boolean deleteAuditData= false;
     private boolean deleteEmployeeSalaryBalance = false;
     private boolean deleteEmployeeCompanyBalance = false;
     private boolean deleteCustomerBalance = false;
-
+*/
+  /*
     public boolean isDeleteEmployeeSalaryBalance() {
         return deleteEmployeeSalaryBalance;
     }
@@ -68,6 +89,13 @@ public class SystemBean {
     public void setDeleteAuditData(boolean deleteAuditData) {
         this.deleteAuditData = deleteAuditData;
     }
+*/
 
-
+    @Override
+    public String toString() {
+        return "SystemBean{" +
+                "orgID=" + orgID +
+                ", selectedDeleteOptions=" + selectedDeleteOptions +
+                '}';
+    }
 }

@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -28,6 +31,19 @@ public class UIListController {
 
     @Autowired
     EmailUtil emailUtil;
+
+    Map<Integer,UIItem> SYSTEM_RESET_OPTION_MAP = null;
+
+    //Initializer block
+    {
+        System.out.println("Initializing Map...");
+        SYSTEM_RESET_OPTION_MAP = new HashMap<Integer,UIItem>();
+        SYSTEM_RESET_OPTION_MAP.put(1, new UIItem("1", "Retain GST Transaction(s)"));
+        SYSTEM_RESET_OPTION_MAP.put(2, new UIItem("2", "Retain Staff Salary Transaction(s)"));
+        SYSTEM_RESET_OPTION_MAP.put(3, new UIItem("3", "Retain Staff Acccount Balance(s)"));
+        SYSTEM_RESET_OPTION_MAP.put(4, new UIItem("4", "Retain Customer/Supplier Balance(s)"));
+        SYSTEM_RESET_OPTION_MAP.put(5, new UIItem("5", "Retain Staff Salary Balance(s)"));
+    }
 
     @PostMapping(path = "/getCities", produces = "application/json")
     public List<City> getCity() {
@@ -61,10 +77,17 @@ public class UIListController {
         return UIListDAO.getOrgDetailsUILists();
     }
 
+    @PostMapping(path = "/getSystemResetScreenOptions", produces = "application/json")
+    public Collection<UIItem> getSystemResetScreenOptions() {
+        return SYSTEM_RESET_OPTION_MAP.values();
+    }
+/*
     @PostMapping(path = "/getTest", produces = "application/json")
     public void getTest() {
         emailUtil.sendEmail(null,null,null,null,null);
     }
+
+ */
 }
 
 

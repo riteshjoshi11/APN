@@ -20,8 +20,12 @@ public class SystemController {
     @PostMapping(path = "/deleteDataForOrganization", produces = "application/json")
     public ResponseEntity deleteOrganizationTranaction(@RequestBody SystemBean systemBean)
     {
+        System.out.println("deleteOrganizationTranaction=" + systemBean);
+
+        /*
         systemDAO.softDeleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),
                 systemBean.isDeleteEmployeeSalaryBalance(), systemBean.isDeleteEmployeeCompanyBalance(), systemBean.isDeleteCustomerBalance());
+        */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

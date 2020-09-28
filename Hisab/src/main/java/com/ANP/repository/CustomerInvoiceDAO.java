@@ -1,7 +1,6 @@
 package com.ANP.repository;
 
 import com.ANP.bean.CustomerInvoiceBean;
-import com.ANP.bean.Expense;
 import com.ANP.bean.SearchParam;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
@@ -58,7 +57,7 @@ public class CustomerInvoiceDAO {
                 "select cusinv.id,cusinv.tocustomerid,cusinv.date,cusinv.orderamount,cusinv.cgst,cusinv.sgst,cusinv.igst," +
                         "(select concat(`first`,' ',`last`,'[',`mobile`,']') from employee e where e.id = cusinv.createdbyid) as createdByEmployeeName, " +
                         "cusinv.totalamount,cusinv.invoiceno,cusinv.toaccountid,cusinv.orgid,cusinv.includeinreport," +
-                        "cusinv.includeincalc,cusinv.createdate,cusinv.createdbyid,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin from customer c," +
+                        "cusinv.includeincalc,cusinv.createdate,cusinv.createdbyid,c.state, c.name,c.firmname,c.city,c.mobile1,c.gstin,cusinv.note from customer c," +
                         " customerinvoice cusinv where c.id=cusinv.tocustomerid and cusinv.orgid=:orgID and (cusinv.isdeleted is null or cusinv.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -75,7 +74,6 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.getCustomerBean().setGstin(rs.getString("c.gstin"));
             customerInvoiceBean.getCustomerBean().setMobile1(rs.getString("c.mobile1"));
             customerInvoiceBean.getCustomerBean().setState(rs.getString("c.state"));
-//          customerInvoiceBean.getCustomerBean().setMobile2(rs.getString("c.mobile2"));
             customerInvoiceBean.setInvoiceID(rs.getLong("cusinv.id"));
             customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
             customerInvoiceBean.setCGST(rs.getBigDecimal("cusinv.cgst"));
@@ -92,6 +90,7 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.setCreateDate(rs.getTimestamp("cusinv.createdate"));
             customerInvoiceBean.setCreatedbyId(rs.getString("cusinv.createdbyid"));
             customerInvoiceBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
+            customerInvoiceBean.setNote(rs.getString("cusinv.note"));
             return customerInvoiceBean;
         }
     }
@@ -123,8 +122,9 @@ public class CustomerInvoiceDAO {
      * Always include primary key for the update.
      */
     public int updateSales(CustomerInvoiceBean customerInvoiceBean){
+        System.out.println("customerInvoiceBean.invoiceNo[" + customerInvoiceBean.getInvoiceNo() + "]");
         return namedParameterJdbcTemplate.update("update customerinvoice set cgst = :CGST," +
-                 " sgst=:SGST, igst=:IGST, note = :note,date=:date,invoiceno=invoiceNo, orderamount=:orderAmount " +
+                 " sgst=:SGST, igst=:IGST, note = :note,date=:date,invoiceno=:invoiceNo, orderamount=:orderAmount " +
                 "where orgid = :orgId and id = :invoiceID",new BeanPropertySqlParameterSource(customerInvoiceBean));
     }
 

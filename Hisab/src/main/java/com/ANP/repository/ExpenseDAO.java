@@ -36,8 +36,8 @@ public class ExpenseDAO {
             isDuplicateSuspect(expense);
         }
         return namedParameterJdbcTemplate.update(
-                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,includeinreport,orderamount,cgst,sgst,igst,extra,topartygstno,topartymobileno,paid)" +
-                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:extra,:toPartyGSTNO,:toPartyMobileNO,:paid);",
+                "INSERT INTO generalexpense(date,Category,Description,totalamount,toPartyName,orgId,createdById,FromAccountID,fromemployeeid,includeinreport,orderamount,cgst,sgst,igst,topartygstno,topartymobileno,paid)" +
+                        "VALUES(:date,:category,:description,:totalAmount,:toPartyName,:orgId,:createdbyId,:FromAccountID,:fromEmployeeID,:includeInReport,:orderAmount,:CGST,:SGST,:IGST,:toPartyGSTNO,:toPartyMobileNO,:paid);",
                 new BeanPropertySqlParameterSource(expense));
     }
 
@@ -77,7 +77,6 @@ public class ExpenseDAO {
             obj.setCGST(rs.getDouble("exp.cgst"));
             obj.setSGST(rs.getDouble("exp.sgst"));
             obj.setIGST(rs.getDouble("exp.igst"));
-            obj.setExtra(rs.getDouble("exp.extra"));
             obj.setToPartyName(rs.getString("exp.topartyname"));
             obj.setDate(rs.getTimestamp("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
@@ -89,6 +88,7 @@ public class ExpenseDAO {
             obj.setFromAccountID(rs.getLong("exp.fromaccountid"));
             obj.setFromEmployeeID(rs.getString("exp.fromemployeeid"));
             obj.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
+            obj.setDescription(rs.getString("description"));
 
             return obj;
         }
@@ -227,7 +227,6 @@ public class ExpenseDAO {
             obj.setCGST(rs.getDouble("exp.cgst"));
             obj.setSGST(rs.getDouble("exp.sgst"));
             obj.setIGST(rs.getDouble("exp.igst"));
-            obj.setExtra(rs.getDouble("exp.extra"));
             obj.setToPartyName(rs.getString("exp.topartyname"));
             obj.setDate(rs.getTimestamp("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
@@ -246,7 +245,7 @@ public class ExpenseDAO {
     public void updateExpense(Expense expense) {
         namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
                         "sgst=:SGST, igst=:IGST, description = :description, date=:date,category=:category, " +
-                        "orderamount=:orderAmount, includeinreport=:includeInReport,extra=:extra,topartygstno=:toPartyGSTNO," +
+                        "orderamount=:orderAmount, includeinreport=:includeInReport,topartygstno=:toPartyGSTNO," +
                         "topartymobileno=:toPartyMobileNO where orgid = :orgId and id = :expenseId",
                 new BeanPropertySqlParameterSource(expense));
     }

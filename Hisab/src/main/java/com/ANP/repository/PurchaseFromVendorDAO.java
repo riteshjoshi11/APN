@@ -100,6 +100,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
             purchaseFromVendorBean.setFromAccountId(rs.getLong("p.fromaccountid"));
             purchaseFromVendorBean.setFromCustomerId(rs.getString("customer.id"));
+            purchaseFromVendorBean.setOrderAmount(rs.getDouble("p.orderamount"));
             purchaseFromVendorBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return purchaseFromVendorBean;
         }
