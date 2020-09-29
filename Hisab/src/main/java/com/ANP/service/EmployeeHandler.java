@@ -5,7 +5,9 @@ import com.ANP.repository.AccountDAO;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,8 +119,12 @@ public class EmployeeHandler {
     //Create Salary and Update Employee:LastSalaryBalance
     public void deleteEmpSalaryDue(EmployeeSalary employeeSalaryBean) {
         //create entry into the salary table
-        employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
-
+        int noOfRecordsDeleted;
+        noOfRecordsDeleted =  employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
+        if(noOfRecordsDeleted != 1)
+        {
+            throw new CustomAppException("Wrong Employee Salary Due Deletion Entry", "SERVER.EMPLOYEE_SALARY_DUE.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        }
 
         //Employee Salary Audit
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
@@ -183,7 +189,12 @@ public class EmployeeHandler {
 
         System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
         System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
-        employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
+        int noOfRecordsDeleted;
+        noOfRecordsDeleted = employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
+        if(noOfRecordsDeleted != 1)
+        {
+            throw new CustomAppException("Wrong Employee Salary Payment Deletion Entry", "SERVER.EMPLOYEE_SALARY_PAYMENT.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        }
         //Update/SUBTRACT From Employee Balance
         EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
         employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
