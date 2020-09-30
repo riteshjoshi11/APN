@@ -1,6 +1,8 @@
 package com.ANP.repository;
 
 
+import com.ANP.bean.SystemBean;
+import com.ANP.bean.UIItem;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
@@ -40,27 +42,50 @@ public class UISystemDAO {
     DataSource dataSource;
 
     @Transactional(rollbackFor = Exception.class)
-    public void softDeleteOrganizationTransaction(long orgId, boolean deleteCompanyData, boolean deleteSalaryData, boolean deleteAuditData ,
-                                                  boolean deleteEmployeeSalaryBalance, boolean deleteEmployeeCompanyBalance, boolean deleteCustomerBalance)
+    public void softDeleteOrganizationTransaction(SystemBean systemBean)
     {
+
+        boolean retainGSTTransaction = false;
+        boolean retainStaffSalaryTransaction = false;
+        boolean RetainStaffAccountBalance = false;
+        boolean RetainCustomerBalance = false;
+        boolean RetainStaffSalaryBalance = false;
+
+        for(UIItem uiItem : systemBean.getSelectedDeleteOptions()) {
+            if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("1")) {
+                retainGSTTransaction = true;
+            }
+            else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("2")) {
+                retainStaffSalaryTransaction = true;
+            }
+            else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("3")) {
+                RetainStaffAccountBalance = true;
+            }
+            else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("4")) {
+                RetainCustomerBalance = true;
+            }
+            else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("5")) {
+                RetainStaffSalaryBalance = true;
+            }
+        }
+
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
         procedure.setSql("SoftDeleteOrgData_Procedure");
         procedure.setFunction(false);
 
         SqlParameter[] declareparameters = {
+                new SqlParameter("RetainGSTTransaction",Types.BOOLEAN),
+                new SqlParameter("RetainStaffSalaryTransaction",Types.BOOLEAN),
+                new SqlParameter("RetainStaffAccountBalance",Types.BOOLEAN),
+                new SqlParameter("RetainCustomerBalance",Types.BOOLEAN),
+                new SqlParameter("RetainStaffSalaryBalance",Types.BOOLEAN),
                 new SqlParameter("ParamOrgId",Types.INTEGER),
-                new SqlParameter("DeleteCompanyData",Types.BOOLEAN),
-                new SqlParameter("DeleteSalaryData",Types.BOOLEAN),
-                new SqlParameter("DeleteAuditData",Types.BOOLEAN),
-                new SqlParameter("DeleteEmployeeSalaryBalance",Types.BOOLEAN),
-                new SqlParameter("DeleteEmployeeCompanyBalance",Types.BOOLEAN),
-                new SqlParameter("DeleteCustomerBalance",Types.BOOLEAN),
         };
         procedure.setParameters(declareparameters);
         procedure.compile();
-        procedure.execute(orgId, deleteCompanyData, deleteSalaryData, deleteAuditData, deleteEmployeeSalaryBalance,
-                deleteEmployeeCompanyBalance, deleteCustomerBalance);
+        procedure.execute(retainGSTTransaction,retainStaffSalaryTransaction,RetainStaffAccountBalance,
+                RetainCustomerBalance,RetainStaffSalaryBalance,systemBean.getOrgID());
     }
 
     public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll) {

@@ -3,7 +3,6 @@ package com.ANP.controller;
 
 import com.ANP.bean.SystemAuditBean;
 import com.ANP.bean.SystemBean;
-import com.ANP.bean.UIItem;
 import com.ANP.repository.UISystemDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,18 +22,9 @@ public class SystemController {
     {
         System.out.println("deleteOrganizationTranaction=" + systemBean);
 
-        if(!systemBean.getSelectedDeleteOptions().isEmpty()) {
-            if (systemBean.getSelectedDeleteOptions().contains(new UIItem("100",""))) {
-                //meaning Delete all
-            } else {
 
-            }
-        }
+        systemDAO.softDeleteOrganizationTransaction(systemBean);
 
-        /*
-        systemDAO.softDeleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),
-                systemBean.isDeleteEmployeeSalaryBalance(), systemBean.isDeleteEmployeeCompanyBalance(), systemBean.isDeleteCustomerBalance());
-        */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
