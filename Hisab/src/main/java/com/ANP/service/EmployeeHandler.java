@@ -5,7 +5,9 @@ import com.ANP.repository.AccountDAO;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,6 +114,30 @@ public class EmployeeHandler {
         employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    //Create Salary and Update Employee:LastSalaryBalance
+    public void deleteEmpSalaryDue(EmployeeSalary employeeSalaryBean) {
+        //create entry into the salary table
+        int noOfRecordsDeleted;
+        noOfRecordsDeleted =  employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
+        if(noOfRecordsDeleted != 1)
+        {
+            throw new CustomAppException("Wrong Employee Salary Due Deletion Entry", "SERVER.EMPLOYEE_SALARY_DUE.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        //Employee Salary Audit
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(employeeSalaryBean.getOrgId());
+        employeeAuditBean.setEmployeeid(employeeSalaryBean.getToEmployeeID());
+        employeeAuditBean.setAmount(employeeSalaryBean.getAmount());
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_DUE);
+        employeeAuditBean.setTransactionDate(new Date());
+        employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
+
+    }
+
     @Transactional(rollbackFor = Exception.class)
     //Create Salary and Update Employee:LastSalaryBalance
     //SUBTRACT PAYING PARTY BALANCE
@@ -157,6 +183,40 @@ public class EmployeeHandler {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    //Create Salary and Update Employee:LastSalaryBalance
+    //SUBTRACT PAYING PARTY BALANCE
+    public void deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
+
+        System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
+        System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
+        int noOfRecordsDeleted;
+        noOfRecordsDeleted = employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
+        if(noOfRecordsDeleted != 1)
+        {
+            throw new CustomAppException("Wrong Employee Salary Payment Deletion Entry", "SERVER.EMPLOYEE_SALARY_PAYMENT.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
+        }
+        //Update/SUBTRACT From Employee Balance
+        EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
+        employeeAuditBean.setOrgId(employeeSalaryPaymentBean.getOrgId());
+        employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
+        employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
+        employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
+        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+        employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
+        employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
+        accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
+
+        //Audit Employee Salary Balance
+        employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getToEmployeeId());
+        employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_PAY);
+        employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
+
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean){
         EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(),employeeBean.getEmployeeId());
         System.out.println("first " + employeeBeanFetched.getFirst());
@@ -195,6 +255,7 @@ public class EmployeeHandler {
         employeeDAO.updateEmployee(employeeBean);
 
     }
+
 
 
 }
