@@ -22,10 +22,9 @@ public class SystemController {
     {
         System.out.println("deleteOrganizationTranaction=" + systemBean);
 
-        /*
-        systemDAO.softDeleteOrganizationTransaction(systemBean.getOrgID(), systemBean.isDeleteCompanyData(), systemBean.isDeleteSalaryData(), systemBean.isDeleteAuditData(),
-                systemBean.isDeleteEmployeeSalaryBalance(), systemBean.isDeleteEmployeeCompanyBalance(), systemBean.isDeleteCustomerBalance());
-        */
+
+        systemDAO.softDeleteOrganizationTransaction(systemBean);
+
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
