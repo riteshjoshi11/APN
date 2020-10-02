@@ -1,4 +1,4 @@
-package com.ANP.offline;
+package com.ANP.service.offline;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
