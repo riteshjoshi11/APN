@@ -1,13 +1,17 @@
 package com.ANP.repository;
 
+import com.ANP.service.offline.OfflineDataGrowthController;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,7 @@ import java.util.Map;
  * This will actually archive and purge/delete organization data based on the table names and number of days after soft deletion configuration parameters
  */
 public class ArchiveAndPurgeDAO {
+    private static final Logger logger = LoggerFactory.getLogger(ArchiveAndPurgeDAO.class);
 
     @Autowired
     SystemConfigurationReaderDAO systemConfigurationReaderDAO;
@@ -32,8 +37,13 @@ public class ArchiveAndPurgeDAO {
 
     @Transactional(rollbackFor = Exception.class)
     public void invokeArchiveAndPurgeProcess() {
-        System.out.println("archive and purge procedure call");
-        /*
+        logger.trace("archive and purge procedure call");
+        if(ANPUtils.isTestEnvironment()) {
+            logger.warn("Returning without doing anything as it is test environment") ;
+            return ;
+        }
+
+        logger.info("Processing the Archive and Purge Process..."); ;
         Map<String,String> systemConfigMap ;
         systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
         String commaSeperatedArchiveList = systemConfigMap.get("ArchivePurge.archiveandpurgetablelist");
@@ -83,17 +93,22 @@ public class ArchiveAndPurgeDAO {
                 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
                 System.out.println("result = "+ simpleJdbcCallResult);
             }
-        }*/
-
-        System.out.println("archive and purge procedure call EXIT");
+        }
+        logger.trace("archive and purge procedure call EXIT");
 
     }
 
-
+    @Async
     @Transactional(rollbackFor = Exception.class)
     public void controlOrgDataGrowth() {
-        System.out.println("Entering Control Organization Data Growth...");
-        /*
+        logger.trace("Entering controlOrgDataGrowth()");
+        if(ANPUtils.isTestEnvironment()) {
+            logger.warn("Returning without doing anything as it is test environment") ;
+            return ;
+        }
+
+        logger.info("Processing the Control Orgnization Data Growth..."); ;
+
         Map<String, String> systemConfigMap;
         systemConfigMap = systemConfigurationReaderDAO.getSystemConfigurationMap();
         String commaSeperatedDataControlTableList = systemConfigMap.get("CONTROL.ORG.DATA.GROWTH.TABLENAME");
@@ -152,8 +167,8 @@ public class ArchiveAndPurgeDAO {
         controlOrgDataGrowthDateWise(noDeleteDays, premiumNoDeleteDays, resultDataControlTableList);
         //Deleting data for NON PREMIUM users TRANSACTION WISE
         controlOrgDataGrowthTransactionWise(automaticDeleteTransactions, premiumDeleteTransactions, resultDataControlTableList);
-*/
-        System.out.println("Exiting Control Organization Data Growth...");
+
+        logger.trace("Entering controlOrgDataGrowth()");
     }
 
 

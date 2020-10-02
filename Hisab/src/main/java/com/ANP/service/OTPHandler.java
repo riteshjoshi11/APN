@@ -16,18 +16,18 @@ public class OTPHandler {
     UserCommunicationHandler userCommunicationHandler;
 
     public boolean sendOTP(String mobile) {
-        String otp = generateNumberOTP(6);
-        String testModeOTP = System.getProperty("TestModeOTP");
-        if (!ANPUtils.isNullOrEmpty(testModeOTP)) {
-            System.out.println("Test Mode is enabled to setting OTP to [" + testModeOTP + "]");
-            otp = testModeOTP;
+        String otp = "";
+        if(!ANPUtils.isTestEnvironment()) {
+            otp = generateNumberOTP(6);
+        } else {
+            otp = ANPUtils.getTestModeOTP();
         }
         OTPBean otpBean = new OTPBean();
         otpBean.setMobileNumber(mobile);
         otpBean.setOtp(otp);
         int dbCreateStatus = otpdao.createOTP(otpBean);
         //SEND OTP ONLY WHEN PROD ENV (MENAING TESTMODE OTP IS NOT GIVEN
-        if (dbCreateStatus > 0 && ANPUtils.isNullOrEmpty(testModeOTP)) {
+        if (dbCreateStatus > 0 && !ANPUtils.isTestEnvironment()) {
             //SEND SMS
 
             System.out.println("will send SMS");

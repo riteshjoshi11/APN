@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ReportService {
@@ -144,13 +141,34 @@ public class ReportService {
         }
 
     }
+    /*
+        @TODO: Paras please correct the date - i directly converted Date to toString - but check if you need in any specific format
+     */
+    public void processTransactionReport(TransactionReportBean reportBean) {
+        String excelName = generateFileName() + ".xlsx";
+        String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
+        reportDAO.backupReportGeneration(reportBean.getOrgId(),reportBean.getFromDate().toString(),reportBean.getToDate().toString(),excelPath);
+    }
 
+    /*
     public void generateTransactionReport(long orgId, String format, String dateFrom , String dateTo) {
         String excelName = generateFileName() + ".xlsx";
         String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
         reportDAO.backupReportGeneration(orgId,dateFrom,dateTo,excelPath);
     }
-
+*/
+    /*
+    @TODO Paras Please complete this code as per Trello Card
+     */
+    public List<GSTReportBean> getUnprocessedGSTReportRequestBatch(Integer batchSize) {
+        return null;
+    }
+    /*
+       @TODO Paras Please complete this code as per Trello Card
+        */
+    public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize) {
+        return null;
+    }
 
     private Map<String, String> monthNum(String month, String year) {
         Map<String, String> dateMap = new HashMap<>();

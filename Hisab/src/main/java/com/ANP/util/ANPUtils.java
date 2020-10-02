@@ -101,5 +101,20 @@ public class ANPUtils implements ANPConstants {
         new File(absoluteFilePath).createNewFile();
     }
 
+    public static Boolean isTestEnvironment() {
+        String testModeOTP = System.getProperty("TestModeOTP");
+        if (!ANPUtils.isNullOrEmpty(testModeOTP)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+    public static String getTestModeOTP() {
+        String testModeOTP = System.getProperty("TestModeOTP");
+        if (!ANPUtils.isNullOrEmpty(testModeOTP)) {
+            return testModeOTP;
+        }
+        return null;
+    }
 
 }
