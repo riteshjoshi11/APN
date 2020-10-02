@@ -37,6 +37,9 @@ public class ReportService {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /*
+    This method is being invoked by UI to create Transaction Report Request
+     */
     public long createGSTReportRecord(GSTReportBean reportBean) {
         //validate
         reportDAO.canCreateMoreGSTReports(reportBean);
@@ -49,6 +52,9 @@ public class ReportService {
         return reportDAO.createGSTReport(reportBean);
     }
 
+    /*
+    This method is being invoked by UI to create GST Report Request
+     */
     public long createTxnReportRecord(TransactionReportBean reportBean) {
         //calculate from date and to date in case user has selected from last backup date to now.
         reportBean.setReportStatus(ReportBean.reportStatusEnum.WAITING.toString());
@@ -139,6 +145,12 @@ public class ReportService {
 
     }
 
+    public void generateTransactionReport(long orgId, String format, String dateFrom , String dateTo) {
+        String excelName = generateFileName() + ".xlsx";
+        String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
+        reportDAO.backupReportGeneration(orgId,dateFrom,dateTo,excelPath);
+    }
+
 
     private Map<String, String> monthNum(String month, String year) {
         Map<String, String> dateMap = new HashMap<>();
@@ -223,13 +235,5 @@ public class ReportService {
         return (formattedDateTime + "-" + randomNumberString );
     }
 
-    public void backupReportGeneration(long orgId, String format, String dateFrom , String dateTo) {
-        String excelName = generateFileName() + ".xlsx";
-        String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
-
-        reportDAO.backupReportGeneration(orgId,dateFrom,dateTo,excelPath);
-
-
-    }
 }
 

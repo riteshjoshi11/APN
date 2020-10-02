@@ -116,7 +116,7 @@ public class ReportController {
 
     @PostMapping(path = "/backupReportGeneration", produces = "application/json")
     public ResponseEntity backupReportGeneration(long orgId, String format, String dateFrom , String dateTo) {
-        reportService.backupReportGeneration(orgId,format,dateFrom,dateTo);
+        reportService.generateTransactionReport(orgId,format,dateFrom,dateTo);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

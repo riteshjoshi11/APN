@@ -1,10 +1,13 @@
 package com.ANP.offline;
 
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OfflineUserDataReportProcessor extends GenericOfflineProcessor{
-    @Override
-    public void processOffline() {
 
+    @Override
+    @Scheduled(cron="${cron.schedule.OfflineUserDataReportProcessor}")
+    public void processOffline() {
     }
 }
