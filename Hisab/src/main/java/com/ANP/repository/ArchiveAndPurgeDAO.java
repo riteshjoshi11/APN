@@ -22,7 +22,6 @@ import java.util.*;
 * This process will kick-off as per the configured schedule
 * This will actually archive and purge/delete organization data based on the table names and number of days after soft deletion configuration parameters
  */
-@EnableScheduling
 public class ArchiveAndPurgeDAO {
 
     @Autowired
@@ -31,7 +30,6 @@ public class ArchiveAndPurgeDAO {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @Scheduled(cron="${cron.expressionForArchiveAndPurge}")
     @Transactional(rollbackFor = Exception.class)
     public void invokeArchiveAndPurgeProcess()
     {
@@ -88,9 +86,11 @@ public class ArchiveAndPurgeDAO {
             }
         }*/
 
+        System.out.println("archive and purge procedure call EXIT");
+
     }
 
-    @Scheduled(cron="${cron.expressionForOrgDataControl}")
+
     @Transactional(rollbackFor = Exception.class)
     public void controlOrgDataGrowth()
     {
