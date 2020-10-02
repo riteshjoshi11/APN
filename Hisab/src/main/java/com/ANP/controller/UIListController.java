@@ -43,7 +43,6 @@ public class UIListController {
         SYSTEM_RESET_OPTION_MAP.put(3, new UIItem("3", "Retain Staff Account Balance(s)"));    // Not to delete current balance of employee
         SYSTEM_RESET_OPTION_MAP.put(4, new UIItem("4", "Retain Customer/Supplier Balance(s)")); // Not to delete Customer balance
         SYSTEM_RESET_OPTION_MAP.put(5, new UIItem("5", "Retain Staff Salary Balance(s)"));  // Not to delete salary balance Employee
-        SYSTEM_RESET_OPTION_MAP.put(100, new UIItem("100", "Delete Everything"));  //100 means not check anything
     }
 
     @PostMapping(path = "/getCities", produces = "application/json")
