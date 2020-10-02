@@ -44,7 +44,9 @@ public class UISystemDAO {
     @Transactional(rollbackFor = Exception.class)
     public void softDeleteOrganizationTransaction(SystemBean systemBean)
     {
-
+        if(systemBean.getOrgID()<=0){
+            throw new CustomAppException("OrgId not valid","SYSTEM.DELETE_ORGANIZATION_TRANSACTION.NOTVALID",HttpStatus.BAD_REQUEST);
+        }
         boolean retainGSTTransaction = false;
         boolean retainStaffSalaryTransaction = false;
         boolean RetainStaffAccountBalance = false;
@@ -66,6 +68,14 @@ public class UISystemDAO {
             }
             else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("5")) {
                 RetainStaffSalaryBalance = true;
+            }
+            else if (!ANPUtils.isNullOrEmpty(uiItem.getUiItemCode()) && uiItem.getUiItemCode().equalsIgnoreCase("100")) {
+                 retainGSTTransaction = false;
+                 retainStaffSalaryTransaction = false;
+                 RetainStaffAccountBalance = false;
+                 RetainCustomerBalance = false;
+                 RetainStaffSalaryBalance = false;
+                 break;
             }
         }
 

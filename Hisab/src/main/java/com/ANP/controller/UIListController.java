@@ -38,11 +38,12 @@ public class UIListController {
     {
         System.out.println("Initializing Map...");
         SYSTEM_RESET_OPTION_MAP = new HashMap<Integer,UIItem>();
-        SYSTEM_RESET_OPTION_MAP.put(1, new UIItem("1", "Retain GST Transaction(s)"));
-        SYSTEM_RESET_OPTION_MAP.put(2, new UIItem("2", "Retain Staff Salary Transaction(s)"));
-        SYSTEM_RESET_OPTION_MAP.put(3, new UIItem("3", "Retain Staff Acccount Balance(s)"));
-        SYSTEM_RESET_OPTION_MAP.put(4, new UIItem("4", "Retain Customer/Supplier Balance(s)"));
-        SYSTEM_RESET_OPTION_MAP.put(5, new UIItem("5", "Retain Staff Salary Balance(s)"));
+        SYSTEM_RESET_OPTION_MAP.put(1, new UIItem("1", "Retain GST Transaction(s)"));   // Transaction deletion includeInCA and includeinReport False or null   Sale Expense purchse
+        SYSTEM_RESET_OPTION_MAP.put(2, new UIItem("2", "Retain Staff Salary Transaction(s)"));  // Not to delete salary transactions employee salary and employee salary payment
+        SYSTEM_RESET_OPTION_MAP.put(3, new UIItem("3", "Retain Staff Account Balance(s)"));    // Not to delete current balance of employee
+        SYSTEM_RESET_OPTION_MAP.put(4, new UIItem("4", "Retain Customer/Supplier Balance(s)")); // Not to delete Customer balance
+        SYSTEM_RESET_OPTION_MAP.put(5, new UIItem("5", "Retain Staff Salary Balance(s)"));  // Not to delete salary balance Employee
+        SYSTEM_RESET_OPTION_MAP.put(100, new UIItem("100", "Delete Everything"));  //100 means not check anything
     }
 
     @PostMapping(path = "/getCities", produces = "application/json")
