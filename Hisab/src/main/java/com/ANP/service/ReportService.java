@@ -12,7 +12,9 @@ import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
@@ -90,6 +92,7 @@ public class ReportService {
      * Please update - ReportBean.reportStatusEnum.Error in case of error (do not ignore the errors in the catch blocks - just update the status)
      *
      */
+    @Async
     public void processGSTReport(GSTReportBean gstReportBean) {
 
         try {
@@ -144,6 +147,7 @@ public class ReportService {
     /*
         @TODO: Paras please correct the date - i directly converted Date to toString - but check if you need in any specific format
      */
+    @Async
     public void processTransactionReport(TransactionReportBean reportBean) {
         String excelName = generateFileName() + ".xlsx";
         String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;

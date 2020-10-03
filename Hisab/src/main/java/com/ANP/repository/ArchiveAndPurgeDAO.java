@@ -36,6 +36,7 @@ public class ArchiveAndPurgeDAO {
     JdbcTemplate jdbcTemplate;
 
     @Transactional(rollbackFor = Exception.class)
+    @Async
     public void invokeArchiveAndPurgeProcess() {
         logger.trace("archive and purge procedure call");
         if(ANPUtils.isTestEnvironment()) {
