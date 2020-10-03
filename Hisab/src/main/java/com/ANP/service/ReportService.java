@@ -152,7 +152,7 @@ public class ReportService {
         String excelName = generateFileName() + ".xlsx";
         String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
         reportDAO.backupReportGeneration(reportBean.getOrgId(),reportBean.getFromDate().toString(),reportBean.getToDate().toString(),excelPath);
-    }
+    }//make changes in .toString methods
 
     /*
     public void generateTransactionReport(long orgId, String format, String dateFrom , String dateTo) {
@@ -165,13 +165,13 @@ public class ReportService {
     @TODO Paras Please complete this code as per Trello Card
      */
     public List<GSTReportBean> getUnprocessedGSTReportRequestBatch(Integer batchSize) {
-        return null;
+        return reportDAO.getUnprocessedGSTReportRequestBatch(batchSize);
     }
     /*
-       @TODO Paras Please complete this code as per Trello Card
-        */
+    @TODO Paras Please complete this code as per Trello Card
+    */
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize) {
-        return null;
+        return reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
     }
 
     private Map<String, String> monthNum(String month, String year) {
