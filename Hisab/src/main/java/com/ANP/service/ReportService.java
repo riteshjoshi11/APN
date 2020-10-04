@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -151,7 +153,12 @@ public class ReportService {
     public void processTransactionReport(TransactionReportBean reportBean) {
         String excelName = generateFileName() + ".xlsx";
         String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
-        reportDAO.backupReportGeneration(reportBean.getOrgId(),reportBean.getFromDate().toString(),reportBean.getToDate().toString(),excelPath);
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String fromDate = df.format(reportBean.getFromDate());
+        String toDate = df.format(reportBean.getToDate());
+
+        reportDAO.backupReportGeneration(reportBean.getOrgId(),fromDate,toDate,excelPath);
     }//make changes in .toString methods
 
     /*
