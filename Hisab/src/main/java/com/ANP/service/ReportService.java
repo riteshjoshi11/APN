@@ -161,13 +161,7 @@ public class ReportService {
         reportDAO.backupReportGeneration(reportBean.getOrgId(),fromDate,toDate,excelPath);
     }//make changes in .toString methods
 
-    /*
-    public void generateTransactionReport(long orgId, String format, String dateFrom , String dateTo) {
-        String excelName = generateFileName() + ".xlsx";
-        String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
-        reportDAO.backupReportGeneration(orgId,dateFrom,dateTo,excelPath);
-    }
-*/
+
     /*
     @TODO Paras Please complete this code as per Trello Card
      */
@@ -264,5 +258,21 @@ public class ReportService {
         return (formattedDateTime + "-" + randomNumberString );
     }
 
+    /*
+        * @TODO : Paras please complete this method
+        * Fire a Batch Update and update Report status = Processing for List<GSTReportBean>
+        * Use Report ID & OrgID in the where condition to update the records
+     */
+    public void updateGSTReportStatusProcessingInBatch(List<GSTReportBean> gstReportBeanList) {
+
+    }
+
+    /*
+     * @TODO : Paras please complete this method
+     * Fire a Batch Update and update Report status = Processing for List<TransactionReportBean>
+     * Use Report ID & OrgID in the where condition to update the records
+     */
+    public void updateTxnReportStatusProcessingInBatch(List<TransactionReportBean> txnReportBeanList) {
+    }
 }
 
