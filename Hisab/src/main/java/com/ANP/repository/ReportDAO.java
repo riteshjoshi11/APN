@@ -948,6 +948,8 @@ public class ReportDAO {
             TransactionReportBean transactionReportBean = new TransactionReportBean();
             transactionReportBean.setOrgId(rs.getLong("orgid"));
             transactionReportBean.setReportId(rs.getLong("id"));
+            transactionReportBean.setFromDate(rs.getDate("fromdate"));
+            transactionReportBean.setToDate(rs.getDate("todate"));
             return transactionReportBean;
         }
 
