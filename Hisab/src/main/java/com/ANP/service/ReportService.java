@@ -174,9 +174,7 @@ public class ReportService {
     @TODO Paras Please complete this code as per Trello Card
     */
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize) {
-        List<TransactionReportBean> transactionReportBeanList = reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
-        updateTxnReportStatusProcessingInBatch(transactionReportBeanList);
-        return transactionReportBeanList;
+        return reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
     }
 
     private Map<String, String> monthNum(String month, String year) {

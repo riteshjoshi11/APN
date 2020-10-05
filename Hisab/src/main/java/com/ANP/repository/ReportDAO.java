@@ -920,7 +920,7 @@ public class ReportDAO {
     public List<GSTReportBean> getUnprocessedGSTReportRequestBatch(Integer batchSize){
         Map<String,Object> param = new HashMap<>();
         param.put("batchSize",batchSize);
-        return namedParameterJdbcTemplate.query("select id , orgid " +
+        return namedParameterJdbcTemplate.query("select id , orgid, formonth " +
                 "  from p_gst_reports where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
                 " limit :batchSize offset 0",param,new GSTReportMapper());
     }
@@ -930,6 +930,7 @@ public class ReportDAO {
             GSTReportBean gstReportBean = new GSTReportBean();
             gstReportBean.setOrgId(rs.getLong("orgid"));
             gstReportBean.setReportId(rs.getLong("id"));
+            gstReportBean.setForMonth(rs.getString("formonth"));
             return gstReportBean;
         }
     }
