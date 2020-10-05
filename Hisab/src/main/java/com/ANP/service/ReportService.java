@@ -166,13 +166,17 @@ public class ReportService {
     @TODO Paras Please complete this code as per Trello Card
      */
     public List<GSTReportBean> getUnprocessedGSTReportRequestBatch(Integer batchSize) {
-        return reportDAO.getUnprocessedGSTReportRequestBatch(batchSize);
+        List<GSTReportBean> gstReportBeanList = reportDAO.getUnprocessedGSTReportRequestBatch(batchSize);
+        updateGSTReportStatusProcessingInBatch(gstReportBeanList);
+        return gstReportBeanList;
     }
     /*
     @TODO Paras Please complete this code as per Trello Card
     */
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize) {
-        return reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
+        List<TransactionReportBean> transactionReportBeanList = reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
+        updateTxnReportStatusProcessingInBatch(transactionReportBeanList);
+        return transactionReportBeanList;
     }
 
     private Map<String, String> monthNum(String month, String year) {
@@ -264,6 +268,7 @@ public class ReportService {
         * Use Report ID & OrgID in the where condition to update the records
      */
     public void updateGSTReportStatusProcessingInBatch(List<GSTReportBean> gstReportBeanList) {
+        reportDAO.updateGSTReportStatusProcessingInBatch(gstReportBeanList);
 
     }
 
@@ -273,6 +278,7 @@ public class ReportService {
      * Use Report ID & OrgID in the where condition to update the records
      */
     public void updateTxnReportStatusProcessingInBatch(List<TransactionReportBean> txnReportBeanList) {
+        reportDAO.updateTxnReportStatusProcessingInBatch(txnReportBeanList);
     }
 }
 

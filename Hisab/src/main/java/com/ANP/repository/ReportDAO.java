@@ -920,9 +920,8 @@ public class ReportDAO {
     public List<GSTReportBean> getUnprocessedGSTReportRequestBatch(Integer batchSize){
         Map<String,Object> param = new HashMap<>();
         param.put("batchSize",batchSize);
-        return namedParameterJdbcTemplate.query("select * , " +
-                " (select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = pgst.generatedby) as createdByEmployeeName " +
-                "  from p_gst_reports pgst where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
+        return namedParameterJdbcTemplate.query("select id , orgid " +
+                "  from p_gst_reports where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
                 " limit :batchSize offset 0",param,new GSTReportMapper());
     }
 
@@ -930,15 +929,7 @@ public class ReportDAO {
         public GSTReportBean mapRow(ResultSet rs, int Rownum) throws SQLException{
             GSTReportBean gstReportBean = new GSTReportBean();
             gstReportBean.setOrgId(rs.getLong("orgid"));
-            gstReportBean.setPdfFilePath(rs.getString("pdffilepath"));
-            gstReportBean.setExcelFilePath(rs.getString("excelfilepath"));
-            gstReportBean.setGenerateDate(rs.getTimestamp("generatedate"));
-            gstReportBean.setGeneratedByName(rs.getString("createdByEmployeeName"));
-            gstReportBean.setFromEmail(rs.getString("fromEmail"));
-            gstReportBean.setMode(rs.getString("mode"));
-            gstReportBean.setReportStatus(rs.getString("reportstatus"));
-            gstReportBean.setForMonth(rs.getString("formonth"));
-
+            gstReportBean.setReportId(rs.getLong("id"));
             return gstReportBean;
         }
     }
@@ -946,9 +937,8 @@ public class ReportDAO {
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize){
         Map<String,Object> param = new HashMap<>();
         param.put("batchSize",batchSize);
-        return namedParameterJdbcTemplate.query("select * , " +
-                " (select concat(`first`,' ',`last`,'[',`mobile`,']') from employee where employee.id = ptxn.generatedby) as createdByEmployeeName " +
-                "  from `p_txn_reports` ptxn where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
+        return namedParameterJdbcTemplate.query("select id , orgid " +
+                "  from p_txn_reports where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
                 " limit :batchSize offset 0",param,new TransactionGSTReportMapper());
     }
 
@@ -956,19 +946,53 @@ public class ReportDAO {
         public TransactionReportBean mapRow(ResultSet rs, int rownum) throws SQLException{
             TransactionReportBean transactionReportBean = new TransactionReportBean();
             transactionReportBean.setOrgId(rs.getLong("orgid"));
-            transactionReportBean.setPdfFilePath(rs.getString("pdffilepath"));
-            transactionReportBean.setExcelFilePath(rs.getString("excelfilepath"));
-            transactionReportBean.setGeneratedByName(rs.getString("createdByEmployeeName"));
-            transactionReportBean.setGenerateDate(rs.getTimestamp("generatedate"));
-            transactionReportBean.setReportStatus(rs.getString("reportstatus"));
-            transactionReportBean.setTimePeriod(rs.getString("period"));
-            transactionReportBean.setType(rs.getString("type"));
-            transactionReportBean.setReportFormat(rs.getString("format"));
-            transactionReportBean.setFromDate(rs.getTimestamp("fromdate"));
-            transactionReportBean.setToDate(rs.getTimestamp("todate"));
+            transactionReportBean.setReportId(rs.getLong("id"));
             return transactionReportBean;
         }
 
     }
+
+    public void updateGSTReportStatusProcessingInBatch(List<GSTReportBean> gstReportBeanList) {
+        String sql = "update p_gst_reports set reportstatus = '"+ ReportBean.reportStatusEnum.PROCESSING +"'" +
+                " where id = ? and orgid = ?  ";
+        namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps, int i)
+                    throws SQLException {
+
+                Long reportID = gstReportBeanList.get(i).getReportId();
+                Long orgId = gstReportBeanList.get(i).getOrgId();
+                ps.setLong(1, reportID);
+                ps.setLong(2, orgId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return (gstReportBeanList.size());
+            }
+        });
+    }
+
+    public void updateTxnReportStatusProcessingInBatch(List<TransactionReportBean> transactionReportBeanList) {
+        String sql = "update p_txn_reports set reportstatus = '"+ ReportBean.reportStatusEnum.PROCESSING +"'" +
+                " where id = ? and orgid = ?  ";
+        namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i)
+                        throws SQLException {
+                    Long reportID = transactionReportBeanList.get(i).getReportId();
+                    Long orgId = transactionReportBeanList.get(i).getOrgId();
+                    ps.setLong(1, reportID);
+                    ps.setLong(2, orgId);
+                }
+
+            @Override
+            public int getBatchSize() {
+                    return (transactionReportBeanList.size());
+                }
+        });
+    }
 }
+
 
