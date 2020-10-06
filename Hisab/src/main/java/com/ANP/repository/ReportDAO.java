@@ -117,7 +117,7 @@ public class ReportDAO {
     public long createGSTReport(GSTReportBean reportBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into p_gst_reports(orgid," +
-                "`mode`,reportstatus,formonth) values(:orgId,:mode,:reportStatus,:forMonth)", new BeanPropertySqlParameterSource(reportBean), holder);
+                "`mode`,reportstatus,formonth) values(:orgId,:mode,'"+ReportBean.reportStatusEnum.WAITING.toString()+"',:forMonth)", new BeanPropertySqlParameterSource(reportBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createGSTReport: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
@@ -327,7 +327,7 @@ public class ReportDAO {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into " + ANPConstants.DB_TBL_TXN_REPORT + " (orgid," +
                         " reportstatus,period,fromdate,todate,format,type) " +
-                        " values(:orgId,:reportStatus,:timePeriod,:fromDate,:toDate, :reportFormat,:type)",
+                        " values(:orgId,'"+ ReportBean.reportStatusEnum.WAITING.toString() +"',:timePeriod,:fromDate,:toDate, :reportFormat,:type)",
                 new BeanPropertySqlParameterSource(reportBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
         System.out.println("createTxnReport: Generated Key=" + generatedOrgKey);
@@ -549,6 +549,20 @@ public class ReportDAO {
 
         //Updating ReportStatus and Excel File Path
         namedParameterJdbcTemplate.update("update p_gst_reports set reportstatus = :reportstatus , excelfilepath = :excelFilePath" +
+                " where id = :reportid and  orgid = :orgId", param);
+
+    }
+
+    public void updateTransactionReport(TransactionReportBean transactionReportBean) {
+        Map<String, Object> param = new HashMap<>();
+
+        param.put("excelFilePath", transactionReportBean.getExcelFilePath());
+        param.put("reportstatus", transactionReportBean.getReportStatus());
+        param.put("reportid", transactionReportBean.getReportId());
+        param.put("orgId", transactionReportBean.getOrgId());
+
+        //Updating ReportStatus and Excel File Path
+        namedParameterJdbcTemplate.update("update p_txn_reports set reportstatus = :reportstatus , excelfilepath = :excelFilePath" +
                 " where id = :reportid and  orgid = :orgId", param);
 
     }
@@ -938,7 +952,7 @@ public class ReportDAO {
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize){
         Map<String,Object> param = new HashMap<>();
         param.put("batchSize",batchSize);
-        return namedParameterJdbcTemplate.query("select id , orgid " +
+        return namedParameterJdbcTemplate.query("select id , orgid, fromdate, todate " +
                 "  from p_txn_reports where reportstatus = '"+ ReportBean.reportStatusEnum.WAITING.toString() +"'" +
                 " limit :batchSize offset 0",param,new TransactionGSTReportMapper());
     }

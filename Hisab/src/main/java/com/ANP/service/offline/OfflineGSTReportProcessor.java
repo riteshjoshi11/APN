@@ -31,7 +31,7 @@ public class OfflineGSTReportProcessor extends GenericOfflineProcessor {
             for (GSTReportBean gstReportBean : gstReportBeanList) {
                 reportService.processGSTReport(gstReportBean);
             }
-            reportService.updateGSTReportStatusProcessingInBatch(gstReportBeanList);
+
         }
 
         logger.trace("Exiting processOffline()");

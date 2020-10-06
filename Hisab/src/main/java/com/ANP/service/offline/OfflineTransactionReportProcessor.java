@@ -32,8 +32,6 @@ public class OfflineTransactionReportProcessor extends GenericOfflineProcessor{
             for (TransactionReportBean gstReportBean : txnReportBeanList) {
                 reportService.processTransactionReport(gstReportBean);
             }
-            reportService.updateTxnReportStatusProcessingInBatch(txnReportBeanList);
-
         }
 
         logger.trace("Exiting processOffline()");

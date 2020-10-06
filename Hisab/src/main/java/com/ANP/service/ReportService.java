@@ -133,7 +133,6 @@ public class ReportService {
             gstReportBean.setExcelFilePath(excelPath);
 
             //Call method to generate the GST Report
-            gstReportBean.setReportStatus(ReportBean.reportStatusEnum.PROCESSING.toString());
             reportDAO.generateGSTReport(gstReportBean, startDate, lastDate);
             gstReportBean.setReportStatus(ReportBean.reportStatusEnum.GENERATED.toString());
             //Updating status in p_gst_table
@@ -151,15 +150,26 @@ public class ReportService {
      */
     @Async
     public void processTransactionReport(TransactionReportBean reportBean) {
+        try {
         String excelName = generateFileName() + ".xlsx";
         String excelPath = systemConfigurationReaderDAO.getSystemConfigurationMap().get("REPORT.PATH") + excelName;
+        reportBean.setExcelFilePath(excelPath);
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String fromDate = df.format(reportBean.getFromDate());
         String toDate = df.format(reportBean.getToDate());
 
         reportDAO.backupReportGeneration(reportBean.getOrgId(),fromDate,toDate,excelPath);
-    }//make changes in .toString methods
+        reportBean.setReportStatus(ReportBean.reportStatusEnum.GENERATED.toString());
+        //Updating status in p_txn table
+        reportDAO.updateTransactionReport(reportBean);
+        } catch(Exception e) {
+        reportBean.setReportStatus(ReportBean.reportStatusEnum.ERROR.toString());
+        //not throwing error as it is not being used by UI
+        //Updating status in p_txn table
+        reportDAO.updateTransactionReport(reportBean);
+    }
+    }
 
 
     /*
@@ -174,7 +184,9 @@ public class ReportService {
     @TODO Paras Please complete this code as per Trello Card
     */
     public List<TransactionReportBean> getUnprocessedTransactionReportRequestBatch(Integer batchSize) {
-        return reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
+        List<TransactionReportBean> transactionReportBeanList = reportDAO.getUnprocessedTransactionReportRequestBatch(batchSize);
+        updateTxnReportStatusProcessingInBatch(transactionReportBeanList);
+        return transactionReportBeanList;
     }
 
     private Map<String, String> monthNum(String month, String year) {
