@@ -14,6 +14,17 @@ public class EmployeeAuditBean extends CommonAttribute {
     private String otherPartyName;
     private String forWhat;
     private Date transactionDate;
+
+    public enum EmpTypeEnum {
+        Salary,
+        Retail,
+        Expense,
+        Supplier,
+        Customer,
+        Staff_Transfer
+    }
+
+
     public long getAuditId() {
         return auditId;
     }
