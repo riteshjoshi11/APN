@@ -1,5 +1,6 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class InternalTransferBean extends CommonAttribute {
@@ -7,7 +8,7 @@ public class InternalTransferBean extends CommonAttribute {
     private long fromAccountID;
     private long toAccountID;
     private java.util.Date receivedDate;
-    private double amount;
+    private BigDecimal amount;
     private String details;
     private String toEmployeeID;
     private String fromEmployeeID;
@@ -91,11 +92,11 @@ public class InternalTransferBean extends CommonAttribute {
         this.receivedDate = receivedDate;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

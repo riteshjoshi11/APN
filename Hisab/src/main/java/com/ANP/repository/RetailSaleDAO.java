@@ -68,7 +68,7 @@ public class RetailSaleDAO {
         {
             RetailSale ret = new RetailSale();
             ret.setRetailSaleId(rs.getLong("retail.id"));
-            ret.setAmount(rs.getLong("retail.amount"));
+            ret.setAmount(rs.getBigDecimal("retail.amount"));
             ret.setDate(rs.getTimestamp("retail.date"));
             ret.setIncludeincalc(rs.getBoolean("retail.includeincalc"));
             ret.setFromaccountid(rs.getInt("retail.fromaccountid"));
@@ -96,8 +96,8 @@ public class RetailSaleDAO {
         params.put("date", retailSale.getDate());
         params.put("orgid", retailSale.getOrgId());
 
-        long actualamount = (long)(retailSale.getAmount());
-        params.put("amount", actualamount);
+
+        params.put("amount", retailSale.getAmount().longValue());
 
 
         Integer count = namedParameterJdbcTemplate.queryForObject(   "select count(*) from ( SELECT  floor(amount) " +

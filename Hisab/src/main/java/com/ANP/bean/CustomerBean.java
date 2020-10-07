@@ -3,6 +3,7 @@ package com.ANP.bean;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
 
 @AtLeastOneNotEmpty(fields = {"name", "firmname"})
 public class CustomerBean extends CommonAttribute {
@@ -18,11 +19,11 @@ public class CustomerBean extends CommonAttribute {
     private String firmname;
     private String billingadress;
     private String customerID;
-    private float initialBalance = 0;
+    private BigDecimal initialBalance = new BigDecimal("0");
     private boolean sendPaymentReminders;
     private String state;
     //This is account attribute
-    private double accountBalance;
+    private BigDecimal accountBalance;
     private long accountId;
 
     public long getAccountId() {
@@ -41,11 +42,15 @@ public class CustomerBean extends CommonAttribute {
         this.state = state;
     }
 
-    public double getAccountBalance() {
+    public void setInitialBalance(BigDecimal initialBalance) {
+        this.initialBalance = initialBalance;
+    }
+
+    public BigDecimal getAccountBalance() {
         return accountBalance;
     }
 
-    public void setAccountBalance(double accountBalance) {
+    public void setAccountBalance(BigDecimal accountBalance) {
         this.accountBalance = accountBalance;
     }
 
@@ -65,13 +70,6 @@ public class CustomerBean extends CommonAttribute {
         this.customerID = customerID;
     }
 
-    public float getInitialBalance() {
-        return initialBalance;
-    }
-
-    public void setInitialBalance(float initialBalance) {
-        this.initialBalance = initialBalance;
-    }
 
     public String getGstin() {
         return gstin;
@@ -135,6 +133,10 @@ public class CustomerBean extends CommonAttribute {
 
     public void setTransporter(String transporter) {
         this.transporter = transporter;
+    }
+
+    public BigDecimal getInitialBalance() {
+        return initialBalance;
     }
 }
 

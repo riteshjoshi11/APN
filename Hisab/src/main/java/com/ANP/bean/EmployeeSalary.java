@@ -1,9 +1,11 @@
 package com.ANP.bean;
 
 
+import java.math.BigDecimal;
+
 public class EmployeeSalary extends CommonAttribute {
     private String toEmployeeID;
-    private double amount;
+    private BigDecimal amount;
     private String details;
     private long salaryID;
     private boolean includeInCalc;
@@ -46,13 +48,9 @@ public class EmployeeSalary extends CommonAttribute {
         this.salaryID = salaryID;
     }
 
-    public double getAmount() {
-        return amount;
-    }
+    public BigDecimal getAmount() { return amount; }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public String getDetails() {
         return details;

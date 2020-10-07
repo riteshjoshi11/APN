@@ -1,4 +1,5 @@
 package com.ANP.service;
+import java.math.BigDecimal;
 import java.util.*;
 import com.ANP.bean.*;
 import com.ANP.repository.AccountDAO;
@@ -48,8 +49,10 @@ public class EmployeeHandler {
 
 
         //@TODO Paras: Please add a check here if (should not be 0 or 0.0) then call below method
-        if(employeeBean.getInitialSalaryBalance()>0) {
-            createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+        if(employeeBean.getInitialSalaryBalance() != null) {
+            if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
+                createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+            }
         }
         System.out.println("End CreateEmployee");
     }
@@ -248,10 +251,11 @@ public class EmployeeHandler {
         }
 
         //@TODO paras : if there is change in the employeeInitialSalary balance field
-        if(employeeBean.getInitialSalaryBalance()>0) {
-            createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+        if(employeeBean.getInitialSalaryBalance() != null){
+            if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
+                createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
+            }
         }
-
         employeeDAO.updateEmployee(employeeBean);
 
     }

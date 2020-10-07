@@ -1,11 +1,12 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class EmployeeSalaryPayment extends CommonAttribute {
     private long fromAccountId;
     private java.util.Date transferDate;
-    private double amount;
+    private BigDecimal amount;
     private String details;
     private String toEmployeeId;
     private String fromEmployeeId;
@@ -80,13 +81,9 @@ public class EmployeeSalaryPayment extends CommonAttribute {
         this.transferDate = transferDate;
     }
 
-    public double getAmount() {
-        return amount;
-    }
+    public BigDecimal getAmount() { return amount; }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public String getDetails() {
         return details;

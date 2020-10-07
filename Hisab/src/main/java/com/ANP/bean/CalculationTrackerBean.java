@@ -1,32 +1,34 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
+
 public class CalculationTrackerBean extends CommonAttribute {
 
-    private float unPaidExpense;
-    private float paidExpense;
-    private float totalExpense ;
+    private BigDecimal unPaidExpense;
+    private BigDecimal paidExpense;
+    private BigDecimal totalExpense ;
 
-    public float getUnPaidExpense() {
+    public BigDecimal getUnPaidExpense() {
         return unPaidExpense;
     }
 
-    public void setUnPaidExpense(float unPaidExpense) {
+    public void setUnPaidExpense(BigDecimal unPaidExpense) {
         this.unPaidExpense = unPaidExpense;
     }
 
-    public float getPaidExpense() {
+    public BigDecimal getPaidExpense() {
         return paidExpense;
     }
 
-    public void setPaidExpense(float paidExpense) {
+    public void setPaidExpense(BigDecimal paidExpense) {
         this.paidExpense = paidExpense;
     }
 
-    public float getTotalExpense() {
+    public BigDecimal getTotalExpense() {
         return totalExpense;
     }
 
-    public void setTotalExpense(float totalExpense) {
+    public void setTotalExpense(BigDecimal totalExpense) {
         this.totalExpense = totalExpense;
     }
 }

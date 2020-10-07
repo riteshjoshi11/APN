@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -30,7 +31,7 @@ public class CalculationTrackerDAO {
 
     //Add the balance amount onto the existing "paid" balance
     //Operations: (ADD,SUBTRACT)
-    public int updatePaidExpenseBalance(long orgID, double balance, String operation) {
+    public int updatePaidExpenseBalance(long orgID, BigDecimal balance, String operation) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
         mapSqlParameterSource.addValue("balance", balance);
@@ -45,7 +46,7 @@ public class CalculationTrackerDAO {
 
     //Add the balance amount onto the existing "unpaid" balance
     //Operations: (ADD,SUBTRACT)
-    public int updateUnPaidExpenseBalance(long orgID, double balance,String operation) {
+    public int updateUnPaidExpenseBalance(long orgID, BigDecimal balance,String operation) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
         mapSqlParameterSource.addValue("balance", balance);
@@ -59,7 +60,7 @@ public class CalculationTrackerDAO {
     }
 
     //Add the balance amount onto the existing "unpaid" balance
-    public int makeUnpaidToPaid(long orgID, double balance) {
+    public int makeUnpaidToPaid(long orgID, BigDecimal balance) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
         mapSqlParameterSource.addValue("balance", balance);
@@ -84,9 +85,9 @@ public class CalculationTrackerDAO {
     private static final class CalculationMapper implements RowMapper<CalculationTrackerBean> {
         public CalculationTrackerBean mapRow(ResultSet rs, int rowNum) throws SQLException {
             CalculationTrackerBean calculationTrackerBean = new CalculationTrackerBean();
-            calculationTrackerBean.setPaidExpense(rs.getFloat("paidexpense"));
-            calculationTrackerBean.setUnPaidExpense(rs.getFloat("unpaidexpense"));
-            calculationTrackerBean.setTotalExpense(rs.getFloat("totalexpense"));
+            calculationTrackerBean.setPaidExpense(rs.getBigDecimal("paidexpense"));
+            calculationTrackerBean.setUnPaidExpense(rs.getBigDecimal("unpaidexpense"));
+            calculationTrackerBean.setTotalExpense(rs.getBigDecimal("totalexpense"));
             return calculationTrackerBean;
         }
     }

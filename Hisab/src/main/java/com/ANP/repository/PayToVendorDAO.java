@@ -75,7 +75,7 @@ public class PayToVendorDAO {
             payToVendorBean.setFromAccountID(rs.getLong("paytov.fromaccountid"));
             payToVendorBean.setToAccountID(rs.getLong("paytov.toaccountid"));
             payToVendorBean.setPaymentDate(rs.getTimestamp("paytov.date"));
-            payToVendorBean.setAmount(rs.getFloat("paytov.amount"));
+            payToVendorBean.setAmount(rs.getBigDecimal("paytov.amount"));
             payToVendorBean.setDetails(rs.getString("paytov.details"));
             payToVendorBean.setFromEmployeeID(rs.getString("paytov.fromemployeeid"));
             payToVendorBean.setOrgId(rs.getLong("paytov.orgid"));
@@ -99,8 +99,8 @@ public class PayToVendorDAO {
         params.put("orgid", payToVendorBean.getOrgId());
         params.put("tocustomerid", payToVendorBean.getToCustomerID());
 
-        long actualamount = (long)(payToVendorBean.getAmount());
-        params.put("amount", actualamount);
+
+        params.put("amount", payToVendorBean.getAmount().longValue());
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as " +
                 " amount ,id from paytovendor where orgid=:orgid and tocustomerid=:tocustomerid and (isdeleted is null or isdeleted <> true) " +
                 " order by id desc limit 1) pay where amount = :amount",params, Integer.class);

@@ -75,11 +75,11 @@ public class CustomerInvoiceDAO {
             customerInvoiceBean.getCustomerBean().setMobile1(rs.getString("c.mobile1"));
             customerInvoiceBean.getCustomerBean().setState(rs.getString("c.state"));
             customerInvoiceBean.setInvoiceID(rs.getLong("cusinv.id"));
-            customerInvoiceBean.setOrderAmount(rs.getDouble("orderamount"));
+            customerInvoiceBean.setOrderAmount(rs.getBigDecimal("orderamount"));
             customerInvoiceBean.setCGST(rs.getBigDecimal("cusinv.cgst"));
-            customerInvoiceBean.setIGST(rs.getFloat("cusinv.igst"));
-            customerInvoiceBean.setSGST(rs.getFloat("cusinv.sgst"));
-            customerInvoiceBean.setTotalAmount(rs.getFloat("cusinv.totalamount"));
+            customerInvoiceBean.setIGST(rs.getBigDecimal("cusinv.igst"));
+            customerInvoiceBean.setSGST(rs.getBigDecimal("cusinv.sgst"));
+            customerInvoiceBean.setTotalAmount(rs.getBigDecimal("cusinv.totalamount"));
             customerInvoiceBean.setInvoiceNo(rs.getString("cusinv.invoiceno"));
             customerInvoiceBean.setOrgId(rs.getLong("cusinv.orgid"));
             customerInvoiceBean.setToAccountId(rs.getLong("cusinv.toaccountid"));
@@ -102,8 +102,7 @@ public class CustomerInvoiceDAO {
         params.put("orgid", customerInvoiceBean.getOrgId());
         params.put("tocustomerid", customerInvoiceBean.getToCustomerId());
 
-        long actualamount = (long)(customerInvoiceBean.getTotalAmount());
-        params.put("amount", actualamount);
+        params.put("amount", customerInvoiceBean.getTotalAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(totalamount) as totalamount ," +
                 "id from customerinvoice where orgid=:orgid and tocustomerid=:tocustomerid and (isdeleted is null or isdeleted <> true) " +

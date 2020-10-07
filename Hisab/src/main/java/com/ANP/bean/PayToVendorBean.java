@@ -1,5 +1,6 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class PayToVendorBean extends CommonAttribute {
@@ -10,7 +11,7 @@ public class PayToVendorBean extends CommonAttribute {
     private long toAccountID;
     private String toCustomerID;
     private java.util.Date paymentDate;
-    private double amount;
+    private BigDecimal amount;
     private String details;
     private boolean includeInCalc = true;
     private CustomerBean customerBean;
@@ -116,13 +117,9 @@ public class PayToVendorBean extends CommonAttribute {
         this.paymentDate = paymentDate;
     }
 
-    public double getAmount() {
-        return amount;
-    }
+    public BigDecimal getAmount() { return amount; }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public String getDetails() {
         return details;
@@ -136,7 +133,5 @@ public class PayToVendorBean extends CommonAttribute {
         return createPurchaseEntryAlso;
     }
 
-    public void setCreatePurchaseEntryAlso(boolean createPurchaseEntryAlso) {
-        this.createPurchaseEntryAlso = createPurchaseEntryAlso;
-    }
+    public void setCreatePurchaseEntryAlso(boolean createPurchaseEntryAlso) { this.createPurchaseEntryAlso = createPurchaseEntryAlso; }
 }

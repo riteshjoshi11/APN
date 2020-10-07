@@ -10,6 +10,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Map;
 
@@ -47,8 +48,8 @@ public class DashboardDAO {
         Map<String, Object> result = procedure.execute(orgId);
         System.out.println("Status " + result);
         System.out.println("Status  " + result.get("positiveBalance"));
-        dashboardBean.setNeedToPay((Double) result.get("positiveBalance"));
-        dashboardBean.setNeedToCollect((Double) result.get("negativeBalance"));
+        dashboardBean.setNeedToPay((BigDecimal) result.get("positiveBalance"));
+        dashboardBean.setNeedToCollect((BigDecimal)result.get("negativeBalance"));
 
         StoredProcedure procedure1 = new GenericStoredProcedure();
         procedure1.setDataSource(dataSource);
@@ -63,7 +64,7 @@ public class DashboardDAO {
         procedure1.compile();
         Map<String, Object> result1 = procedure1.execute(orgId);
         System.out.println("Status tot cash in hand " + result1.get("totalCashInHand"));
-        dashboardBean.setTotalCashInHand((Double)result1.get("totalCashInHand"));
+        dashboardBean.setTotalCashInHand((BigDecimal)result1.get("totalCashInHand"));
 
 
         StoredProcedure procedure2 = new GenericStoredProcedure();
@@ -79,7 +80,7 @@ public class DashboardDAO {
         procedure2.compile();
         Map<String, Object> result2 = procedure2.execute(orgId);
         System.out.println("Status tot salary due  " + result2.get("totalSalaryDue"));
-        dashboardBean.setTotalSalaryDue((Double)result2.get("totalSalaryDue"));
+        dashboardBean.setTotalSalaryDue((BigDecimal)result2.get("totalSalaryDue"));
 
 
         //build the dashboard bean

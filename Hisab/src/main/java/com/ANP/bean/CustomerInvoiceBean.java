@@ -8,12 +8,12 @@ public class CustomerInvoiceBean extends CommonAttribute {
     private long toAccountId;
     private String toCustomerId;
     private java.util.Date date;
-    private double orderAmount;
+    private BigDecimal orderAmount;
     private BigDecimal CGST;
-    private double SGST;
-    private double IGST;
-    private double extra;
-    private double totalAmount;
+    private BigDecimal SGST;
+    private BigDecimal IGST;
+    private BigDecimal extra;
+    private BigDecimal totalAmount;
     private String note;
 
     private String invoiceNo;
@@ -69,53 +69,29 @@ public class CustomerInvoiceBean extends CommonAttribute {
         this.date = date;
     }
 
-    public double getOrderAmount() {
-        return orderAmount;
-    }
+    public BigDecimal getOrderAmount() { return orderAmount; }
 
-    public void setOrderAmount(double orderAmount) {
-        this.orderAmount = orderAmount;
-    }
+    public void setOrderAmount(BigDecimal orderAmount) { this.orderAmount = orderAmount; }
 
-    public BigDecimal getCGST() {
-        return CGST;
-    }
+    public BigDecimal getCGST() { return CGST; }
 
-    public void setCGST(BigDecimal CGST) {
-        this.CGST = CGST;
-    }
+    public void setCGST(BigDecimal CGST) { this.CGST = CGST; }
 
-    public double getSGST() {
-        return SGST;
-    }
+    public BigDecimal getSGST() { return SGST; }
 
-    public void setSGST(double SGST) {
-        this.SGST = SGST;
-    }
+    public void setSGST(BigDecimal SGST) { this.SGST = SGST; }
 
-    public double getIGST() {
-        return IGST;
-    }
+    public BigDecimal getIGST() { return IGST; }
 
-    public void setIGST(double IGST) {
-        this.IGST = IGST;
-    }
+    public void setIGST(BigDecimal IGST) { this.IGST = IGST; }
 
-    public double getExtra() {
-        return extra;
-    }
+    public BigDecimal getExtra() { return extra; }
 
-    public void setExtra(double extra) {
-        this.extra = extra;
-    }
+    public void setExtra(BigDecimal extra) { this.extra = extra; }
 
-    public double getTotalAmount() {
-        return totalAmount;
-    }
+    public BigDecimal getTotalAmount() { return totalAmount; }
 
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount;    }
 
     public String getNote() {
         return note;

@@ -44,11 +44,11 @@ public class CustomerAuditDAO {
             customerAuditBean.setCustomerid(rs.getString("custau.customerid"));
             customerAuditBean.setAccountid(rs.getLong("custau.accountid"));
             customerAuditBean.setType(rs.getString("custau.type"));
-            customerAuditBean.setAmount(rs.getLong("custau.amount"));
-            customerAuditBean.setNewbalance(rs.getLong("custau.newbalance"));
+            customerAuditBean.setAmount(rs.getBigDecimal("custau.amount"));
+            customerAuditBean.setNewbalance(rs.getBigDecimal("custau.newbalance"));
             customerAuditBean.setOperation(rs.getString("custau.operation"));
             customerAuditBean.setOtherPartyName(rs.getString("custau.otherparty"));
-            customerAuditBean.setPreviousbalance(rs.getLong("custau.previousbalance"));
+            customerAuditBean.setPreviousbalance(rs.getBigDecimal("custau.previousbalance"));
             customerAuditBean.setTransactionDate(rs.getTimestamp("custau.txndate"));
             customerAuditBean.setCreateDate(rs.getTimestamp("custau.date"));
             customerAuditBean.setOrgId(rs.getLong("custau.orgid"));

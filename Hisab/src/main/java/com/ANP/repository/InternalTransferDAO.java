@@ -76,7 +76,7 @@ public class InternalTransferDAO {
             internalTransferBean.getToEmployee().setFirst(rs.getString("e.first"));
             internalTransferBean.getToEmployee().setLast(rs.getString("e.last"));
             internalTransferBean.getToEmployee().setMobile(rs.getString("e.mobile"));
-            internalTransferBean.setAmount(rs.getDouble("internal.amount"));
+            internalTransferBean.setAmount(rs.getBigDecimal("internal.amount"));
             internalTransferBean.setReceivedDate(rs.getTimestamp("internal.rcvddate"));
             internalTransferBean.setCreateDate(rs.getTimestamp("internal.createdate"));
             internalTransferBean.setCreatedbyId(rs.getString("internal.createdbyid"));
@@ -99,8 +99,8 @@ public class InternalTransferDAO {
         params.put("fromemployeeid", internalTransferBean.getFromEmployeeID());
         params.put("toemployeeid", internalTransferBean.getToEmployeeID());
 
-        long actualamount = (long) (internalTransferBean.getAmount());
-        params.put("amount", actualamount);
+
+        params.put("amount", internalTransferBean.getAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( select  floor(amount) " +
                 " as amount ,id from internaltransfer where orgid=:orgid and fromemployeeid=:fromemployeeid " +

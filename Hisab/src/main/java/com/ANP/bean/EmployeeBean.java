@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class EmployeeBean extends CommonAttribute {
 
@@ -21,11 +22,11 @@ public class EmployeeBean extends CommonAttribute {
     private String mobile2;
     private String type;
     private int typeInt;
-    private double currentsalarybalance;
-    private double lastsalarybalance;
-    private float initialSalaryBalance;
-    private float currentAccountBalance;
-    private float initialBalance;
+    private BigDecimal currentsalarybalance;
+    private BigDecimal lastsalarybalance;
+    private BigDecimal initialSalaryBalance;
+    private BigDecimal currentAccountBalance;
+    private BigDecimal initialBalance;
     private boolean loginrequired;
     private long accountId;
 
@@ -52,20 +53,36 @@ public class EmployeeBean extends CommonAttribute {
         return this.first + " " + this.last;
     }
 
-    public float getCurrentAccountBalance() {
-        return currentAccountBalance;
+    public void setCurrentsalarybalance(BigDecimal currentsalarybalance) {
+        this.currentsalarybalance = currentsalarybalance;
     }
 
-    public void setCurrentAccountBalance(float currentAccountBalance) {
-        this.currentAccountBalance = currentAccountBalance;
+    public void setLastsalarybalance(BigDecimal lastsalarybalance) {
+        this.lastsalarybalance = lastsalarybalance;
     }
 
-    public float getInitialSalaryBalance() {
+    public BigDecimal getInitialSalaryBalance() {
         return initialSalaryBalance;
     }
 
-    public void setInitialSalaryBalance(float initialSalaryBalance) {
+    public void setInitialSalaryBalance(BigDecimal initialSalaryBalance) {
         this.initialSalaryBalance = initialSalaryBalance;
+    }
+
+    public BigDecimal getCurrentAccountBalance() {
+        return currentAccountBalance;
+    }
+
+    public void setCurrentAccountBalance(BigDecimal currentAccountBalance) {
+        this.currentAccountBalance = currentAccountBalance;
+    }
+
+    public void setInitialBalance(BigDecimal initialBalance) {
+        this.initialBalance = initialBalance;
+    }
+
+    public boolean isLoginrequired() {
+        return loginrequired;
     }
 
     public String getEmployeeId() {
@@ -108,34 +125,16 @@ public class EmployeeBean extends CommonAttribute {
         this.type=type;
     }
 
-    public double getCurrentsalarybalance(){
-        return currentsalarybalance;
-    }
+    public BigDecimal getCurrentsalarybalance() { return currentsalarybalance; }
 
-    public void setCurrentsalarybalance(double currentsalarybalance){
-        this.currentsalarybalance=currentsalarybalance;
-    }
+    public BigDecimal getLastsalarybalance() { return lastsalarybalance; }
 
-    public double getLastsalarybalance(){
-        return lastsalarybalance;
-    }
-
-    public void setLastsalarybalance(double lastsalarybalance){
-        this.lastsalarybalance=lastsalarybalance;
-    }
+    public BigDecimal getInitialBalance() { return initialBalance; }
 
     public boolean getLoginrequired(){ return loginrequired; }
 
     public void setLoginrequired(boolean loginrequired){
         this.loginrequired = loginrequired;
-    }
-
-    public float getInitialBalance() {
-        return initialBalance;
-    }
-
-    public void setInitialBalance(float initialBalance) {
-        this.initialBalance = initialBalance;
     }
 
     public String getMobile2() {

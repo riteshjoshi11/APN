@@ -1,11 +1,12 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class RetailSale extends CommonAttribute {
     private long retailSaleId;
     private String notes;
-    private double amount;
+    private BigDecimal amount;
     private String fromemployeeid;
     private int fromaccountid;
     private Date date;
@@ -49,13 +50,9 @@ public class RetailSale extends CommonAttribute {
         this.notes = notes;
     }
 
-    public double getAmount() {
-        return amount;
-    }
+    public BigDecimal getAmount() { return amount; }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public String getFromemployeeid() {
         return fromemployeeid;

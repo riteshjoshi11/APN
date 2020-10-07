@@ -1,5 +1,7 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
+
 public class AccountBean extends CommonAttribute {
 
     private String ownerid;
@@ -7,19 +9,13 @@ public class AccountBean extends CommonAttribute {
     private String type;
     private String details;
     private String createdbyid;
-    private double currentbalance;
-    private double lastbalance;
+    private BigDecimal currentbalance;
+    private BigDecimal lastbalance;
     private String createdate;
     private long accountId;
-    private float initialBalance;
+    private BigDecimal initialBalance;
 
-    public float getInitialBalance() {
-        return initialBalance;
-    }
 
-    public void setInitialBalance(float initialBalance) {
-        this.initialBalance = initialBalance;
-    }
 
     public long getAccountId(){return  accountId;}
 
@@ -66,20 +62,28 @@ public class AccountBean extends CommonAttribute {
         this.createdbyid = createdbyid;
     }
 
-    public double getCurrentbalance() {
+    public BigDecimal getCurrentbalance() {
         return currentbalance;
     }
 
-    public void setCurrentbalance(double currentbalance) {
+    public void setCurrentbalance(BigDecimal currentbalance) {
         this.currentbalance = currentbalance;
     }
 
-    public double getLastbalance() {
+    public BigDecimal getLastbalance() {
         return lastbalance;
     }
 
-    public void setLastbalance(double lastbalance) {
+    public void setLastbalance(BigDecimal lastbalance) {
         this.lastbalance = lastbalance;
+    }
+
+    public BigDecimal getInitialBalance() {
+        return initialBalance;
+    }
+
+    public void setInitialBalance(BigDecimal initialBalance) {
+        this.initialBalance = initialBalance;
     }
 
     public String getCreatedate() {

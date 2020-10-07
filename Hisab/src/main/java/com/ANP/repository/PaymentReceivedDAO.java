@@ -77,7 +77,7 @@ public class PaymentReceivedDAO {
             paymentReceivedBean.setToAccountID(rs.getLong("prcvd.toaccountid"));
             paymentReceivedBean.setToEmployeeID(rs.getString("prcvd.toemployeeid"));
             paymentReceivedBean.setReceivedDate(rs.getTimestamp("prcvd.rcvddate"));
-            paymentReceivedBean.setAmount(rs.getFloat("prcvd.amount"));
+            paymentReceivedBean.setAmount(rs.getBigDecimal("prcvd.amount"));
             paymentReceivedBean.setDetails(rs.getString("prcvd.details"));
             paymentReceivedBean.setOrgId(rs.getLong("prcvd.orgid"));
             paymentReceivedBean.setIncludeInCalc(rs.getBoolean("prcvd.includeincalc"));
@@ -97,8 +97,8 @@ public class PaymentReceivedDAO {
         params.put("fromcustomerid", paymentReceivedBean.getFromCustomerID());
 
 
-        long actualamount = (long)(paymentReceivedBean.getAmount());
-        params.put("amount", actualamount);
+
+        params.put("amount", paymentReceivedBean.getAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) " +
                 " as amount ,id from paymentreceived where orgid=:orgid and fromcustomerid=:fromcustomerid and " +

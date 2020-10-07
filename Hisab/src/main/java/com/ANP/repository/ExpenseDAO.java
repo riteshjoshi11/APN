@@ -69,14 +69,14 @@ public class ExpenseDAO {
             Expense obj = new Expense();
             obj.setExpenseId(rs.getInt("exp.id"));
             obj.setCategory(rs.getString("exp.category"));
-            obj.setTotalAmount(rs.getFloat("exp.totalamount"));
+            obj.setTotalAmount(rs.getBigDecimal("exp.totalamount"));
             obj.setOrgId(rs.getLong("exp.orgid"));
             obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
             obj.setCreatedbyId(rs.getString("exp.createdbyid"));
-            obj.setOrderAmount(rs.getDouble("exp.orderamount"));
-            obj.setCGST(rs.getDouble("exp.cgst"));
-            obj.setSGST(rs.getDouble("exp.sgst"));
-            obj.setIGST(rs.getDouble("exp.igst"));
+            obj.setOrderAmount(rs.getBigDecimal("exp.orderamount"));
+            obj.setCGST(rs.getBigDecimal("exp.cgst"));
+            obj.setSGST(rs.getBigDecimal("exp.sgst"));
+            obj.setIGST(rs.getBigDecimal("exp.igst"));
             obj.setToPartyName(rs.getString("exp.topartyname"));
             obj.setDate(rs.getTimestamp("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));
@@ -149,8 +149,8 @@ public class ExpenseDAO {
         params.put("orgid", expense.getOrgId());
         params.put("fromemployeeid", expense.getFromEmployeeID());
 
-        long actualamount = (long) (expense.getTotalAmount());
-        params.put("amount", actualamount);
+
+        params.put("amount", expense.getTotalAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) " +
                 " as totalamount ,id FROM generalexpense where orgid=:orgid and fromemployeeid=:fromemployeeid and (isdeleted is null or isdeleted<> true) " +
@@ -219,14 +219,14 @@ public class ExpenseDAO {
             Expense obj = new Expense();
             obj.setExpenseId(rs.getInt("exp.id"));
             obj.setCategory(rs.getString("exp.category"));
-            obj.setTotalAmount(rs.getFloat("exp.totalamount"));
+            obj.setTotalAmount(rs.getBigDecimal("exp.totalamount"));
             obj.setOrgId(rs.getLong("exp.orgid"));
             obj.setIncludeInReport(rs.getBoolean("exp.includeinreport"));
             obj.setCreatedbyId(rs.getString("exp.createdbyid"));
-            obj.setOrderAmount(rs.getDouble("exp.orderamount"));
-            obj.setCGST(rs.getDouble("exp.cgst"));
-            obj.setSGST(rs.getDouble("exp.sgst"));
-            obj.setIGST(rs.getDouble("exp.igst"));
+            obj.setOrderAmount(rs.getBigDecimal("exp.orderamount"));
+            obj.setCGST(rs.getBigDecimal("exp.cgst"));
+            obj.setSGST(rs.getBigDecimal("exp.sgst"));
+            obj.setIGST(rs.getBigDecimal("exp.igst"));
             obj.setToPartyName(rs.getString("exp.topartyname"));
             obj.setDate(rs.getTimestamp("exp.date"));
             obj.setToPartyGSTNO(rs.getString("exp.topartygstno"));

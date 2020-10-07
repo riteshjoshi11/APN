@@ -142,10 +142,10 @@ public class EmployeeDAO {
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
             empbean.setType(rs.getString("emptype"));
-            empbean.setCurrentsalarybalance(rs.getFloat("e.currentsalarybalance"));
-            empbean.setCurrentAccountBalance(rs.getFloat("acc.currentbalance"));
+            empbean.setCurrentsalarybalance(rs.getBigDecimal("e.currentsalarybalance"));
+            empbean.setCurrentAccountBalance(rs.getBigDecimal("acc.currentbalance"));
             empbean.setAccountId(rs.getLong("acc.id"));
-            empbean.setInitialSalaryBalance(rs.getFloat("e.initialsalarybalance"));
+            empbean.setInitialSalaryBalance(rs.getBigDecimal("e.initialsalarybalance"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             empbean.setMobile2(rs.getString("e.mobile2"));
 
@@ -188,7 +188,7 @@ public class EmployeeDAO {
             employeeSalary.getEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalary.getEmployeeBean().setMobile(rs.getString("e.mobile"));
             //      employeeSalary.getEmployeeBean().setType(rs.getString("e.type"));
-            employeeSalary.setAmount(rs.getFloat("empsal.amount"));
+            employeeSalary.setAmount(rs.getBigDecimal("empsal.amount"));
             employeeSalary.setDetails(rs.getString("empsal.details"));
             employeeSalary.setIncludeInCalc(rs.getBoolean("empsal.includeincalc"));
             employeeSalary.setCreateDate(rs.getTimestamp("empsal.createdate"));
@@ -236,7 +236,7 @@ public class EmployeeDAO {
             employeeSalaryPayment.getToEmployeeBean().setLast(rs.getString("e.last"));
             employeeSalaryPayment.getToEmployeeBean().setEmployeeId(rs.getString("e.id"));
             employeeSalaryPayment.getToEmployeeBean().setMobile(rs.getString("e.mobile"));
-            employeeSalaryPayment.setAmount(rs.getFloat("empsalpay.amount"));
+            employeeSalaryPayment.setAmount(rs.getBigDecimal("empsalpay.amount"));
             employeeSalaryPayment.setDetails(rs.getString("empsalpay.details"));
             employeeSalaryPayment.setIncludeInCalc(rs.getBoolean("empsalpay.includeincalc"));
             employeeSalaryPayment.getFromEmployeeBean().setEmployeeId(rs.getString("empsalpay.fromemployeeid"));
@@ -256,8 +256,7 @@ public class EmployeeDAO {
         params.put("orgid", employeeSalaryPayment.getOrgId());
         params.put("toemployeeid", employeeSalaryPayment.getToEmployeeId());
 
-        long actualamount = (long) (employeeSalaryPayment.getAmount());
-        params.put("amount", actualamount);
+        params.put("amount", employeeSalaryPayment.getAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount ," +
                 " id FROM employeesalarypayment where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +
@@ -275,8 +274,7 @@ public class EmployeeDAO {
         params.put("orgid", employeeSalary.getOrgId());
         params.put("toemployeeid", employeeSalary.getToEmployeeID());
 
-        long actualamount = (long) (employeeSalary.getAmount());
-        params.put("amount", actualamount);
+        params.put("amount", employeeSalary.getAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(amount) as amount , " +
                 " id FROM employeesalary where orgid=:orgid and toemployeeid=:toemployeeid and (isdeleted is null or isdeleted<> true) " +

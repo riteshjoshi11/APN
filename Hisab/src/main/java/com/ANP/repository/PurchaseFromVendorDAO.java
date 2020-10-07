@@ -87,11 +87,11 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setOrgId(rs.getLong("customer.orgid"));
             purchaseFromVendorBean.setPurchaseID(rs.getLong("p.id"));
             purchaseFromVendorBean.setDate(rs.getTimestamp("p.date"));
-            purchaseFromVendorBean.setCGST(rs.getFloat("p.CGST"));
-            purchaseFromVendorBean.setSGST(rs.getFloat("p.SGST"));
-            purchaseFromVendorBean.setIGST(rs.getFloat("p.IGST"));
-            purchaseFromVendorBean.setExtra(rs.getFloat("p.extra"));
-            purchaseFromVendorBean.setTotalAmount(rs.getFloat("p.totalamount"));
+            purchaseFromVendorBean.setCGST(rs.getBigDecimal("p.CGST"));
+            purchaseFromVendorBean.setSGST(rs.getBigDecimal("p.SGST"));
+            purchaseFromVendorBean.setIGST(rs.getBigDecimal("p.IGST"));
+            purchaseFromVendorBean.setExtra(rs.getBigDecimal("p.extra"));
+            purchaseFromVendorBean.setTotalAmount(rs.getBigDecimal("p.totalamount"));
             purchaseFromVendorBean.setNote(rs.getString("p.note"));
             purchaseFromVendorBean.setIncludeInReport(rs.getBoolean("p.includeInReport"));
             purchaseFromVendorBean.setIncludeInCalc(rs.getBoolean("p.includeincalc"));
@@ -100,7 +100,7 @@ public class PurchaseFromVendorDAO {
             purchaseFromVendorBean.setCreatedbyId(rs.getString("p.createdbyid"));
             purchaseFromVendorBean.setFromAccountId(rs.getLong("p.fromaccountid"));
             purchaseFromVendorBean.setFromCustomerId(rs.getString("customer.id"));
-            purchaseFromVendorBean.setOrderAmount(rs.getDouble("p.orderamount"));
+            purchaseFromVendorBean.setOrderAmount(rs.getBigDecimal("p.orderamount"));
             purchaseFromVendorBean.setCreatedByEmpoyeeName(rs.getString("createdByEmployeeName"));
             return purchaseFromVendorBean;
         }
@@ -112,8 +112,7 @@ public class PurchaseFromVendorDAO {
         params.put("orgid", purchaseFromVendorBean.getOrgId());
         params.put("fromcustomerid", purchaseFromVendorBean.getFromCustomerId());
 
-        long actualamount = (long) (purchaseFromVendorBean.getTotalAmount());
-        params.put("amount", actualamount);
+        params.put("amount", purchaseFromVendorBean.getTotalAmount().longValue());
 
         Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from ( SELECT  floor(totalamount) as totalamount " +
                 ",id FROM purchasefromvendor where orgid=:orgid and fromcustomerid=:fromcustomerid and (isdeleted is null or isdeleted <> true) " +

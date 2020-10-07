@@ -1,5 +1,6 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CustomerAuditBean extends CommonAttribute {
@@ -7,9 +8,9 @@ public class CustomerAuditBean extends CommonAttribute {
     private String customerid;
     private long accountid;
     private String type;
-    private double amount;
-    private double newbalance;
-    private double previousbalance;
+    private BigDecimal amount;
+    private BigDecimal newbalance;
+    private BigDecimal previousbalance;
     private String operation;
     private String otherPartyName;
     private CustomerBean customerBean;
@@ -88,29 +89,27 @@ public class CustomerAuditBean extends CommonAttribute {
         this.type = type;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public double getNewbalance() {
+    public BigDecimal getNewbalance() {
         return newbalance;
     }
 
-    public void setNewbalance(double newbalance) {
+    public void setNewbalance(BigDecimal newbalance) {
         this.newbalance = newbalance;
     }
 
-    public double getPreviousbalance() {
+    public BigDecimal getPreviousbalance() {
         return previousbalance;
     }
 
-    public void setPreviousbalance(double previousbalance) {
+    public void setPreviousbalance(BigDecimal previousbalance) {
         this.previousbalance = previousbalance;
     }
-
-
 }

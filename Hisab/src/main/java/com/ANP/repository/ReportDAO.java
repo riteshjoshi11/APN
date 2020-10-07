@@ -681,12 +681,12 @@ public class ReportDAO {
                 rowNum++;
                 row = sheet.createRow(rowNum);
                 row.createCell(0).setCellValue(customerInvoiceBean.getDate());
-                row.createCell(1).setCellValue(customerInvoiceBean.getOrderAmount());
-                row.createCell(2).setCellValue(customerInvoiceBean.getTotalAmount());
+                row.createCell(1).setCellValue(customerInvoiceBean.getOrderAmount().toString());
+                row.createCell(2).setCellValue(customerInvoiceBean.getTotalAmount().toString());
                 row.createCell(3).setCellValue(customerInvoiceBean.getInvoiceNo());
                 row.createCell(4).setCellValue(customerInvoiceBean.getCGST().toString());
-                row.createCell(5).setCellValue(customerInvoiceBean.getSGST());
-                row.createCell(6).setCellValue(customerInvoiceBean.getIGST());
+                row.createCell(5).setCellValue(customerInvoiceBean.getSGST().toString());
+                row.createCell(6).setCellValue(customerInvoiceBean.getIGST().toString());
             }
             XSSFSheet sheet1 = workbook.createSheet("Purchase");
             Row row1 = sheet1.createRow(0);
@@ -705,11 +705,11 @@ public class ReportDAO {
                 rowNum++;
                 row1 = sheet1.createRow(rowNum);
                 row1.createCell(0).setCellValue(purchaseFromVendorBean.getDate());
-                row1.createCell(1).setCellValue(purchaseFromVendorBean.getOrderAmount());
-                row1.createCell(2).setCellValue(purchaseFromVendorBean.getCGST());
-                row1.createCell(3).setCellValue(purchaseFromVendorBean.getSGST());
-                row1.createCell(4).setCellValue(purchaseFromVendorBean.getIGST());
-                row1.createCell(5).setCellValue(purchaseFromVendorBean.getTotalAmount());
+                row1.createCell(1).setCellValue(purchaseFromVendorBean.getOrderAmount().toString());
+                row1.createCell(2).setCellValue(purchaseFromVendorBean.getCGST().toString());
+                row1.createCell(3).setCellValue(purchaseFromVendorBean.getSGST().toString());
+                row1.createCell(4).setCellValue(purchaseFromVendorBean.getIGST().toString());
+                row1.createCell(5).setCellValue(purchaseFromVendorBean.getTotalAmount().toString());
                 row1.createCell(6).setCellValue(purchaseFromVendorBean.getBillNo());
             }
 
@@ -733,13 +733,13 @@ public class ReportDAO {
                 row2 = sheet2.createRow(rowNum);
                 row2.createCell(0).setCellValue(expense.getDate());
                 row2.createCell(1).setCellValue(expense.getToPartyName());
-                row2.createCell(2).setCellValue(expense.getOrderAmount());
-                row2.createCell(3).setCellValue(expense.getCGST());
-                row2.createCell(4).setCellValue(expense.getSGST());
-                row2.createCell(5).setCellValue(expense.getIGST());
+                row2.createCell(2).setCellValue(expense.getOrderAmount().toString());
+                row2.createCell(3).setCellValue(expense.getCGST().toString());
+                row2.createCell(4).setCellValue(expense.getSGST().toString());
+                row2.createCell(5).setCellValue(expense.getIGST().toString());
                 row2.createCell(6).setCellValue(expense.getToPartyGSTNO());
                 row2.createCell(7).setCellValue(expense.getToPartyMobileNO());
-                row2.createCell(8).setCellValue(expense.getTotalAmount());
+                row2.createCell(8).setCellValue(expense.getTotalAmount().toString());
             }
 
             XSSFSheet sheet3 = workbook.createSheet("Internal Transfer");
@@ -755,7 +755,7 @@ public class ReportDAO {
                 rowNum++;
                 row3 = sheet3.createRow(rowNum);
                 row3.createCell(0).setCellValue(internalTransferBean.getReceivedDate());
-                row3.createCell(1).setCellValue(internalTransferBean.getAmount());
+                row3.createCell(1).setCellValue(internalTransferBean.getAmount().toString());
                 row3.createCell(2).setCellValue(internalTransferBean.getDetails());
             }
 
@@ -772,7 +772,7 @@ public class ReportDAO {
                 rowNum++;
                 row4 = sheet4.createRow(rowNum);
                 row4.createCell(0).setCellValue(retailSale.getDate());
-                row4.createCell(1).setCellValue(retailSale.getAmount());
+                row4.createCell(1).setCellValue(retailSale.getAmount().toString());
                 row4.createCell(2).setCellValue(retailSale.getNotes());
             }
 
@@ -789,7 +789,7 @@ public class ReportDAO {
                 rowNum++;
                 row5 = sheet5.createRow(rowNum);
                 row5.createCell(0).setCellValue(payToVendorBean.getPaymentDate());
-                row5.createCell(1).setCellValue(payToVendorBean.getAmount());
+                row5.createCell(1).setCellValue(payToVendorBean.getAmount().toString());
                 row5.createCell(2).setCellValue(payToVendorBean.getDetails());
             }
 
@@ -807,7 +807,7 @@ public class ReportDAO {
                 rowNum++;
                 row6 = sheet6.createRow(rowNum);
                 row6.createCell(0).setCellValue(paymentReceivedBean.getReceivedDate());
-                row6.createCell(1).setCellValue(paymentReceivedBean.getAmount());
+                row6.createCell(1).setCellValue(paymentReceivedBean.getAmount().toString());
                 row6.createCell(2).setCellValue(paymentReceivedBean.getDetails());
                 row6.createCell(3).setCellValue(paymentReceivedBean.getPaymentType());
             }

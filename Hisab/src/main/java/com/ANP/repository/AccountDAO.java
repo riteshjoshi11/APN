@@ -18,6 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -52,9 +53,12 @@ public class AccountDAO {
         long generatedAccKey = holder.getKey().longValue();
         System.out.println("createAccount: Generated Key=" + generatedAccKey);
         accountBean.setAccountId(generatedAccKey);
-        if( ( (accountBean.getCurrentbalance()==0 || accountBean.getCurrentbalance()==0.0)) ) {
-            System.out.println("Current Balance is 0 So not updating the value into DB");
-            return;
+        BigDecimal zero = new BigDecimal("0.0");
+        if (accountBean.getCurrentbalance()!= null) {
+            if (((accountBean.getCurrentbalance().equals(zero)))) {
+                System.out.println("Current Balance is 0 So not updating the value into DB");
+                return;
+            }
         }
         updateInitialBalance(accountBean);
     }
@@ -185,8 +189,8 @@ public class AccountDAO {
             successLoginBean.getEmployeeBean().setMobile(rs.getString("employee.mobile"));
             successLoginBean.getEmployeeBean().setLoginrequired(rs.getBoolean("employee.loginrequired"));
             successLoginBean.getEmployeeBean().setTypeInt(rs.getInt("employee.type"));
-            successLoginBean.getEmployeeBean().setCurrentsalarybalance((rs.getDouble("employee.currentsalarybalance")));
-            successLoginBean.getEmployeeBean().setLastsalarybalance((rs.getDouble("employee.lastsalarybalance")));
+            successLoginBean.getEmployeeBean().setCurrentsalarybalance((rs.getBigDecimal("employee.currentsalarybalance")));
+            successLoginBean.getEmployeeBean().setLastsalarybalance((rs.getBigDecimal("employee.lastsalarybalance")));
             successLoginBean.getEmployeeBean().setMobile2(rs.getString("employee.mobile2"));
 
 
@@ -203,19 +207,19 @@ public class AccountDAO {
             successLoginBean.getAccountBean().setOwnerid(rs.getString("account.ownerid"));
             successLoginBean.getAccountBean().setAccountnickname(rs.getString("account.accountnickname"));
             successLoginBean.getAccountBean().setCreatedbyid(rs.getString("account.createdbyid"));
-            successLoginBean.getAccountBean().setCurrentbalance(rs.getDouble("account.currentbalance"));
-            successLoginBean.getAccountBean().setLastbalance(rs.getDouble("account.lastbalance"));
+            successLoginBean.getAccountBean().setCurrentbalance(rs.getBigDecimal("account.currentbalance"));
+            successLoginBean.getAccountBean().setLastbalance(rs.getBigDecimal("account.lastbalance"));
             return successLoginBean;
         }
     }
 
-    public double getCashWithYou(String employeeID, long orgId) {
+    public BigDecimal getCashWithYou(String employeeID, long orgId) {
         System.out.println("getCashWithYou : employeeID[" + employeeID +"] orgid[" + orgId+ "]");
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("employeeID", employeeID);
         in.addValue("orgId", orgId);
-        double retValue = 0.0 ;
-        List<Double> cashwithyouList =  namedParameterJdbcTemplate.query("select sum(currentbalance) as cashwithyou from account where ownerid=:employeeID " +
+        BigDecimal retValue = new BigDecimal("0.0") ;
+        List<BigDecimal> cashwithyouList =  namedParameterJdbcTemplate.query("select sum(currentbalance) as cashwithyou from account where ownerid=:employeeID " +
                 " and orgId=:orgId group by ownerid",in,new CashWithYouMapper());
         if(cashwithyouList!=null && !cashwithyouList.isEmpty()) {
             retValue = cashwithyouList.get(0);
@@ -223,9 +227,9 @@ public class AccountDAO {
         return retValue;
     }
 
-    private static final class CashWithYouMapper implements RowMapper<Double> {
-        public Double mapRow(ResultSet rs, int rowNum) throws SQLException {
-          return rs.getDouble("cashwithyou");
+    private static final class CashWithYouMapper implements RowMapper<BigDecimal> {
+        public BigDecimal mapRow(ResultSet rs, int rowNum) throws SQLException {
+          return rs.getBigDecimal("cashwithyou");
         }
     }
 
@@ -309,7 +313,7 @@ public class AccountDAO {
                 "where orgid = :orgId and ownerid = :ownerId",param);
     }
 
-    public void updateInitialBalanceField(String ownerId, long orgId, float initialBalance)
+    public void updateInitialBalanceField(String ownerId, long orgId, BigDecimal initialBalance)
     {
         Map<String,Object> param = new HashMap<>();
         param.put("ownerId",ownerId);

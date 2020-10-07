@@ -1,105 +1,121 @@
 package com.ANP.bean;
 
+import java.math.BigDecimal;
+
 /*
 This bean is mainly used for building/showing dashboard related items
  */
 public class DashboardBean {
 
-    private double cashWithYou=0.0;
+    private BigDecimal cashWithYou = new BigDecimal("0.0");
 
-    private double unpaidExpense=0.0;
-    private double paidExpense=0.0;
-    private double totalExpense=0.0;
+    private BigDecimal unpaidExpense = new BigDecimal("0.0");
+    private BigDecimal paidExpense = new BigDecimal("0.0");
+    private BigDecimal totalExpense = new BigDecimal("0.0");
 
-    private double totalCashInHand=0.0;
-    private double needToCollect=0.0;
+
+    private BigDecimal totalCashInHand = new BigDecimal("0.0");
+    private BigDecimal needToCollect = new BigDecimal("0.0");
     //auto calculated - no need to set
-    private double totalAssets=0.0;
+    private BigDecimal totalAssets = new BigDecimal("0.0");
 
-    private double totalSalaryDue=0.0;
-    private double needToPay=0.0;
+
+    private BigDecimal totalSalaryDue = new BigDecimal("0.0");
+    private BigDecimal needToPay = new BigDecimal("0.0");
+
     //auto calculated - no need to set
-    private double totalLiability=0.0;
+    private BigDecimal totalLiability = new BigDecimal("0.0");
 
     //auto calculated - no need to set
-    private double businessHealth=0.0;
+    private BigDecimal businessHealth = new BigDecimal("0.0");
 
-    public double getCashWithYou() {
+
+
+    public BigDecimal getCashWithYou() {
         return cashWithYou;
     }
 
-    public void setCashWithYou(double cashWithYou) {
+    public void setCashWithYou(BigDecimal cashWithYou) {
         this.cashWithYou = cashWithYou;
     }
 
-    public double getUnpaidExpense() {
+    public BigDecimal getUnpaidExpense() {
         return unpaidExpense;
     }
 
-    public void setUnpaidExpense(double unpaidExpense) {
+    public void setUnpaidExpense(BigDecimal unpaidExpense) {
         this.unpaidExpense = unpaidExpense;
     }
 
-    public double getPaidExpense() {
+    public BigDecimal getPaidExpense() {
         return paidExpense;
     }
 
-    public void setPaidExpense(double paidExpense) {
+    public void setPaidExpense(BigDecimal paidExpense) {
         this.paidExpense = paidExpense;
     }
 
-    public double getTotalExpense() {
+    public BigDecimal getTotalExpense() {
         return totalExpense;
     }
 
-    public void setTotalExpense(double totalExpense) {
+    public void setTotalExpense(BigDecimal totalExpense) {
         this.totalExpense = totalExpense;
     }
 
-    public double getTotalCashInHand() {
+    public BigDecimal getTotalCashInHand() {
         return totalCashInHand;
     }
 
-    public void setTotalCashInHand(double totalCashInHand) {
+    public void setTotalCashInHand(BigDecimal totalCashInHand) {
         this.totalCashInHand = totalCashInHand;
     }
 
-    public double getTotalAssets() {
-        //need to collect is negative number and need to convert to positive
-        return (getNeedToCollect() + getTotalCashInHand());
-     }
-
-    public double getNeedToPay() {
-        return needToPay;
+    public BigDecimal getNeedToCollect() {
+        return needToCollect;
     }
 
-    public void setNeedToPay(double needToPay) {
-        this.needToPay = needToPay;
-    }
-
-    public double getTotalLiability() {
-        this.totalLiability = (getTotalExpense() + getTotalSalaryDue() + getNeedToPay());
-        return totalLiability ;
-    }
-
-    public double getBusinessHealth() {
-        this.businessHealth =  (getTotalAssets() - getTotalLiability()) ;
-        return businessHealth ;
-    }
-
-    public double getNeedToCollect() {
-        return Math.abs(needToCollect);
-    }
-
-    public void setNeedToCollect(double needToCollect) {
+    public void setNeedToCollect(BigDecimal needToCollect) {
         this.needToCollect = needToCollect;
     }
 
-    public double getTotalSalaryDue() {
+    public BigDecimal getTotalAssets() {
+        return totalAssets;
+    }
+
+    public void setTotalAssets(BigDecimal totalAssets) {
+        this.totalAssets = totalAssets;
+    }
+
+    public BigDecimal getTotalLiability() {
+        return totalLiability;
+    }
+
+    public void setTotalLiability(BigDecimal totalLiability) {
+        this.totalLiability = totalLiability;
+    }
+
+    public BigDecimal getBusinessHealth() {
+        return businessHealth;
+    }
+
+    public void setBusinessHealth(BigDecimal businessHealth) {
+        this.businessHealth = businessHealth;
+    }
+
+    public BigDecimal getTotalSalaryDue() {
         return totalSalaryDue;
     }
 
-    public void setTotalSalaryDue(double totalSalaryDue) {
+    public void setTotalSalaryDue(BigDecimal totalSalaryDue) {
         this.totalSalaryDue = totalSalaryDue;
+    }
+
+    public BigDecimal getNeedToPay() {
+        return needToPay;
+    }
+
+    public void setNeedToPay(BigDecimal needToPay) {
+        this.needToPay = needToPay;
     }
 }
