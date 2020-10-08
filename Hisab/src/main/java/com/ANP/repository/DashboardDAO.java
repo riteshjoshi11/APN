@@ -38,9 +38,9 @@ public class DashboardDAO {
 
         SqlParameter[] declareparameters = {
                 new SqlParameter(Types.INTEGER),
-                new SqlOutParameter("positiveBalance", Types.DOUBLE),
-                new SqlOutParameter("negativeBalance", Types.DOUBLE),
-                new SqlOutParameter("totalBalance", Types.DOUBLE),
+                new SqlOutParameter("positiveBalance", Types.DECIMAL),
+                new SqlOutParameter("negativeBalance", Types.DECIMAL),
+                new SqlOutParameter("totalBalance", Types.DECIMAL),
         };
 
         procedure.setParameters(declareparameters);
@@ -48,8 +48,10 @@ public class DashboardDAO {
         Map<String, Object> result = procedure.execute(orgId);
         System.out.println("Status " + result);
         System.out.println("Status  " + result.get("positiveBalance"));
-        dashboardBean.setNeedToPay((BigDecimal) result.get("positiveBalance"));
-        dashboardBean.setNeedToCollect((BigDecimal)result.get("negativeBalance"));
+
+        //dashboardBean.setNeedToPay((BigDecimal) result.get("positiveBalance"));
+        //dashboardBean.setNeedToCollect((BigDecimal)result.get("negativeBalance"));
+
 
         StoredProcedure procedure1 = new GenericStoredProcedure();
         procedure1.setDataSource(dataSource);
@@ -58,7 +60,7 @@ public class DashboardDAO {
 
         SqlParameter[] declareparameters1 = {
                 new SqlParameter(Types.INTEGER),
-                new SqlOutParameter("totalCashInHand", Types.DOUBLE),
+                new SqlOutParameter("totalCashInHand", Types.DECIMAL),
         };
         procedure1.setParameters(declareparameters1);
         procedure1.compile();
@@ -74,7 +76,7 @@ public class DashboardDAO {
 
         SqlParameter[] declareparameters2 = {
                 new SqlParameter(Types.INTEGER),
-                new SqlOutParameter("totalSalaryDue", Types.DOUBLE),
+                new SqlOutParameter("totalSalaryDue", Types.DECIMAL),
         };
         procedure2.setParameters(declareparameters2);
         procedure2.compile();

@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -29,19 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-// configure AuthenticationManager so that it knows from where to load
-// user for matching credentials
-// Use BCryptPasswordEncoder
+    // configure AuthenticationManager so that it knows from where to load
+    // user for matching credentials
+    // Use BCryptPasswordEncoder
         System.out.println("Configuring  User detail service ");
         auth.userDetailsService(jwtUserDetailsService);//.passwordEncoder(passwordEncoder());
 
 
     }
 
-    //    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -51,29 +45,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         //TODO nitesh remove comment this line to enable token.antMatchers(HttpMethod.POST, "/**").permitAll()
-// We don't need CSRF for this example
+        // We don't need CSRF for this example
         httpSecurity.csrf().disable()
-// dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
-                .antMatchers(HttpMethod.POST, "/login/verifyOTP").permitAll()
-                .antMatchers(HttpMethod.POST, "/login/sendOTP").permitAll()
-                .antMatchers(HttpMethod.POST, "/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().
-                antMatchers("/v2/api-docs",
+        // dont authenticate this particular request
+         .authorizeRequests().antMatchers("/authenticate").permitAll()
+         .antMatchers(HttpMethod.POST, "/login/verifyOTP").permitAll()
+         .antMatchers(HttpMethod.POST, "/login/sendOTP").permitAll()
+         .antMatchers(HttpMethod.POST, "/**").permitAll()
+         .antMatchers(HttpMethod.GET, "/**").permitAll()
+         .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().
+          antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll().
 
-// all other requests need to be authenticated
+       // all other requests need to be authenticated
         anyRequest().authenticated().and().
-// make sure we use stateless session; session won't be used to
-// store user's state.
+       // make sure we use stateless session; session won't be used to
+       // store user's state.
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-// Add a filter to validate the tokens with every request
+        // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
