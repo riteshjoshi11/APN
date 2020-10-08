@@ -1,5 +1,6 @@
 package com.ANP.config;
 
+import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,13 +47,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         //TODO nitesh remove comment this line to enable token.antMatchers(HttpMethod.POST, "/**").permitAll()
         // We don't need CSRF for this example
+        if(ANPUtils.isTestEnvironment()) {
+            System.out.println("Test Environment so allowing all GET and POST requests");
+            httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**").permitAll().antMatchers(HttpMethod.GET, "/**").permitAll();
+        }
         httpSecurity.csrf().disable()
         // dont authenticate this particular request
          .authorizeRequests().antMatchers("/authenticate").permitAll()
          .antMatchers(HttpMethod.POST, "/login/verifyOTP").permitAll()
          .antMatchers(HttpMethod.POST, "/login/sendOTP").permitAll()
-         .antMatchers(HttpMethod.POST, "/**").permitAll()
-         .antMatchers(HttpMethod.GET, "/**").permitAll()
          .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().
           antMatchers("/v2/api-docs",
                         "/configuration/ui",
@@ -67,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
        // store user's state.
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

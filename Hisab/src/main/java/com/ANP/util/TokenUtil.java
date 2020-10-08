@@ -19,7 +19,7 @@ public class TokenUtil implements Serializable {
     //TODO need to pass from property file or environment
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     //TODO nitesh Find place to store secreat key
-    private String secret = "abcdefg";
+    private String secret = "DDABCDXYZ8769999910oooUTX_123fsdfs";
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
