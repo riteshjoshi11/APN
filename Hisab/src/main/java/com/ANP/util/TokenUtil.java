@@ -17,7 +17,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class TokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
     //TODO need to pass from property file or environment
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY =31536000; // Seconds in a year
     //TODO nitesh Find place to store secreat key
     private String secret = "DDABCDXYZ8769999910oooUTX_123fsdfs";
 
@@ -55,10 +55,10 @@ public class TokenUtil implements Serializable {
     }
 
     //while creating the token -
-//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-//2. Sign the JWT using the HS512 algorithm and secret key.
-//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-//   compaction of the JWT to a URL-safe string
+    //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
+    //2. Sign the JWT using the HS512 algorithm and secret key.
+    //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
+    //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         //Bearer token
         return "Bearer " + Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))

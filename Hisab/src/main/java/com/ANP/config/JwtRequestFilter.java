@@ -4,6 +4,7 @@ import com.ANP.service.JwtUserDetailsService;
 import com.ANP.util.CustomAppException;
 import com.ANP.util.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 logger1.error("JWT Token has expired", e);
                 throw new CustomAppException("ERROR.SERVER.SECURITY_TOKEN_EXPIRED","expired token", HttpStatus.NOT_ACCEPTABLE);
+            } catch(SignatureException e) {
+                throw new CustomAppException("ERROR.SERVER.SECURITY_TOKEN_TEMPERED","security token tempered", HttpStatus.NOT_ACCEPTABLE);
+            } catch(Exception e) {
+                throw new CustomAppException("ERROR.SERVER.SECURITY_TOKEN_UNKNOWN_ERROR","Unknown issue with security token", HttpStatus.NOT_ACCEPTABLE);
             }
         } else {
             logger1.warn("JWT Token does not begin with Bearer String");

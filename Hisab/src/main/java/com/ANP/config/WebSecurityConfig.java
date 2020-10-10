@@ -2,6 +2,7 @@ package com.ANP.config;
 
 import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${security.token.verification.disabled}")
+    private Boolean isTokenSecurityDisabled ;
+
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -47,8 +52,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         //TODO nitesh remove comment this line to enable token.antMatchers(HttpMethod.POST, "/**").permitAll()
         // We don't need CSRF for this example
-        if(ANPUtils.isTestEnvironment()) {
-            System.out.println("Test Environment so allowing all GET and POST requests");
+        System.out.println("isTokenSecurityDisabled[" + isTokenSecurityDisabled + "]");
+        if(isTokenSecurityDisabled) {
+            System.out.println("Token security is disabled so allowing all GET and POST requests");
             httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**").permitAll().antMatchers(HttpMethod.GET, "/**").permitAll();
         }
         httpSecurity.csrf().disable()
