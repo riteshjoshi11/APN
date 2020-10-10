@@ -998,41 +998,29 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE DEFINER=`root`@`%` PROCEDURE `ControlOrgDataGrowthTransactionWise_Procedure`(
-IN AutomaticDeleteOnNoOfTransactions Int,
-IN IsPremiumAccount boolean,
+IN RegularNoOfTxn Int,
+IN PremiumNoOFTxn Int,
 IN TableName Varchar(75)
 )
 BEGIN
-declare count bigint;
-declare ParamOrgId long;
+declare iterator int;
+declare countTempRows int;
 
-declare FirstCursor cursor for select `organization`.`id`
-FROM  `organization`
-where
-`organization`.`id` not in
-(select `orgid` from `org_subscription`);
-
-declare SecondCursor cursor for select `orgid` from `org_subscription`;
-if(IsPremiumAccount = false) then
-set count = (select count(*) from `organization` where organization.id not in(select id from org_subscription));
-open FirstCursor;
-     while(count>0) do
-         fetch FirstCursor into ParamOrgId;
-         call InternalDataControl_Procedure (TableName,AutomaticDeleteOnNoOfTransactions,ParamOrgId);
-         set count = count - 1;
-	end while;
-close FirstCursor ;
-elseif(IsPremiumAccount = true) then
-set count = (select count(*) from `org_subscription`);
-open SecondCursor;
-	while(count>0) do
-         fetch SecondCursor into ParamOrgId;
-         call InternalDataControl_Procedure (TableName,AutomaticDeleteOnNoOfTransactions,ParamOrgId);
-         set count = count - 1;
-	end while;
-close SecondCursor ;
-end if;
-END$$
+SET @sql2 = CONCAT('CREATE TEMPORARY TABLE IF NOT EXISTS tempotable AS select count(id) , orgid mainorgid , (select id from org_subscription t where t.orgid=mainOrgID)
+ from ', TableName ,' group by orgid having (count(id)> ',RegularNoOfTxn,' and orgid NOT IN (select orgid from org_subscription) )
+ or (count(id)>',PremiumNoOFTxn,' and orgid IN(select orgid from org_subscription) ) ;');
+PREPARE stmt from @sql2;
+EXECUTE stmt;
+select count(*) from tempotable into countTempRows;
+set iterator = 0;
+while(iterator<countTempRows) do
+	set @sql3 = CONCAT('Select * into @count,@ParamOrgId,@isPremium from tempotable limit 1 offset ',iterator,';');
+	PREPARE stmt from @sql3;
+	EXECUTE stmt;
+	call InternalDataControl_Procedure (TableName,RegularNoOfTxn,PremiumNoOFTxn,@ParamOrgId,@count,@isPremium);
+  set iterator = iterator +1;
+end while;
+end$$
 DELIMITER ;
 
 DELIMITER $$
@@ -1061,17 +1049,24 @@ DELIMITER ;
 DELIMITER $$
 CREATE DEFINER=`root`@`%` PROCEDURE `InternalDataControl_Procedure`(
 IN TableName Varchar(75),
-IN AutomaticDeleteOnNoOfTransactions Int,
-IN ParamOrgId long
+IN RegularNoOfTxn Int,
+IN PremiumNoOFTxn Int,
+IN ParamOrgId long,
+IN count Int,
+In isPremium long
 )
 BEGIN
-SET @sql = CONCAT('update ', TableName,
-' set `isdeleted` = true, `deletedate` = curdate()
-where orgid = ', ParamOrgId ,' AND id IN ( select * from (
-SELECT id FROM ', TableName , ' where orgid = ',ParamOrgId,
-' order by createdate DESC
-LIMIT ', AutomaticDeleteOnNoOfTransactions,',17476744073723451615) as pseudotable);');
-
+if(isPremium is  null) then
+	if(count > RegularNoOfTxn) then
+		SET @sql = CONCAT('update ',TableName,' set `isdeleted` = true, `deletedate` = curdate()
+		where orgid = ', ParamOrgId, ' order by createdate LIMIT ',(count - RegularNoOfTxn),';');
+   end if;
+else
+	if(count > PremiumNoOFTxn) then
+		SET @sql = CONCAT('update ',TableName,' set `isdeleted` = true, `deletedate` = curdate()
+		where orgid = ', ParamOrgId, ' order by createdate LIMIT ',(count - PremiumNoOFTxn),';');
+    end if;
+End if;
 PREPARE stmt1 from @sql;
 EXECUTE stmt1 ;
 END$$
@@ -1145,7 +1140,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Restore_SoftDeletedOrgData`(
+CREATE DEFINER=`root`@`%` PROCEDURE `Restore_SoftDeletedOrgData`(
 	IN ParamOrgId INT
   )
 BEGIN
