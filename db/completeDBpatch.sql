@@ -1251,7 +1251,7 @@ update employee set lastsalarybalance = currentsalarybalance  where id = employe
 
 /* adjusting the balances on the employee table */
 IF operation = 'ADD' THEN
-update employee set currentsalarybalance = (currentsalarybalance + amount) where id = employeeid;
+update employee set currentsalarybalance = (currentsalarybalance + amount) where id =  employeeid;
 ELSE
 update employee set currentsalarybalance = (currentsalarybalance - amount) where id = employeeid;
 END IF;
