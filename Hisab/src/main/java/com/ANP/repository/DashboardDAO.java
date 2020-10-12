@@ -49,8 +49,8 @@ public class DashboardDAO {
         System.out.println("Status " + result);
         System.out.println("Status  " + result.get("positiveBalance"));
 
-        //dashboardBean.setNeedToPay((BigDecimal) result.get("positiveBalance"));
-        //dashboardBean.setNeedToCollect((BigDecimal)result.get("negativeBalance"));
+        dashboardBean.setNeedToPay((BigDecimal) result.get("positiveBalance"));
+        dashboardBean.setNeedToCollect((BigDecimal)result.get("negativeBalance"));
 
 
         StoredProcedure procedure1 = new GenericStoredProcedure();

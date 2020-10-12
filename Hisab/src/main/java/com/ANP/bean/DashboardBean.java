@@ -13,7 +13,6 @@ public class DashboardBean {
     private BigDecimal paidExpense = new BigDecimal("0.0");
     private BigDecimal totalExpense = new BigDecimal("0.0");
 
-
     private BigDecimal totalCashInHand = new BigDecimal("0.0");
     private BigDecimal needToCollect = new BigDecimal("0.0");
     //auto calculated - no need to set
@@ -28,8 +27,6 @@ public class DashboardBean {
 
     //auto calculated - no need to set
     private BigDecimal businessHealth = new BigDecimal("0.0");
-
-
 
     public BigDecimal getCashWithYou() {
         return cashWithYou;
@@ -72,35 +69,22 @@ public class DashboardBean {
     }
 
     public BigDecimal getNeedToCollect() {
-        return needToCollect;
-    }
-
-    public void setNeedToCollect(BigDecimal needToCollect) {
-        this.needToCollect = needToCollect;
+        return needToCollect.abs();
     }
 
     public BigDecimal getTotalAssets() {
-        return totalAssets;
-    }
-
-    public void setTotalAssets(BigDecimal totalAssets) {
-        this.totalAssets = totalAssets;
+        //need to collect is negative number and need to convert to positive
+        return getNeedToCollect().add(getTotalCashInHand());
     }
 
     public BigDecimal getTotalLiability() {
-        return totalLiability;
-    }
-
-    public void setTotalLiability(BigDecimal totalLiability) {
-        this.totalLiability = totalLiability;
+        this.totalLiability = (getTotalExpense().add(getTotalSalaryDue())).add(getNeedToPay());
+        return totalLiability ;
     }
 
     public BigDecimal getBusinessHealth() {
-        return businessHealth;
-    }
-
-    public void setBusinessHealth(BigDecimal businessHealth) {
-        this.businessHealth = businessHealth;
+        this.businessHealth =  getTotalAssets().subtract(getTotalLiability()) ;
+        return businessHealth ;
     }
 
     public BigDecimal getTotalSalaryDue() {
@@ -118,4 +102,8 @@ public class DashboardBean {
     public void setNeedToPay(BigDecimal needToPay) {
         this.needToPay = needToPay;
     }
+    public void setNeedToCollect(BigDecimal needToCollect) {
+        this.needToCollect = needToCollect;
+    }
+
 }
