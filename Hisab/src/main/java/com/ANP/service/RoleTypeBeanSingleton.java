@@ -24,7 +24,7 @@ public class RoleTypeBeanSingleton {
             logger.info("Initialization complete" + roleTypeBeanMap);
         }
         PermissionBean permissionBean = this.roleTypeBeanMap.get(employeeType);
-        logger.trace("Initialization complete" + permissionBean);
+        logger.trace("got the permission: complete" + permissionBean);
         return  permissionBean;
     }
 

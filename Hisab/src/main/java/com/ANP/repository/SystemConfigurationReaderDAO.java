@@ -57,7 +57,6 @@ public class SystemConfigurationReaderDAO {
        Finally - create/build a map with key as RoleType and Value as PermissionBean.
      */
     public Map<Integer, PermissionBean> getPermissionBeanMap() {
-        //@TODO RITESH : write a query here
         return namedParameterJdbcTemplate.query("select empTypeId,  permissionId, pe.name  from role_permission rp,permission pe,employeetype et where rp.empTypeId=et.id and rp.permissionId =pe.id ",
                 new ResultSetExtractor<Map<Integer, PermissionBean>>() {
                     @Override

@@ -9,6 +9,7 @@ import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.ANP.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class LoginHandler {
 
     @Autowired
     private TokenUtil tokenUtil;
+
+    @Value("${LoginHandler.ourOrgId}")
+    private Long ourOrgId;
+
     /*
     1. User Enter Mobile
     2. Send OTP
@@ -98,6 +103,11 @@ public class LoginHandler {
         }
         //set the user permissions
         PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());
+        if(orgId==ourOrgId && permissionBean!=null) {
+            System.out.println("Detected A&N so setting DeliveryMenu to true");
+            permissionBean.setCanShowDeliveryMenu(Boolean.TRUE);
+        }
+
         loginBean.setPermissionBean(permissionBean);
         return loginBean;
     }
