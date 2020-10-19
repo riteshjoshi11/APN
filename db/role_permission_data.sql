@@ -8,12 +8,16 @@ INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('7', 'view.gst.rep
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('8', 'view.txn.report.page');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('9', 'view.txn.report.page');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('10', 'view.reset.clean.page');
-
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('11', 'create.employee');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('12', 'create.customer');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('13', 'create.employee.fingerprint');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('14', 'authenticate.employee.fingerprint');
 INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('15', 'view.other.account.selection');
+##Currently not assigned to anyone
+INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('16', 'view.audit.delete.button');
+INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('17', 'view.audit.deleteall.button');
+#
+INSERT INTO `antrackerdb`.`permission` (`id`, `name`) VALUES ('18', 'edit.organization.details');
 
 
 ## Super Admin
@@ -34,7 +38,6 @@ INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('1', '15');
 
 
-
 ## Partner
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '1');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '2');
@@ -50,11 +53,7 @@ INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '13');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '14');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '15');
-
-
-## Sales Person (3) 
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('3', '8');
-
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '18');
 
 ## Accountant (4)
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '1');
@@ -66,8 +65,16 @@ INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '7');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '8');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '9');
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '11');
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '12');
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '13');
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '14');
-INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('2', '15');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '11');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '12');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '13');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '14');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '15');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('4', '18');
+
+
+## Sales Person (3) 
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('3', '8');
+
+
+

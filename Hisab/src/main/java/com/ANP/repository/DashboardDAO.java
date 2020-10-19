@@ -29,8 +29,10 @@ public class DashboardDAO {
         System.out.println(orgId);
         DashboardBean dashboardBean = new DashboardBean();
 
-        dashboardBean.setCashWithYou(accountDAO.getCashWithYou(employeeID, orgId));
-
+        BigDecimal cashWithYou = accountDAO.getCashWithYou(employeeID, orgId) ;
+        if(cashWithYou!=null) {
+            dashboardBean.setCashWithYou(cashWithYou);
+        }
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
         procedure.setSql("CustomerVendorBalanceTracking_Procedure");

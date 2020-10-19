@@ -13,7 +13,7 @@ public class PermissionBean {
 
     //Employee Account Balance on the List Employee Screen & Account Page
     public Boolean getCanShowEmployeePersonalBalance() {
-        if(permissionMap.get("view.other.emp.personalbalance")) {
+        if(permissionMap.get("view.other.emp.personalbalance")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -21,7 +21,7 @@ public class PermissionBean {
 
     //Employee Salary Balance on the List Employee Screen & Account Page
     public Boolean getCanShowOtherEmployeeSalaryBalance() {
-        if(permissionMap.get("view.other.emp.salarybalance")) {
+        if(permissionMap.get("view.other.emp.salarybalance")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -29,7 +29,7 @@ public class PermissionBean {
 
     //Can Show Company Details Part after CashWithYou on the DashBoard
     public Boolean getCanShowDashboard() {
-        if(permissionMap.get("view.dashboard.company.details")) {
+        if(permissionMap.get("view.dashboard.company.details")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -37,7 +37,7 @@ public class PermissionBean {
 
     //Employee Account Details Page - When a user clicks on a employee on the list employee screen
     public Boolean getCanShowOtherEmployeePersonalBalancePage() {
-        if(permissionMap.get("view.emp.personalbalance.page")) {
+        if(permissionMap.get("view.emp.personalbalance.page")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -45,7 +45,7 @@ public class PermissionBean {
 
     //Employee Salary Details Page - When a user clicks on a employee on the list employee screen
     public Boolean getCanShowOtherEmployeeSalaryBalancePage() {
-        if(permissionMap.get("view.emp.salarybalance.page")) {
+        if(permissionMap.get("view.emp.salarybalance.page")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -64,7 +64,7 @@ public class PermissionBean {
 
     //Control GST Report Menu
     public Boolean getCanShowGSTReportMenu() {
-        if(permissionMap.get("view.gst.report.page")) {
+        if(permissionMap.get("view.gst.report.page")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -72,7 +72,7 @@ public class PermissionBean {
 
     //Control Transaction Report Menu
     public Boolean getCanShowTransactionReportMenu() {
-        if(permissionMap.get("view.txn.report.page")) {
+        if(permissionMap.get("view.txn.report.page")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -80,7 +80,7 @@ public class PermissionBean {
 
     //Control Employee Create/Update Employee Save Button
     public Boolean getCanShowCreateUpdateEmployeeButton() {
-        if(permissionMap.get("create.employee")) {
+        if(permissionMap.get("create.employee")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -88,7 +88,7 @@ public class PermissionBean {
 
     //Control Employee Create/Update Customer Save Button
     public Boolean getCanShowCreateCustomer() {
-        if(permissionMap.get("create.customer")) {
+        if(permissionMap.get("create.customer")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -96,7 +96,7 @@ public class PermissionBean {
 
     //Control Create Employee FingerPrint (When feature is available)
     public Boolean getCanShowEmployeeCreateFingerprint() {
-        if(permissionMap.get("create.employee.fingerprint")) {
+        if(permissionMap.get("create.employee.fingerprint")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -104,7 +104,7 @@ public class PermissionBean {
 
     //Control Authenticate Employee FingerPrint (When feature is available)
     public Boolean getCanShowEmployeeAuthenticateFingerprint() {
-        if(permissionMap.get("authenticate.employee.fingerprint")) {
+        if(permissionMap.get("authenticate.employee.fingerprint")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -112,12 +112,33 @@ public class PermissionBean {
 
     //Control Account Selection available on all the create Transactional forms (PaidByAccount, ReceivedByAccount)
     public Boolean getCanShowOtherAccountSelection() {
-        if(permissionMap.get("view.other.account.selection")) {
+        if(permissionMap.get("view.other.account.selection")!=null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
 
+    public Boolean getCanShowDeleteAuditButton() {
+        if(permissionMap.get("view.audit.delete.button")!=null) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+
+    public Boolean getCanShowDeleteAuditAllButton() {
+        if(permissionMap.get("view.audit.deleteall.button")!=null) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+    public Boolean getCanEditOrganizationDetails() {
+        if(permissionMap.get("edit.organization.details")!=null) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 
     public void setPermissionMap(Map<String, Boolean> permissionMap) {
         this.permissionMap = permissionMap;
