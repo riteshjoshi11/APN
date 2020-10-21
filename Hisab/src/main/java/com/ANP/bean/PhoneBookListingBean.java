@@ -9,6 +9,7 @@ public class PhoneBookListingBean {
     private long orgId;
     @NotBlank(message = "employeeId name is mandatory")
     private String employeeId;
+    private String mobileNumber;
 
     private List<RawPhonebookContact> rawPhonebookContacts;
 
@@ -26,6 +27,14 @@ public class PhoneBookListingBean {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 
     public List<RawPhonebookContact> getRawPhonebookContacts() {
