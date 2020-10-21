@@ -7,6 +7,8 @@ import com.ANP.repository.EmployeeDAO;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,13 @@ public class EmployeeHandler {
     @Autowired
     AccountDAO accountDAO;
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeHandler.class);
+
     @Transactional(rollbackFor = Exception.class)
     //Create Employee and Account
     public void createEmployee(EmployeeBean employeeBean) {
 
-        System.out.println("Start CreateEmployee");
-//        employeeDAO.isMobileDuplicate(employeeBean);
+        logger.debug("Start CreateEmployee");
 
         if(employeeBean.getTypeInt()==0) {
            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
@@ -54,7 +57,7 @@ public class EmployeeHandler {
                 createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
             }
         }
-        System.out.println("End CreateEmployee");
+        logger.debug("End CreateEmployee");
     }
 
     /*
@@ -83,7 +86,7 @@ public class EmployeeHandler {
         } else {
             accountNickName = employeeBean.getFirst() + " " + employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
         }
-        System.out.println(accountNickName);
+        logger.debug(accountNickName);
         return accountNickName;
     }
 
@@ -147,8 +150,8 @@ public class EmployeeHandler {
     public void createSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
         //Lets check if a Salary due to be created as part of the Salary Payment
 
-        System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
-        System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
+        logger.debug("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
+        logger.debug("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
 
         if(employeeSalaryPaymentBean.isCreateSalaryDueAlso()) {
             EmployeeSalary employeeSalary = new EmployeeSalary();
@@ -190,8 +193,8 @@ public class EmployeeHandler {
     //SUBTRACT PAYING PARTY BALANCE
     public void deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
 
-        System.out.println("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
-        System.out.println("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
+        logger.debug("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
+        logger.debug("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
         int noOfRecordsDeleted;
         noOfRecordsDeleted = employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
         if(noOfRecordsDeleted != 1)
@@ -222,8 +225,8 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean){
         EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(),employeeBean.getEmployeeId());
-        System.out.println("first " + employeeBeanFetched.getFirst());
-        System.out.println("first input " + employeeBean.getFirst());
+        logger.debug("first " + employeeBeanFetched.getFirst());
+        logger.debug("first input " + employeeBean.getFirst());
         if(!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
                 !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
             if(ANPUtils.isNullOrEmpty(employeeBean.getLast()))
@@ -241,7 +244,7 @@ public class EmployeeHandler {
 
             accountBean.setOrgId(employeeBean.getOrgId());
             accountBean.setOwnerid(employeeBean.getEmployeeId());
-            System.out.println("AccountId = " + employeeBeanFetched.getAccountId());
+            logger.debug("AccountId = " + employeeBeanFetched.getAccountId());
             accountBean.setAccountId(employeeBeanFetched.getAccountId());
             accountBean.setInitialBalance(employeeBean.getInitialBalance());
             accountBean.setType(LOGIN_TYPE_EMPLOYEE);

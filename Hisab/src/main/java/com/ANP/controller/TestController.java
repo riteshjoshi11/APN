@@ -37,5 +37,29 @@ public class TestController {
 
     }
 
+    @Async
+    @PostMapping(path = "/createBulkCustomer", produces = "application/json")
+    public ResponseEntity createBulkCustomer() {
+        Random rand = new Random();
 
+        for (int i = 1; i <= 5000; i++) {
+            Long unique = (long) Math.floor(Math.random() * 9000000000L);
+            logger.trace("Creating Org for Iteration=" + unique);
+            testService.createCustomers(i, unique);
+        }
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+
+    }
+
+    @Async
+    @PostMapping(path = "/createBulkEmployee", produces = "application/json")
+    public ResponseEntity createBulkEmployee() {
+        Random rand = new Random();
+       for (int i = 1; i <= 100000; i++) {
+            Long unique = (long) Math.floor(Math.random() * 9000000000L);
+            logger.trace("Creating Org for Iteration=" + unique);
+            testService.createEmployee(i, unique);
+        }
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }

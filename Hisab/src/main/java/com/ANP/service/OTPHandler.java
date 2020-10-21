@@ -3,7 +3,9 @@ import com.ANP.bean.OTPBean;
 import com.ANP.repository.OTPDAO;
 import com.ANP.util.ANPUtils;
 
+import com.ANP.util.CustomAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -16,6 +18,12 @@ public class OTPHandler {
     UserCommunicationHandler userCommunicationHandler;
 
     public boolean sendOTP(String mobile) {
+        //repeating numbers
+        String regex = "\\b(\\d)\\1+\\b";
+        if(mobile.matches(regex)) {
+            throw new CustomAppException("SERVER.SENDOTP.INVALID_MOBILE_NO", "Mobile Number looks to be invalid", HttpStatus.BAD_REQUEST);
+        }
+
         String otp = "";
         if(!ANPUtils.isTestEnvironment()) {
             otp = generateNumberOTP(6);
