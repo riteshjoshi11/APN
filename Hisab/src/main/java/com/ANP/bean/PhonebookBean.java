@@ -12,6 +12,7 @@ public class PhonebookBean {
     protected String employeeId;
     protected Timestamp lastSyncDate;
     protected String syncStatus;
+    private String mobileNumber;
 
     public enum SYNC_STATUS_ENUM {
         Syncing,
@@ -62,4 +63,13 @@ public class PhonebookBean {
     public void setOrgId(Long orgId) {
         this.orgId = orgId;
     }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
 }

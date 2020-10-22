@@ -1,7 +1,10 @@
 package com.ANP.repository;
 
 import com.ANP.bean.*;
+import com.ANP.controller.PhonebookController;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -26,6 +29,8 @@ public class PhonebookDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private static final Logger logger = LoggerFactory.getLogger(PhonebookDAO.class);
 
     /*
      * Returns PhonebookBean
@@ -131,24 +136,26 @@ public class PhonebookDAO {
      * if contains YES - Check if the value
      */
     @Transactional
-    public void syncPhonebook(long orgId, String employeeId, List<RawPhonebookContact> inputRawPhonebookContacts) {
-        if (inputRawPhonebookContacts == null || inputRawPhonebookContacts.size() == 0) {
+    public void syncPhonebook(PhoneBookListingBean phoneBookListingBean) {
+        if (phoneBookListingBean.getRawPhonebookContacts() == null || phoneBookListingBean.getRawPhonebookContacts().size() == 0) {
             throw new CustomAppException("INPUT CONTACT LIST IS EMPTY", "SERVER.SYNC_PHONEBOOK.NULLOREMPTY.CONTACT", HttpStatus.BAD_REQUEST);
         }
 
-        Long phonebookId = getId(orgId, employeeId);
+        Long phonebookId = getId(phoneBookListingBean.getOrgId(), phoneBookListingBean.getEmployeeId());
         Boolean firstTimeCreated = false;
         if (phonebookId == null || phonebookId <= 0) {
             PhonebookBean phonebookBean = new PhonebookBean();
 
-            phonebookBean.setEmployeeId(employeeId);
-            phonebookBean.setOrgId(orgId);
+            phonebookBean.setEmployeeId(phoneBookListingBean.getEmployeeId());
+            phonebookBean.setOrgId(phoneBookListingBean.getOrgId());
+            phonebookBean.setMobileNumber(phoneBookListingBean.getMobileNumber());
             phonebookId = this.createPhoneBookEntry(phonebookBean);
             firstTimeCreated = true;
         }
+
         Map<String, Object> paramSync = new HashMap<>();
-        paramSync.put("orgId", orgId);
-        paramSync.put("employeeId", employeeId);
+        paramSync.put("orgId", phoneBookListingBean.getOrgId());
+        paramSync.put("employeeId", phoneBookListingBean.getEmployeeId());
         paramSync.put("syncStatus",PhonebookBean.SYNC_STATUS_ENUM.Syncing.toString());
 
         namedParameterJdbcTemplate.update("update phonebook set sync_status = :syncStatus" +
@@ -158,10 +165,10 @@ public class PhonebookDAO {
         List<RawPhonebookContact> listForDeletion = new ArrayList<>();
 
         //getting processed contact after filtering the deleted contacts.
-        Map<String, ProcessedContact> contactMap = getContactMap(orgId, employeeId, true);
+        Map<String, ProcessedContact> contactMap = getContactMap(phoneBookListingBean.getOrgId(), phoneBookListingBean.getEmployeeId(), true);
         if(!firstTimeCreated) {
             //Identification of create and update scenario
-            for (RawPhonebookContact rawPhonebookContact : inputRawPhonebookContacts) {
+            for (RawPhonebookContact rawPhonebookContact : (phoneBookListingBean.getRawPhonebookContacts())) {
 
                 if (contactMap.get(rawPhonebookContact.getContactName().toUpperCase()) == null) {
                     //no match found that means contact does not exist
@@ -181,33 +188,33 @@ public class PhonebookDAO {
                     }
                 }
 
-                System.out.println("We are here that means Contact might need to be deleted that will be decided in next logic");
+                logger.trace("We are here that means Contact might need to be deleted that will be decided in next logic");
 
             }
 
             //Identification of delete scenario
-            List<RawPhonebookContact> dbPhonebookContactList = listRawContactsFromDB(orgId, employeeId);
+            List<RawPhonebookContact> dbPhonebookContactList = listRawContactsFromDB(phoneBookListingBean.getOrgId(), phoneBookListingBean.getEmployeeId());
             for (RawPhonebookContact rawPhonebookContact : dbPhonebookContactList) {
-                if (!inputRawPhonebookContacts.contains(rawPhonebookContact)) {
+                if (!(phoneBookListingBean.getRawPhonebookContacts()).contains(rawPhonebookContact)) {
                     rawPhonebookContact.setDeleted(true);
                     listForDeletion.add(rawPhonebookContact);
                     //delete batch
                 }
             }
 
-            System.out.println("Nitesh deletion data=" + listForDeletion);
+            logger.trace("Nitesh deletion data=" + listForDeletion);
             if(!listForDeletion.isEmpty()) {
                 deleteBatch(listForDeletion, phonebookId);
             }
 
-            System.out.println("Nitesh Creation data=" + listForCreation);
+            logger.trace("Nitesh Creation data=" + listForCreation);
             if(!listForCreation.isEmpty()) {
                 createBatch(listForCreation, phonebookId);
             }
         } else  {
             System.out.print("The first time contact sync scenario");
-            if(!inputRawPhonebookContacts.isEmpty()) {
-                createBatch(inputRawPhonebookContacts, phonebookId);
+            if(!(phoneBookListingBean.getRawPhonebookContacts()).isEmpty()) {
+                createBatch(phoneBookListingBean.getRawPhonebookContacts(), phonebookId);
             }
         }
 
@@ -246,7 +253,7 @@ public class PhonebookDAO {
     }
 
 
-    public void createBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
+    private void createBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
         String sql = "insert into phonebook_contact(`contact_name`,`key`,`value`,`phonebookid`) values(?,?,?,?) ";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -266,7 +273,7 @@ public class PhonebookDAO {
     }
 
 
-    public void deleteBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
+    private void deleteBatch(List<RawPhonebookContact> rawPhonebookContactList, long phonebookId) {
         String sql = "update `phonebook_contact` set `isdeleted` = true where `contact_name` = ? and `phonebookid` = ? and `key` = ? and `value` = ?";
         namedParameterJdbcTemplate.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -285,7 +292,7 @@ public class PhonebookDAO {
         });
     }
 
-    public Long getId(long orgId, String employeeId) {
+    private Long getId(long orgId, String employeeId) {
         Map<String, Object> param = new HashMap<>();
         param.put("orgid", orgId);
         param.put("employeeid", employeeId);
@@ -301,12 +308,13 @@ public class PhonebookDAO {
     /*
      * create records into the master table for Phonebook
      */
-    public Long createPhoneBookEntry(PhonebookBean phonebookBean) {
+    private Long createPhoneBookEntry(PhonebookBean phonebookBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("insert into phonebook (orgid,employeeid,sync_status) " +
-                "values (:orgId,:employeeId,'"+ PhonebookBean.SYNC_STATUS_ENUM.Syncing.toString() +"')", new BeanPropertySqlParameterSource(phonebookBean), holder);
+                "values (:orgId,:employeeId,'"+ PhonebookBean.SYNC_STATUS_ENUM.Syncing.toString() +"')",
+                new BeanPropertySqlParameterSource(phonebookBean), holder);
         long generatedOrgKey = holder.getKey().longValue();
-        System.out.println("createPhoneBookEntry: Generated Key=" + generatedOrgKey);
+        logger.trace("createPhoneBookEntry: Generated Key=" + generatedOrgKey);
         return generatedOrgKey;
     }
 }

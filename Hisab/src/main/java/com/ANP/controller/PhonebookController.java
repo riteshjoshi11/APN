@@ -3,6 +3,9 @@ package com.ANP.controller;
 import com.ANP.bean.PhoneBookListingBean;
 import com.ANP.bean.PhonebookBean;
 import com.ANP.repository.PhonebookDAO;
+import com.ANP.service.offline.OfflineArchivePurgeProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +19,19 @@ import javax.validation.Valid;
 public class PhonebookController {
     @Autowired
     PhonebookDAO phonebookDAO;
-    @PostMapping(path = "/syncPhonebook", produces = "application/json")
+
+    private static final Logger logger = LoggerFactory.getLogger(PhonebookController.class);
+
+
 
     /*
      * Each RawPhonebookContact contains contactName, Key (EMAIL|WEBSITE|PHONENO), Value
      */
     @Async
+    @PostMapping(path = "/syncPhonebook", produces = "application/json")
     public ResponseEntity syncPhonebook(@Valid @RequestBody PhoneBookListingBean phoneBookListingBean) {
-        phonebookDAO.syncPhonebook(phoneBookListingBean.getOrgId(),
-                phoneBookListingBean.getEmployeeId(),
-                phoneBookListingBean.getRawPhonebookContacts());
-        System.out.println("input data=" + phoneBookListingBean.getRawPhonebookContacts());
+        phonebookDAO.syncPhonebook(phoneBookListingBean);
+        logger.trace("input data=" + phoneBookListingBean.getRawPhonebookContacts());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
