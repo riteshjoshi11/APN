@@ -175,9 +175,10 @@ public class EmployeeHandler {
         employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
         employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
         employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
-        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Salary"));
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+       // employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
         employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
         employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -207,9 +208,10 @@ public class EmployeeHandler {
         employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getFromEmployeeId());
         employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
         employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
-        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Salary"));
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+        //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
         employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
         employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);

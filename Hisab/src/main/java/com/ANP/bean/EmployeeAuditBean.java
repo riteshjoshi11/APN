@@ -13,18 +13,31 @@ public class EmployeeAuditBean extends CommonAttribute {
     private BigDecimal previousbalance;
     private String operation;
     private String otherPartyName;
-    private String forWhat;
+    private String forWhat ="";
     private Date transactionDate;
 
-    public enum EmpTypeEnum {
-        Salary,
-        Retail,
-        Expense,
-        Supplier,
-        Customer,
-        Staff_Transfer
-    }
+    //Look at also LocaleHandlerService.employeeAuditTypeMap
+    public enum TRANSACTION_TYPE_ENUM {
+        Salary(1),
+        Retail(2),
+        Expense(3),
+        Supplier(4),
+        Customer(5),
+        Staff_Transfer(6),
+        D_Salary(7),
+        D_Retail(8),
+        D_Expense(9),
+        D_Supplier(10),
+        D_Customer(11),
+        D_Staff_Transfer(12);
 
+        private final int value;
+
+        TRANSACTION_TYPE_ENUM(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+    }
 
     public long getAuditId() {
         return auditId;

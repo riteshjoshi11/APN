@@ -45,6 +45,9 @@ public class AccountingHandler {
     @Autowired
     CommonDAO commonDAO;
 
+    @Autowired
+    LocaleHandlerService localeHandlerService;
+
     /*
      * Create a invoice for a customer (Sale Entry)
      * Only Affects the customer balance
@@ -123,9 +126,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(payToVendorBean.getFromEmployeeID());
             employeeAuditBean.setAccountid(payToVendorBean.getFromAccountID());
             employeeAuditBean.setAmount(payToVendorBean.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+           // employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            employeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Supplier"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
+          //  employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
             employeeAuditBean.setOtherPartyName(payToVendorBean.getToPartyName()); //This will be opposite party
             employeeAuditBean.setTransactionDate(payToVendorBean.getPaymentDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -160,9 +164,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(paymentReceivedBean.getToEmployeeID());
             employeeAuditBean.setAccountid(paymentReceivedBean.getToAccountID());
             employeeAuditBean.setAmount(paymentReceivedBean.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Customer"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
+            //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
             employeeAuditBean.setOtherPartyName(paymentReceivedBean.getFromPartyName());
             employeeAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -185,9 +190,10 @@ public class AccountingHandler {
             fromEmployeeAuditBean.setEmployeeid(internalTransferBean.getFromEmployeeID());
             fromEmployeeAuditBean.setAccountid(internalTransferBean.getFromAccountID());
             fromEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            //fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            fromEmployeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Staff_Transfer"));
             fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+            //fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getToPartyName()); //This will be opposite party
             fromEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
@@ -199,9 +205,10 @@ public class AccountingHandler {
             toEmployeeAuditBean.setEmployeeid(internalTransferBean.getToEmployeeID());
             toEmployeeAuditBean.setAccountid(internalTransferBean.getToAccountID());
             toEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            //toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            toEmployeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Staff_Transfer"));
             toEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+           // toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromPartyName());
             toEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);
@@ -222,9 +229,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(retailSale.getFromemployeeid());
             employeeAuditBean.setAccountid(retailSale.getFromaccountid());
             employeeAuditBean.setAmount(retailSale.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
+            employeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Retail"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
+            //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
             employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(retailSale.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -251,9 +259,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
             employeeAuditBean.setAccountid(expense.getFromAccountID());
             employeeAuditBean.setAmount(expense.getTotalAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+            employeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Expense"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+           //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
             employeeAuditBean.setOtherPartyName(expense.getToPartyName());
             employeeAuditBean.setTransactionDate(expense.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -278,9 +287,11 @@ public class AccountingHandler {
         employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
         employeeAuditBean.setAccountid(expense.getFromAccountID());
         employeeAuditBean.setAmount(expense.getTotalAmount());
-        employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+       // employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
+        employeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Expense"));
+
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-        employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+       // employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
         employeeAuditBean.setOtherPartyName(expense.getToPartyName());
         employeeAuditBean.setTransactionDate(expense.getDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -304,6 +315,7 @@ public class AccountingHandler {
         if(invoiceBeans==null || invoiceBeans.isEmpty()) {
             throw new CustomAppException("ID NOT VALID","SERVER.DELETE_INVOICE.INVALID_ID", HttpStatus.EXPECTATION_FAILED);
         }
+
         CustomerInvoiceBean customerInvoiceBean = invoiceBeans.get(0);
 
         if(customerInvoiceBean.isIncludeInCalc()) {
@@ -318,6 +330,7 @@ public class AccountingHandler {
             customerAuditBean.setOtherPartyName("");
             accountDAO.updateCustomerAccountBalance(customerAuditBean);
         }
+
         commonDAO.softDeleteSingleRecord(ANPConstants.DB_TBL_customerinvoice,orgId,invoiceId);
         return true;
     }
@@ -381,9 +394,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(paymentReceivedBean.getToEmployeeID());
             employeeAuditBean.setAccountid(paymentReceivedBean.getToAccountID());
             employeeAuditBean.setAmount(paymentReceivedBean.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+           // employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Customer"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
+         //   employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_CUSTOMER_RCVD);
             employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(paymentReceivedBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -426,9 +440,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(payToVendorBean.getFromEmployeeID());
             employeeAuditBean.setAccountid(payToVendorBean.getFromAccountID());
             employeeAuditBean.setAmount(payToVendorBean.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Supplier"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
+           // employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_VENDORPAY);
             employeeAuditBean.setOtherPartyName(""); //This will be opposite party
             employeeAuditBean.setTransactionDate(payToVendorBean.getPaymentDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -457,9 +472,10 @@ public class AccountingHandler {
             fromEmployeeAuditBean.setEmployeeid(internalTransferBean.getFromEmployeeID());
             fromEmployeeAuditBean.setAccountid(internalTransferBean.getFromAccountID());
             fromEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+           // fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            fromEmployeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Staff_Transfer"));
             fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+            //fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getToPartyName()); //This will be opposite party
             fromEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
@@ -471,9 +487,10 @@ public class AccountingHandler {
             toEmployeeAuditBean.setEmployeeid(internalTransferBean.getToEmployeeID());
             toEmployeeAuditBean.setAccountid(internalTransferBean.getToAccountID());
             toEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            //toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            toEmployeeAuditBean.setType(""+ EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Staff_Transfer"));
             toEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
+            //toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromPartyName());
             toEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);
@@ -502,9 +519,10 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(retailSale.getFromemployeeid());
             employeeAuditBean.setAccountid(retailSale.getFromaccountid());
             employeeAuditBean.setAmount(retailSale.getAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_RCVD);
+            employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Retail"));
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
+            //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
             employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(retailSale.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -535,9 +553,11 @@ public class AccountingHandler {
             employeeAuditBean.setEmployeeid(expense.getFromEmployeeID());
             employeeAuditBean.setAccountid(expense.getFromAccountID());
             employeeAuditBean.setAmount(expense.getTotalAmount());
-            employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_DELETE_PAY);
+            employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Expense"));
+
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
+            //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_EXPENSE);
             employeeAuditBean.setOtherPartyName(expense.getToPartyName());
             employeeAuditBean.setTransactionDate(expense.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
