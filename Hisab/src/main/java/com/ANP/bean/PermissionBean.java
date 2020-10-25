@@ -140,6 +140,9 @@ public class PermissionBean {
         return Boolean.FALSE;
     }
 
+    public Boolean getCanShowPaymentReminder() {
+         return Boolean.FALSE;
+    }
     public void setPermissionMap(Map<String, Boolean> permissionMap) {
         this.permissionMap = permissionMap;
     }
