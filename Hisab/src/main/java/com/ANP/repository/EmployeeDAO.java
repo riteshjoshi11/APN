@@ -43,9 +43,9 @@ public class EmployeeDAO {
             id = namedParameterJdbcTemplate.queryForObject(idSql, param, String.class);
             employeeBean.setEmployeeId(id);
             namedParameterJdbcTemplate.update(
-                    "insert into employee (id,first,last,mobile,loginrequired,orgid,type,mobile2) " +
+                    "insert into employee (id,first,last,mobile,loginrequired,orgid,type,mobile2,initialsalarybalance) " +
                             " values(:employeeId,:first,:last,:mobile,:loginrequired" +
-                            ",:orgId, :typeInt,:mobile2)", new BeanPropertySqlParameterSource(employeeBean));
+                            ",:orgId, :typeInt,:mobile2,:initialSalaryBalance)", new BeanPropertySqlParameterSource(employeeBean));
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
@@ -125,7 +125,7 @@ public class EmployeeDAO {
         if (ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "e.first,e.last desc";
         }
-        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, acc.id, " +
+        return namedParameterJdbcTemplate.query("select e.*, acc.currentbalance, acc.initialbalance,acc.id, " +
                         " (select empt.`name` from employeetype empt where e.type = empt.id) as emptype " +
                         " from employee e,account acc where e.id=acc.ownerid and e.orgid=:orgID " +
                         ANPUtils.getWhereClause(searchParams) + " order by  " + orderBy + "  limit  :noOfRecordsToShow"
@@ -148,6 +148,7 @@ public class EmployeeDAO {
             empbean.setInitialSalaryBalance(rs.getBigDecimal("e.initialsalarybalance"));
             //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
             empbean.setMobile2(rs.getString("e.mobile2"));
+            empbean.setInitialBalance(rs.getBigDecimal("acc.initialbalance"));
 
             return empbean;
         }
@@ -315,8 +316,10 @@ public class EmployeeDAO {
         if (employeeBean.getTypeInt() <= 0) {
             throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
+        String toAppend=",initialsalarybalance=:initialSalaryBalance";
+
         namedParameterJdbcTemplate.update("update employee set first = :first," +
-                "last=:last, loginrequired = :loginrequired, type = :typeInt, mobile2 =:mobile2 " +
+                "last=:last, loginrequired = :loginrequired, type = :typeInt, mobile2 =:mobile2 " + toAppend +
                 " where orgid = :orgId and id = :employeeId", new BeanPropertySqlParameterSource(employeeBean));
     }
 

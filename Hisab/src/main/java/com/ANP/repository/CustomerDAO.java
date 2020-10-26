@@ -94,7 +94,7 @@ public class CustomerDAO {
             orderBy = " account.currentbalance asc ";
         }
 
-        return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance, account.id " +
+        return namedParameterJdbcTemplate.query("select customer.*, account.currentbalance, account.initialbalance, account.id " +
                          " from customer,account where customer.id=account.ownerid and customer.orgid=:orgID " +
                            ANPUtils.getWhereClause(searchParams) + " order by  "+ orderBy+"  limit  :noOfRecordsToShow"
                         + " offset :startIndex",
@@ -118,6 +118,7 @@ public class CustomerDAO {
             cus.setState(rs.getString("customer.state"));
             cus.setSendPaymentReminders(rs.getBoolean("customer.sendPaymentReminders"));
             cus.setAccountBalance(rs.getBigDecimal("account.currentbalance"));
+            cus.setInitialBalance(rs.getBigDecimal("account.initialbalance"));
             cus.setCreateDate(rs.getTimestamp("customer.createdate"));
             cus.setCreatedbyId(rs.getString("customer.createdbyid"));
             cus.setAccountId(rs.getLong("account.id"));

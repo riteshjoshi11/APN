@@ -261,6 +261,7 @@ public class EmployeeHandler {
                 createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
             }
         }
+
         employeeDAO.updateEmployee(employeeBean);
 
     }
