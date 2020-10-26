@@ -16,6 +16,29 @@ public class CustomerAuditBean extends CommonAttribute {
     private CustomerBean customerBean;
     private Date transactionDate;
 
+    //Look at also LocaleHandlerService.employeeAuditTypeMap
+    public enum TRANSACTION_TYPE_ENUM {
+        Sale(1),
+        Purchase(2),
+        Paid(3),
+        Received(4),
+        D_Sale(5),
+        D_Purchase(6),
+        D_Paid(7),
+        D_Received(8),
+        Initial(9);
+
+        private final int value;
+
+        TRANSACTION_TYPE_ENUM(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
     public long getAuditId() {
         return auditId;
     }
@@ -50,11 +73,11 @@ public class CustomerAuditBean extends CommonAttribute {
 
     //WE allow only 80 chars for otherParty
     public void setOtherPartyName(String pOtherPartyName) {
-       if(pOtherPartyName!=null && pOtherPartyName.trim().length()>80) {
-           this.otherPartyName=(pOtherPartyName.trim()).substring(0,80);
+        if (pOtherPartyName != null && pOtherPartyName.trim().length() > 80) {
+            this.otherPartyName = (pOtherPartyName.trim()).substring(0, 80);
         } else {
-           this.otherPartyName = pOtherPartyName;
-       }
+            this.otherPartyName = pOtherPartyName;
+        }
     }
 
     public String getOperation() {

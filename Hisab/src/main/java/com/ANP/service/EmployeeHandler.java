@@ -1,6 +1,5 @@
 package com.ANP.service;
-import java.math.BigDecimal;
-import java.util.*;
+
 import com.ANP.bean.*;
 import com.ANP.repository.AccountDAO;
 import com.ANP.repository.EmployeeDAO;
@@ -13,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 import static com.ANP.util.ANPConstants.LOGIN_TYPE_EMPLOYEE;
 
@@ -31,8 +33,8 @@ public class EmployeeHandler {
 
         logger.debug("Start CreateEmployee");
 
-        if(employeeBean.getTypeInt()==0) {
-           employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
+        if (employeeBean.getTypeInt() == 0) {
+            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
         }
 
         String createdEmployeeID = employeeDAO.createEmployee(employeeBean);
@@ -52,7 +54,7 @@ public class EmployeeHandler {
 
 
         //@TODO Paras: Please add a check here if (should not be 0 or 0.0) then call below method
-        if(employeeBean.getInitialSalaryBalance() != null) {
+        if (employeeBean.getInitialSalaryBalance() != null) {
             if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
                 createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
             }
@@ -75,14 +77,14 @@ public class EmployeeHandler {
 
     }
 
-    public String generateAccountNickName(EmployeeBean employeeBean){
+    public String generateAccountNickName(EmployeeBean employeeBean) {
         String accountNickName = null;
-        if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()) || ANPUtils.isNullOrEmpty(employeeBean.getLast())) {
-            if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
+        if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()) || ANPUtils.isNullOrEmpty(employeeBean.getLast())) {
+            if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
                 accountNickName = employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
 
-            if(ANPUtils.isNullOrEmpty(employeeBean.getLast()))
-                accountNickName =  employeeBean.getFirst() + " [" + employeeBean.getMobile() + "]";
+            if (ANPUtils.isNullOrEmpty(employeeBean.getLast()))
+                accountNickName = employeeBean.getFirst() + " [" + employeeBean.getMobile() + "]";
         } else {
             accountNickName = employeeBean.getFirst() + " " + employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
         }
@@ -126,9 +128,8 @@ public class EmployeeHandler {
     public void deleteEmpSalaryDue(EmployeeSalary employeeSalaryBean) {
         //create entry into the salary table
         int noOfRecordsDeleted;
-        noOfRecordsDeleted =  employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
-        if(noOfRecordsDeleted != 1)
-        {
+        noOfRecordsDeleted = employeeDAO.deleteEmployeeSalary(employeeSalaryBean);
+        if (noOfRecordsDeleted != 1) {
             throw new CustomAppException("Wrong Employee Salary Due Deletion Entry", "SERVER.EMPLOYEE_SALARY_DUE.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
         }
 
@@ -153,7 +154,7 @@ public class EmployeeHandler {
         logger.debug("To Employee Name=" + employeeSalaryPaymentBean.getToEmployeeName());
         logger.debug("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
 
-        if(employeeSalaryPaymentBean.isCreateSalaryDueAlso()) {
+        if (employeeSalaryPaymentBean.isCreateSalaryDueAlso()) {
             EmployeeSalary employeeSalary = new EmployeeSalary();
             employeeSalary.setCreateDate(new Date());
             employeeSalary.setIncludeInCalc(true);
@@ -176,9 +177,9 @@ public class EmployeeHandler {
         employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
         employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
         //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
-        employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("Salary"));
+        employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.Salary);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-       // employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
+        // employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
         employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
         employeeAuditBean.setTransactionDate(employeeSalaryPaymentBean.getTransferDate());
         accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
@@ -198,8 +199,7 @@ public class EmployeeHandler {
         logger.debug("From Employee Name=" + employeeSalaryPaymentBean.getFromEmployeeBean());
         int noOfRecordsDeleted;
         noOfRecordsDeleted = employeeDAO.deleteEmpSalaryPayment(employeeSalaryPaymentBean);
-        if(noOfRecordsDeleted != 1)
-        {
+        if (noOfRecordsDeleted != 1) {
             throw new CustomAppException("Wrong Employee Salary Payment Deletion Entry", "SERVER.EMPLOYEE_SALARY_PAYMENT.NOTEXIST", HttpStatus.EXPECTATION_FAILED);
         }
         //Update/SUBTRACT From Employee Balance
@@ -209,7 +209,7 @@ public class EmployeeHandler {
         employeeAuditBean.setAccountid(employeeSalaryPaymentBean.getFromAccountId());
         employeeAuditBean.setAmount(employeeSalaryPaymentBean.getAmount());
         //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
-        employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.valueOf("D_Salary"));
+        employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.D_Salary);
         employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
         //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_SALARYPAY);
         employeeAuditBean.setOtherPartyName(employeeSalaryPaymentBean.getFromEmployeeName()); //This will be opposite party
@@ -225,23 +225,23 @@ public class EmployeeHandler {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateEmployee(EmployeeBean employeeBean){
-        EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(),employeeBean.getEmployeeId());
+    public void updateEmployee(EmployeeBean employeeBean) {
+        EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(), employeeBean.getEmployeeId());
         logger.debug("first " + employeeBeanFetched.getFirst());
         logger.debug("first input " + employeeBean.getFirst());
-        if(!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
+        if (!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
                 !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
-            if(ANPUtils.isNullOrEmpty(employeeBean.getLast()))
+            if (ANPUtils.isNullOrEmpty(employeeBean.getLast()))
                 employeeBean.setLast("");
-            else if(ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
+            else if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
                 employeeBean.setFirst("");
-            accountDAO.updateAccountNickName(employeeBean.getEmployeeId(),employeeBean.getOrgId(),generateAccountNickName(employeeBean));
+            accountDAO.updateAccountNickName(employeeBean.getEmployeeId(), employeeBean.getOrgId(), generateAccountNickName(employeeBean));
         }
 
-        if(employeeBean.getInitialBalance()!=employeeBeanFetched.getInitialBalance()){
+        if (employeeBean.getInitialBalance() != employeeBeanFetched.getInitialBalance()) {
 
             //This is to update initial balance in the backend.
-            accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(),employeeBean.getOrgId(),employeeBean.getInitialBalance());
+            accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(), employeeBean.getOrgId(), employeeBean.getInitialBalance());
             AccountBean accountBean = new AccountBean();
 
             accountBean.setOrgId(employeeBean.getOrgId());
@@ -256,7 +256,7 @@ public class EmployeeHandler {
         }
 
         //@TODO paras : if there is change in the employeeInitialSalary balance field
-        if(employeeBean.getInitialSalaryBalance() != null){
+        if (employeeBean.getInitialSalaryBalance() != null) {
             if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
                 createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
             }
@@ -264,7 +264,4 @@ public class EmployeeHandler {
         employeeDAO.updateEmployee(employeeBean);
 
     }
-
-
-
-}
+}//end class

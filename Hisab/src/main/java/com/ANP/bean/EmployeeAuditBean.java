@@ -29,7 +29,8 @@ public class EmployeeAuditBean extends CommonAttribute {
         D_Expense(9),
         D_Supplier(10),
         D_Customer(11),
-        D_Staff_Transfer(12);
+        D_Staff_Transfer(12),
+        Initial(12);
 
         private final int value;
 

@@ -70,7 +70,7 @@ public class AccountDAO {
             customerAuditBean.setCustomerid(accountBean.getOwnerid());
             customerAuditBean.setAccountid(accountBean.getAccountId());
             customerAuditBean.setAmount(accountBean.getInitialBalance());
-            customerAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            customerAuditBean.setType(""+CustomerAuditBean.TRANSACTION_TYPE_ENUM.Initial);
             customerAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
             customerAuditBean.setOtherPartyName(""); //This will be opposite party
             customerAuditBean.setTransactionDate(new Date());
@@ -82,9 +82,9 @@ public class AccountDAO {
             employeeAuditBean.setEmployeeid(accountBean.getOwnerid());
             employeeAuditBean.setAccountid(accountBean.getAccountId());
             employeeAuditBean.setAmount(accountBean.getInitialBalance());
-            employeeAuditBean.setType(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+            employeeAuditBean.setType(""+EmployeeAuditBean.TRANSACTION_TYPE_ENUM.Initial);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
+          //  employeeAuditBean.setForWhat(ANPConstants.AUDIT_TYPE_INITIAL_BALANCE);
             employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(new Date());
             this.updateEmployeeAccountBalance(employeeAuditBean);
