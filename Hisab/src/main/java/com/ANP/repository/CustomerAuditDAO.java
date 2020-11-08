@@ -24,6 +24,7 @@ public class CustomerAuditDAO {
         if (startIndex == 0) {
             startIndex = 1;
         }
+
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
@@ -31,6 +32,7 @@ public class CustomerAuditDAO {
         if(ANPUtils.isNullOrEmpty(orderBy)) {
             orderBy = "custau.id desc";
         }
+
         return namedParameterJdbcTemplate.query("select custau.* , c.name, c.firmname, c.city " +
                         "from customer c, customeraudit custau where custau.customerid = c.id and custau.orgid=:orgID and (custau.isdeleted is null or  custau.isdeleted <> true) " +
                         ANPUtils.getWhereClause(searchParams) + " order by "+ orderBy+" limit  :noOfRecordsToShow" + " offset :startIndex",

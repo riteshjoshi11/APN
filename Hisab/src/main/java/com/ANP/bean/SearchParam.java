@@ -22,6 +22,7 @@ public class SearchParam {
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
+
     public String getCondition() {
         return condition;
     }
@@ -30,7 +31,7 @@ public class SearchParam {
         this.condition = condition;
     }
 
-    public  String getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -41,7 +42,19 @@ public class SearchParam {
     public String getSoperator() {
         return soperator;
     }
+
     public void setSoperator(String soperator) {
         this.soperator = soperator;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchParam{" +
+                "soperator='" + soperator + '\'' +
+                ", fieldType='" + fieldType + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", condition='" + condition + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

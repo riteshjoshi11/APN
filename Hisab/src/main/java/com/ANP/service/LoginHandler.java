@@ -5,15 +5,18 @@ import com.ANP.repository.AccountDAO;
 import com.ANP.repository.CustomerDAO;
 import com.ANP.repository.OrgDAO;
 import com.ANP.util.ANPConstants;
-import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
 import com.ANP.util.TokenUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -38,6 +41,8 @@ public class LoginHandler {
     @Value("${LoginHandler.ourOrgId}")
     private Long ourOrgId;
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
+
     /*
     1. User Enter Mobile
     2. Send OTP
@@ -48,11 +53,17 @@ public class LoginHandler {
 
     //Send OTP on the given mobileNumber
     public boolean sendOTP(String mobileNumber) {
-        return otpHandler.sendOTP(mobileNumber);
+        logger.trace("Entering sendOTP() : mobileNumber:" + mobileNumber);
+        Instant start = Instant.now();
+        Boolean otpSent = otpHandler.sendOTP(mobileNumber);
+        logger.trace("Exiting sendOTP() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
+        return otpSent;
     }
 
 
     public Token validateOTPAndProvideToken(OTPBean otpBean) {
+        logger.trace("Entering validateOTPAndProvideToken() : OTPBean:" + otpBean);
+        Instant start = Instant.now();
         otpHandler.verifyOTP(otpBean);
         Token token = new Token();
         final UserDetails userDetails = userDetailsService.loadUserByUsername(otpBean.getMobileNumber());
@@ -69,6 +80,9 @@ public class LoginHandler {
         3# if both are not then the user has not registered in any way
      */
     public IntermediateLoginBean isMobileRegistered(String mobileNumber) {
+        logger.trace("Entering getLoggedInUserDetails() : mobileNumber[" + mobileNumber + "");
+        Instant start = Instant.now();
+
         IntermediateLoginBean intermediateLoginBean = new IntermediateLoginBean();
         List<Organization> organizationList = orgDAO.getOrganizationsForMobileNo(mobileNumber);
         boolean loginVerified = false;
@@ -87,20 +101,26 @@ public class LoginHandler {
             }
         }*/
         intermediateLoginBean.setLoginVerified(loginVerified);
+        logger.trace("Exiting: isMobileRegistered() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
         return intermediateLoginBean;
     }
 
     public SuccessLoginBean getLoggedInUserDetails(String mobileNumber,long orgId) {
+        logger.trace("Entering getLoggedInUserDetails() : mobileNumber[" + mobileNumber + "] orgId[" + orgId + "]");
+        Instant start = Instant.now();
 
         SuccessLoginBean loginBean = accountDAO.getUserDetails(mobileNumber,orgId);
+
         if(!loginBean.getEmployeeBean().getLoginrequired()) {
             throw new CustomAppException("The user with given mobile number on the given business is disabled.",
                     "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.LOCKED);
         }
+
         if(loginBean.getEmployeeBean().getTypeInt()==6) {
             throw new CustomAppException("The user with given type cannot login.",
                     "SERVER.getLoggedInUserDetails.LOGIN.NOT_ALLOWED", HttpStatus.LOCKED);
         }
+
         //set the user permissions
         PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());
         if(orgId==ourOrgId && permissionBean!=null) {
@@ -109,6 +129,8 @@ public class LoginHandler {
         }
 
         loginBean.setPermissionBean(permissionBean);
+        logger.trace("Exiting getLoggedInUserDetails() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
+
         return loginBean;
     }
 

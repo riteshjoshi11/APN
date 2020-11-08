@@ -3,8 +3,11 @@ package com.ANP.repository;
 import com.ANP.bean.PermissionBean;
 import com.ANP.bean.RetailSale;
 import com.ANP.bean.SystemConfigurationBean;
+import com.ANP.service.LoginHandler;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,9 +28,10 @@ public class SystemConfigurationReaderDAO {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(SystemConfigurationReaderDAO.class);
 
     SystemConfigurationReaderDAO() {
-        System.out.println("Calling system configuration dao");
+        logger.trace("Calling system configuration dao");
     }
 
     public Map<String, String> getSystemConfigurationMap() {
@@ -74,7 +78,7 @@ public class SystemConfigurationReaderDAO {
                                 String permissionName = rs.getString("pe.name");
                                 Boolean permissionTrueFalse = new Boolean(true); //if entry present in table it means have permission
 
-                                System.out.println("Permission bean .." + permissionBean + " name " + permissionName + " true flase  " + permissionTrueFalse);
+                                logger.trace("Permission bean .." + permissionBean + " name " + permissionName + " true flase  " + permissionTrueFalse);
                                 if (!ANPUtils.isNullOrEmpty(permissionName)) {
                                     permissionBean.addEntryIntoMap(permissionName, Boolean.TRUE);
                                 }

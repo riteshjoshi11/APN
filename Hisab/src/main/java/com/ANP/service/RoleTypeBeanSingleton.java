@@ -17,14 +17,18 @@ public class RoleTypeBeanSingleton {
     private static final Logger logger = LoggerFactory.getLogger(RoleTypeBeanSingleton.class);
     private Map<Integer, PermissionBean> roleTypeBeanMap = null;
 
+
     public PermissionBean getPermissionBean(Integer employeeType) {
+        logger.trace("Entering getPermissionBean() : employeeType:" + employeeType);
+
         if (roleTypeBeanMap == null) {
             logger.info("Initializing the Permission Data...");
             roleTypeBeanMap = systemConfigurationReaderDAO.getPermissionBeanMap();
             logger.info("Initialization complete" + roleTypeBeanMap);
         }
+
         PermissionBean permissionBean = this.roleTypeBeanMap.get(employeeType);
-        logger.trace("got the permission: complete" + permissionBean);
+        logger.trace("Exiting getPermissionBean() : permissionBean:" + permissionBean);
         return  permissionBean;
     }
 

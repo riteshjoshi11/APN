@@ -3,20 +3,20 @@ package com.ANP.bean;
 
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ListParametersBean {
     private String orderBy;
     private int noOfRecordsToShow;
     private int startIndex;
-    @Min(value=1, message = "orgid is mandatory")
+    @Min(value = 1, message = "orgid is mandatory")
     private long orgID;
     private List<SearchParam> searchParam;
 
     public ListParametersBean() {
         this.searchParam = new ArrayList<>();
     }
+
     public List<SearchParam> getSearchParam() {
         return searchParam;
     }
@@ -58,4 +58,14 @@ public class ListParametersBean {
         this.startIndex = startIndex;
     }
 
+    @Override
+    public String toString() {
+        return "ListParametersBean{" +
+                "orderBy='" + orderBy + '\'' +
+                ", noOfRecordsToShow=" + noOfRecordsToShow +
+                ", startIndex=" + startIndex +
+                ", orgID=" + orgID +
+                ", searchParam=" + searchParam +
+                '}';
+    }
 }
