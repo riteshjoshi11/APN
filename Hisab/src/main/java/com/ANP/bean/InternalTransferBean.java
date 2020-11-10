@@ -39,11 +39,11 @@ public class InternalTransferBean extends CommonAttribute {
     }
 
 
-    public InternalTransferBean()
-    {
+    public InternalTransferBean() {
         this.toEmployee = new EmployeeBean();
         this.fromEmployee = new EmployeeBean();
     }
+
     public EmployeeBean getToEmployee() {
         return toEmployee;
     }
@@ -130,5 +130,22 @@ public class InternalTransferBean extends CommonAttribute {
 
     public void setIncludeInCalc(boolean includeInCalc) {
         this.includeInCalc = includeInCalc;
+    }
+
+    @Override
+    public String toString() {
+        return "InternalTransferBean{" +
+                "internalTransferID=" + internalTransferID +
+                ", fromAccountID=" + fromAccountID +
+                ", toAccountID=" + toAccountID +
+                ", receivedDate=" + receivedDate +
+                ", amount=" + amount +
+                ", details='" + details + '\'' +
+                ", toEmployeeID='" + toEmployeeID + '\'' +
+                ", fromEmployeeID='" + fromEmployeeID + '\'' +
+                ", includeInCalc=" + includeInCalc +
+                ", fromPartyName='" + fromPartyName + '\'' +
+                ", toPartyName='" + toPartyName + '\'' +
+                '}';
     }
 }

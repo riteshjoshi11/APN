@@ -21,8 +21,7 @@ public class RetailSale extends CommonAttribute {
         this.retailSaleId = retailSaleId;
     }
 
-    public RetailSale()
-    {
+    public RetailSale() {
         fromEmployee = new EmployeeBean();
     }
 
@@ -50,9 +49,13 @@ public class RetailSale extends CommonAttribute {
         this.notes = notes;
     }
 
-    public BigDecimal getAmount() { return amount; }
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     public String getFromemployeeid() {
         return fromemployeeid;
@@ -76,5 +79,18 @@ public class RetailSale extends CommonAttribute {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "RetailSale{" +
+                "retailSaleId=" + retailSaleId +
+                ", notes='" + notes + '\'' +
+                ", amount=" + amount +
+                ", fromemployeeid='" + fromemployeeid + '\'' +
+                ", fromaccountid=" + fromaccountid +
+                ", date=" + date +
+                ", includeincalc=" + includeincalc +
+                '}';
     }
 }

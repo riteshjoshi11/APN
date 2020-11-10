@@ -130,7 +130,7 @@ public class PurchaseFromVendorDAO {
      */
     public int updatePurchase(PurchaseFromVendorBean purchaseFromVendorBean) {
         return namedParameterJdbcTemplate.update("update purchasefromvendor set cgst = :CGST," +
-                "sgst=:SGST, igst=:IGST, note = :note,date=:date,billno=:billNo,orderamount=:orderAmount" +
+                "sgst=:SGST, igst=:IGST, note = :note,date=:date,billno=:billNo,orderamount=:orderAmount, includeinreport=:includeInReport" +
                 " where orgid = :orgId and id = :purchaseID", new BeanPropertySqlParameterSource(purchaseFromVendorBean));
     }
 

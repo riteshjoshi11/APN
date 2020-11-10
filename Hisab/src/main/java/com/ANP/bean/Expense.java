@@ -107,8 +107,8 @@ public class Expense extends CommonAttribute {
     }
 
     public void setToPartyName(String toPartyName) {
-        if(!ANPUtils.isNullOrEmpty(toPartyName))
-        this.toPartyName = toPartyName.toUpperCase();
+        if (!ANPUtils.isNullOrEmpty(toPartyName))
+            this.toPartyName = toPartyName.toUpperCase();
     }
 
     public long getFromAccountID() {
@@ -180,5 +180,32 @@ public class Expense extends CommonAttribute {
         this.extra = extra;
     }
 
-    public BigDecimal getTotalAmount() { return totalAmount; }
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "expenseId=" + expenseId +
+                ", date=" + date +
+                ", category='" + category + '\'' +
+                ", description='" + description + '\'' +
+                ", totalAmount=" + totalAmount +
+                ", toPartyName='" + toPartyName + '\'' +
+                ", fromAccountID=" + fromAccountID +
+                ", fromEmployeeID='" + fromEmployeeID + '\'' +
+                ", includeInReport=" + includeInReport +
+                ", orderAmount=" + orderAmount +
+                ", CGST=" + CGST +
+                ", SGST=" + SGST +
+                ", IGST=" + IGST +
+                ", extra=" + extra +
+                ", toPartyGSTNO='" + toPartyGSTNO + '\'' +
+                ", toPartyMobileNO='" + toPartyMobileNO + '\'' +
+                ", paid=" + paid +
+                ", empFirstName='" + empFirstName + '\'' +
+                ", empLastName='" + empLastName + '\'' +
+                '}';
+    }
 }

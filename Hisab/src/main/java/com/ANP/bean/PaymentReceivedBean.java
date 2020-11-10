@@ -14,9 +14,9 @@ public class PaymentReceivedBean extends CommonAttribute {
     private String paymentType;
     private java.util.Date receivedDate;
     private BigDecimal amount;
-    private boolean includeInCalc=true;
+    private boolean includeInCalc = true;
     private String details;
-    private boolean createSaleEntryAlso=false;
+    private boolean createSaleEntryAlso = false;
 
 
     private CustomerBean customerBean;
@@ -135,9 +135,13 @@ public class PaymentReceivedBean extends CommonAttribute {
         this.receivedDate = receivedDate;
     }
 
-    public BigDecimal getAmount() { return amount; }
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     public boolean isCreateSaleEntryAlso() {
         return createSaleEntryAlso;
@@ -145,5 +149,24 @@ public class PaymentReceivedBean extends CommonAttribute {
 
     public void setCreateSaleEntryAlso(boolean createSaleEntryAlso) {
         this.createSaleEntryAlso = createSaleEntryAlso;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentReceivedBean{" +
+                "paymentReceivedID=" + paymentReceivedID +
+                ", fromAccountID=" + fromAccountID +
+                ", fromCustomerID='" + fromCustomerID + '\'' +
+                ", toAccountID=" + toAccountID +
+                ", toEmployeeID='" + toEmployeeID + '\'' +
+                ", paymentType='" + paymentType + '\'' +
+                ", receivedDate=" + receivedDate +
+                ", amount=" + amount +
+                ", includeInCalc=" + includeInCalc +
+                ", details='" + details + '\'' +
+                ", createSaleEntryAlso=" + createSaleEntryAlso +
+                ", fromPartyName='" + fromPartyName + '\'' +
+                ", toPartyName='" + toPartyName + '\'' +
+                '}';
     }
 }

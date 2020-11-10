@@ -29,12 +29,11 @@ public class CustomerInvoiceBean extends CommonAttribute {
         this.customerBean = customerBean;
     }
 
-    public CustomerInvoiceBean()
-    {
+    public CustomerInvoiceBean() {
         this.customerBean = new CustomerBean();
     }
-    private CustomerBean customerBean;
 
+    private CustomerBean customerBean;
 
 
     public long getInvoiceID() {
@@ -69,29 +68,53 @@ public class CustomerInvoiceBean extends CommonAttribute {
         this.date = date;
     }
 
-    public BigDecimal getOrderAmount() { return orderAmount; }
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
+    }
 
-    public void setOrderAmount(BigDecimal orderAmount) { this.orderAmount = orderAmount; }
+    public void setOrderAmount(BigDecimal orderAmount) {
+        this.orderAmount = orderAmount;
+    }
 
-    public BigDecimal getCGST() { return CGST; }
+    public BigDecimal getCGST() {
+        return CGST;
+    }
 
-    public void setCGST(BigDecimal CGST) { this.CGST = CGST; }
+    public void setCGST(BigDecimal CGST) {
+        this.CGST = CGST;
+    }
 
-    public BigDecimal getSGST() { return SGST; }
+    public BigDecimal getSGST() {
+        return SGST;
+    }
 
-    public void setSGST(BigDecimal SGST) { this.SGST = SGST; }
+    public void setSGST(BigDecimal SGST) {
+        this.SGST = SGST;
+    }
 
-    public BigDecimal getIGST() { return IGST; }
+    public BigDecimal getIGST() {
+        return IGST;
+    }
 
-    public void setIGST(BigDecimal IGST) { this.IGST = IGST; }
+    public void setIGST(BigDecimal IGST) {
+        this.IGST = IGST;
+    }
 
-    public BigDecimal getExtra() { return extra; }
+    public BigDecimal getExtra() {
+        return extra;
+    }
 
-    public void setExtra(BigDecimal extra) { this.extra = extra; }
+    public void setExtra(BigDecimal extra) {
+        this.extra = extra;
+    }
 
-    public BigDecimal getTotalAmount() { return totalAmount; }
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
 
-    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount;    }
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public String getNote() {
         return note;
@@ -123,5 +146,28 @@ public class CustomerInvoiceBean extends CommonAttribute {
 
     public void setIncludeInCalc(boolean includeInCalc) {
         this.includeInCalc = includeInCalc;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerInvoiceBean{" +
+                "invoiceID=" + invoiceID +
+                ", toAccountId=" + toAccountId +
+                ", toCustomerId='" + toCustomerId + '\'' +
+                ", date=" + date +
+                ", orderAmount=" + orderAmount +
+                ", CGST=" + CGST +
+                ", SGST=" + SGST +
+                ", IGST=" + IGST +
+                ", extra=" + extra +
+                ", totalAmount=" + totalAmount +
+                ", note='" + note + '\'' +
+                ", invoiceNo='" + invoiceNo + '\'' +
+                ", includeInReport=" + includeInReport +
+                ", includeInCalc=" + includeInCalc +
+                ", customerBean=" + customerBean +
+                ", createdbyId='" + createdbyId + '\'' +
+                ", orgId=" + orgId +
+                '}';
     }
 }

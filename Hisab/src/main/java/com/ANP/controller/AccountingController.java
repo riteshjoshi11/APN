@@ -59,13 +59,12 @@ public class AccountingController {
 
     @PostMapping(path = "/createSalesEntry", produces = "application/json")
     public ResponseEntity createCustomerInvoice(@Valid @RequestBody CustomerInvoiceBean customerInvoiceBean) {
-        logger.trace("Entering createCustomerInvoice()");
+        logger.trace("Entering createCustomerInvoice(): CustomerInvoiceBean : " + customerInvoiceBean);
         Instant start = Instant.now();
         accountingHandler.createCustomerInvoice(customerInvoiceBean);
         logger.trace("Exiting createCustomerInvoice() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
 
     @PostMapping(path = "/createPurchaseEntry", produces = "application/json")
     public ResponseEntity createPurchaseFromVendor(@Valid @RequestBody PurchaseFromVendorBean purchaseFromVendorBean) {
@@ -78,7 +77,7 @@ public class AccountingController {
 
     @PostMapping(path = "/createGeneralExpense", produces = "application/json")
     public ResponseEntity createExpense(@Valid @RequestBody Expense expense) {
-        logger.trace("Entering createExpense()");
+        logger.trace("Entering createExpense(): Expense=" + expense);
         Instant start = Instant.now();
         accountingHandler.createExpense(expense);
         logger.trace("Exiting createExpense() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -87,7 +86,7 @@ public class AccountingController {
 
     @PostMapping(path = "/createPayToVendor", produces = "application/json")
     public ResponseEntity createPayToVendor(@Valid @RequestBody PayToVendorBean payToVendorBean) {
-        logger.trace("Entering createPayToVendor()");
+        logger.trace("Entering createPayToVendor(): payToVendorBean: " + payToVendorBean);
         Instant start = Instant.now();
         accountingHandler.createPayToVendor(payToVendorBean);
         if (payToVendorBean.isCreatePurchaseEntryAlso()) {
@@ -104,10 +103,9 @@ public class AccountingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-
     @PostMapping(path = "/createPaymentReceived", produces = "application/json")
     public ResponseEntity createPaymentReceived(@Valid @RequestBody PaymentReceivedBean paymentReceivedBean) {
-        logger.trace("Entering createPaymentReceived()");
+        logger.trace("Entering createPaymentReceived(): paymentReceivedBean=" + paymentReceivedBean );
         Instant start = Instant.now();
         accountingHandler.createPaymentReceived(paymentReceivedBean);
         if (paymentReceivedBean.isCreateSaleEntryAlso()) {
@@ -124,10 +122,9 @@ public class AccountingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-
     @PostMapping(path = "/createInternalTransfer", produces = "application/json")
     public ResponseEntity createInternalTransfer(@Valid @RequestBody InternalTransferBean internalTransferBean) {
-        logger.trace("Entering createInternalTransfer()");
+        logger.trace("Entering createInternalTransfer(): internalTransferBean:" + internalTransferBean);
         Instant start = Instant.now();
         accountingHandler.createInternalTransfer(internalTransferBean);
         logger.trace("Exiting createInternalTransfer() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -136,7 +133,7 @@ public class AccountingController {
 
     @PostMapping(path = "/createRetailSale", produces = "application/json")
     public ResponseEntity createRetailSale(@Valid @RequestBody RetailSale retailSale) {
-        logger.trace("Entering createRetailSale()");
+        logger.trace("Entering createRetailSale(): RetailSale:" + retailSale);
         Instant start = Instant.now();
         accountingHandler.createRetailSale(retailSale);
         logger.trace("Exiting createRetailSale() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -311,7 +308,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updateSales", produces = "application/json")
     public ResponseEntity updateSales(@RequestBody CustomerInvoiceBean customerInvoiceBean) {
-        logger.trace("Entering updateSales()");
+        logger.trace("Entering updateSales(): customerInvoiceBean:" + customerInvoiceBean);
         Instant start = Instant.now();
         customerInvoiceDAO.updateSales(customerInvoiceBean);
         logger.trace("Exiting updateSales(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -329,7 +326,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updateExpense", produces = "application/json")
     public ResponseEntity updateExpense(@RequestBody Expense expense) {
-        logger.trace("Entering updateExpense()");
+        logger.trace("Entering updateExpense() : expense: " + expense);
         Instant start = Instant.now();
         accountingHandler.updateExpense(expense);
         logger.trace("Exiting updateExpense(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -338,7 +335,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updatePayToVendor", produces = "application/json")
     public ResponseEntity updatePayToVendor(@RequestBody PayToVendorBean payToVendorBean) {
-        logger.trace("Entering updatePayToVendor()");
+        logger.trace("Entering updatePayToVendor(): " + payToVendorBean);
         Instant start = Instant.now();
         payToVendorDAO.updatePayToVendor(payToVendorBean);
         logger.trace("Exiting updatePayToVendor(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -347,7 +344,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updatePaymentReceived", produces = "application/json")
     public ResponseEntity updatePaymentReceived(@RequestBody PaymentReceivedBean paymentReceivedBean) {
-        logger.trace("Entering updatePaymentReceived()");
+        logger.trace("Entering updatePaymentReceived(): paymentReceivedBean: " + paymentReceivedBean);
         Instant start = Instant.now();
         paymentReceivedDAO.updatePaymentReceived(paymentReceivedBean);
         logger.trace("Exiting updatePaymentReceived(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -356,7 +353,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updateInternalTransfer", produces = "application/json")
     public ResponseEntity updateInternalTransfer(@RequestBody InternalTransferBean internalTransferBean) {
-        logger.trace("Entering updateInternalTransfer()");
+        logger.trace("Entering updateInternalTransfer(): internalTransferBean: " + internalTransferBean);
         Instant start = Instant.now();
         internalTransferDAO.updateInternalTransfer(internalTransferBean);
         logger.trace("Exiting updateInternalTransfer(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
@@ -365,7 +362,7 @@ public class AccountingController {
 
     @PostMapping(path = "/updateRetailSale", produces = "application/json")
     public ResponseEntity updateRetailSale(@RequestBody RetailSale retailSale) {
-        logger.trace("Entering updateRetailSale()");
+        logger.trace("Entering updateRetailSale(): retailSale: " + retailSale);
         Instant start = Instant.now();
         retailSaleDAO.updateRetailSale(retailSale);
         logger.trace("Exiting updateRetailSale(): Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");

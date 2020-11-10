@@ -19,11 +19,11 @@ public class PayToVendorBean extends CommonAttribute {
     //For Audit Entry
     private String fromPartyName;
     private String toPartyName;
-    private boolean createPurchaseEntryAlso=false;
+    private boolean createPurchaseEntryAlso = false;
 
 
     public PayToVendorBean() {
-        this.customerBean =  new CustomerBean();
+        this.customerBean = new CustomerBean();
         this.employeeBean = new EmployeeBean();
     }
 
@@ -50,7 +50,6 @@ public class PayToVendorBean extends CommonAttribute {
     public void setEmployeeBean(EmployeeBean employeeBean) {
         this.employeeBean = employeeBean;
     }
-
 
 
     public CustomerBean getCustomerBean() {
@@ -117,9 +116,13 @@ public class PayToVendorBean extends CommonAttribute {
         this.paymentDate = paymentDate;
     }
 
-    public BigDecimal getAmount() { return amount; }
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     public String getDetails() {
         return details;
@@ -133,5 +136,25 @@ public class PayToVendorBean extends CommonAttribute {
         return createPurchaseEntryAlso;
     }
 
-    public void setCreatePurchaseEntryAlso(boolean createPurchaseEntryAlso) { this.createPurchaseEntryAlso = createPurchaseEntryAlso; }
+    public void setCreatePurchaseEntryAlso(boolean createPurchaseEntryAlso) {
+        this.createPurchaseEntryAlso = createPurchaseEntryAlso;
+    }
+
+    @Override
+    public String toString() {
+        return "PayToVendorBean{" +
+                "payToVendorID=" + payToVendorID +
+                ", fromAccountID=" + fromAccountID +
+                ", fromEmployeeID='" + fromEmployeeID + '\'' +
+                ", toAccountID=" + toAccountID +
+                ", toCustomerID='" + toCustomerID + '\'' +
+                ", paymentDate=" + paymentDate +
+                ", amount=" + amount +
+                ", details='" + details + '\'' +
+                ", includeInCalc=" + includeInCalc +
+                ", fromPartyName='" + fromPartyName + '\'' +
+                ", toPartyName='" + toPartyName + '\'' +
+                ", createPurchaseEntryAlso=" + createPurchaseEntryAlso +
+                '}';
+    }
 }
