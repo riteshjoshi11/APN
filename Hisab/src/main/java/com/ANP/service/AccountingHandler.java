@@ -190,25 +190,20 @@ public class AccountingHandler {
             fromEmployeeAuditBean.setEmployeeid(internalTransferBean.getFromEmployeeID());
             fromEmployeeAuditBean.setAccountid(internalTransferBean.getFromAccountID());
             fromEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            //fromEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_PAY);
             fromEmployeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.Staff_Transfer);
             fromEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_SUBTRACT);
-            //fromEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             fromEmployeeAuditBean.setOtherPartyName(internalTransferBean.getToPartyName()); //This will be opposite party
             fromEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(fromEmployeeAuditBean);
 
-            //accountDAO.updateAccountBalance(internalTransferBean.getToAccountID(), internalTransferBean.getAmount(), "ADD");
             //Update TO Employee (ADD)
             EmployeeAuditBean toEmployeeAuditBean = new EmployeeAuditBean();
             toEmployeeAuditBean.setOrgId(internalTransferBean.getOrgId());
             toEmployeeAuditBean.setEmployeeid(internalTransferBean.getToEmployeeID());
             toEmployeeAuditBean.setAccountid(internalTransferBean.getToAccountID());
             toEmployeeAuditBean.setAmount(internalTransferBean.getAmount());
-            //toEmployeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
             toEmployeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.Staff_Transfer);
             toEmployeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            // toEmployeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_INTERNAL);
             toEmployeeAuditBean.setOtherPartyName(internalTransferBean.getFromPartyName());
             toEmployeeAuditBean.setTransactionDate(internalTransferBean.getReceivedDate());
             accountDAO.updateEmployeeAccountBalance(toEmployeeAuditBean);

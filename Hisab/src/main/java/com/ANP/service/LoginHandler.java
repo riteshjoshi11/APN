@@ -124,8 +124,10 @@ public class LoginHandler {
         //set the user permissions
         PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());
         if(orgId==ourOrgId && permissionBean!=null) {
-            System.out.println("Detected A&N so setting DeliveryMenu to true");
+            logger.warn("Detected A&N so setting DeliveryMenu to true");
             permissionBean.setCanShowDeliveryMenu(Boolean.TRUE);
+        } else {
+            permissionBean.setCanShowDeliveryMenu(Boolean.FALSE);
         }
 
         loginBean.setPermissionBean(permissionBean);

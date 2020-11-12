@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 public class RoleTypeBeanSingleton {
+
     @Autowired
     SystemConfigurationReaderDAO systemConfigurationReaderDAO;
 
@@ -31,5 +32,4 @@ public class RoleTypeBeanSingleton {
         logger.trace("Exiting getPermissionBean() : permissionBean:" + permissionBean);
         return  permissionBean;
     }
-
 }

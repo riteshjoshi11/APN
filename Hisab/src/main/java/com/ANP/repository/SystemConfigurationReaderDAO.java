@@ -78,7 +78,7 @@ public class SystemConfigurationReaderDAO {
                                 String permissionName = rs.getString("pe.name");
                                 Boolean permissionTrueFalse = new Boolean(true); //if entry present in table it means have permission
 
-                                logger.trace("Permission bean .." + permissionBean + " name " + permissionName + " true flase  " + permissionTrueFalse);
+                                logger.trace("Permission bean .." + permissionBean + " name " + permissionName + " true false  " + permissionTrueFalse);
                                 if (!ANPUtils.isNullOrEmpty(permissionName)) {
                                     permissionBean.addEntryIntoMap(permissionName, Boolean.TRUE);
                                 }
