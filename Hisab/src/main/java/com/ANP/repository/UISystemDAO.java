@@ -98,6 +98,7 @@ public class UISystemDAO {
                 RetainCustomerBalance,RetainStaffSalaryBalance,systemBean.getOrgID());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void softDeleteAuditData(long orgId, long recordNo, String identifier, boolean deleteAll) {
 
         if(ANPUtils.isNullOrEmpty(identifier)){

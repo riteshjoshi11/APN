@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class RetailSaleDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Transactional(rollbackFor = Exception.class)
     public int createRetailSale(RetailSale retailSale) {
         if(!retailSale.isForceCreate()) {
             isDuplicateSuspect(retailSale);
@@ -110,10 +112,13 @@ public class RetailSaleDAO {
                     "SERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECTSERVER.CREATE_RETAILSALE.DUPLICATE_SUSPECT", HttpStatus.CONFLICT);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
     public int updateRetailSale(RetailSale retailSale){
         return namedParameterJdbcTemplate.update("update retailsale set notes = :notes where orgid = :orgId and " +
                 "retailsale.id = :retailSaleId", new BeanPropertySqlParameterSource(retailSale));
     }
+
     public RetailSale getRetailSaleById(Long orgId, Long retailSaleId) {
         java.util.List<SearchParam> searchParams = new ArrayList<SearchParam>();
         SearchParam param = new SearchParam();

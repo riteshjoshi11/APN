@@ -116,20 +116,24 @@ public class LoginHandler {
                     "SERVER.getLoggedInUserDetails.LOGIN.DISABLED", HttpStatus.LOCKED);
         }
 
-        if(loginBean.getEmployeeBean().getTypeInt()==6) {
+        if(loginBean.getEmployeeBean().getTypeInt()==6 || loginBean.getEmployeeBean().getTypeInt()==4) {
             throw new CustomAppException("The user with given type cannot login.",
                     "SERVER.getLoggedInUserDetails.LOGIN.NOT_ALLOWED", HttpStatus.LOCKED);
         }
 
         //set the user permissions
         PermissionBean permissionBean = roleTypeBeanSingleton.getPermissionBean(loginBean.getEmployeeBean().getTypeInt());
+        if(permissionBean==null) {
+            throw new CustomAppException("Invalid user permission",
+                    "SERVER.LOGINHANDLER.getLoggedInUserDetails.INVALID_USER_PERMISSION", HttpStatus.EXPECTATION_FAILED);
+        }
+
         if(orgId==ourOrgId && permissionBean!=null) {
             logger.warn("Detected A&N so setting DeliveryMenu to true");
             permissionBean.setCanShowDeliveryMenu(Boolean.TRUE);
         } else {
             permissionBean.setCanShowDeliveryMenu(Boolean.FALSE);
         }
-
         loginBean.setPermissionBean(permissionBean);
         logger.trace("Exiting getLoggedInUserDetails() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
 

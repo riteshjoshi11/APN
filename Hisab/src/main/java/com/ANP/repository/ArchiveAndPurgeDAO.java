@@ -196,7 +196,6 @@ public class ArchiveAndPurgeDAO {
     }
 
     // This is a method for OrgDataControlTransactionWise
-
     private void controlOrgDataGrowthTransactionWise(int deleteAfterTransactions, int premiumDeleteAfterTransactions, List<String> resultDataControlTableList) {
         SimpleJdbcCall simpleJdbcCall1 = new SimpleJdbcCall(jdbcTemplate).withProcedureName("ControlOrgDataGrowthTransactionWise_Procedure");
         Map<String, Object> inParamMap1 = new HashMap<>();

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.sql.ResultSet;
@@ -24,7 +25,7 @@ public class CustomerDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
+    @Transactional(rollbackFor = Exception.class)
     public int createCustomer(CustomerBean customerBean) {
         System.out.println("customer " + customerBean.getName());
         try {
@@ -125,6 +126,8 @@ public class CustomerDAO {
             return cus;
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
     public int updateCustomer(CustomerBean customerBean){
         return namedParameterJdbcTemplate.update("update customer set name = :name," +
                 "city=:city, gstin=:gstin , transporter = :transporter , mobile2 = :mobile2 " +
@@ -148,6 +151,7 @@ public class CustomerDAO {
         return null;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int updateSendPaymentReminders(CustomerBean customerBean) {
 
         if(customerBean==null || ANPUtils.isNullOrEmpty(customerBean.getCustomerID()) || customerBean.getOrgId()<=0) {

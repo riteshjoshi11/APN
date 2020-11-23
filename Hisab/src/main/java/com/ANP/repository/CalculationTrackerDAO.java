@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ public class CalculationTrackerDAO {
     /*
     * This method will only be invoked once during create organization
      */
+    @Transactional(rollbackFor = Exception.class)
     public int createCalculationTracker(long orgID) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
@@ -31,6 +33,7 @@ public class CalculationTrackerDAO {
 
     //Add the balance amount onto the existing "paid" balance
     //Operations: (ADD,SUBTRACT)
+    @Transactional(rollbackFor = Exception.class)
     public int updatePaidExpenseBalance(long orgID, BigDecimal balance, String operation) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
@@ -46,6 +49,7 @@ public class CalculationTrackerDAO {
 
     //Add the balance amount onto the existing "unpaid" balance
     //Operations: (ADD,SUBTRACT)
+    @Transactional(rollbackFor = Exception.class)
     public int updateUnPaidExpenseBalance(long orgID, BigDecimal balance,String operation) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);
@@ -60,6 +64,7 @@ public class CalculationTrackerDAO {
     }
 
     //Add the balance amount onto the existing "unpaid" balance
+    @Transactional(rollbackFor = Exception.class)
     public int makeUnpaidToPaid(long orgID, BigDecimal balance) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("orgID", orgID);

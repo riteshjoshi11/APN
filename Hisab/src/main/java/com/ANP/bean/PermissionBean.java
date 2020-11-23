@@ -143,6 +143,7 @@ public class PermissionBean {
     public Boolean getCanShowPaymentReminder() {
          return Boolean.FALSE;
     }
+
     public void setPermissionMap(Map<String, Boolean> permissionMap) {
         this.permissionMap = permissionMap;
     }
@@ -150,5 +151,10 @@ public class PermissionBean {
         return permissionMap.put(key, value);
     }
 
-
+    public Boolean getCanShowResetCleanMenu() {
+        if(permissionMap.get("view.reset.clean.page")!=null) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 }

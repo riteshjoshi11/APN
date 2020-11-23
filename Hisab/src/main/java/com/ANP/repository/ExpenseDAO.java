@@ -30,7 +30,7 @@ public class ExpenseDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
+    @Transactional(rollbackFor = Exception.class)
     public int createExpense(Expense expense) {
         if (!expense.isForceCreate()) {
             isDuplicateSuspect(expense);
@@ -118,6 +118,7 @@ public class ExpenseDAO {
     /*
          you need to update Expense Table:IncludeInCAReport field with the passed value
      */
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateIncludeInCAReport(long expenseID, boolean caSwitch) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
@@ -133,6 +134,7 @@ public class ExpenseDAO {
     /*
         you need to update Expense Table:includeInCalc field with the passed value
   */
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateExpenseStatus(long expenseID, boolean paidStatus) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", expenseID);
@@ -241,7 +243,7 @@ public class ExpenseDAO {
      * also there is big mistake here the current logic will update all the expense for an organization.
      * Always include primary key for the update.
      */
-
+    @Transactional(rollbackFor = Exception.class)
     public void updateExpense(Expense expense) {
         namedParameterJdbcTemplate.update("update generalexpense set cgst = :CGST," +
                         "sgst=:SGST, igst=:IGST, description = :description, date=:date,category=:category, " +

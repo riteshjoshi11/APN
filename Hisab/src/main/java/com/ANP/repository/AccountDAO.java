@@ -16,6 +16,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ public class AccountDAO {
     @Autowired
     private DataSource dataSource;
 
+    @Transactional(rollbackFor = Exception.class)
     public void createAccount(AccountBean accountBean) {
         KeyHolder holder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
@@ -63,6 +65,7 @@ public class AccountDAO {
         updateInitialBalance(accountBean);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void updateInitialBalance(AccountBean accountBean) {
         if(ANPConstants.LOGIN_TYPE_CUSTOMER.equalsIgnoreCase(accountBean.getType())) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
@@ -178,11 +181,8 @@ public class AccountDAO {
     }
 
     private static final class SuccessLoginBeanMapper implements RowMapper<SuccessLoginBean> {
-
         public SuccessLoginBean mapRow(ResultSet rs, int rowNum) throws SQLException {
-
             SuccessLoginBean successLoginBean = new SuccessLoginBean();
-
             successLoginBean.getEmployeeBean().setEmployeeId(rs.getString("employee.id"));
             successLoginBean.getEmployeeBean().setFirst(rs.getString("employee.first"));
             successLoginBean.getEmployeeBean().setLast(rs.getString("employee.last"));
@@ -303,8 +303,8 @@ public class AccountDAO {
         return true;
     }
 
-    public void updateAccountNickName(String ownerId, long orgId, String nickname)
-    {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAccountNickName(String ownerId, long orgId, String nickname) {
         Map<String,Object> param = new HashMap<>();
         param.put("ownerId",ownerId);
         param.put("orgId",orgId);
@@ -313,8 +313,8 @@ public class AccountDAO {
                 "where orgid = :orgId and ownerid = :ownerId",param);
     }
 
-    public void updateInitialBalanceField(String ownerId, long orgId, BigDecimal initialBalance)
-    {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateInitialBalanceField(String ownerId, long orgId, BigDecimal initialBalance) {
         Map<String,Object> param = new HashMap<>();
         param.put("ownerId",ownerId);
         param.put("orgId",orgId);

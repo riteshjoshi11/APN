@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.sql.ResultSet;
@@ -25,7 +26,6 @@ import java.util.List;
 public class CustomerInvoiceDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     private static final Logger logger = LoggerFactory.getLogger(CustomerInvoiceDAO.class);
 
     public int createInvoice(CustomerInvoiceBean invoiceBean) {

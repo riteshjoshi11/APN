@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ public class OrgDAO {
     /*
         return orgKey
      */
+    @Transactional(rollbackFor = Exception.class)
     public long createOrganization(Organization organization, EmployeeBean employeeBean) {
         System.out.println("createOrganization: Organization Bean:" + organization);
         isDuplicate(organization, employeeBean);
@@ -92,11 +94,13 @@ public class OrgDAO {
      * and create a bare shell orgDetails
      * The details will be filled up later
      */
+    @Transactional(rollbackFor = Exception.class)
     public int createOrganizationDetails(long orgId) {
         Map<String, Object> param = new HashMap<>();
         return namedParameterJdbcTemplate.update("insert into orgdetails(orgid) values (" + orgId + ")", param);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void updateOrganizationDetails(OrgDetails orgDetails) {
         int numberOfRecordsUpdates =  namedParameterJdbcTemplate.update("update orgdetails set mobile1 = :mobile1," +
                 "email=:email, mobile2=:mobile2, gstnumber = :gstNumber, pannumber = :panNumber," +

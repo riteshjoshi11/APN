@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,11 +26,11 @@ public class PaymentReceivedDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Transactional(rollbackFor = Exception.class)
     public int createPaymentReceived(PaymentReceivedBean paymentReceivedBean) {
         if(!paymentReceivedBean.isForceCreate()) {
             isDuplicateSuspect(paymentReceivedBean);
         }
-
         return namedParameterJdbcTemplate.update(
                 "insert into paymentreceived (fromaccountid,fromcustomerid,toaccountid,toemployeeid,rcvddate,amount,details,includeincalc,orgid,createdbyid)" +
                         " values(:fromAccountID,:fromCustomerID,:toAccountID,:toEmployeeID,:receivedDate,:amount,:details,:includeInCalc,:orgId,:createdbyId)",

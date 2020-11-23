@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class AccountingHandler {
 
     @Autowired
@@ -52,7 +53,7 @@ public class AccountingHandler {
      * Create a invoice for a customer (Sale Entry)
      * Only Affects the customer balance
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public boolean createCustomerInvoice(CustomerInvoiceBean customerInvoiceBean) {
         customerInvoiceDAO.createInvoice(customerInvoiceBean);
         //accountDAO.updateAccountBalance(customerInvoiceBean.getToAccountId(), customerInvoiceBean.getTotalAmount(), "SUBTRACT");
@@ -141,10 +142,9 @@ public class AccountingHandler {
      *   Logic
      *   Payment Received 1. FromAccount (Customer who is paying)  is ADDED 2. ToAccount(Employee who received payment) is ADDED
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public boolean createPaymentReceived(PaymentReceivedBean paymentReceivedBean) {
         paymentReceivedDAO.createPaymentReceived(paymentReceivedBean);
-        //accountDAO.updateAccountBalance(paymentReceivedBean.getFromAccountID(), paymentReceivedBean.getAmount(), "ADD");
         if (paymentReceivedBean.isIncludeInCalc()) {
             CustomerAuditBean customerAuditBean = new CustomerAuditBean();
             customerAuditBean.setOrgId(paymentReceivedBean.getOrgId());

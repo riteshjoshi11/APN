@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ public class PurchaseFromVendorDAO {
      *   TODO: Joshi i have corrected this method, you need to run the latest 29April version of DB patch
      *  No need to change anything here.
      */
+    @Transactional(rollbackFor = Exception.class)
     public int createBill(PurchaseFromVendorBean purchaseFromVendorBean) {
         if (!purchaseFromVendorBean.isForceCreate()) {
             isDuplicateSuspect(purchaseFromVendorBean);
@@ -128,6 +130,7 @@ public class PurchaseFromVendorDAO {
      * also there is big mistake here the current logic will update all the Purchase for an organization.
      * Always include primary key for the update.
      */
+    @Transactional(rollbackFor = Exception.class)
     public int updatePurchase(PurchaseFromVendorBean purchaseFromVendorBean) {
         return namedParameterJdbcTemplate.update("update purchasefromvendor set cgst = :CGST," +
                 "sgst=:SGST, igst=:IGST, note = :note,date=:date,billno=:billNo,orderamount=:orderAmount, includeinreport=:includeInReport" +

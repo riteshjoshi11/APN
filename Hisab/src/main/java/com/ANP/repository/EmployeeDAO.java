@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.GenericStoredProcedure;
 import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.sql.DataSource;
@@ -34,7 +35,7 @@ public class EmployeeDAO {
     @Autowired
     private DataSource dataSource;
 
-
+    @Transactional(rollbackFor = Exception.class)
     public String createEmployee(EmployeeBean employeeBean) {
         String id = "";
         try {
@@ -52,7 +53,7 @@ public class EmployeeDAO {
         return id;
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public void createEmployeeSalary(EmployeeSalary employeeSalaryBean) {
         if (!employeeSalaryBean.isForceCreate()) {
             this.isDuplicateSalaryDueSuspect(employeeSalaryBean);
@@ -62,6 +63,7 @@ public class EmployeeDAO {
                 new BeanPropertySqlParameterSource(employeeSalaryBean));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean createEmployeeSalaryPayment(EmployeeSalaryPayment employeeSalaryPaymentBean) {
 
         if (!employeeSalaryPaymentBean.isForceCreate()) {
