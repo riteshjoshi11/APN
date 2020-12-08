@@ -46,7 +46,7 @@ public class ReportController {
         reportBean.setGenerateDate(new Date());
         /*
          START - Temporary code to be removed
-         */
+
         String testModeOTP = System.getProperty("TestModeOTP");
         if (!ANPUtils.isNullOrEmpty(testModeOTP)) {
             reportBean.setReportId(reportID);
@@ -56,7 +56,7 @@ public class ReportController {
             reportDao.updateReport_filepath(reportBean, ANPConstants.DB_TBL_GST_REPORT);
             reportDao.updateReport_status(reportBean, ANPConstants.DB_TBL_GST_REPORT);
         }
-        /* END */
+        */
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

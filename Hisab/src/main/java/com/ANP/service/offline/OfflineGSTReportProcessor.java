@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class OfflineGSTReportProcessor extends GenericOfflineProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(OfflineArchivePurgeProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(OfflineGSTReportProcessor.class);
 
     @Autowired
     ReportService reportService ;

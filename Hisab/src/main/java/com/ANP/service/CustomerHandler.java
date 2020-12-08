@@ -6,12 +6,13 @@ import com.ANP.repository.CustomerDAO;
 import com.ANP.bean.CustomerBean;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.ANP.util.ANPConstants.LOGIN_TYPE_CUSTOMER;
-import static com.ANP.util.ANPConstants.LOGIN_TYPE_EMPLOYEE;
 
 @Service
 public class CustomerHandler {
@@ -19,6 +20,8 @@ public class CustomerHandler {
     CustomerDAO customerDao;
     @Autowired
     AccountDAO accountDAO;
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomerHandler.class);
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -101,7 +104,7 @@ public class CustomerHandler {
         }
 
         accountNickName = accountNickNameWithoutMobile + mobile;
-        System.out.println(accountNickName);
+        logger.trace(accountNickName);
         return accountNickName;
     }
 
@@ -114,16 +117,15 @@ public class CustomerHandler {
             String accountNickName = getAccountNickName(customerBean);
             accountDAO.updateAccountNickName(customerBean.getCustomerID(),customerBean.getOrgId(),accountNickName);
         }
-        if(customerBean.getInitialBalance()!=customerBeanFetched.getInitialBalance()){
-
+        if( !(customerBean.getInitialBalance()==null && customerBeanFetched.getInitialBalance()==null)
+                && (customerBean.getInitialBalance().longValue()!=customerBeanFetched.getInitialBalance().longValue())){
             //This is to update initial balance in the backend.
             accountDAO.updateInitialBalanceField(customerBean.getCustomerID(),customerBean.getOrgId(),customerBean.getInitialBalance());
-
 
             AccountBean accountBean = new AccountBean();
             accountBean.setOrgId(customerBean.getOrgId());
             accountBean.setOwnerid(customerBean.getCustomerID());
-            System.out.println("AccountId = " + customerBeanFetched.getAccountId());
+            logger.trace("AccountId = " + customerBeanFetched.getAccountId());
             accountBean.setAccountId(customerBeanFetched.getAccountId());
             accountBean.setInitialBalance(customerBean.getInitialBalance());
             accountBean.setType(LOGIN_TYPE_CUSTOMER);
@@ -132,12 +134,4 @@ public class CustomerHandler {
         customerDao.updateCustomer(customerBean);
     }
 
-    private String getAccountNickName(String firmName, String personName, String city) {
-        String nickName="";
-        if(firmName.trim().equalsIgnoreCase(personName.trim())){
-            nickName = firmName + " " + city;
-        }
-        nickName = personName + " " + firmName + " " + city;
-        return nickName;
-    }
 }

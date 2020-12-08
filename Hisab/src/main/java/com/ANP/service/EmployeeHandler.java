@@ -227,10 +227,10 @@ public class EmployeeHandler {
     @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean) {
         EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(), employeeBean.getEmployeeId());
-        logger.debug("first " + employeeBeanFetched.getFirst());
-        logger.debug("first input " + employeeBean.getFirst());
+       //NickName is only updated when first or last name updated
         if (!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
                 !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
+
             if (ANPUtils.isNullOrEmpty(employeeBean.getLast()))
                 employeeBean.setLast("");
             else if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
@@ -238,8 +238,7 @@ public class EmployeeHandler {
             accountDAO.updateAccountNickName(employeeBean.getEmployeeId(), employeeBean.getOrgId(), generateAccountNickName(employeeBean));
         }
 
-        if (employeeBean.getInitialBalance() != employeeBeanFetched.getInitialBalance()) {
-
+        if ( !(employeeBean.getInitialBalance() ==null && employeeBeanFetched.getInitialBalance()==null) &&  (employeeBean.getInitialBalance().longValue() != employeeBeanFetched.getInitialBalance().longValue())) {
             //This is to update initial balance in the backend.
             accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(), employeeBean.getOrgId(), employeeBean.getInitialBalance());
             AccountBean accountBean = new AccountBean();
@@ -252,7 +251,6 @@ public class EmployeeHandler {
             accountBean.setType(LOGIN_TYPE_EMPLOYEE);
             accountDAO.updateInitialBalance(accountBean);
             //process in accounDao from line 62-85
-
         }
 
         //@TODO paras : if there is change in the employeeInitialSalary balance field

@@ -3,7 +3,8 @@ package com.ANP.controller;
 import com.ANP.bean.*;
 import com.ANP.repository.EmployeeDAO;
 import com.ANP.service.EmployeeHandler;
-import com.ANP.util.ANPConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -23,6 +26,8 @@ public class EmployeeController {
     @Autowired
     private EmployeeDAO employeeDAO;
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
 
     @PostMapping(path = "/createEmployee", produces = "application/json")
     public ResponseEntity createEmployee(@Valid @RequestBody EmployeeBean employeeBean) {
@@ -33,7 +38,11 @@ public class EmployeeController {
 
     @PostMapping(path = "/updateEmployee", produces = "application/json")
     public ResponseEntity updateEmployee(@Valid @RequestBody EmployeeBean employeeBean) {
+        logger.trace("Entering updateEmployee(): EmployeeBean:" + employeeBean);
+        Instant start = Instant.now();
         employeeHandler.updateEmployee(employeeBean);
+        logger.trace("Exiting updateEmployee() : Time Taken[" + Duration.between(start, Instant.now()).toMillis() + "]");
+
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
@@ -49,28 +58,6 @@ public class EmployeeController {
         employeeHandler.createSalaryPayment(employeeSalaryPayment);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-/*
-    @PostMapping(path = "/updateLoginRequired", produces = "application/json")
-    @ResponseBody
-    public ResponseEntity updateLoginRequired(@RequestBody EmployeeBean employeeBean) {
-        employeeHandler.updateLoginRequired(employeeBean.getEmployeeId(), employeeBean.getLoginrequired());
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/updateMobile", produces = "application/json")
-    @ResponseBody
-    public ResponseEntity updateMobile(@RequestBody EmployeeBean employeeBean) {
-        employeeHandler.updateMobile(employeeBean.getEmployeeId(), employeeBean.getMobile());
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/updateSalaryBalance", produces = "application/json")
-    public ResponseEntity updateSalaryBalance(@RequestParam String EmployeeId, @RequestParam double balance, @RequestParam String operation) {
-        employeeHandler.UpdateEmpSalaryBalance(EmployeeId, balance, operation);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-    */
-
 
     /*
        This method will mainly used by UI fill Employee List in the Employee Module
