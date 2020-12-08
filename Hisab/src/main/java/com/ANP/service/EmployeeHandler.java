@@ -78,7 +78,8 @@ public class EmployeeHandler {
     }
 
     public String generateAccountNickName(EmployeeBean employeeBean) {
-        String accountNickName = null;
+         String accountNickName = null;
+
         if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()) || ANPUtils.isNullOrEmpty(employeeBean.getLast())) {
             if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
                 accountNickName = employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
@@ -88,7 +89,12 @@ public class EmployeeHandler {
         } else {
             accountNickName = employeeBean.getFirst() + " " + employeeBean.getLast() + " [" + employeeBean.getMobile() + "]";
         }
-        logger.debug(accountNickName);
+        //Nitesh: Fixing space issue during search
+        if(!ANPUtils.isNullOrEmpty(accountNickName)) {
+            accountNickName = accountNickName.trim();
+        }
+
+        logger.debug("generated accountNickName[" + accountNickName + "]");
         return accountNickName;
     }
 

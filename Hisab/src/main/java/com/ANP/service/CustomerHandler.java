@@ -104,19 +104,28 @@ public class CustomerHandler {
         }
 
         accountNickName = accountNickNameWithoutMobile + mobile;
+
+       //Nitesh: Fixing space issue during search
+       if(!ANPUtils.isNullOrEmpty(accountNickName)) {
+            accountNickName = accountNickName.trim();
+        }
+
         logger.trace(accountNickName);
         return accountNickName;
     }
 
 
     public void updateCustomer(CustomerBean customerBean){
+
         CustomerBean customerBeanFetched = customerDao.getCustomerById(customerBean.getOrgId(),customerBean.getCustomerID());
+
         if(!customerBeanFetched.getName().equalsIgnoreCase(customerBean.getName()) ||
         !customerBeanFetched.getFirmname().equalsIgnoreCase(customerBean.getFirmname()) ||
         !customerBeanFetched.getCity().equalsIgnoreCase(customerBean.getCity())){
             String accountNickName = getAccountNickName(customerBean);
             accountDAO.updateAccountNickName(customerBean.getCustomerID(),customerBean.getOrgId(),accountNickName);
         }
+
         if( !(customerBean.getInitialBalance()==null && customerBeanFetched.getInitialBalance()==null)
                 && (customerBean.getInitialBalance().longValue()!=customerBeanFetched.getInitialBalance().longValue())){
             //This is to update initial balance in the backend.
