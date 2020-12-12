@@ -236,11 +236,13 @@ public class EmployeeHandler {
        //NickName is only updated when first or last name updated
         if (!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
                 !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
-
+            logger.trace("employeeBean=" + employeeBean);
+            logger.trace("employeeBean getlast[" + employeeBean.getLast() + "]");
             if (ANPUtils.isNullOrEmpty(employeeBean.getLast()))
                 employeeBean.setLast("");
             else if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
                 employeeBean.setFirst("");
+
             accountDAO.updateAccountNickName(employeeBean.getEmployeeId(), employeeBean.getOrgId(), generateAccountNickName(employeeBean));
         }
 
@@ -259,7 +261,7 @@ public class EmployeeHandler {
             //process in accounDao from line 62-85
         }
 
-        //@TODO paras : if there is change in the employeeInitialSalary balance field
+        // if there is change in the employeeInitialSalary balance field
         if (employeeBean.getInitialSalaryBalance() != null) {
             if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
                 createSalaryDueBasedOnInitialSalaryBalance(employeeBean);

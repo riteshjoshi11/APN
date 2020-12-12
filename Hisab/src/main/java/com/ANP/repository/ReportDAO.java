@@ -357,7 +357,6 @@ public class ReportDAO {
     }
 
     public void generateGSTReport(GSTReportBean gstReportBean, String dateFrom, String dateTo) {
-
         List<SearchParam> searchParamList = new ArrayList<>();
         SearchParam searchParam = new SearchParam();
         searchParam.setCondition("and");
@@ -387,16 +386,18 @@ public class ReportDAO {
             row.createCell(2).setCellValue("Bill No");
             row.createCell(3).setCellValue("Party GST NO");
             row.createCell(4).setCellValue("NET");
-            row.createCell(5).setCellValue("CGSTe");
+            row.createCell(5).setCellValue("CGST");
             row.createCell(6).setCellValue("SGST");
             row.createCell(7).setCellValue("IGST");
             row.createCell(8).setCellValue("OTHER");
-            row.createCell(9).setCellValue("Total");
+            row.createCell(9).setCellValue("Total(Gross)");
+            row.createCell(10).setCellValue("Details");
+
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("orgId", gstReportBean.getOrgId());
             namedParameterJdbcTemplate.query("select exp.date, exp.description, exp.orderamount, exp.cgst," +
                     " exp.igst, exp.sgst, exp.extra, exp.totalamount, exp.topartyname," +
-                    "   exp.topartygstno from generalexpense exp " +
+                    "   exp.topartygstno, exp.description from generalexpense exp " +
                     " where exp.orgid = :orgId and exp.includeinreport " +
                     "= true and (exp.isdeleted is null or exp.isdeleted <> true) "
                     + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
@@ -412,10 +413,12 @@ public class ReportDAO {
                         row.createCell(3).setCellValue(rs.getString("exp.topartygstno"));
                         row.createCell(4).setCellValue(rs.getDouble("exp.orderamount"));
                         row.createCell(5).setCellValue(rs.getDouble("exp.cgst"));
-                        row.createCell(6).setCellValue(rs.getDouble("exp.igst"));
-                        row.createCell(7).setCellValue(rs.getDouble("exp.sgst"));
+                        row.createCell(6).setCellValue(rs.getDouble("exp.sgst"));
+                        row.createCell(7).setCellValue(rs.getDouble("exp.igst"));
                         row.createCell(8).setCellValue(rs.getDouble("exp.extra"));
                         row.createCell(9).setCellValue(rs.getDouble("exp.totalamount"));
+                        row.createCell(10).setCellValue(rs.getString("exp.description"));
+
                     }
 
 
@@ -436,13 +439,16 @@ public class ReportDAO {
             row1.createCell(7).setCellValue("SGST");
             row1.createCell(8).setCellValue("IGST");
             row1.createCell(9).setCellValue("OTHER");
-            row1.createCell(10).setCellValue("Total");
+            row1.createCell(10).setCellValue("Total(Gross)");
+            row1.createCell(11).setCellValue("Details");
+
 
             namedParameterJdbcTemplate.query("select pur.date, pur.billno, pur.orderamount, pur.cgst," +
-                    " pur.igst, pur.sgst, pur.extra, pur.totalamount, customer.name," +
+                    " pur.igst, pur.sgst, pur.extra, pur.totalamount,  pur.note, customer.name," +
                     "  customer.state, customer.gstin from customer, purchasefromvendor pur " +
                     " where customer.id = pur.fromcustomerid and pur.orgid = :orgId and pur.includeinreport " +
-                    "= true and (pur.isdeleted is null or pur.isdeleted <> true) " + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
+                    "= true and (pur.isdeleted is null or pur.isdeleted <> true) "
+                    + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
                 public String extractData(ResultSet rs) throws SQLException {
                     while (rs.next()) {
                         int rowNum = sheet1.getLastRowNum();
@@ -456,10 +462,11 @@ public class ReportDAO {
                         row.createCell(4).setCellValue(rs.getString("customer.gstin"));
                         row.createCell(5).setCellValue(rs.getDouble("pur.orderamount"));
                         row.createCell(6).setCellValue(rs.getDouble("pur.cgst"));
-                        row.createCell(7).setCellValue(rs.getDouble("pur.igst"));
-                        row.createCell(8).setCellValue(rs.getDouble("pur.sgst"));
+                        row.createCell(7).setCellValue(rs.getDouble("pur.sgst"));
+                        row.createCell(8).setCellValue(rs.getDouble("pur.igst"));
                         row.createCell(9).setCellValue(rs.getDouble("pur.extra"));
                         row.createCell(10).setCellValue(rs.getDouble("pur.totalamount"));
+                        row.createCell(11).setCellValue(rs.getString("pur.note"));
                     }
 
 
@@ -480,13 +487,16 @@ public class ReportDAO {
             row2.createCell(7).setCellValue("SGST");
             row2.createCell(8).setCellValue("IGST");
             row2.createCell(9).setCellValue("OTHER");
-            row2.createCell(10).setCellValue("Total");
+            row2.createCell(10).setCellValue("Total(Gross)");
+            row2.createCell(11).setCellValue("Details");
+
 
             namedParameterJdbcTemplate.query("select cus.date, cus.invoiceno, cus.orderamount, cus.cgst," +
-                    " cus.igst, cus.sgst, cus.extra, cus.totalamount, customer.name," +
+                    " cus.igst, cus.sgst, cus.extra, cus.totalamount, cus.note, customer.name," +
                     "  customer.state, customer.gstin from customer, customerinvoice cus " +
                     " where customer.id = cus.tocustomerid and cus.orgid = :orgId and cus.includeinreport " +
-                    "= true and (cus.isdeleted is null or cus.isdeleted <> true) " + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
+                    "= true and (cus.isdeleted is null or cus.isdeleted <> true) "
+                    + ANPUtils.getWhereClause(searchParamList), param, new ResultSetExtractor<String>() {
                 public String extractData(ResultSet rs) throws SQLException {
                     while (rs.next()) {
                         int rowNum = sheet2.getLastRowNum();
@@ -500,10 +510,12 @@ public class ReportDAO {
                         row.createCell(4).setCellValue(rs.getString("customer.gstin"));
                         row.createCell(5).setCellValue(rs.getDouble("cus.orderamount"));
                         row.createCell(6).setCellValue(rs.getDouble("cus.cgst"));
-                        row.createCell(7).setCellValue(rs.getDouble("cus.igst"));
-                        row.createCell(8).setCellValue(rs.getDouble("cus.sgst"));
+                        row.createCell(7).setCellValue(rs.getDouble("cus.sgst"));
+                        row.createCell(8).setCellValue(rs.getDouble("cus.igst"));
                         row.createCell(9).setCellValue(rs.getDouble("cus.extra"));
                         row.createCell(10).setCellValue(rs.getDouble("cus.totalamount"));
+                        row.createCell(10).setCellValue(rs.getString("cus.note"));
+
                     }
 
 
