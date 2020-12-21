@@ -43,6 +43,7 @@ INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('1', '13');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('1', '14');
 INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('1', '15');
+INSERT INTO `antrackerdb`.`role_permission` (`empTypeId`, `permissionId`) VALUES ('1', '18');
 
 
 ## Partner
