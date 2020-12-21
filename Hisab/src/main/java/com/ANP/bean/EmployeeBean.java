@@ -46,6 +46,26 @@ public class EmployeeBean extends CommonAttribute {
         this.accountId = accountId;
     }
 
+    public enum EmployeeTypeEnum {
+        SUPER_ADMIN(1),
+        BusinessPartner(2),
+        SalesPerson(3),
+        Labour(4),
+        Accountant(5),
+        VIRTUAL(6),
+        Default(7);
+
+        private final int value;
+
+        private EmployeeTypeEnum(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+   }
+
     /*
         This method will be used for displaying in the UI
          */
@@ -143,5 +163,25 @@ public class EmployeeBean extends CommonAttribute {
 
     public void setMobile2(String mobile2) {
         this.mobile2 = mobile2;
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeBean{" +
+                "employeeId='" + employeeId + '\'' +
+                ", first='" + first + '\'' +
+                ", last='" + last + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", mobile2='" + mobile2 + '\'' +
+                ", type='" + type + '\'' +
+                ", typeInt=" + typeInt +
+                ", currentsalarybalance=" + currentsalarybalance +
+                ", lastsalarybalance=" + lastsalarybalance +
+                ", initialSalaryBalance=" + initialSalaryBalance +
+                ", currentAccountBalance=" + currentAccountBalance +
+                ", initialBalance=" + initialBalance +
+                ", loginrequired=" + loginrequired +
+                ", accountId=" + accountId +
+                '}';
     }
 }

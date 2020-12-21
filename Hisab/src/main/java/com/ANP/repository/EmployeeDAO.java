@@ -4,6 +4,8 @@ import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.ANPUtils;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -34,6 +37,8 @@ public class EmployeeDAO {
 
     @Autowired
     private DataSource dataSource;
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeDAO.class);
 
     @Transactional(rollbackFor = Exception.class)
     public String createEmployee(EmployeeBean employeeBean) {
@@ -120,6 +125,7 @@ public class EmployeeDAO {
         if (startIndex == 0) {
             startIndex = 1;
         }
+
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("orgID", orgID);
         param.put("noOfRecordsToShow", noOfRecordsToShow);
@@ -137,21 +143,43 @@ public class EmployeeDAO {
 
     private static final class FullEmployeeMapper implements RowMapper<EmployeeBean> {
         public EmployeeBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+
             EmployeeBean empbean = new EmployeeBean();
             empbean.setFirst(rs.getString("e.first"));
             empbean.setLast(rs.getString("e.last"));
             empbean.setEmployeeId(rs.getString("e.id"));
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
-            empbean.setType(rs.getString("emptype"));
+            Integer empTypeInteger = rs.getInt("e.type") ;
+            String empType = rs.getString("emptype");
+
+
+/*
+            //if SUPER ADMIN then make it business partner for UI to display
+            if(empTypeInteger==1) {
+                empTypeInteger = 2;
+                empType = "Business Partner" ;
+            } else if(empTypeInteger==6) {
+                //if VIRTUAL then make it Default for UI to display
+                empTypeInteger = 7;
+                empType = "Default" ;
+            }
+  */
+            empbean.setTypeInt(empTypeInteger); // Business Partner
+            empbean.setType(empType);
+
             empbean.setCurrentsalarybalance(rs.getBigDecimal("e.currentsalarybalance"));
             empbean.setCurrentAccountBalance(rs.getBigDecimal("acc.currentbalance"));
             empbean.setAccountId(rs.getLong("acc.id"));
             empbean.setInitialSalaryBalance(rs.getBigDecimal("e.initialsalarybalance"));
-            //empbean.setCreateDate(rs.getTimestamp("e.createdate"));
-            empbean.setMobile2(rs.getString("e.mobile2"));
-            empbean.setInitialBalance(rs.getBigDecimal("acc.initialbalance"));
 
+            empbean.setMobile2(rs.getString("e.mobile2"));
+
+            if(rs.getBigDecimal("acc.initialbalance")!=null) {
+                empbean.setInitialBalance(rs.getBigDecimal("acc.initialbalance"));
+            } else {
+                empbean.setInitialBalance(new BigDecimal(0.0));
+            }
             return empbean;
         }
     }//end FullEmployeeMapper
@@ -315,9 +343,11 @@ public class EmployeeDAO {
      * This method is single update method to handle all the updates
      */
     public void updateEmployee(EmployeeBean employeeBean) {
+        logger.trace("Entering : updateEmployee: the employeebean which will be saved[" + employeeBean + "]");
         if (employeeBean.getTypeInt() <= 0) {
             throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
+
         String toAppend=",initialsalarybalance=:initialSalaryBalance";
 
         namedParameterJdbcTemplate.update("update employee set first = :first," +
@@ -327,6 +357,8 @@ public class EmployeeDAO {
 
 
     public EmployeeBean getEmployeeById(Long orgId, String employeeId) {
+        logger.trace("Entering : getEmployeeById : orgId[" + orgId + "] employeeId [" + employeeId + "]");
+
         List<SearchParam> searchParams = new ArrayList<>();
         SearchParam param = new SearchParam();
         param.setCondition("and");
@@ -335,11 +367,14 @@ public class EmployeeDAO {
         param.setSoperator("=");
         param.setValue(employeeId);
         searchParams.add(param);
+        EmployeeBean retEmployeeBean = null ;
         List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams, "", 1, 1);
+
         if (employeeList != null && !employeeList.isEmpty()) {
-            return employeeList.get(0);
+            retEmployeeBean = employeeList.get(0);
         }
-        return null;
+        logger.trace("Exiting : getEmployeeById : retEmployeeBean[" + retEmployeeBean + "]");
+        return retEmployeeBean;
     }
 
     public void updateEmployeeSalaryBalance(EmployeeAuditBean employeeAuditBean) {

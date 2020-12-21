@@ -226,27 +226,44 @@ public class EmployeeHandler {
         employeeAuditBean.setEmployeeid(employeeSalaryPaymentBean.getToEmployeeId());
         employeeAuditBean.setType(ANPConstants.EMPLOYEE_SALARY_AUDIT_TYPE_PAY);
         employeeDAO.updateEmployeeSalaryBalance(employeeAuditBean);
-
-
-    }
+   }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateEmployee(EmployeeBean employeeBean) {
+        logger.trace("updateEmployee: Input employeeBean:" + employeeBean);
         EmployeeBean employeeBeanFetched = employeeDAO.getEmployeeById(employeeBean.getOrgId(), employeeBean.getEmployeeId());
-       //NickName is only updated when first or last name updated
-        if (!employeeBeanFetched.getFirst().equalsIgnoreCase(employeeBean.getFirst()) ||
-                !employeeBeanFetched.getLast().equalsIgnoreCase(employeeBean.getLast())) {
-            logger.trace("employeeBean=" + employeeBean);
-            logger.trace("employeeBean getlast[" + employeeBean.getLast() + "]");
-            if (ANPUtils.isNullOrEmpty(employeeBean.getLast()))
-                employeeBean.setLast("");
-            else if (ANPUtils.isNullOrEmpty(employeeBean.getFirst()))
-                employeeBean.setFirst("");
+        logger.trace("updateEmployee: Fetched from DB employeeBean:" + employeeBeanFetched);
 
+
+        boolean nameChanged = false ; //track variable to determine whether first or last name changed
+
+        //if input and fetched firstName is not null and there is change in the value
+        if ( (!ANPUtils.isNullOrEmpty(employeeBean.getFirst())
+                && !ANPUtils.isNullOrEmpty(employeeBeanFetched.getFirst()) )
+                && !(employeeBean.getFirst().trim().equalsIgnoreCase(employeeBeanFetched.getFirst().trim()))) {
+            nameChanged = true;
+        }
+
+        //if firstName (above) not changed then check for update in the last name
+        //AND if input and fetched LastName is not null and there is change in the value
+
+        if(!nameChanged && (!ANPUtils.isNullOrEmpty(employeeBean.getLast())
+                && !ANPUtils.isNullOrEmpty(employeeBeanFetched.getLast()) )
+                && !(employeeBean.getLast().trim().equalsIgnoreCase(employeeBeanFetched.getLast().trim()))) {
+
+        }
+
+        if(nameChanged) {
+            logger.trace("updateEmployee: Detected Name change for employee with ID [" + employeeBeanFetched.getEmployeeId() + "]");
+            if(employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue()) {
+                logger.trace("employee with ID [" + employeeBeanFetched.getEmployeeId() + "] is an virtual account and we do not allow name change on that");
+                throw new CustomAppException("Name updated not allowed on this account", "SERVER.UPDATE_EMPLOYEE_VIRTUAL_CHANGE_NOTALLOWED", HttpStatus.EXPECTATION_FAILED );
+            }
             accountDAO.updateAccountNickName(employeeBean.getEmployeeId(), employeeBean.getOrgId(), generateAccountNickName(employeeBean));
         }
 
-        if ( !(employeeBean.getInitialBalance() ==null && employeeBeanFetched.getInitialBalance()==null) &&  (employeeBean.getInitialBalance().longValue() != employeeBeanFetched.getInitialBalance().longValue())) {
+        if ( !(employeeBean.getInitialBalance() ==null && employeeBeanFetched.getInitialBalance()==null)
+                &&  (employeeBean.getInitialBalance().longValue() != employeeBeanFetched.getInitialBalance().longValue())) {
             //This is to update initial balance in the backend.
             accountDAO.updateInitialBalanceField(employeeBean.getEmployeeId(), employeeBean.getOrgId(), employeeBean.getInitialBalance());
             AccountBean accountBean = new AccountBean();
@@ -258,7 +275,6 @@ public class EmployeeHandler {
             accountBean.setInitialBalance(employeeBean.getInitialBalance());
             accountBean.setType(LOGIN_TYPE_EMPLOYEE);
             accountDAO.updateInitialBalance(accountBean);
-            //process in accounDao from line 62-85
         }
 
         // if there is change in the employeeInitialSalary balance field
@@ -268,7 +284,67 @@ public class EmployeeHandler {
             }
         }
 
-        employeeDAO.updateEmployee(employeeBean);
+        if((employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue() ||
+                 employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue())) {
+            logger.trace("updateEmployee: The account is either restricted account. Applying different checks");
+            //If fetched employee is of type SUPER_ADMIN then we need to check that EmployeeType is not other than Business partner (as we have made SUPER ADMIN as business partner )
+            // and we do not allow any updates on SUPER_ADMIN
+            if (employeeBeanFetched.getTypeInt()!=employeeBean.getTypeInt() &&
+                       ((employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue()
+                           && employeeBean.getTypeInt()!=EmployeeBean.EmployeeTypeEnum.Default.getValue())
+                       || (employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue()
+                           && employeeBean.getTypeInt()!=EmployeeBean.EmployeeTypeEnum.BusinessPartner.getValue())) ) {
+                throw new CustomAppException("[Type] updates not allowed on this user/account", "SERVER.RESTRICTED_ACCOUNT.CHANGE_NOTALLOWED", HttpStatus.EXPECTATION_FAILED);
+            }
 
+            //SUPER ADMIN & VIRTUAL: LOGIN cannot be CHANGED
+            if (employeeBean.isLoginrequired() != employeeBeanFetched.isLoginrequired()) {
+                throw new CustomAppException("The [LoginRequired] cannot be changed for this user/account", "SERVER.RESTRICTED_ACCOUNT.LOGIN_CHANGE_NOTALLOWED", HttpStatus.EXPECTATION_FAILED);
+            }
+
+            if(!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())
+                    && !(employeeBean.getMobile2().trim().equalsIgnoreCase(employeeBeanFetched.getMobile2()))
+                    && employeeBeanFetched.getTypeInt() ==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue()) {
+                   //Virtual : Company Account
+                    throw new CustomAppException("[Mobile2] updates not allowed on this account", "SERVER.RESTRICTED_ACCOUNT.UPDATE_EMPLOYEE_MOBILE_ONVIRTUAL_NOTALLOWED", HttpStatus.EXPECTATION_FAILED);
+           }
+
+            //----- Update handling
+            if(employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue()) {
+                employeeBean.setTypeInt(EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue());
+                logger.trace("Updated typeInt for virtual ");
+            } else if (employeeBeanFetched.getTypeInt()== EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue()) {
+                employeeBean.setTypeInt(EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue());
+                logger.trace("Updated typeInt for super admin ");
+
+            }
+       }
+       employeeDAO.updateEmployee(employeeBean);
     }
-}//end class
+
+    public EmployeeBean getEmployeeById(Long orgId, String employeeId) {
+        logger.trace("Entering : getEmployeeById : orgId[" + orgId + "] employeeId [" + employeeId + "]");
+        EmployeeBean retEmployeeBean = employeeDAO.getEmployeeById(orgId,employeeId);
+        if(retEmployeeBean!=null) {
+            Integer empTypeInteger = retEmployeeBean.getTypeInt() ;
+            String empType = retEmployeeBean.getType();
+            //if SUPER ADMIN then make it business partner for UI to display
+            if(empTypeInteger==EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue()) {
+                empTypeInteger = EmployeeBean.EmployeeTypeEnum.BusinessPartner.getValue();
+                logger.trace("Changed SUPER ADMIN to Business Partner");
+                empType = "Business Partner" ;
+            } else if(empTypeInteger==EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue()) {
+                //if VIRTUAL then make it Default for UI to display
+                empTypeInteger = EmployeeBean.EmployeeTypeEnum.VIRTUAL.getValue();
+                logger.trace("Changed VIRTUAL to Default");
+                empType = "Default" ;
+            }
+            //retEmployeeBean.setType(empType);
+            retEmployeeBean.setTypeInt(empTypeInteger);
+            retEmployeeBean.setType(empType);
+        }
+        logger.trace("Exiting : getEmployeeById : retEmployeeBean[" + retEmployeeBean + "]");
+        return retEmployeeBean;
+    }
+
+    }//end class

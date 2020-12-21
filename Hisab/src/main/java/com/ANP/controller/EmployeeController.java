@@ -108,7 +108,7 @@ public class EmployeeController {
 
     @GetMapping(path = "/getEmployeeById", produces = "application/json")
     public EmployeeBean getEmployeeById(@RequestParam Long orgId, @RequestParam String employeeId) {
-        return employeeDAO.getEmployeeById(orgId, employeeId);
+        return employeeHandler.getEmployeeById(orgId, employeeId);
     }
 
     @PostMapping(path = "/deleteEmpSalaryDue", produces = "application/json")
