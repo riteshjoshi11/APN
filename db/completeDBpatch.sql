@@ -238,7 +238,7 @@ CREATE TABLE `customerinvoice` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `tocustomerid` varchar(25) DEFAULT NULL,
   `date` timestamp NOT NULL,
-  `orderamount` decimal(10,2) NOT NULL,
+  `orderamount` decimal(10,2) NULL,
   `cgst` decimal(10,2) DEFAULT '0.00',
   `sgst` decimal(10,2) DEFAULT '0.00',
   `igst` decimal(10,2) DEFAULT '0.00',
@@ -1294,5 +1294,6 @@ INSERT INTO `systemconfigurations` (`key`, `value`) VALUES ('ArchivePurge.archiv
 INSERT INTO `companytype` (`id`, `name`) VALUES (1,'One Person Company'),(2,'Private Ltd Company'),(3,'Public Ltd Company'),(4,'Limited Liability Partnership (LLP) '),(5,'Proprietorship / HUF'),(6,'Partnership'),(7,'Cooperatives');
 
 
-
+ALTER TABLE `antrackerdb`.`phonebook` 
+ADD COLUMN `mobileno` VARCHAR(15) NULL AFTER `lastsyncdate`;
 
