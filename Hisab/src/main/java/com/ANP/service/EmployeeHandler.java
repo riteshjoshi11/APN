@@ -278,10 +278,12 @@ public class EmployeeHandler {
         }
 
         // if there is change in the employeeInitialSalary balance field
-        if (employeeBean.getInitialSalaryBalance() != null) {
-            if (employeeBean.getInitialSalaryBalance().compareTo(new BigDecimal("0.0")) > 0) {
-                createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
-            }
+        if (employeeBean.getInitialSalaryBalance() != null
+                && employeeBean.getInitialSalaryBalance().longValue()!=0
+                && employeeBean.getInitialSalaryBalance().compareTo(employeeBeanFetched.getInitialSalaryBalance()) !=0 )  {
+            logger.trace("updateEmployee: Detected Change in Initial Salary Balance for employee with ID [" + employeeBeanFetched.getEmployeeId()
+                    + "] and initialSalaryBalance:[" + employeeBean.getInitialSalaryBalance()  + "]");
+            createSalaryDueBasedOnInitialSalaryBalance(employeeBean);
         }
 
         if((employeeBeanFetched.getTypeInt()==EmployeeBean.EmployeeTypeEnum.SUPER_ADMIN.getValue() ||
