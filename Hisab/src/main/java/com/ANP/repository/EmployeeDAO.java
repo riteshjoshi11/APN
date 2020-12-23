@@ -18,7 +18,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -42,7 +41,9 @@ public class EmployeeDAO {
 
     @Transactional(rollbackFor = Exception.class)
     public String createEmployee(EmployeeBean employeeBean) {
+        logger.trace("Entering: createEmployee: employeeBean: " + employeeBean);
         String id = "";
+        isMobileDuplicate(employeeBean, false);
         try {
             String idSql = "SELECT getEmployeeId() ";
             Map param = new HashMap<String, Object>();
@@ -55,6 +56,8 @@ public class EmployeeDAO {
         } catch (DuplicateKeyException e) {
             throw new CustomAppException("Duplicate Entry", "SERVER.CREATE_EMPLOYEE.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
+        logger.trace("Exiting: createEmployee: id" + id);
+
         return id;
     }
 
@@ -150,7 +153,7 @@ public class EmployeeDAO {
             empbean.setEmployeeId(rs.getString("e.id"));
             empbean.setMobile(rs.getString("e.mobile"));
             empbean.setLoginrequired(rs.getBoolean("e.loginrequired"));
-            Integer empTypeInteger = rs.getInt("e.type") ;
+            Integer empTypeInteger = rs.getInt("e.type");
             String empType = rs.getString("emptype");
 
 
@@ -175,7 +178,7 @@ public class EmployeeDAO {
 
             empbean.setMobile2(rs.getString("e.mobile2"));
 
-            if(rs.getBigDecimal("acc.initialbalance")!=null) {
+            if (rs.getBigDecimal("acc.initialbalance") != null) {
                 empbean.setInitialBalance(rs.getBigDecimal("acc.initialbalance"));
             } else {
                 empbean.setInitialBalance(new BigDecimal(0.0));
@@ -348,7 +351,7 @@ public class EmployeeDAO {
             throw new CustomAppException("Employee Type cannot be 0 or blank", "SERVER.UPDATE_EMPLOYEE.NULLVALUE", HttpStatus.EXPECTATION_FAILED);
         }
 
-        String toAppend=",initialsalarybalance=:initialSalaryBalance";
+        String toAppend = ",initialsalarybalance=:initialSalaryBalance";
 
         namedParameterJdbcTemplate.update("update employee set first = :first," +
                 "last=:last, loginrequired = :loginrequired, type = :typeInt, mobile2 =:mobile2 " + toAppend +
@@ -367,7 +370,7 @@ public class EmployeeDAO {
         param.setSoperator("=");
         param.setValue(employeeId);
         searchParams.add(param);
-        EmployeeBean retEmployeeBean = null ;
+        EmployeeBean retEmployeeBean = null;
         List<EmployeeBean> employeeList = listEmployeesWithBalancePaged(orgId, searchParams, "", 1, 1);
 
         if (employeeList != null && !employeeList.isEmpty()) {
@@ -411,40 +414,61 @@ public class EmployeeDAO {
         System.out.println("Status " + result);
     }
 
-    public void isMobileDuplicate(EmployeeBean employeeBean) {
+    public void isMobileDuplicate(EmployeeBean employeeBean, boolean isUpdateScenario) {
+
         Map<String, Object> params = new HashMap<>();
+        params.put("mobile", employeeBean.getMobile());
         params.put("mobile2", employeeBean.getMobile2());
         params.put("orgId", employeeBean.getOrgId());
         String queryPart = "";
+
         if (!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())) {
-            queryPart = " and (mobile = :mobile2 or mobile2 = :mobile2) ";
+            queryPart = queryPart + " (mobile = :mobile2 or mobile2 = :mobile2) ";
         }
 
-        Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where orgid=:orgId " +
-                queryPart, params, Integer.class);
+        if (!ANPUtils.isNullOrEmpty(employeeBean.getMobile())) {
+            if(ANPUtils.isNullOrEmpty(queryPart)) {
+                queryPart = " (mobile = :mobile or mobile2 = :mobile) ";
+            } else {
+                queryPart = queryPart + " or (mobile = :mobile or mobile2 = :mobile) ";
+            }
+        }
 
-        if (count > 0) {
-            throw new CustomAppException("This mobile no. is already registered for your business", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
+        logger.trace("isMobileDuplicate: SQL [" + queryPart + "]");
+
+        if (!ANPUtils.isNullOrEmpty(queryPart)) {
+            Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where orgid=:orgId AND " +
+                    queryPart, params, Integer.class);
+
+            logger.trace("isMobileDuplicate: the query output [" + count + "]");
+
+            if (!isUpdateScenario && count > 0) { //in case of create, the query should return 0
+                throw new CustomAppException("The mobile or alternate mobile no. is already registered for your business with some other user", "SERVER.CREATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
+            }
+
+            if (isUpdateScenario && count > 1) { //in case of updates, the query may return 1 (for self Record)
+                throw new CustomAppException("The mobile or alternate mobile no. is already registered for your business with some other user", "SERVER.UPDATE_EMPLOYEE.DUPLICATE_MOBILE", HttpStatus.EXPECTATION_FAILED);
+            }
         }
     }
 
-    public int deleteEmployeeSalary(EmployeeSalary employeeSalary)
-    {
-        Map<String,Object> param = new HashMap<>();
-        param.put("id",employeeSalary.getSalaryID());
-        param.put("orgid",employeeSalary.getOrgId());
+    public int deleteEmployeeSalary(EmployeeSalary employeeSalary) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("id", employeeSalary.getSalaryID());
+        param.put("orgid", employeeSalary.getOrgId());
 
         return namedParameterJdbcTemplate.update("update employeesalary set isdeleted = true, deletedate = CURDATE() " +
-                "where id = :id and orgid = :orgid",param);
+                "where id = :id and orgid = :orgid", param);
     }
 
-    public int deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPayment)
-    {
-        Map<String,Object> param = new HashMap<>();
-        param.put("id",employeeSalaryPayment.getSalaryPaymentID());
-        param.put("orgid",employeeSalaryPayment.getOrgId());
+    public int deleteEmpSalaryPayment(EmployeeSalaryPayment employeeSalaryPayment) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("id", employeeSalaryPayment.getSalaryPaymentID());
+        param.put("orgid", employeeSalaryPayment.getOrgId());
         return namedParameterJdbcTemplate.update("update employeesalarypayment set isdeleted = true, deletedate = CURDATE() " +
-                "where id = :id and orgid = :orgid",param);
+                "where id = :id and orgid = :orgid", param);
 
     }
+
+
 }

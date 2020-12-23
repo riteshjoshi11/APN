@@ -321,7 +321,12 @@ public class EmployeeHandler {
 
             }
        }
-       employeeDAO.updateEmployee(employeeBean);
+
+        if(!ANPUtils.isNullOrEmpty(employeeBean.getMobile2())) {
+           employeeDAO.isMobileDuplicate(employeeBean, true); // this will throw exception if duplicate
+        }
+
+        employeeDAO.updateEmployee(employeeBean);
     }
 
     public EmployeeBean getEmployeeById(Long orgId, String employeeId) {
