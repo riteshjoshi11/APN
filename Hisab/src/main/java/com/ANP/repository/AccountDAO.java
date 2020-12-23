@@ -3,6 +3,8 @@ package com.ANP.repository;
 import com.ANP.bean.*;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,6 +46,9 @@ public class AccountDAO {
     @Autowired
     private DataSource dataSource;
 
+    private static final Logger logger = LoggerFactory.getLogger(AccountDAO.class);
+
+
     @Transactional(rollbackFor = Exception.class)
     public void createAccount(AccountBean accountBean) {
         KeyHolder holder = new GeneratedKeyHolder();
@@ -53,12 +58,12 @@ public class AccountDAO {
                 new BeanPropertySqlParameterSource(accountBean),holder);
 
         long generatedAccKey = holder.getKey().longValue();
-        System.out.println("createAccount: Generated Key=" + generatedAccKey);
+        logger.trace("createAccount: Generated Key=" + generatedAccKey);
         accountBean.setAccountId(generatedAccKey);
         BigDecimal zero = new BigDecimal("0.0");
         if (accountBean.getCurrentbalance()!= null) {
             if (((accountBean.getCurrentbalance().equals(zero)))) {
-                System.out.println("Current Balance is 0 So not updating the value into DB");
+                logger.trace("Current Balance is 0 So not updating the value into DB");
                 return;
             }
         }
@@ -115,7 +120,7 @@ public class AccountDAO {
         Return: List:AccountBean with only AccountID, OwnerID, NickName populated (Nothing else, for the optimization we are doing this)
      */
     public List<AccountBean> searchAccounts(AccountBean accountBean) {
-        System.out.println(accountBean.getOrgId());
+        logger.trace("searchAccounts"+ accountBean.getOrgId());
         if (accountBean.getOrgId() == 0) {
             throw new java.lang.RuntimeException("orgId is mandatory");
         }
@@ -214,7 +219,7 @@ public class AccountDAO {
     }
 
     public BigDecimal getCashWithYou(String employeeID, long orgId) {
-        System.out.println("getCashWithYou : employeeID[" + employeeID +"] orgid[" + orgId+ "]");
+        logger.trace("getCashWithYou : employeeID[" + employeeID +"] orgid[" + orgId+ "]");
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("employeeID", employeeID);
         in.addValue("orgId", orgId);
@@ -251,7 +256,7 @@ public class AccountDAO {
 
         procedure.setParameters(declareparameters);
         procedure.compile();
-        System.out.println(customerAuditBean.getCustomerid() + "," +  customerAuditBean.getAccountid() + "," +
+        logger.trace(customerAuditBean.getCustomerid() + "," +  customerAuditBean.getAccountid() + "," +
                 customerAuditBean.getAmount() + "," +    customerAuditBean.getOtherPartyName() + "," +  customerAuditBean.getOperation());
         Map<String, Object> result = procedure.execute(
                 customerAuditBean.getCustomerid(),
@@ -263,11 +268,12 @@ public class AccountDAO {
                 customerAuditBean.getOrgId(),
                 customerAuditBean.getTransactionDate()
         );
-        System.out.println("Status " + result);
+        logger.trace("Status " + result);
         return true;
     }
 
-    public boolean updateEmployeeAccountBalance(EmployeeAuditBean employeeAuditBean) {
+    public void updateEmployeeAccountBalance(EmployeeAuditBean employeeAuditBean) {
+        logger.trace("Entering : updateEmployeeAccountBalance: EmployeeAuditBean:" + employeeAuditBean);
         StoredProcedure procedure = new GenericStoredProcedure();
         procedure.setDataSource(dataSource);
         procedure.setSql("UpdateEmployeeBalanceWithAudit_Procedure");
@@ -286,8 +292,7 @@ public class AccountDAO {
 
         procedure.setParameters(declareparameters);
         procedure.compile();
-        System.out.println(employeeAuditBean.getEmployeeid() + "," +  employeeAuditBean.getAccountid() + "," +
-        employeeAuditBean.getAmount() + "," +    employeeAuditBean.getOtherPartyName() + "," +  employeeAuditBean.getOperation());
+
         Map<String, Object> result = procedure.execute(
                 employeeAuditBean.getEmployeeid(),
                 employeeAuditBean.getAccountid(),
@@ -299,8 +304,8 @@ public class AccountDAO {
                 employeeAuditBean.getOrgId(),
                 employeeAuditBean.getTransactionDate()
         );
-        System.out.println("Status " + result);
-        return true;
+        logger.trace("Exiting Status " + result);
+
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -134,6 +134,24 @@ public class EmployeeAuditBean extends CommonAttribute {
     public BigDecimal getPreviousbalance() { return previousbalance; }
 
     public void setPreviousbalance(BigDecimal previousbalance) { this.previousbalance = previousbalance; }
+
+    @Override
+    public String toString() {
+        return "EmployeeAuditBean{" +
+                "auditId=" + auditId +
+                ", employeeid='" + employeeid + '\'' +
+                ", accountid=" + accountid +
+                ", type='" + type + '\'' +
+                ", amount=" + amount +
+                ", newbalance=" + newbalance +
+                ", previousbalance=" + previousbalance +
+                ", operation='" + operation + '\'' +
+                ", otherPartyName='" + otherPartyName + '\'' +
+                ", forWhat='" + forWhat + '\'' +
+                ", transactionDate=" + transactionDate +
+                ", employeeBean=" + employeeBean +
+                '}';
+    }
 }
 
 

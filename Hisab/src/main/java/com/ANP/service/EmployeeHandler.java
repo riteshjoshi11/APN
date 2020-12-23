@@ -34,7 +34,8 @@ public class EmployeeHandler {
         logger.debug("Start CreateEmployee");
 
         if (employeeBean.getTypeInt() == 0) {
-            employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
+            //employeeBean.setTypeInt(ANPConstants.EMPLOYEE_TYPE_DEFAULT);
+            employeeBean.setTypeInt(EmployeeBean.EmployeeTypeEnum.Default.getValue());
         }
 
         String createdEmployeeID = employeeDAO.createEmployee(employeeBean);

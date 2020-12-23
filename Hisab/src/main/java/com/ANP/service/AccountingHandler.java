@@ -4,6 +4,8 @@ import com.ANP.bean.*;
 import com.ANP.repository.*;
 import com.ANP.util.ANPConstants;
 import com.ANP.util.CustomAppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -46,8 +48,8 @@ public class AccountingHandler {
     @Autowired
     CommonDAO commonDAO;
 
-    @Autowired
-    LocaleHandlerService localeHandlerService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountingHandler.class);
 
     /*
      * Create a invoice for a customer (Sale Entry)
@@ -215,24 +217,22 @@ public class AccountingHandler {
      * Retail Sale only updates the employee Balance
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean createRetailSale(RetailSale retailSale) {
+    public void createRetailSale(RetailSale retailSale) {
+        logger.trace("Entering: createRetailSale:" + retailSale);
         retailSaleDAO.createRetailSale(retailSale);
-        // accountDAO.updateAccountBalance(retailSale.getFromaccountid(), retailSale.getAmount(), "ADD");
         if (retailSale.isIncludeincalc()) {
             EmployeeAuditBean employeeAuditBean = new EmployeeAuditBean();
             employeeAuditBean.setOrgId(retailSale.getOrgId());
             employeeAuditBean.setEmployeeid(retailSale.getFromemployeeid());
             employeeAuditBean.setAccountid(retailSale.getFromaccountid());
             employeeAuditBean.setAmount(retailSale.getAmount());
-            //employeeAuditBean.setType(ANPConstants.EMPLOYEE_AUDIT_TYPE_RCVD);
             employeeAuditBean.setType("" + EmployeeAuditBean.TRANSACTION_TYPE_ENUM.Retail);
             employeeAuditBean.setOperation(ANPConstants.OPERATION_TYPE_ADD);
-            //employeeAuditBean.setForWhat(ANPConstants.EMPLOYEE_AUDIT_FORWHAT_RETAILSALE);
             employeeAuditBean.setOtherPartyName("");
             employeeAuditBean.setTransactionDate(retailSale.getDate());
             accountDAO.updateEmployeeAccountBalance(employeeAuditBean);
         }
-        return true;
+        logger.trace("Exiting: createRetailSale:");
     }
 
     /*

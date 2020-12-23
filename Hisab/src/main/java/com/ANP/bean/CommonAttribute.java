@@ -55,4 +55,12 @@ public class CommonAttribute {
     public String getCreatedByEmpoyeeName() { return createdByEmpoyeeName; }
 
     public void setCreatedByEmpoyeeName(String createdByEmpoyeeName) { this.createdByEmpoyeeName = createdByEmpoyeeName; }
+
+    @Override
+    public String toString() {
+        return "CommonAttribute{" +
+                "orgId=" + orgId +
+                ", forceCreate=" + forceCreate +
+                '}';
+    }
 }

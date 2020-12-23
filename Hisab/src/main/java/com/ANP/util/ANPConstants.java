@@ -1,9 +1,9 @@
 package com.ANP.util;
 
 public interface ANPConstants {
-      public static final int EMPLOYEE_TYPE_SUPER_ADMIN=1;
-      public static final int EMPLOYEE_TYPE_VIRTUAL=6;
-      public static final int EMPLOYEE_TYPE_DEFAULT=7;
+     // public static final int EMPLOYEE_TYPE_SUPER_ADMIN=1;
+     // public static final int EMPLOYEE_TYPE_VIRTUAL=6;
+      //public static final int EMPLOYEE_TYPE_DEFAULT=7;
 
 
       public static final String LOGIN_TYPE_EMPLOYEE="EMPLOYEE";
