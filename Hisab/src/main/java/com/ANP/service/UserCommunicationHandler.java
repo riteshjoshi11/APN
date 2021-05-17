@@ -18,12 +18,13 @@ public class UserCommunicationHandler {
       * Currently this method will only interact with SMS Provider
      */
     @Autowired
-    @Qualifier("datagenitSMSProvider")
+    @Qualifier("MySMSShopSMSProvider")
     SMSProvider smsProvider;
 
     public void sendOTP(String mobile, String email, String otp) {
         //toto write a methord to get Message based on user preference
-        String message = "OTP for accessing Business Setu is:[" + otp + "] Please do not disclose it to anyone else";
+        //String message = "OTP for accessing Business Setu is:[" + otp + "] Please do not disclose it to anyone else";
+        String message = "[" + otp + "] is the OTP to access Business Setu. OTP is valid for 1 hour. Do not share with anyone." ;
         smsProvider.sendSMS(mobile, message);
     }
 }

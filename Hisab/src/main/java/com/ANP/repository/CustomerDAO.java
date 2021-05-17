@@ -42,6 +42,7 @@ public class CustomerDAO {
             return updated;
         }
         catch (DuplicateKeyException e) {
+            e.printStackTrace();
             throw new CustomAppException("Duplicate Entry","SERVER.CREATE_CUSTOMER.DUPLICATE", HttpStatus.EXPECTATION_FAILED);
         }
     }
