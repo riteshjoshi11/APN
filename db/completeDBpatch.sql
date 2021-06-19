@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS test_antracker_db;
-CREATE DATABASE test_antracker_db;
-use test_antracker_db;
+DROP DATABASE IF EXISTS antrackerdb;
+CREATE DATABASE antrackerdb;
+use antrackerdb;
 
 DROP procedure IF EXISTS `ArchiveAndPurgeProcess_Procedure`;
 DROP procedure IF EXISTS `ControlOrgDataGrowthDateWise_Procedure`;
