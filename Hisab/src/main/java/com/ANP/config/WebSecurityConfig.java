@@ -1,6 +1,5 @@
 package com.ANP.config;
 
-import com.ANP.util.ANPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Use BCryptPasswordEncoder
         System.out.println("Configuring  User detail service ");
         auth.userDetailsService(jwtUserDetailsService);//.passwordEncoder(passwordEncoder());
-
-
-    }
+   }
 
     @Bean
     @Override
@@ -72,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
        // all other requests need to be authenticated
         anyRequest().authenticated().and().
+
        // make sure we use stateless session; session won't be used to
        // store user's state.
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

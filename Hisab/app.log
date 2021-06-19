@@ -1,0 +1,132 @@
+2020-11-10 15:09:16,217 DEBUG com.ANP.config.JwtRequestFilter [main] Filter 'jwtRequestFilter' configured for use
+2020-11-10 15:09:17,312 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [main] 91 mappings in 'requestMappingHandlerMapping'
+2020-11-10 15:09:17,412 INFO com.ANP.config.AsyncConfiguration [main] Creating Async Task Executor, core poolsize[5] MaxPoolSize[10] QCapacity[10000] ThreadNamePrefix[Custom-]
+2020-11-10 15:09:17,915 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter [main] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-11-10 15:09:18,028 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [main] Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-11-10 15:09:18,052 DEBUG org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-11-10 15:09:55,815 INFO org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2020-11-10 15:09:55,816 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Detected StandardServletMultipartResolver
+2020-11-10 15:09:55,818 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2020-11-10 15:09:55,818 INFO org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Completed initialization in 2 ms
+2020-11-10 15:09:55,850 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] Entering: doFilterInternal
+2020-11-10 15:09:55,850 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] JWT Token does not begin with Bearer String
+2020-11-10 15:09:55,880 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] GET "/apn/swagger-ui.html", parameters={}
+2020-11-10 15:09:55,896 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-1] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-11-10 15:09:55,913 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Completed 200 OK
+2020-11-10 15:09:55,928 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] Exiting: doFilterInternal
+2020-11-10 15:09:55,995 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] Entering: doFilterInternal
+2020-11-10 15:09:55,995 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] JWT Token does not begin with Bearer String
+2020-11-10 15:09:55,998 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] Entering: doFilterInternal
+2020-11-10 15:09:55,998 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] JWT Token does not begin with Bearer String
+2020-11-10 15:09:55,998 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-3] GET "/apn/webjars/springfox-swagger-ui/swagger-ui.css?v=2.9.2", parameters={masked}
+2020-11-10 15:09:56,000 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] Entering: doFilterInternal
+2020-11-10 15:09:56,000 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,000 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-4] GET "/apn/webjars/springfox-swagger-ui/springfox.js?v=2.9.2", parameters={masked}
+2020-11-10 15:09:56,002 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-3] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:56,005 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-4] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:56,006 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] GET "/apn/webjars/springfox-swagger-ui/springfox.css?v=2.9.2", parameters={masked}
+2020-11-10 15:09:56,008 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-2] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:56,023 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] Entering: doFilterInternal
+2020-11-10 15:09:56,023 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,025 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] Entering: doFilterInternal
+2020-11-10 15:09:56,039 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-3] Completed 200 OK
+2020-11-10 15:09:56,035 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] Completed 200 OK
+2020-11-10 15:09:56,031 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-4] Completed 200 OK
+2020-11-10 15:09:56,046 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] Exiting: doFilterInternal
+2020-11-10 15:09:56,026 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-6] GET "/apn/webjars/springfox-swagger-ui/swagger-ui-standalone-preset.js?v=2.9.2", parameters={masked}
+2020-11-10 15:09:56,047 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-6] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:56,046 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] Exiting: doFilterInternal
+2020-11-10 15:09:56,055 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] Exiting: doFilterInternal
+2020-11-10 15:09:56,025 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,082 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-6] Completed 200 OK
+2020-11-10 15:09:56,082 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] Exiting: doFilterInternal
+2020-11-10 15:09:56,083 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-5] GET "/apn/webjars/springfox-swagger-ui/swagger-ui-bundle.js?v=2.9.2", parameters={masked}
+2020-11-10 15:09:56,086 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-5] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:56,140 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-5] Completed 200 OK
+2020-11-10 15:09:56,140 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] Exiting: doFilterInternal
+2020-11-10 15:09:56,666 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-7] Entering: doFilterInternal
+2020-11-10 15:09:56,666 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-7] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,666 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-7] GET "/apn/swagger-resources/configuration/ui", parameters={}
+2020-11-10 15:09:56,672 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [http-nio-8080-exec-7] Mapped to springfox.documentation.swagger.web.ApiResourceController#uiConfiguration()
+2020-11-10 15:09:56,758 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-7] Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:56,759 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-7] Writing [springfox.documentation.swagger.web.UiConfiguration@24096d13]
+2020-11-10 15:09:56,778 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-7] Completed 200 OK
+2020-11-10 15:09:56,778 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-7] Exiting: doFilterInternal
+2020-11-10 15:09:56,913 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-8] Entering: doFilterInternal
+2020-11-10 15:09:56,914 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-8] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,915 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-8] GET "/apn/swagger-resources/configuration/security", parameters={}
+2020-11-10 15:09:56,916 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [http-nio-8080-exec-8] Mapped to springfox.documentation.swagger.web.ApiResourceController#securityConfiguration()
+2020-11-10 15:09:56,925 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-8] Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:56,925 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-8] Writing [springfox.documentation.swagger.web.SecurityConfiguration@bc1a7e1]
+2020-11-10 15:09:56,928 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-8] Completed 200 OK
+2020-11-10 15:09:56,928 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-8] Exiting: doFilterInternal
+2020-11-10 15:09:56,933 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-9] Entering: doFilterInternal
+2020-11-10 15:09:56,934 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-9] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,935 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-9] GET "/apn/swagger-resources", parameters={}
+2020-11-10 15:09:56,935 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [http-nio-8080-exec-9] Mapped to springfox.documentation.swagger.web.ApiResourceController#swaggerResources()
+2020-11-10 15:09:56,941 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-9] Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:56,941 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-9] Writing [[springfox.documentation.swagger.web.SwaggerResource@582eefeb]]
+2020-11-10 15:09:56,945 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-9] Completed 200 OK
+2020-11-10 15:09:56,945 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-9] Exiting: doFilterInternal
+2020-11-10 15:09:56,998 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-10] Entering: doFilterInternal
+2020-11-10 15:09:56,998 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-10] JWT Token does not begin with Bearer String
+2020-11-10 15:09:56,999 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-10] GET "/apn/v2/api-docs", parameters={}
+2020-11-10 15:09:56,999 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] Entering: doFilterInternal
+2020-11-10 15:09:56,999 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,000 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] GET "/apn/", parameters={}
+2020-11-10 15:09:57,004 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-1] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-11-10 15:09:57,004 DEBUG org.springframework.web.servlet.resource.ResourceHttpRequestHandler [http-nio-8080-exec-1] Resource not found
+2020-11-10 15:09:57,004 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Completed 404 NOT_FOUND
+2020-11-10 15:09:57,004 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-1] Exiting: doFilterInternal
+2020-11-10 15:09:57,011 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] "ERROR" dispatch for GET "/apn/error", parameters={}
+2020-11-10 15:09:57,013 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [http-nio-8080-exec-1] Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2020-11-10 15:09:57,024 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-1] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:57,025 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-1] Writing [{timestamp=Tue Nov 10 15:09:57 IST 2020, status=404, error=Not Found, message=, path=/apn/}]
+2020-11-10 15:09:57,033 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Exiting from "ERROR" dispatch, status 404
+2020-11-10 15:09:57,057 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] Entering: doFilterInternal
+2020-11-10 15:09:57,057 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,058 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-4] GET "/apn/webjars/springfox-swagger-ui/fonts/titillium-web-v6-latin-700.woff2", parameters={}
+2020-11-10 15:09:57,059 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-4] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:57,066 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-4] Completed 200 OK
+2020-11-10 15:09:57,066 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-4] Exiting: doFilterInternal
+2020-11-10 15:09:57,066 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] Entering: doFilterInternal
+2020-11-10 15:09:57,066 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,067 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-3] GET "/apn/webjars/springfox-swagger-ui/fonts/open-sans-v15-latin-regular.woff2", parameters={}
+2020-11-10 15:09:57,068 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-3] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:57,075 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-3] Completed 200 OK
+2020-11-10 15:09:57,076 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-3] Exiting: doFilterInternal
+2020-11-10 15:09:57,088 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] Entering: doFilterInternal
+2020-11-10 15:09:57,088 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,089 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] GET "/apn/csrf", parameters={}
+2020-11-10 15:09:57,090 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-2] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-11-10 15:09:57,093 DEBUG org.springframework.web.servlet.resource.ResourceHttpRequestHandler [http-nio-8080-exec-2] Resource not found
+2020-11-10 15:09:57,093 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] Completed 404 NOT_FOUND
+2020-11-10 15:09:57,093 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-2] Exiting: doFilterInternal
+2020-11-10 15:09:57,094 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] "ERROR" dispatch for GET "/apn/error", parameters={}
+2020-11-10 15:09:57,094 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [http-nio-8080-exec-2] Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2020-11-10 15:09:57,095 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-2] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:57,095 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-2] Writing [{timestamp=Tue Nov 10 15:09:57 IST 2020, status=404, error=Not Found, message=, path=/apn/csrf}]
+2020-11-10 15:09:57,097 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-2] Exiting from "ERROR" dispatch, status 404
+2020-11-10 15:09:57,333 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-10] Using 'application/json', given [application/json, */*] and supported [application/json, application/*+json, application/json, application/*+json]
+2020-11-10 15:09:57,333 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [http-nio-8080-exec-10] Writing [springfox.documentation.spring.web.json.Json@5a1e72c4]
+2020-11-10 15:09:57,341 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-10] Completed 200 OK
+2020-11-10 15:09:57,341 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-10] Exiting: doFilterInternal
+2020-11-10 15:09:57,722 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] Entering: doFilterInternal
+2020-11-10 15:09:57,723 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,723 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-5] GET "/apn/webjars/springfox-swagger-ui/fonts/source-code-pro-v7-latin-300.woff2", parameters={}
+2020-11-10 15:09:57,725 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-5] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:57,727 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] Entering: doFilterInternal
+2020-11-10 15:09:57,727 WARN com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] JWT Token does not begin with Bearer String
+2020-11-10 15:09:57,730 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-5] Completed 200 OK
+2020-11-10 15:09:57,730 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-6] GET "/apn/webjars/springfox-swagger-ui/fonts/open-sans-v15-latin-700.woff2", parameters={}
+2020-11-10 15:09:57,730 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-5] Exiting: doFilterInternal
+2020-11-10 15:09:57,732 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [http-nio-8080-exec-6] Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/webjars/"]
+2020-11-10 15:09:57,741 DEBUG org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-6] Completed 200 OK
+2020-11-10 15:09:57,742 TRACE com.ANP.config.JwtRequestFilter [http-nio-8080-exec-6] Exiting: doFilterInternal
+2020-11-10 15:15:06,753 DEBUG org.springframework.web.context.support.GenericWebApplicationContext [main] Refreshing org.springframework.web.context.support.GenericWebApplicationContext@49ff7d8c
+2020-11-10 15:15:11,137 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [main] 91 mappings in 'requestMappingHandlerMapping'
+2020-11-10 15:15:11,402 INFO com.ANP.config.AsyncConfiguration [main] Creating Async Task Executor, core poolsize[5] MaxPoolSize[10] QCapacity[10000] ThreadNamePrefix[Custom-]
+2020-11-10 15:15:14,307 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter [main] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-11-10 15:15:14,632 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [main] Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-11-10 15:15:14,675 DEBUG org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-11-10 15:15:23,569 DEBUG org.springframework.web.context.support.GenericWebApplicationContext [SpringContextShutdownHook] Closing org.springframework.web.context.support.GenericWebApplicationContext@49ff7d8c, started on Tue Nov 10 15:15:06 IST 2020
