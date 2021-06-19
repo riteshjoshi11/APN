@@ -1,0 +1,55 @@
+1. Created a acccount, wait for a day to get it activated
+2. Launch EC2 Instance of - RedHatEnterprise Linux with default conf
+3. Now take a public address and create a new ssh file to connect
+4. execute ssh file in the IDE and it will complain about the file permission issue.
+5. "Amazon Connection issue.docx" read document. 
+6. Follow the instruction as it is and you should be able to resolve and login to the server
+
+Assign Elastic IP address: 
+1. Select right region (Mumbai) 
+2. Left Side Menu: Network & Security --> Elastic IPs : Click on "Allocate Elastic IP address" button
+3. You will see success message and see the IP address assigned. 
+4. Now on the Elastic IP address page (Selected) - Click on "Associate Elastic IP address"
+5. You will see the your running instnace in the  "Instance" selection. Click Confirm.
+
+
+You can connect from putty/winScp (ssh) with the public address being shown. 
+
+
+Copy Java
+=======
+jdk-8u261-linux-x64.tar.gz from local downloads to server home
+
+install it at /opt/
+go to /opt/ folder 
+
+then run commands:
+$ sudo tar -xvf ~/jdk-8u261-linux-x64.tar.gz
+$ sudo chown -R ec2-user:ec2-user jdk1.8.0_261
+
+
+export JAVA_HOME=/opt/jdk1.8.0_261
+export PATH=$JAVA_HOME/bin:$PATH
+
+
+run: 
+$bash
+
+check $JAVA_HOME and java -version command : jdk 1.8 should be shown
+
+
+Now Copy file 
+StartANTracker.sh and stopANTracker.sh and give 755 permission
+Started the server and looks good
+
+But URL is not accessible. 
+Swagar for new URL
+======
+ec2-52-66-114-221.ap-south-1.compute.amazonaws.com:8080/
+
+
+Open 8080 Port
+===================
+Go to Instance - Inbound rule
+add a rule Custom - Custom TCP - Port 8080, IP 0.0.0.0 same like SSH 
+
