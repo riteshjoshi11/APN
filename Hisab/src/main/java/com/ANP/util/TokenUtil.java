@@ -48,10 +48,10 @@ public class TokenUtil implements Serializable {
     }
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String mobileNumber) {
         //TODO priority 2 need to add user mobile number
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, mobileNumber);
     }
 
     //while creating the token -
@@ -69,6 +69,9 @@ public class TokenUtil implements Serializable {
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
+        System.out.println("validateToken: username from token[" + username
+                + "] userDetails.getUsername()[" + userDetails.getUsername() + "]");
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

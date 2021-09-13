@@ -24,16 +24,13 @@ public class LoginHandler {
 
     @Autowired
     OrgDAO orgDAO;
-    @Autowired
-    CustomerDAO customerDao;
+
     @Autowired
     AccountDAO accountDAO;
     @Autowired
     OTPHandler otpHandler;
     @Autowired
     RoleTypeBeanSingleton roleTypeBeanSingleton;
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
 
     @Autowired
     private TokenUtil tokenUtil;
@@ -66,8 +63,9 @@ public class LoginHandler {
         Instant start = Instant.now();
         otpHandler.verifyOTP(otpBean);
         Token token = new Token();
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(otpBean.getMobileNumber());
-        String tok = tokenUtil.generateToken(userDetails);
+       // final UserDetails userDetails = userDetailsService.loadUserByUsername(otpBean.getMobileNumber());
+        //String tok = tokenUtil.generateToken(userDetails);
+        String tok = tokenUtil.generateToken(otpBean.getMobileNumber());
         token.setToken(tok);
         return token;
     }

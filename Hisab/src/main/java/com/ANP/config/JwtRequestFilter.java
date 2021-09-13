@@ -37,7 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         logger1.trace("Entering: doFilterInternal");
-        final String requestTokenHeader = request.getHeader("Authorization");
+        final String requestTokenHeader = request.getHeader("JWTToken");
         System.out.print("requestTokenHeader[" + requestTokenHeader + "]");
         String username = null;
         String jwtToken = null;
@@ -57,10 +57,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 throw new CustomAppException("ERROR.SERVER.SECURITY_TOKEN_UNKNOWN_ERROR","Unknown issue with security token", HttpStatus.NOT_ACCEPTABLE);
             }
         } else {
-            logger1.warn("JWT Token does not begin with Bearer String");
-            System.out.print("JWT Token does not begin with Bearer String");
-            //throw new CustomAppException("ERROR.SERVER.SECURITY_BEARER_ERROR","", HttpStatus.NOT_ACCEPTABLE);
+            logger1.warn("JWT Token does not exist or does not  begin with Bearer String");
+            System.out.print("JWT Token does not exist or does not begin with Bearer String");
+           // throw new CustomAppException("ERROR.SERVER.SECURITY_BEARER_ERROR","", HttpStatus.UNAUTHORIZED);
         }
+
+        logger1.trace("username["+ username + "]");
 
        // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -81,5 +83,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         logger1.trace("Exiting: doFilterInternal");
 
     }
-
 }

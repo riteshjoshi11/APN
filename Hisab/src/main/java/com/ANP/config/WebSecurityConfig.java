@@ -52,7 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.println("isTokenSecurityDisabled[" + isTokenSecurityDisabled + "]");
         if(isTokenSecurityDisabled) {
             System.out.println("Token security is disabled so allowing all GET and POST requests");
-            httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**").permitAll().antMatchers(HttpMethod.GET, "/**").permitAll();
+            httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**").permitAll().
+                    antMatchers(HttpMethod.GET, "/**").permitAll();
         }
         httpSecurity.csrf().disable()
         // dont authenticate this particular request
