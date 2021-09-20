@@ -471,27 +471,18 @@ public class EmployeeDAO {
     }
 
     public String isMobilePresent(String mobileNumber) {
-
-        logger.trace("isMobilePresent entr: mobileNumber [" + mobileNumber + "]");
-
-
+        logger.trace("isMobilePresent entry: mobileNumber [" + mobileNumber + "]");
         String retMobileNumber = "";
-
         if (!ANPUtils.isNullOrEmpty(mobileNumber)) {
-
             Map<String, Object> params = new HashMap<>();
             params.put("mobileNumber", mobileNumber);
-
             Integer count = namedParameterJdbcTemplate.queryForObject("select count(*) from employee where " +
                     " mobile=:mobileNumber or  mobile2=:mobileNumber", params, Integer.class);
-
-            if (count > 1) {
-                return mobileNumber;
+            if (count > 0) {
+                retMobileNumber = mobileNumber;
             }
         }
-
-        logger.trace("isMobilePresent exit: mobileNumber [" + mobileNumber + "]");
-
+        logger.trace("isMobilePresent exit: retMobileNumber [" + retMobileNumber + "]");
         return retMobileNumber;
         }
     }

@@ -60,8 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          .authorizeRequests().antMatchers("/authenticate").permitAll()
          .antMatchers(HttpMethod.POST, "/login/verifyOTP").permitAll()
          .antMatchers(HttpMethod.POST, "/login/sendOTP").permitAll()
-         .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().
-          antMatchers("/v2/api-docs",
+        // .antMatchers(HttpMethod.POST, "/login/getUserRegistrationStatusOnVerifiedOTP").permitAll()
+         .antMatchers(HttpMethod.POST, "/organization/createOrganization").permitAll()
+         .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+         .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
                         "/configuration/security",
@@ -77,6 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Add a filter to validate the tokens with every request
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterAfter(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

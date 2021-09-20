@@ -36,8 +36,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        logger1.trace("Entering: doFilterInternal");
-        final String requestTokenHeader = request.getHeader("JWTToken");
+        logger1.trace("Entering: doFilterInternal contextPath[" + request.getContextPath()
+                + "] URI[" + request.getRequestURI() + "] method[" + request.getMethod() + "] URL[" + request.getRequestURL() + "]" );
+        final String requestTokenHeader = request.getHeader("Authorization");
         System.out.print("requestTokenHeader[" + requestTokenHeader + "]");
         String username = null;
         String jwtToken = null;
@@ -62,13 +63,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
            // throw new CustomAppException("ERROR.SERVER.SECURITY_BEARER_ERROR","", HttpStatus.UNAUTHORIZED);
         }
 
-        logger1.trace("username["+ username + "]");
+        logger1.trace("JwtRequestFilter: username from received token["+ username + "]");
 
        // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
            // if token is valid configure Spring Security to manually set  authentication
-            if (tokenUtil.validateToken(jwtToken, userDetails)) {
+            if (userDetails!=null && tokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
@@ -81,6 +82,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
         logger1.trace("Exiting: doFilterInternal");
-
     }
 }
