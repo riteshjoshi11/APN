@@ -19,7 +19,12 @@ public class OfflineDataGrowthController extends GenericOfflineProcessor{
     @Scheduled(cron="${cron.schedule.OrgDataControl}")
     public void processOffline() {
         logger.trace("Entering processOffline()");
-        archiveAndPurgeDAO.controlOrgDataGrowth();
+        try {
+            archiveAndPurgeDAO.controlOrgDataGrowth();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
         logger.trace("Exiting processOffline()");
     }
 }

@@ -16,24 +16,25 @@ public class OfflineGSTReportProcessor extends GenericOfflineProcessor {
     private static final Logger logger = LoggerFactory.getLogger(OfflineGSTReportProcessor.class);
 
     @Autowired
-    ReportService reportService ;
+    ReportService reportService;
 
     @Value("${offline.gen.gstreport.BatchSize}")
     private Integer batchSize;
 
     @Override
-    @Scheduled(cron="${cron.schedule.OfflineGSTReportProcessor}")
+    @Scheduled(cron = "${cron.schedule.OfflineGSTReportProcessor}")
     public void processOffline() {
         logger.trace("Entering processOffline()");
-        List<GSTReportBean> gstReportBeanList =  reportService.getUnprocessedGSTReportRequestBatch(batchSize);
-
-        if(gstReportBeanList!=null && gstReportBeanList.size()>0) {
-            for (GSTReportBean gstReportBean : gstReportBeanList) {
-                reportService.processGSTReport(gstReportBean);
-            }
-
+        try {
+            List<GSTReportBean> gstReportBeanList = reportService.getUnprocessedGSTReportRequestBatch(batchSize);
+            if (gstReportBeanList != null && gstReportBeanList.size() > 0) {
+                for (GSTReportBean gstReportBean : gstReportBeanList) {
+                    reportService.processGSTReport(gstReportBean);
+                }
+            } //end if
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         logger.trace("Exiting processOffline()");
 
     }

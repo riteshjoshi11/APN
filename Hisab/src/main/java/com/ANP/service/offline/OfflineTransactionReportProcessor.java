@@ -26,14 +26,16 @@ public class OfflineTransactionReportProcessor extends GenericOfflineProcessor{
     @Scheduled(cron="${cron.schedule.OfflineUserDataReportProcessor}")
     public void processOffline() {
         logger.trace("Entering processOffline()");
-        List<TransactionReportBean> txnReportBeanList =  reportService.getUnprocessedTransactionReportRequestBatch(batchSize);
-
-        if(txnReportBeanList!=null && txnReportBeanList.size()>0) {
-            for (TransactionReportBean gstReportBean : txnReportBeanList) {
-                reportService.processTransactionReport(gstReportBean);
+        try {
+            List<TransactionReportBean> txnReportBeanList = reportService.getUnprocessedTransactionReportRequestBatch(batchSize);
+            if (txnReportBeanList != null && txnReportBeanList.size() > 0) {
+                for (TransactionReportBean gstReportBean : txnReportBeanList) {
+                    reportService.processTransactionReport(gstReportBean);
+                }
             }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-
         logger.trace("Exiting processOffline()");
     }
 }

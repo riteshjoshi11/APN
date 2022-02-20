@@ -19,7 +19,11 @@ public class OfflineArchivePurgeProcessor extends GenericOfflineProcessor {
     @Scheduled(cron="${cron.schedule.ArchiveAndPurge}")
     public void processOffline() {
         logger.trace("Entering processOffline()");
-        archiveAndPurgeDAO.invokeArchiveAndPurgeProcess();
+        try {
+            archiveAndPurgeDAO.invokeArchiveAndPurgeProcess();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.trace("Exiting processOffline()");
 
     }
