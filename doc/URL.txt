@@ -1,0 +1,10 @@
+http://localhost:8080/apn/swagger-ui.html#/
+
+Token
+====
+  "token": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNjU3NDYxNjM5LCJpYXQiOjE2MjU5MjU2Mzl9.pIdLzSSUGx_ZwIYshVYKhZo1aBTmZmnTssnHz1bnyReGC-sa8ytU4DCYTS6tJkdOsy3Z-kXhUpMzK86xRJJaMg"
+
+
+
+  "token": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNjU3NjQ5MTA2LCJpYXQiOjE2MjYxMTMxMDZ9.VYG46e-p48Ip0qzh5osSm-KST4tt5El-2PWvPV_gI6GTZuQT4g1CvIRq68tLQmYya93wBzX1G_Tu4QcYtCKSCg"
+
